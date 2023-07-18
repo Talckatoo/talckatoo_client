@@ -104,7 +104,7 @@ The Talckatoo Chat App is open-source software licensed under the [LICENSE](LICE
 Thank you for choosing Talckatoo! We appreciate your support and hope you find our chat app useful for your real-time communication needs. If you have any questions or need any more help, please don't hesitate to contact us. Happy chatting! 🐦💬
 
 ## Special thanks to :
-[Frank Stepanski](https://github.com/frankstepanski)
-[Roy Mosby](https://github.com/royemosby)
+************* [Frank Stepanski](https://github.com/frankstepanski) ************
+ 
+************* [Roy Mosby](https://github.com/royemosby) ************
 
-Thank you for choosing Talckatoo! If you have any questions or need any more help, please don't hesitate to contact us. Happy chatting! 🐦💬
