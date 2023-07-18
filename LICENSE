@@ -1,21 +1,54 @@
-MIT License
+Talckatoo Open Source License
 
-Copyright (c) 2023 Talckatoo
+Version 1.0, 18th July 2023
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. Definitions
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+- "App" refers to Talckatoo, including all its source code, associated documentation, and any modifications or derivatives made by third parties.
+- "You" refers to any person or entity exercising the rights granted by this license.
+- "License" means this document, granting the rights described herein.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+2. Grant of License
+
+Subject to the terms and conditions of this License, the dev_team (represented by talckatoodev@gmail.com) hereby grants You a worldwide, royalty-free, non-exclusive, perpetual, and irrevocable license to:
+
+a) Use, copy, modify, and distribute the App's source code and any modifications You make to it.
+b) Use, copy, modify, and distribute compiled versions of the App, solely for non-commercial purposes.
+
+3. Restrictions
+
+This License does not grant You the right to:
+
+a) Use the App for commercial purposes without explicit written permission from the dev_team.
+b) Sublicense, sell, rent, lease, or otherwise transfer rights to the App or its derivatives to third parties.
+c) Remove or alter any copyright, trademark, or attribution notices from the App's source code or associated documentation.
+
+4. Attribution
+
+If You distribute the App or any derivative work based on it, You must provide appropriate attribution, acknowledging the original authors and the source of the App.
+
+5. No Warranty
+
+The App is provided "as is," without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. The dev_team shall not be liable for any damages or liabilities arising from the use, distribution, or modification of the App.
+
+6. Termination
+
+This License will automatically terminate if You fail to comply with any of its terms. Upon termination, You must cease all use, distribution, and possession of the App and its derivatives.
+
+7. Governing Law
+
+This License shall be governed by and construed in accordance with the laws of [Your Jurisdiction], without regard to its conflict of laws principles.
+
+8. Entire Agreement
+
+This License constitutes the entire agreement between You and the dev_team concerning the App and supersedes any prior or contemporaneous agreements regarding the same.
+
+9. Modifications
+
+The dev_team reserves the right to modify this License at any time, without notice. Any changes will be effective immediately upon the updated License being published.
+
+By using, copying, or distributing the App, You agree to be bound by the terms and conditions of this License.
+
+dev_team
+Email: talckatoodev@gmail.com
+Talckatoo's Website or Repository URL: [Your App's Website or Repository URL]
