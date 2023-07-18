@@ -2,6 +2,7 @@
 
 Talckatoo is a real-time chat application created using Vite, TypeScript, and Socket.IO. It features a backend that manages all the responses and facilitates seamless communication between users. This README file provides essential information to get started with the application, including installation instructions and usage guidelines.
 
+
 ## Table of Contents
 
 - [Talckatoo Chat App](#talckatoo-chat-app)
@@ -11,10 +12,10 @@ Talckatoo is a real-time chat application created using Vite, TypeScript, and So
 - [Installation](#installation)
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
-- [Teams](#teams)
+- [Backend](#backend)
 - [Contributing](#contributing)
 - [License](#license)
-
+- [Thanks](#thanks)
 ## Features
 
 Talckatoo offers the following features:
@@ -77,13 +78,17 @@ Talckatoo is built with the following technologies:
 
 The backend is built using the technology of your choice (e.g., Node.js with Express, Python with Django, etc.). Make sure to include relevant documentation for the backend in a separate file.
 
-## Author
+##   👥 Author
 
-- Rabiu Abdulazeez Danmaihaja (@Abdulaiman)
-- Manny Montes (@mdmontes)
-- miminiverse (@Miminiverse)
-- Laasri Said (@Said-laasri)
+- 👤 Rabiu Abdulazeez Danmaihaja [Abdulaiman](https://github.com/Abdulaiman)
+- 👤 Manny Montes [mdmontes](https://github.com/Miminiverse)
+- 👤 Tam Pham [Miminiverse](https://github.com/Miminiverse)
+- 👤 Laasri Said [SAID LAASRI](https://www.linkedin.com/in/said-laasri-8a4367172/)
 
+## Backend
+
+Talckatoo relies on a powerful backend system that handles real-time messaging and manages responses. The backend is built using the technology of your choice (e.g., Node.js with Express, Python with Django, etc.). For more details on setting up and configuring the backend, please refer to the documentation provided separately.
+LINK: https://github.com/Talckatoo/talckatoo_client
 
 ## Contributing
 
@@ -93,6 +98,13 @@ We welcome contributions to Talckatoo! If you find any issues or want to suggest
 
 The Talckatoo Chat App is open-source software licensed under the [LICENSE](LICENSE).
 
----
+
+## Thanks
+
+Thank you for choosing Talckatoo! We appreciate your support and hope you find our chat app useful for your real-time communication needs. If you have any questions or need any more help, please don't hesitate to contact us. Happy chatting! 🐦💬
+
+## Special thanks to :
+[Frank Stepanski](https://github.com/frankstepanski)
+[Roy Mosby](https://github.com/royemosby)
 
 Thank you for choosing Talckatoo! If you have any questions or need any more help, please don't hesitate to contact us. Happy chatting! 🐦💬
