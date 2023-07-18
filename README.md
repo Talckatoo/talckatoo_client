@@ -83,7 +83,7 @@ The backend is built using the technology of your choice (e.g., Node.js with Exp
 - 👤 Rabiu Abdulazeez Danmaihaja [Abdulaiman](https://github.com/Abdulaiman)
 - 👤 Manny Montes [mdmontes](https://github.com/Miminiverse)
 - 👤 Tam Pham [Miminiverse](https://github.com/Miminiverse)
-- 👤 Laasri Said [SAID LAASRI](https://www.linkedin.com/in/said-laasri-8a4367172/)
+- 👤 Laasri Said [Said Laasri](https://github.com/Said-laasri)
 
 ## Backend
 
@@ -108,3 +108,4 @@ Thank you for choosing Talckatoo! We appreciate your support and hope you find o
  
 ************* [Roy Mosby](https://github.com/royemosby) ************
 
+************* [Jaheem Prevost](https://github.com/jaheemprevost) ***************
