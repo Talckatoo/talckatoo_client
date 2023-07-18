@@ -77,13 +77,12 @@ Talckatoo is built with the following technologies:
 
 The backend is built using the technology of your choice (e.g., Node.js with Express, Python with Django, etc.). Make sure to include relevant documentation for the backend in a separate file.
 
-## busts_in_silhouette Author
+## Author
 
-
-- bust_in_silhouette Rabiu Abdulazeez Danmaihaja (@Abdulaiman)
-- bust_in_silhouette Manny Montes (@mdmontes)
-- bust_in_silhouette miminiverse (@Miminiverse)
-- bust_in_silhouette Laasri Said (@Said-laasri)
+- Rabiu Abdulazeez Danmaihaja (@Abdulaiman)
+- Manny Montes (@mdmontes)
+- miminiverse (@Miminiverse)
+- Laasri Said (@Said-laasri)
 
 
 ## Contributing
