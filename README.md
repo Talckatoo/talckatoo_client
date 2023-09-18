@@ -2,6 +2,8 @@
 
 Talckatoo is a real-time chat application created using Vite, TypeScript, and Socket.IO. It features a backend that manages all the responses and facilitates seamless communication between users. This README file provides essential information to get started with the application, including installation instructions and usage guidelines.
 
+Link Demo: https://youtu.be/lkLmidpuwNU
+
 ## Table of Contents
 
 - [Talckatoo Chat App](#talckatoo-chat-app)
