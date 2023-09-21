@@ -6,23 +6,21 @@ import { FaMicrophone, FaStop, FaPlay, FaPaperPlane } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import "./VoiceMessage.css";
 import RecordRTC from "recordrtc";
-import DOMAIN from "../util/url";
-
+import { BASE_URL } from "../util/url.ts";
 
 interface VoiceMessageProps {
-  socket: Socket,
+  socket: Socket;
   onHandleTranslateText: (newMessageText: string) => void;
 }
 
 interface voiceCode {
-  voiceCode: string | undefined
+  voiceCode: string | undefined;
 }
 
 const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
-  
-
-  const WHISPER_TRANSCRIPTION_URL = "https://api.openai.com/v1/audio/translations"
-  const { user, selectId, setMessages, language,  } = useContext(UserContext);
+  const WHISPER_TRANSCRIPTION_URL =
+    "https://api.openai.com/v1/audio/translations";
+  const { user, selectId, setMessages, language } = useContext(UserContext);
   const [isReadyToSend, setIsReadyToSend] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState(null);
@@ -38,14 +36,12 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   //   if (l.code === language) return l.language
   // })
 
-
-
   const startRecording = () => {
-    setIsRecording(true)
+    setIsRecording(true);
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const options = {
-        type: 'audio',
-        mimeType: 'audio/mp3',
+        type: "audio",
+        mimeType: "audio/mp3",
         numberOfAudioChannels: 1,
         recorderType: RecordRTC.StereoAudioRecorder,
         // checkForInactiveTracks: true,
@@ -53,36 +49,29 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
         // ondataavailable: (blob) => {
         //   socket.emit('audio', { buffer: blob })
         // },
-      }
+      };
 
-      const recordRTC = new RecordRTC(stream, options)
-      setRecorder(recordRTC)
-      recordRTC.startRecording()
-    })
-  }
-
-
+      const recordRTC = new RecordRTC(stream, options);
+      setRecorder(recordRTC);
+      recordRTC.startRecording();
+    });
+  };
 
   const stopRecording = () => {
     if (recorder) {
       recorder.stopRecording(async () => {
         let blob = await recorder.getBlob();
 
-        
-        var file = new File([blob], 'filename.mp3', {
-          type: 'audio/mp3'
-      }
-      );
-  
+        var file = new File([blob], "filename.mp3", {
+          type: "audio/mp3",
+        });
+
         setRecordedAudio(file);
         setIsRecording(false);
         setIsReadyToSend(true); // Set the audio ready to be sent
+      });
     }
-    );
-    }
-}
-
-
+  };
 
   //   if (mediaRecorder && mediaStream) {
   //     mediaRecorder.stop();
@@ -95,8 +84,6 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   //   }
   // };
 
-
-
   const sendAudio = async () => {
     if (recordedAudio) {
       const formData = new FormData();
@@ -107,7 +94,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
 
       try {
         const { data } = await axios.post(
-          `${DOMAIN.BACKEND_DEPLOY_URL}/api/v1/messages/voice-note`,
+          `${BASE_URL}/api/v1/messages/voice-note`,
           formData,
           {
             headers: {
@@ -156,35 +143,32 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   };
 
   const handleTranslateAudio = async () => {
+    const formData = new FormData();
 
-    const formData = new FormData()
-
-    if(recordedAudio) {
-      formData.append("file", recordedAudio)
-      formData.append("model", "whisper-1")
-      formData.append("language", "en")
-      if(recordedAudio.size > 25 * 1024 * 1024) {
-        toast.error("Please upload an audio file less than 25MB")
-        return
-    }
+    if (recordedAudio) {
+      formData.append("file", recordedAudio);
+      formData.append("model", "whisper-1");
+      formData.append("language", "en");
+      if (recordedAudio.size > 25 * 1024 * 1024) {
+        toast.error("Please upload an audio file less than 25MB");
+        return;
+      }
     }
 
     try {
       const response = await fetch(WHISPER_TRANSCRIPTION_URL, {
         headers: {
           Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-      },
-          method: "POST",
-          body: formData
-      })
-      const data = await response.json()
-      onHandleTranslateText(data)
-
-     
-  } catch (err) {
+        },
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      onHandleTranslateText(data);
+    } catch (err) {
       console.log(err);
-  } 
-  }
+    }
+  };
 
   // URL.revokeObjectURL(audioURL);
 
@@ -193,7 +177,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
       <div className="">
         <div className="flex flex-row gap-10">
           <button
-          title="Voice message"
+            title="Voice message"
             onClick={startRecording}
             className="bg-slate-300 hover:bg-slate-400  rounded-full px-2.5 h-9 w-9 items-center justify-center"
           >
@@ -261,13 +245,12 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
         </div>
       </div>
       <div>
-      {/* {audioURL && (
+        {/* {audioURL && (
         <audio ref={audioRef} controls>
           <source src={audioURL} type="audio/mp3" />
         </audio>
       )} */}
-    </div>
-
+      </div>
     </>
   );
 };

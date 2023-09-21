@@ -6,7 +6,7 @@ import emailRegex from "../util/constants.ts";
 import { toast } from "react-toastify";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import languagesArray from "../util/languages";
-import DOMAIN from "../util/url";
+import { BASE_URL } from "../util/url.ts";
 
 const Register = () => {
   const [userName, setUserName] = useState("");
@@ -18,12 +18,10 @@ const Register = () => {
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
-  const { setUser, isDarkMode} = useContext(UserContext);
+  const { setUser, isDarkMode } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("");
-
-
 
   useEffect(() => {
     const validateForm = () => {
@@ -99,7 +97,7 @@ const Register = () => {
     if (isFormValid) {
       try {
         const response = await axios.post(
-          `${DOMAIN.BACKEND_DEPLOY_URL}/api/v1/account/sign-up`,
+          `${BASE_URL}/api/v1/account/sign-up`,
           {
             userName,
             email,
@@ -110,7 +108,7 @@ const Register = () => {
 
         const token = response.data.token;
         localStorage.setItem("token", JSON.stringify(token));
-        setUser(response.data.user)
+        setUser(response.data.user);
 
         toast.success("User signed up");
         navigate("/chat");

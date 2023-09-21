@@ -6,7 +6,8 @@ import { getContactName } from "../util/getContactName";
 import { io, Socket } from "socket.io-client";
 import COCKATOO from "./.././assests/cockatoo.png";
 import FetchLatestMessages from "../util/FetchLatestMessages";
-import DOMAIN from "../util/url";
+import { BASE_URL } from "../util/url.ts";
+
 type MyEventMap = {
   connect: () => void;
   disconnect: () => void;
@@ -53,7 +54,7 @@ const Chat = () => {
   );
 
   useEffect(() => {
-    socket.current = io(`${DOMAIN.BACKEND_DEPLOY_URL}`);
+    socket.current = io(`${BASE_URL}`);
   }, []);
 
   useEffect(() => {
@@ -87,14 +88,11 @@ const Chat = () => {
   }, [onlineUsers, usersList?.contactedUsers, usersList?.uncontactedUsers]);
 
   const fetchUsers = async () => {
-    const { data } = await axios.get(
-      `${DOMAIN.BACKEND_DEPLOY_URL}/api/v1/users`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const { data } = await axios.get(`${BASE_URL}/api/v1/users`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     setUsersList(data.users);
   };

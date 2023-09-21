@@ -11,7 +11,8 @@ import { HiOutlineLanguage } from "react-icons/hi2";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
-import DOMAIN from "../util/url";
+import {BASE_URL} from "../util/url.ts";
+
 
 interface Socket {
   current: any;
@@ -51,7 +52,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const fetchMessages = async () => {
         try {
             if (user && !!conversationId) {
-                const {data} = await axios.get(`${DOMAIN.BACKEND_DEPLOY_URL}/api/v1/users/${user._id}/conversations/${conversationId}`, 
+                const {data} = await axios.get(`${BASE_URL}/api/v1/users/${user._id}/conversations/${conversationId}`, 
                 {
                     headers: {
                       Authorization: `Bearer ${token}`
@@ -124,7 +125,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
        
           try {
 
-            const {data} = await axios.post(`${DOMAIN.BACKEND_DEPLOY_URL}/api/v1/messages`, {
+            const {data} = await axios.post(`${BASE_URL}/api/v1/messages`, {
                  from: user?._id,
                  to: selectId, 
                  targetLanguage: language,
@@ -162,7 +163,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         } else if (selectId && conversationId === null) {
           setMessages([])
           try {
-            const {data} = await axios.post(`${DOMAIN.BACKEND_DEPLOY_URL}/api/v1/messages`, {
+            const {data} = await axios.post(`${BASE_URL}/api/v1/messages`, {
                  from: user?._id,
                  to: selectId, 
                  targetLanguage: language,
