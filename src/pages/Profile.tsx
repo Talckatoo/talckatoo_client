@@ -66,7 +66,7 @@ const Profile = () => {
 
   return (
     <div
-      className={`flex justify-center items-center h-full ${
+      className={`flex flex-1 justify-center items-center h-full ${
         isDarkMode ? "bg-slate-950" : ""
       }`}
     >

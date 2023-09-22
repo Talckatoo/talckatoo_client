@@ -137,23 +137,26 @@ const Register = () => {
 
   return (
     <div
-      className={`flex justify-center items-center h-full ${
+      className={`flex justify-center items-center h-full mt-5 ${
         isDarkMode ? "bg-gray-900" : ""
       }`}
+      style={{ height: "100%" }}
     >
-      <div className="flex justify-center items-center">
+      <div
+        className="flex justify-center items-center"
+        style={{ height: "100%" }}
+      >
         <form
-          className={`flex flex-col items-center rounded-2xl p-10 ${
+          className={`flex flex-col justify-center items-center rounded-2xl p-10 ${
             isDarkMode ? "bg-slate-900" : "bg-slate-100"
           }`}
           onSubmit={handleSubmit}
         >
           <h2
-            className={`mb-8 text-5xl ${
+            className={`flex justify-center items-center mb-8 text-5xl ${
               isDarkMode ? "text-white" : "text-black"
             }`}
             style={{
-              marginRight: "180px",
               fontFamily: "Montserrat, sans-serif",
             }}
           >
@@ -204,7 +207,13 @@ const Register = () => {
               className="absolute top-3 right-3 cursor-pointer"
               onClick={togglePasswordVisibility}
             >
-              {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+              {showPassword ? (
+                <AiFillEyeInvisible
+                  style={{ color: isDarkMode ? "white" : "black" }}
+                />
+              ) : (
+                <AiFillEye style={{ color: isDarkMode ? "white" : "black" }} />
+              )}
             </div>
             {passwordError && (
               <div className="text-red-500 text-sm mt-1">{passwordError}</div>
@@ -225,7 +234,13 @@ const Register = () => {
               className="absolute top-3 right-3 cursor-pointer"
               onClick={toggleConfirmPasswordVisibility}
             >
-              {showConfirmPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+              {showConfirmPassword ? (
+                <AiFillEyeInvisible
+                  style={{ color: isDarkMode ? "white" : "black" }}
+                />
+              ) : (
+                <AiFillEye style={{ color: isDarkMode ? "white" : "black" }} />
+              )}
             </div>
             {confirmPasswordError && (
               <div className="text-red-500 text-sm mt-1">

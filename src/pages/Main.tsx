@@ -16,38 +16,49 @@ const Main = () => {
 
   return (
     <div
-      className={`flex h-full justify-start flex-wrap align-top ${
+      className={`flex flex-1 h-auto flex-col justify-center items-center  ${
         isDarkMode ? "bg-slate-950" : ""
       }`}
     >
-      <div className="pt-24" style={{ width: "620px", height: "685px" }}>
-        <ImageWrapper />
-      </div>
-
       <div
-        className="justify-center align-middle mt-24 bg-white rounded-xl"
+        className="flex w-10/12 lg:w-1/2 flex-col justify-center items-center rounded-xl mt-5 mb-5"
         style={{
-          width: "600px",
-          height: "680px",
+          height: "auto",
           backgroundColor: `${isDarkMode ? "#111827" : "#F1F5F9"}`,
         }}
       >
         <div
-          className={`flex justify-center ${isDarkMode ? "bg-gray-900" : ""}`}
+          className="flex flex-col lg:flex-row justify-center items-center"
+          style={{ width: "90%", height: "auto" }}
         >
+          <div className="w-64 h-auto">
+            <ImageWrapper></ImageWrapper>
+          </div>
+          <div className="flex flex-col justify-content items-center w-full">
           {showLogin && <LogIn />}
           {showRegister && <Register />}
-        </div>
-        <div className="flex justify-center m-4 ">
-          <p className={`text ${isDarkMode ? "text-white" : "text-black"}`}>
-            {showLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-            <span
-              className="text-blue-500 font-bold cursor-pointer hover:text-blue-700"
-              onClick={handleRegisterClick}
+            <div
+              className="flex justify-center items-center mt-5 mb-5"
+              style={{ height: "auto" }}
             >
-              {showLogin ? "Register" : "Login"}
-            </span>
-          </p>
+              <p
+                className={`flex flex-col justify-center items-center text ${
+                  isDarkMode ? "text-white" : "text-black"
+                }`}
+              >
+                {showLogin
+                  ? "Don't have an account?"
+                  : "Already have an account?"}
+                <span
+                  className="text-blue-500 font-bold cursor-pointer hover:text-blue-700"
+                  onClick={handleRegisterClick}
+                >
+                  {showLogin ? "Register" : "Login"}
+                </span>
+              </p>
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>
