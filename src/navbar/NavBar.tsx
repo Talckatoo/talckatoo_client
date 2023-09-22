@@ -6,7 +6,8 @@ import { HiOutlineUserCircle } from "react-icons/hi";
 import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
 import COCKATOO from "./.././assests/cockatoo.png";
 import axios from "axios";
-import DOMAIN from "../util/url";
+import { BASE_URL } from "../util/url.ts";
+
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profileImage, setProfileImage] = useState("");
@@ -14,17 +15,17 @@ const Navbar = () => {
     localStorage.getItem("token") || "null"
   );
 
-  const { user, setUser, isDarkMode, setIsDarkMode,} = useContext(UserContext);
+  const { user, setUser, isDarkMode, setIsDarkMode } = useContext(UserContext);
 
   useEffect(() => {
-    setIsDropdownOpen(false); 
+    setIsDropdownOpen(false);
   }, [user]);
 
   useEffect(() => {
     const fetchProfileImage = async () => {
       try {
         const response = await axios.get(
-          `${DOMAIN.BACKEND_DEPLOY_URL}/api/v1/users/${user._id}`,
+          `${BASE_URL}/api/v1/users/${user._id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -63,7 +64,7 @@ const Navbar = () => {
   };
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode); 
+    setIsDarkMode(!isDarkMode);
   };
 
   return (
@@ -92,11 +93,13 @@ const Navbar = () => {
                 isDarkMode ? "white" : "black"
               } hover:text-gray-300  mr-2 focus:outline-none sm:block`}
             >
-              {user && user.userName ? 
-              <p>
-                {user.welcome ? user.welcome : "Welcome"}, {user.userName}
-              </p> 
-                  : ""}
+              {user && user.userName ? (
+                <p>
+                  {user.welcome ? user.welcome : "Welcome"}, {user.userName}
+                </p>
+              ) : (
+                ""
+              )}
             </h5>
             {profileImage ? (
               <div
