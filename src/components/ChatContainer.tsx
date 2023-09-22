@@ -61,6 +61,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             },
           }
         );
+
         const { messages } = data.conversation;
         const { users } = data.conversation;
 
