@@ -137,23 +137,20 @@ const Register = () => {
 
   return (
     <div
-      className={`flex justify-center items-center h-full mt-5 ${
+      className={`flex justify-center items-center mt-5 ${
         isDarkMode ? "bg-gray-900" : ""
       }`}
-      style={{ height: "100%" }}
+      style={{ width: "100%" }}
     >
-      <div
-        className="flex justify-center items-center"
-        style={{ height: "100%" }}
-      >
         <form
           className={`flex flex-col justify-center items-center rounded-2xl p-10 ${
             isDarkMode ? "bg-slate-900" : "bg-slate-100"
           }`}
+          style={{ width: "100%" }}
           onSubmit={handleSubmit}
         >
           <h2
-            className={`flex justify-center items-center mb-8 text-5xl ${
+            className={`flex justify-center items-center mb-8 text-5xl text-center ${
               isDarkMode ? "text-white" : "text-black"
             }`}
             style={{
@@ -162,11 +159,14 @@ const Register = () => {
           >
             Sign up
           </h2>
-          <div className="mb-6">
+          <div
+            className="flex flex-col justify-center mb-6"
+            style={{ width: "100%" }}
+          >
             <input
               type="text"
               placeholder="User Name"
-              className={`w-96 px-4 py-2 border-b-2 outline-none ${
+              className={`w-full px-4 py-2 border-b-2 outline-none ${
                 usernameError ? "border-red-500" : "border-gray-300"
               } ${isDarkMode ? "bg-gray-800" : ""}`}
               value={userName}
@@ -177,11 +177,14 @@ const Register = () => {
               <div className="text-red-500 text-sm mt-1">{usernameError}</div>
             )}
           </div>
-          <div className="mb-6">
+          <div
+            className="flex flex-col justify-center mb-6"
+            style={{ width: "100%" }}
+          >
             <input
               type="email"
               placeholder="Email"
-              className={`w-96 px-4 py-2 border-b-2 outline-none ${
+              className={`w-full px-4 py-2 border-b-2 outline-none ${
                 emailError ? "border-red-500" : "border-gray-300"
               } ${isDarkMode ? "bg-gray-800" : ""}`}
               value={email}
@@ -192,11 +195,15 @@ const Register = () => {
               <div className="text-red-500 text-sm mt-1">{emailError}</div>
             )}
           </div>
-          <div className="mb-6 relative">
+          <div
+            className="flex flex-col justify-center mb-6 relative"
+            style={{ width: "100%" }}
+          >
+            {" "}
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className={`w-96 px-4 py-2 border-b-2 outline-none ${
+              className={`w-full px-4 py-2 border-b-2 outline-none ${
                 passwordError ? "border-red-500" : "border-gray-300"
               } ${isDarkMode ? "bg-gray-800" : ""}`}
               value={password}
@@ -219,11 +226,15 @@ const Register = () => {
               <div className="text-red-500 text-sm mt-1">{passwordError}</div>
             )}
           </div>
-          <div className="mb-6 relative">
+          <div
+            className="flex flex-col justify-center mb-6 relative"
+            style={{ width: "100%" }}
+          >
+            {" "}
             <input
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
-              className={`w-96 px-4 py-2 border-b-2 outline-none ${
+              className={`w-full px-4 py-2 border-b-2 outline-none ${
                 confirmPasswordError ? "border-red-500" : "border-gray-300"
               } ${isDarkMode ? "bg-gray-800" : ""}`}
               value={confirmPassword}
@@ -248,9 +259,13 @@ const Register = () => {
               </div>
             )}
           </div>
-          <div className="mb-6 relative">
+          <div
+            className="flex flex-col justify-center mb-6 relative"
+            style={{ width: "100%" }}
+          >
+            {" "}
             <select
-              className={`w-96 px-4 py-2 border-b-2 outline-none ${
+              className={`w-full px-4 py-2 border-b-2 outline-none ${
                 isDarkMode ? "bg-gray-800" : "bg-gray-100"
               } ${selectedLanguage === "" ? "text-gray-600" : ""} ${
                 isDarkMode ? "text-white" : "text-black"
@@ -268,21 +283,25 @@ const Register = () => {
               ))}
             </select>
           </div>
-          <button
-            type="submit"
-            className={`bg-orange-50 text-gray-800 px-8 py-3 text-2xl w-96 mt-4 mb-4 rounded-full shadow-md transition-colors ${
-              isButtonDisabled
-                ? "bg-gray-300 cursor-not-allowed"
-                : "hover:bg-blue-500 hover:text-white"
-            } ${isDarkMode ? "text-white" : "text-black"}`}
-            disabled={isButtonDisabled as boolean}
-            style={{ backgroundColor: isDarkMode ? "#333" : "" }}
+          <div
+            className="flex flex-col justify-center items-center mb-6"
+            style={{ width: "100%" }}
           >
-            Sign In
-          </button>
+            <button
+              type="submit"
+              className={`bg-orange-50 text-gray-800 px-8 py-3 text-2xl w-full mt-4 mb-4 rounded-full shadow-md transition-colors ${
+                isButtonDisabled
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "hover:bg-blue-500 hover:text-white"
+              } ${isDarkMode ? "text-white" : "text-black"}`}
+              disabled={isButtonDisabled as boolean}
+              style={{ backgroundColor: isDarkMode ? "#333" : "" }}
+            >
+              Sign In
+            </button>
+          </div>
         </form>
       </div>
-    </div>
   );
 };
 
