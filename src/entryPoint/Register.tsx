@@ -17,11 +17,12 @@ const Register = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [selectedLanguageError, setSelectedLanguageError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const { setUser, isDarkMode } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("");
 
   useEffect(() => {
     const validateForm = () => {
@@ -54,7 +55,7 @@ const Register = () => {
       }
 
       if (confirmPassword.trim() === "") {
-        setConfirmPasswordError("* all fields are required");
+        setConfirmPasswordError("*");
         isValid = false;
       } else if (password !== confirmPassword) {
         setConfirmPasswordError("Passwords do not match");
@@ -63,11 +64,18 @@ const Register = () => {
         setConfirmPasswordError("");
       }
 
+      if(selectedLanguage===""){
+        setSelectedLanguageError("* All fields are required");
+        isValid = false;
+      } else{
+        setSelectedLanguageError("");
+      }
+
       return isValid;
     };
 
     setIsFormValid(validateForm());
-  }, [userName, email, password, confirmPassword]);
+  }, [userName, email, password, confirmPassword, selectedLanguage]);
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
@@ -123,6 +131,7 @@ const Register = () => {
     !!emailError ||
     !!passwordError ||
     !!confirmPasswordError ||
+    !!setSelectedLanguageError ||
     !isFormValid;
 
   const togglePasswordVisibility = () => {
@@ -280,6 +289,11 @@ const Register = () => {
                 </option>
               ))}
             </select>
+            {selectedLanguageError && (
+              <div className="text-red-500 text-sm mt-0">
+                {selectedLanguageError}
+              </div>
+            )}
           </div>
           <div
             className="flex flex-col justify-center items-center"
