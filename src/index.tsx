@@ -7,6 +7,7 @@ import { UserContextProvider } from "./context/user-context";
 import { injectStyle } from "react-toastify/dist/inject-style";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import 'animate.css';
 
 // CALL IT ONCE IN YOUR APP
 injectStyle();

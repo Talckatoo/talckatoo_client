@@ -181,7 +181,7 @@ const Register = () => {
               style={{ color: isDarkMode ? "#fff" : "#000" }}
             />
             {usernameError && (
-              <div className="text-red-500 text-sm mt-0">{usernameError}</div>
+              <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">{usernameError}</div>
             )}
           </div>
           <div
@@ -199,7 +199,7 @@ const Register = () => {
               style={{ color: isDarkMode ? "#fff" : "#000" }}
             />
             {emailError && (
-              <div className="text-red-500 text-sm mt-0">{emailError}</div>
+              <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">{emailError}</div>
             )}
           </div>
           <div
@@ -230,7 +230,7 @@ const Register = () => {
               )}
             </div>
             {passwordError && (
-              <div className="text-red-500 text-sm mt-0">{passwordError}</div>
+              <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">{passwordError}</div>
             )}
           </div>
           <div
@@ -261,7 +261,7 @@ const Register = () => {
               )}
             </div>
             {confirmPasswordError && (
-              <div className="text-red-500 text-sm mt-0">
+              <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
                 {confirmPasswordError}
               </div>
             )}
@@ -290,7 +290,7 @@ const Register = () => {
               ))}
             </select>
             {selectedLanguageError && (
-              <div className="text-red-500 text-sm mt-0">
+              <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
                 {selectedLanguageError}
               </div>
             )}

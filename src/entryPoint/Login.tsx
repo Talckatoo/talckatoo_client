@@ -158,7 +158,7 @@ const LogIn = () => {
             style={{ color: isDarkMode ? "#fff" : "#000" }}
           />
           {emailError.error && (
-            <div className="text-red-500 text-sm mt-1">
+            <div className="animate__animated animate__shakeX text-red-500 text-sm mt-1">
               {emailError.errorMessage}
             </div>
           )}
@@ -190,7 +190,7 @@ const LogIn = () => {
             )}
           </div>
           {passwordError.error && (
-            <div className="text-red-500 text-sm mt-1">
+            <div className="animate__animated animate__shakeX text-red-500 text-sm mt-1">
               {passwordError.errorMessage}
             </div>
           )}
