@@ -137,20 +137,18 @@ const Register = () => {
 
   return (
     <div
-      className={`flex justify-center items-center mt-5 ${
-        isDarkMode ? "bg-gray-900" : ""
-      }`}
-      style={{ width: "100%" }}
+      className={`flex justify-center items-center mt-0 lg:mt-5 drop-shadow-lg`}
+      style={{ width: "85%" }}
     >
         <form
-          className={`flex flex-col justify-center items-center rounded-2xl p-10 ${
+          className={`flex flex-col justify-center items-center gap-4 rounded-2xl px-10 py-3 ${
             isDarkMode ? "bg-slate-900" : "bg-slate-100"
           }`}
           style={{ width: "100%" }}
           onSubmit={handleSubmit}
         >
           <h2
-            className={`flex justify-center items-center mb-8 text-5xl text-center ${
+            className={`flex justify-center items-center text-3xl lg:text-5xl text-center ${
               isDarkMode ? "text-white" : "text-black"
             }`}
             style={{
@@ -160,13 +158,13 @@ const Register = () => {
             Sign up
           </h2>
           <div
-            className="flex flex-col justify-center mb-6"
+            className="flex flex-col justify-center"
             style={{ width: "100%" }}
           >
             <input
               type="text"
               placeholder="User Name"
-              className={`w-full px-4 py-2 border-b-2 outline-none ${
+              className={`w- px-4 py-2 border-b-2 outline-none ${
                 usernameError ? "border-red-500" : "border-gray-300"
               } ${isDarkMode ? "bg-gray-800" : ""}`}
               value={userName}
@@ -174,11 +172,11 @@ const Register = () => {
               style={{ color: isDarkMode ? "#fff" : "#000" }}
             />
             {usernameError && (
-              <div className="text-red-500 text-sm mt-1">{usernameError}</div>
+              <div className="text-red-500 text-sm mt-0">{usernameError}</div>
             )}
           </div>
           <div
-            className="flex flex-col justify-center mb-6"
+            className="flex flex-col justify-center"
             style={{ width: "100%" }}
           >
             <input
@@ -192,11 +190,11 @@ const Register = () => {
               style={{ color: isDarkMode ? "#fff" : "#000" }}
             />
             {emailError && (
-              <div className="text-red-500 text-sm mt-1">{emailError}</div>
+              <div className="text-red-500 text-sm mt-0">{emailError}</div>
             )}
           </div>
           <div
-            className="flex flex-col justify-center mb-6 relative"
+            className="flex flex-col justify-center relative"
             style={{ width: "100%" }}
           >
             {" "}
@@ -223,11 +221,11 @@ const Register = () => {
               )}
             </div>
             {passwordError && (
-              <div className="text-red-500 text-sm mt-1">{passwordError}</div>
+              <div className="text-red-500 text-sm mt-0">{passwordError}</div>
             )}
           </div>
           <div
-            className="flex flex-col justify-center mb-6 relative"
+            className="flex flex-col justify-center relative"
             style={{ width: "100%" }}
           >
             {" "}
@@ -254,13 +252,13 @@ const Register = () => {
               )}
             </div>
             {confirmPasswordError && (
-              <div className="text-red-500 text-sm mt-1">
+              <div className="text-red-500 text-sm mt-0">
                 {confirmPasswordError}
               </div>
             )}
           </div>
           <div
-            className="flex flex-col justify-center mb-6 relative"
+            className="flex flex-col justify-center relative"
             style={{ width: "100%" }}
           >
             {" "}
@@ -284,12 +282,12 @@ const Register = () => {
             </select>
           </div>
           <div
-            className="flex flex-col justify-center items-center mb-6"
+            className="flex flex-col justify-center items-center"
             style={{ width: "100%" }}
           >
             <button
               type="submit"
-              className={`bg-orange-50 text-gray-800 px-8 py-3 text-2xl w-full mt-4 mb-4 rounded-full shadow-md transition-colors ${
+              className={`flex justify-center items-center transition duration-150 ease-in-out hover:scale-105 bg-orange-50 text-gray-800 px-8 py-3 text-xl lg:text-2xl w-full mt-4 mb-4 rounded-full shadow-md transition-colors ${
                 isButtonDisabled
                   ? "bg-gray-300 cursor-not-allowed"
                   : "hover:bg-blue-500 hover:text-white"
