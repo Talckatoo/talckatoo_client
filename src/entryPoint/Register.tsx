@@ -131,7 +131,7 @@ const Register = () => {
     !!emailError ||
     !!passwordError ||
     !!confirmPasswordError ||
-    !!setSelectedLanguageError ||
+    !!selectedLanguageError ||
     !isFormValid;
 
   const togglePasswordVisibility = () => {
@@ -178,7 +178,7 @@ const Register = () => {
             style={{ color: isDarkMode ? "#fff" : "#000" }}
           />
           {usernameError && (
-            <div className="animate__animated animate__shakeXtext-red-500 text-sm mt-0">
+            <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
               {usernameError}
             </div>
           )}
@@ -272,7 +272,7 @@ const Register = () => {
         >
           {" "}
           <select
-            className={`w-full px-4 py-2 border-b-2 outline-none ${
+            className={`w-full px-4 py-2 ${selectedLanguageError ? "border-b-2 border-b-red-500":"border-b-2 border-b-gray-300"} outline-none ${
               isDarkMode ? "bg-gray-800" : "bg-gray-100"
             } ${selectedLanguage === "" ? "text-gray-600" : ""} ${
               isDarkMode ? "text-white" : "text-black"
@@ -301,13 +301,8 @@ const Register = () => {
         >
           <button
             type="submit"
-            className={`flex justify-center items-center transition duration-150 ease-in-out hover:scale-105 bg-orange-50 text-gray-800 px-8 py-3 text-xl lg:text-2xl w-full mt-4 mb-4 rounded-full shadow-md transition-colors ${
-              isButtonDisabled
-                ? "bg-gray-300 cursor-not-allowed"
-                : "hover:bg-blue-500 hover:text-white"
-            } ${isDarkMode ? "text-white" : "text-black"}`}
+            className={`flex justify-center items-center bg-gray-700 transition duration-150 ease-in-out hover:scale-105 ${isButtonDisabled ? "cursor-not-allowed":"hover:bg-green-900"} text-gray-800 px-8 py-3 text-xl lg:text-2xl w-full mt-4 mb-4 rounded-full shadow-md colors ${isDarkMode ? "text-white" : "text-black"}`}
             disabled={isButtonDisabled as boolean}
-            style={{ backgroundColor: isDarkMode ? "#333" : "" }}
           >
             Sign In
           </button>

@@ -21,7 +21,7 @@ const Main = () => {
       }`}
     >
       <div
-        className="flex w-10/12 lg:w-1/2 flex-col justify-center items-center rounded-xl mt-5 mb-5"
+        className="flex w-10/12 lg:w-2/3 flex-col justify-center items-center rounded-xl mt-5 mb-5 box-content p-0 lg:p-5"
         style={{
           height: "auto",
           backgroundColor: `${isDarkMode ? "#111827" : "#F1F5F9"}`,
@@ -29,9 +29,9 @@ const Main = () => {
       >
         <div
           className="flex flex-col lg:flex-row justify-center items-center gap-0"
-          style={{ width: "90%", height: "auto" }}
+          style={{ width: "100%", height: "auto" }}
         >
-          <div className="w-32 lg:w-64 h-auto my-0">
+          <div className="w-32 lg:w-1/2 h-auto my-0">
             <ImageWrapper></ImageWrapper>
           </div>
           <div className="flex flex-col justify-content items-center w-full">

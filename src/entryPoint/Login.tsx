@@ -127,7 +127,7 @@ const LogIn = () => {
       style={{ width: "85%" }}
     >
       <form
-        className={`flex flex-col justify-center items-center rounded-2xl px-10 py-3 gap-4 ${
+        className={`flex flex-col justify-center items-center rounded-2xl p-16 box-content gap-4 ${
           isDarkMode ? "bg-slate-900" : "bg-slate-100"
         }`}
         style={{ width: "100%" }}
@@ -143,7 +143,7 @@ const LogIn = () => {
         >
           Sign in
         </h2>
-        <div className="flex flex-col justify-center" style={{ width: "100%" }}>
+        <div className="flex flex-col justify-center mb-4" style={{ width: "100%" }}>
           <input
             type="text"
             placeholder="Email"
@@ -197,13 +197,8 @@ const LogIn = () => {
           style={{ width: "100%" }}
         >
           <button
-            className={`flex justify-center items-center transition duration-150 ease-in-out hover:scale-105 bg-orange-50 text-gray-800 px-8 py-3 text-xl lg:text-2xl w-full mt-4 mb-4 rounded-full shadow-md transition-colors ${
-              isButtonDisabled
-                ? "bg-gray-300 cursor-not-allowed"
-                : "hover:bg-green-500 hover:text-white"
-            } ${isDarkMode ? "text-white" : "text-black"}`}
+            className={`flex justify-center items-center bg-gray-700 transition duration-150 ease-in-out hover:scale-105 ${isButtonDisabled ? "cursor-not-allowed":"hover:bg-green-900"} text-gray-800 px-8 py-3 text-xl lg:text-2xl w-full mt-4 mb-4 rounded-full shadow-md colors ${isDarkMode ? "text-white" : "text-black"}`}
             disabled={isButtonDisabled as boolean}
-            style={{ backgroundColor: isDarkMode ? "#333" : "" }}
           >
             Sign In
           </button>
