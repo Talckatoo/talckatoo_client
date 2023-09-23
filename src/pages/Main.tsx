@@ -28,10 +28,10 @@ const Main = () => {
         }}
       >
         <div
-          className="flex flex-col lg:flex-row justify-center items-center"
+          className="flex flex-col lg:flex-row justify-center items-center gap-0"
           style={{ width: "90%", height: "auto" }}
         >
-          <div className="w-64 h-auto">
+          <div className="w-32 lg:w-64 h-auto my-0">
             <ImageWrapper></ImageWrapper>
           </div>
           <div className="flex flex-col justify-content items-center w-full">
