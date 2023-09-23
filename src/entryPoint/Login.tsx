@@ -197,7 +197,7 @@ const LogIn = () => {
           style={{ width: "100%" }}
         >
           <button
-            className={`flex justify-center items-center bg-gray-700 transition duration-150 ease-in-out hover:scale-105 ${isButtonDisabled ? "cursor-not-allowed":"hover:bg-green-900"} text-gray-800 px-8 py-3 text-xl lg:text-2xl w-full mt-4 mb-4 rounded-full shadow-md colors ${isDarkMode ? "text-white" : "text-black"}`}
+            className={`flex justify-center items-center ${isDarkMode ? "bg-gray-700 text-white": "bg-orange-50 text-black"} transition duration-150 ease-in-out hover:scale-105 ${isButtonDisabled ? "cursor-not-allowed":"hover:bg-green-900 hover:text-white"} px-8 py-3 text-xl lg:text-2xl w-full mt-4 mb-4 rounded-full shadow-md colors ${isDarkMode ? "text-white" : "text-black"}`}
             disabled={isButtonDisabled as boolean}
           >
             Sign In
