@@ -13,12 +13,27 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
-  const [selectedLanguageError, setSelectedLanguageError] = useState("");
+  const [usernameError, setUsernameError] = useState({
+    error:false,
+    errorMessage: ""
+  });
+  const [emailError, setEmailError] = useState({
+    error:false,
+    errorMessage: ""
+  });
+  const [passwordError, setPasswordError] = useState({
+    error:false,
+    errorMessage: ""
+  });
+  const [confirmPasswordError, setConfirmPasswordError] = useState({
+    error:false,
+    errorMessage: ""
+  });
+  const [selectedLanguageError, setSelectedLanguageError] = useState({
+    error:true,
+    errorMessage: "* All fields are required"
+  });
   const [isFormValid, setIsFormValid] = useState(false);
   const { setUser, isDarkMode } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
@@ -26,51 +41,7 @@ const Register = () => {
 
   useEffect(() => {
     const validateForm = () => {
-      let isValid = true;
-
-      if (userName.trim() === "") {
-        setUsernameError("*");
-        isValid = false;
-      } else {
-        setUsernameError("");
-      }
-
-      if (email.trim() === "") {
-        setEmailError("*");
-        isValid = false;
-      } else {
-        if (!emailRegex.test(email)) {
-          setEmailError("Invalid email format");
-          isValid = false;
-        } else {
-          setEmailError("");
-        }
-      }
-
-      if (password.trim() === "") {
-        setPasswordError("*");
-        isValid = false;
-      } else {
-        setPasswordError("");
-      }
-
-      if (confirmPassword.trim() === "") {
-        setConfirmPasswordError("*");
-        isValid = false;
-      } else if (password !== confirmPassword) {
-        setConfirmPasswordError("Passwords do not match");
-        isValid = false;
-      } else {
-        setConfirmPasswordError("");
-      }
-
-      if (selectedLanguage === "") {
-        setSelectedLanguageError("* All fields are required");
-        isValid = false;
-      } else {
-        setSelectedLanguageError("");
-      }
-
+      let isValid = (userName.trim()!=="" && email.trim()!=="" && password.trim()!=="" && confirmPassword.trim()!=="" && selectedLanguage.trim()!=="");
       return isValid;
     };
 
@@ -79,29 +50,64 @@ const Register = () => {
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
+    const userName = e.target.value
+    if (userName.trim() === "") {
+      setUsernameError({error:true,errorMessage:"*"});
+    } else {
+      setUsernameError({error:false,errorMessage:""});
+    }
   };
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+    const email = e.target.value;
+    if (email.trim() === "") {
+      setEmailError({error:true,errorMessage:"*"});
+    } else {
+      if (!emailRegex.test(email)) {
+        setEmailError({error:true,errorMessage:"Invalid email format"});
+      } else {
+        setEmailError({error:false,errorMessage:""});
+      }
+    }
   };
 
   const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedLanguage(e.target.value);
+    const selectedLanguage=e.target.value;
+    if (selectedLanguage === "") {
+      setSelectedLanguageError({error:true,errorMessage:"* All fields are required"});
+    } else {
+      setSelectedLanguageError({error:false,errorMessage:""});
+    }
   };
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    const password=e.target.value;
+    if (password.trim() === "") {
+      setPasswordError({error:true,errorMessage:"*"});
+    } else {
+      setPasswordError({error:false,errorMessage:""});
+    }
   };
 
   const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
+    const confirmPassword = e.target.value;
+    if (confirmPassword.trim() === "") {
+      setConfirmPasswordError({error:true,errorMessage:"*"});
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError({error:true,errorMessage:"Passwords do not match"});
+    } else {
+      setConfirmPasswordError({error:false,errorMessage:""});
+    }
   };
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     if (isFormValid) {
       try {
         const response = await axios.post(
@@ -127,11 +133,11 @@ const Register = () => {
   };
 
   const isButtonDisabled =
-    !!usernameError ||
-    !!emailError ||
-    !!passwordError ||
-    !!confirmPasswordError ||
-    !!selectedLanguageError ||
+    !!usernameError.errorMessage ||
+    !!emailError.errorMessage ||
+    !!passwordError.errorMessage ||
+    !!confirmPasswordError.errorMessage ||
+    !!selectedLanguageError.errorMessage ||
     !isFormValid;
 
   const togglePasswordVisibility = () => {
@@ -171,15 +177,15 @@ const Register = () => {
             type="text"
             placeholder="User Name"
             className={`w- px-4 py-2 border-b-2 outline-none ${
-              usernameError ? "border-red-500" : "border-gray-300"
+              usernameError.error ? "border-red-500" : "border-gray-300"
             } ${isDarkMode ? "bg-gray-800" : ""}`}
             value={userName}
             onChange={handleUsernameChange}
             style={{ color: isDarkMode ? "#fff" : "#000" }}
           />
-          {usernameError && (
+          {usernameError.error && (
             <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
-              {usernameError}
+              {usernameError.errorMessage}
             </div>
           )}
         </div>
@@ -188,15 +194,15 @@ const Register = () => {
             type="email"
             placeholder="Email"
             className={`w-full px-4 py-2 border-b-2 outline-none ${
-              emailError ? "border-red-500" : "border-gray-300"
+              emailError.error ? "border-red-500" : "border-gray-300"
             } ${isDarkMode ? "bg-gray-800" : ""}`}
             value={email}
             onChange={handleEmailChange}
             style={{ color: isDarkMode ? "#fff" : "#000" }}
           />
-          {emailError && (
+          {emailError.error && (
             <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
-              {emailError}
+              {emailError.errorMessage}
             </div>
           )}
         </div>
@@ -209,7 +215,7 @@ const Register = () => {
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             className={`w-full px-4 py-2 border-b-2 outline-none ${
-              passwordError ? "border-red-500" : "border-gray-300"
+              passwordError.error ? "border-red-500" : "border-gray-300"
             } ${isDarkMode ? "bg-gray-800" : ""}`}
             value={password}
             onChange={handlePasswordChange}
@@ -227,9 +233,9 @@ const Register = () => {
               <AiFillEye style={{ color: isDarkMode ? "white" : "black" }} />
             )}
           </div>
-          {passwordError && (
+          {passwordError.error && (
             <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
-              {passwordError}
+              {passwordError.errorMessage}
             </div>
           )}
         </div>
@@ -242,7 +248,7 @@ const Register = () => {
             type={showConfirmPassword ? "text" : "password"}
             placeholder="Confirm Password"
             className={`w-full px-4 py-2 border-b-2 outline-none ${
-              confirmPasswordError ? "border-red-500" : "border-gray-300"
+              confirmPasswordError.error ? "border-red-500" : "border-gray-300"
             } ${isDarkMode ? "bg-gray-800" : ""}`}
             value={confirmPassword}
             onChange={handleConfirmPasswordChange}
@@ -260,9 +266,9 @@ const Register = () => {
               <AiFillEye style={{ color: isDarkMode ? "white" : "black" }} />
             )}
           </div>
-          {confirmPasswordError && (
+          {confirmPasswordError.error && (
             <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
-              {confirmPasswordError}
+              {confirmPasswordError.errorMessage}
             </div>
           )}
         </div>
@@ -272,7 +278,7 @@ const Register = () => {
         >
           {" "}
           <select
-            className={`w-full px-4 py-2 ${selectedLanguageError ? "border-b-2 border-b-red-500":"border-b-2 border-b-gray-300"} outline-none ${
+            className={`w-full px-4 py-2 ${selectedLanguageError.error ? "border-b-2 border-b-red-500":"border-b-2 border-b-gray-300"} outline-none ${
               isDarkMode ? "bg-gray-800" : "bg-gray-100"
             } ${selectedLanguage === "" ? "text-gray-600" : ""} ${
               isDarkMode ? "text-white" : "text-black"
@@ -289,9 +295,9 @@ const Register = () => {
               </option>
             ))}
           </select>
-          {selectedLanguageError && (
+          {selectedLanguageError.error && (
             <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
-              {selectedLanguageError}
+              {selectedLanguageError.errorMessage}
             </div>
           )}
         </div>

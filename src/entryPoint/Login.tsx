@@ -26,8 +26,6 @@ const LogIn = () => {
     setIsFormValid(email.trim() !== "" && password.trim() !== "");
   }, [email, password]);
 
-  useEffect(() => {}, [emailError, passwordError]);
-
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     validateEmail(e.target.value);
