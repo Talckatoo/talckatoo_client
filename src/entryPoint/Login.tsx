@@ -130,7 +130,7 @@ const LogIn = () => {
         className={`flex flex-col justify-center items-center rounded-2xl px-10 py-3 gap-4 ${
           isDarkMode ? "bg-slate-900" : "bg-slate-100"
         }`}
-        style={{ width: "100%"}}
+        style={{ width: "100%" }}
         onSubmit={handleSubmit}
       >
         <h2
@@ -143,10 +143,7 @@ const LogIn = () => {
         >
           Sign in
         </h2>
-        <div
-          className="flex flex-col justify-center"
-          style={{ width: "100%" }}
-        >
+        <div className="flex flex-col justify-center" style={{ width: "100%" }}>
           <input
             type="text"
             placeholder="Email"

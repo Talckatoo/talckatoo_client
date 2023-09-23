@@ -35,8 +35,8 @@ const Main = () => {
             <ImageWrapper></ImageWrapper>
           </div>
           <div className="flex flex-col justify-content items-center w-full">
-          {showLogin && <LogIn />}
-          {showRegister && <Register />}
+            {showLogin && <LogIn />}
+            {showRegister && <Register />}
             <div
               className="flex justify-center items-center mt-5 mb-5"
               style={{ height: "auto" }}
@@ -58,7 +58,6 @@ const Main = () => {
               </p>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
