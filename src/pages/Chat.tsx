@@ -128,7 +128,7 @@ const Chat = () => {
   return (
     <>
       <div
-        className={`flex h-[100vh] overflow-hidden flex-grow ${
+        className={`flex flex-1 h-[100vh] overflow-hidden flex-grow ${
           isDarkMode ? "bg-dark" : "bg-light"
         }`}
       >

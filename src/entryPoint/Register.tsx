@@ -13,87 +13,101 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [usernameError, setUsernameError] = useState({
+    error:false,
+    errorMessage: ""
+  });
+  const [emailError, setEmailError] = useState({
+    error:false,
+    errorMessage: ""
+  });
+  const [passwordError, setPasswordError] = useState({
+    error:false,
+    errorMessage: ""
+  });
+  const [confirmPasswordError, setConfirmPasswordError] = useState({
+    error:false,
+    errorMessage: ""
+  });
+  const [selectedLanguageError, setSelectedLanguageError] = useState({
+    error:true,
+    errorMessage: "* All fields are required"
+  });
   const [isFormValid, setIsFormValid] = useState(false);
   const { setUser, isDarkMode } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("");
 
   useEffect(() => {
     const validateForm = () => {
-      let isValid = true;
-
-      if (userName.trim() === "") {
-        setUsernameError("*");
-        isValid = false;
-      } else {
-        setUsernameError("");
-      }
-
-      if (email.trim() === "") {
-        setEmailError("*");
-        isValid = false;
-      } else {
-        if (!emailRegex.test(email)) {
-          setEmailError("Invalid email format");
-          isValid = false;
-        } else {
-          setEmailError("");
-        }
-      }
-
-      if (password.trim() === "") {
-        setPasswordError("*");
-        isValid = false;
-      } else {
-        setPasswordError("");
-      }
-
-      if (confirmPassword.trim() === "") {
-        setConfirmPasswordError("* all fields are required");
-        isValid = false;
-      } else if (password !== confirmPassword) {
-        setConfirmPasswordError("Passwords do not match");
-        isValid = false;
-      } else {
-        setConfirmPasswordError("");
-      }
-
+      let isValid = (userName.trim()!=="" && email.trim()!=="" && password.trim()!=="" && confirmPassword.trim()!=="" && selectedLanguage.trim()!=="");
       return isValid;
     };
 
     setIsFormValid(validateForm());
-  }, [userName, email, password, confirmPassword]);
+  }, [userName, email, password, confirmPassword, selectedLanguage]);
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
+    const userName = e.target.value
+    if (userName.trim() === "") {
+      setUsernameError({error:true,errorMessage:"*"});
+    } else {
+      setUsernameError({error:false,errorMessage:""});
+    }
   };
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+    const email = e.target.value;
+    if (email.trim() === "") {
+      setEmailError({error:true,errorMessage:"*"});
+    } else {
+      if (!emailRegex.test(email)) {
+        setEmailError({error:true,errorMessage:"Invalid email format"});
+      } else {
+        setEmailError({error:false,errorMessage:""});
+      }
+    }
   };
 
   const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedLanguage(e.target.value);
+    const selectedLanguage=e.target.value;
+    if (selectedLanguage === "") {
+      setSelectedLanguageError({error:true,errorMessage:"* All fields are required"});
+    } else {
+      setSelectedLanguageError({error:false,errorMessage:""});
+    }
   };
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    const password=e.target.value;
+    if (password.trim() === "") {
+      setPasswordError({error:true,errorMessage:"*"});
+    } else {
+      setPasswordError({error:false,errorMessage:""});
+    }
   };
 
   const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
+    const confirmPassword = e.target.value;
+    if (confirmPassword.trim() === "") {
+      setConfirmPasswordError({error:true,errorMessage:"*"});
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError({error:true,errorMessage:"Passwords do not match"});
+    } else {
+      setConfirmPasswordError({error:false,errorMessage:""});
+    }
   };
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     if (isFormValid) {
       try {
         const response = await axios.post(
@@ -119,10 +133,11 @@ const Register = () => {
   };
 
   const isButtonDisabled =
-    !!usernameError ||
-    !!emailError ||
-    !!passwordError ||
-    !!confirmPasswordError ||
+    !!usernameError.errorMessage ||
+    !!emailError.errorMessage ||
+    !!passwordError.errorMessage ||
+    !!confirmPasswordError.errorMessage ||
+    !!selectedLanguageError.errorMessage ||
     !isFormValid;
 
   const togglePasswordVisibility = () => {
@@ -137,136 +152,168 @@ const Register = () => {
 
   return (
     <div
-      className={`flex justify-center items-center h-full ${
-        isDarkMode ? "bg-gray-900" : ""
-      }`}
+      className={`flex justify-center items-center mt-0 lg:mt-5 drop-shadow-lg`}
+      style={{ width: "85%" }}
     >
-      <div className="flex justify-center items-center">
-        <form
-          className={`flex flex-col items-center rounded-2xl p-10 ${
-            isDarkMode ? "bg-slate-900" : "bg-slate-100"
+      <form
+        className={`flex flex-col justify-center items-center gap-4 rounded-2xl px-10 py-3 ${
+          isDarkMode ? "bg-slate-900" : "bg-slate-100"
+        }`}
+        style={{ width: "100%" }}
+        onSubmit={handleSubmit}
+      >
+        <h2
+          className={`flex justify-center items-center text-3xl lg:text-5xl text-center ${
+            isDarkMode ? "text-white" : "text-black"
           }`}
-          onSubmit={handleSubmit}
+          style={{
+            fontFamily: "Montserrat, sans-serif",
+          }}
         >
-          <h2
-            className={`mb-8 text-5xl ${
-              isDarkMode ? "text-white" : "text-black"
-            }`}
-            style={{
-              marginRight: "180px",
-              fontFamily: "Montserrat, sans-serif",
-            }}
+          Sign up
+        </h2>
+        <div className="flex flex-col justify-center" style={{ width: "100%" }}>
+          <input
+            type="text"
+            placeholder="User Name"
+            className={`w- px-4 py-2 border-b-2 outline-none ${
+              usernameError.error ? "border-red-500" : "border-gray-300"
+            } ${isDarkMode ? "bg-gray-800" : ""}`}
+            value={userName}
+            onChange={handleUsernameChange}
+            style={{ color: isDarkMode ? "#fff" : "#000" }}
+          />
+          {usernameError.error && (
+            <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
+              {usernameError.errorMessage}
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col justify-center" style={{ width: "100%" }}>
+          <input
+            type="email"
+            placeholder="Email"
+            className={`w-full px-4 py-2 border-b-2 outline-none ${
+              emailError.error ? "border-red-500" : "border-gray-300"
+            } ${isDarkMode ? "bg-gray-800" : ""}`}
+            value={email}
+            onChange={handleEmailChange}
+            style={{ color: isDarkMode ? "#fff" : "#000" }}
+          />
+          {emailError.error && (
+            <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
+              {emailError.errorMessage}
+            </div>
+          )}
+        </div>
+        <div
+          className="flex flex-col justify-center relative"
+          style={{ width: "100%" }}
+        >
+          {" "}
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            className={`w-full px-4 py-2 border-b-2 outline-none ${
+              passwordError.error ? "border-red-500" : "border-gray-300"
+            } ${isDarkMode ? "bg-gray-800" : ""}`}
+            value={password}
+            onChange={handlePasswordChange}
+            style={{ color: isDarkMode ? "#fff" : "#000" }}
+          />
+          <div
+            className="absolute top-3 right-3 cursor-pointer"
+            onClick={togglePasswordVisibility}
           >
-            Sign up
-          </h2>
-          <div className="mb-6">
-            <input
-              type="text"
-              placeholder="User Name"
-              className={`w-96 px-4 py-2 border-b-2 outline-none ${
-                usernameError ? "border-red-500" : "border-gray-300"
-              } ${isDarkMode ? "bg-gray-800" : ""}`}
-              value={userName}
-              onChange={handleUsernameChange}
-              style={{ color: isDarkMode ? "#fff" : "#000" }}
-            />
-            {usernameError && (
-              <div className="text-red-500 text-sm mt-1">{usernameError}</div>
+            {showPassword ? (
+              <AiFillEyeInvisible
+                style={{ color: isDarkMode ? "white" : "black" }}
+              />
+            ) : (
+              <AiFillEye style={{ color: isDarkMode ? "white" : "black" }} />
             )}
           </div>
-          <div className="mb-6">
-            <input
-              type="email"
-              placeholder="Email"
-              className={`w-96 px-4 py-2 border-b-2 outline-none ${
-                emailError ? "border-red-500" : "border-gray-300"
-              } ${isDarkMode ? "bg-gray-800" : ""}`}
-              value={email}
-              onChange={handleEmailChange}
-              style={{ color: isDarkMode ? "#fff" : "#000" }}
-            />
-            {emailError && (
-              <div className="text-red-500 text-sm mt-1">{emailError}</div>
-            )}
-          </div>
-          <div className="mb-6 relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className={`w-96 px-4 py-2 border-b-2 outline-none ${
-                passwordError ? "border-red-500" : "border-gray-300"
-              } ${isDarkMode ? "bg-gray-800" : ""}`}
-              value={password}
-              onChange={handlePasswordChange}
-              style={{ color: isDarkMode ? "#fff" : "#000" }}
-            />
-            <div
-              className="absolute top-3 right-3 cursor-pointer"
-              onClick={togglePasswordVisibility}
-            >
-              {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+          {passwordError.error && (
+            <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
+              {passwordError.errorMessage}
             </div>
-            {passwordError && (
-              <div className="text-red-500 text-sm mt-1">{passwordError}</div>
+          )}
+        </div>
+        <div
+          className="flex flex-col justify-center relative"
+          style={{ width: "100%" }}
+        >
+          {" "}
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm Password"
+            className={`w-full px-4 py-2 border-b-2 outline-none ${
+              confirmPasswordError.error ? "border-red-500" : "border-gray-300"
+            } ${isDarkMode ? "bg-gray-800" : ""}`}
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
+            style={{ color: isDarkMode ? "#fff" : "#000" }}
+          />
+          <div
+            className="absolute top-3 right-3 cursor-pointer"
+            onClick={toggleConfirmPasswordVisibility}
+          >
+            {showConfirmPassword ? (
+              <AiFillEyeInvisible
+                style={{ color: isDarkMode ? "white" : "black" }}
+              />
+            ) : (
+              <AiFillEye style={{ color: isDarkMode ? "white" : "black" }} />
             )}
           </div>
-          <div className="mb-6 relative">
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm Password"
-              className={`w-96 px-4 py-2 border-b-2 outline-none ${
-                confirmPasswordError ? "border-red-500" : "border-gray-300"
-              } ${isDarkMode ? "bg-gray-800" : ""}`}
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
-              style={{ color: isDarkMode ? "#fff" : "#000" }}
-            />
-            <div
-              className="absolute top-3 right-3 cursor-pointer"
-              onClick={toggleConfirmPasswordVisibility}
-            >
-              {showConfirmPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+          {confirmPasswordError.error && (
+            <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
+              {confirmPasswordError.errorMessage}
             </div>
-            {confirmPasswordError && (
-              <div className="text-red-500 text-sm mt-1">
-                {confirmPasswordError}
-              </div>
-            )}
-          </div>
-          <div className="mb-6 relative">
-            <select
-              className={`w-96 px-4 py-2 border-b-2 outline-none ${
-                isDarkMode ? "bg-gray-800" : "bg-gray-100"
-              } ${selectedLanguage === "" ? "text-gray-600" : ""} ${
-                isDarkMode ? "text-white" : "text-black"
-              } ${selectedLanguage === "" ? "placeholder-gray-400" : ""}`}
-              value={selectedLanguage}
-              onChange={handleLanguageChange}
-            >
-              <option value="" disabled hidden>
-                Select Language
+          )}
+        </div>
+        <div
+          className="flex flex-col justify-center relative"
+          style={{ width: "100%" }}
+        >
+          {" "}
+          <select
+            className={`w-full px-4 py-2 ${selectedLanguageError.error ? "border-b-2 border-b-red-500":"border-b-2 border-b-gray-300"} outline-none ${
+              isDarkMode ? "bg-gray-800" : "bg-gray-100"
+            } ${selectedLanguage === "" ? "text-gray-600" : ""} ${
+              isDarkMode ? "text-white" : "text-black"
+            } ${selectedLanguage === "" ? "placeholder-gray-400" : ""}`}
+            value={selectedLanguage}
+            onChange={handleLanguageChange}
+          >
+            <option value="" disabled hidden>
+              Select Language
+            </option>
+            {languagesArray?.map(({ code, language }) => (
+              <option key={code} value={code}>
+                {language}
               </option>
-              {languagesArray?.map(({ code, language }) => (
-                <option key={code} value={code}>
-                  {language}
-                </option>
-              ))}
-            </select>
-          </div>
+            ))}
+          </select>
+          {selectedLanguageError.error && (
+            <div className="animate__animated animate__shakeX text-red-500 text-sm mt-0">
+              {selectedLanguageError.errorMessage}
+            </div>
+          )}
+        </div>
+        <div
+          className="flex flex-col justify-center items-center"
+          style={{ width: "100%" }}
+        >
           <button
             type="submit"
-            className={`bg-orange-50 text-gray-800 px-8 py-3 text-2xl w-96 mt-4 mb-4 rounded-full shadow-md transition-colors ${
-              isButtonDisabled
-                ? "bg-gray-300 cursor-not-allowed"
-                : "hover:bg-blue-500 hover:text-white"
-            } ${isDarkMode ? "text-white" : "text-black"}`}
+            className={`flex justify-center items-center ${isDarkMode ? "bg-gray-700 text-white": "bg-orange-50 text-black"} transition duration-150 ease-in-out hover:scale-105 ${isButtonDisabled ? "cursor-not-allowed":"hover:bg-green-900 hover:text-white"} px-8 py-3 text-xl lg:text-2xl w-full mt-4 mb-4 rounded-full shadow-md colors ${isDarkMode ? "text-white" : "text-black"}`}
             disabled={isButtonDisabled as boolean}
-            style={{ backgroundColor: isDarkMode ? "#333" : "" }}
           >
             Sign In
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 };

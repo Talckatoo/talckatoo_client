@@ -16,8 +16,7 @@ const App = () => {
   }, []);
 
   return (
-    <>
-      <div className="flex flex-col h-screen ">
+      <div className="flex flex-col h-full w-full ">
         <Navbar />
         <Routes>
           <Route path="/" element={<Main />} />
@@ -25,7 +24,6 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
-    </>
   );
 };
 
