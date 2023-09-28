@@ -61,6 +61,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             },
           }
         );
+        console.log(data);
 
         const { messages } = data.conversation;
         const { users } = data.conversation;
@@ -126,6 +127,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             to: selectId,
             targetLanguage: language,
             message: messageText,
+            status: false,
+            unread: selectId,
           },
           {
             headers: {
@@ -135,6 +138,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
 
         const { message } = data;
+        console.log(data);
 
         socket.current.emit("sendMessage", {
           createdAt: message.createdAt,
@@ -142,6 +146,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           to: selectId,
           targetLanguage: language,
           message: message.message,
+          status: false,
+          unread: selectId,
         });
 
         setMessages((prev) => [
@@ -151,6 +157,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             message: message.message,
             sender: user?._id,
             _id: message._id,
+            status: false,
+            unread: selectId,
           },
         ]);
       } catch (err) {
@@ -166,6 +174,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             to: selectId,
             targetLanguage: language,
             message: messageText,
+            status: false,
+            unread: selectId,
           },
           {
             headers: {
@@ -184,6 +194,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           to: selectId,
           targetLanguage: language,
           message: message.message,
+          status: false,
+          unread: selectId,
         });
       } catch (err) {
         toast.error("Error sending messages, please try again");
@@ -286,6 +298,27 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       }
     }
   };
+
+  const updateConversation = async () => {
+    try {
+      if (user && !!conversationId) {
+        const { data } = await axios.get(
+          `${BASE_URL}/api/v1/users/${user._id}/conversations/${conversationId}/update`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(data);
+      }
+    } catch (err) {
+      toast.error("Error updating messages, please try again");
+    }
+  };
+  useEffect(() => {
+    updateConversation();
+  }, [selectId]);
 
   return (
     <>

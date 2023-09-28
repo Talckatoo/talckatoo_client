@@ -93,6 +93,7 @@ const Chat = () => {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(data);
 
     setUsersList(data.users);
   };
@@ -214,9 +215,14 @@ const Chat = () => {
                           </div>
                           <div className="flex w-3/4 pl-2 ml-2 mb-1">
                             <div className="flex flex-col">
-                              <div className="h-1/2 mb-1">{u.userName}</div>
-                              <div className="h-1/2">
+                              <div className="h-1/3 mb-1">{u.userName}</div>
+                              <div className="h-1/3">
                                 <FetchLatestMessages u={u} />
+                              </div>
+                              <div className="h-1/3">
+                                {u.conversation.unread.includes(user?._id) && (
+                                  <div>Unread</div>
+                                )}
                               </div>
                             </div>
                           </div>
