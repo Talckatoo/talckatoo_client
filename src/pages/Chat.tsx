@@ -160,14 +160,14 @@ const Chat = () => {
             </button>
           </div>
           {view === "friends" && (
-            <div className="overflow-y-auto h-full ">
+            <div className="overflow-y-auto h-full">
               {usersList
                 ? usersList.contactedUsers.map((u) => {
                     return (
                       <div
                         key={u._id}
                         className={
-                          "flex rounded-lg m-2 p-1 cursor-pointer " +
+                          "flex rounded-lg m-2 p-1 cursor-pointer last:mb-[5rem] " +
                           (conversationId === u.conversation._id && isDarkMode
                             ? "bg-slate-500 text-white hover:bg-slate-600"
                             : conversationId === u.conversation._id &&
@@ -229,7 +229,7 @@ const Chat = () => {
           )}
 
           {view === "people" && (
-            <div className="overflow-y-auto h-full ">
+            <div className="overflow-y-auto h-full">
               {usersList
                 ? usersList.uncontactedUsers.map((unContact) => {
                     if (unContact._id === user?._id) {
@@ -239,7 +239,7 @@ const Chat = () => {
                       <div
                         key={unContact._id}
                         className={
-                          "flex rounded-lg m-2 p-1 cursor-pointer " +
+                          "flex rounded-lg m-2 p-1 cursor-pointer last:mb-[5rem] " +
                           (selectId === unContact._id && isDarkMode
                             ? "bg-slate-500 text-white hover:bg-slate-600"
                             : selectId === unContact._id && !isDarkMode
