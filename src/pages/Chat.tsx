@@ -141,9 +141,9 @@ const Chat = () => {
             <button
               className={`p-2 rounded-lg ${
                 view === "friends"
-                  ? "bg-slate-500 hover:bg-slate-400"
-                  : "bg-slate-300 hover:bg-slate-400"
-              }`}
+                  ? "bg-slate-500 hover:bg-slate-400 text-white"
+                  : "bg-slate-300 hover:bg-slate-400 text-black"
+              } font-bold`}
               onClick={() => setView("friends")}
             >
               Friends
@@ -151,9 +151,9 @@ const Chat = () => {
             <button
               className={`p-2 rounded-lg ${
                 view === "people"
-                  ? "bg-slate-500 hover:bg-slate-400"
-                  : "bg-slate-300 hover:bg-slate-400"
-              }`}
+                  ? "bg-slate-500 hover:bg-slate-400 text-white"
+                  : "bg-slate-300 hover:bg-slate-400 text-black"
+              } font-bold`}
               onClick={handleSelectPeople}
             >
               People
@@ -172,7 +172,7 @@ const Chat = () => {
                             ? "bg-slate-500 text-white hover:bg-slate-600"
                             : conversationId === u.conversation._id &&
                               !isDarkMode
-                            ? "bg-slate-500 text-black hover:bg-slate-400"
+                            ? "bg-slate-500 text-white hover:bg-slate-400"
                             : isDarkMode
                             ? "bg-[#161c24] text-white hover:bg-slate-600"
                             : "bg-slate-300 text-black hover:bg-slate-400")
