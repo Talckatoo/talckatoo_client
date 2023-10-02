@@ -179,7 +179,7 @@ const Chat = () => {
                         }
                         onClick={() => handleSelectContact(u)}
                       >
-                        <div className="flex flex-row">
+                        <div className="flex flex-row w-full">
                           <div className="w-1/4 flex items-center justify-center mx-2">
                             <div className="relative">
                               <div
@@ -213,9 +213,9 @@ const Chat = () => {
                             </div>
                           </div>
                           <div className="flex w-3/4 pl-2 ml-2 mb-1">
-                            <div className="flex flex-col">
-                              <div className={`h-1/2 mb-1 font-bold`}>{u.userName}</div>
-                              <div className={`h-1/2`}>
+                            <div className="flex flex-col w-full">
+                              <div className={`h-1/2 mb-1 font-bold w-full`}>{u.userName}</div>
+                              <div className={`h-1/2 w-full`}>
                                 <FetchLatestMessages u={u} />
                               </div>
                             </div>
