@@ -57,7 +57,7 @@ const FetchLatestMessages: React.FC<FetchLatestMessagesProps> = ({ u }) => {
     getMessages();
   }, []);
 
-  return <div className="text-slate-300 text-sm">{latestMessage}</div>;
+  return <div className="text-sm">{latestMessage}</div>;
 };
 
 export default FetchLatestMessages;

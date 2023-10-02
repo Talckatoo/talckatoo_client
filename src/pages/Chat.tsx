@@ -141,9 +141,9 @@ const Chat = () => {
             <button
               className={`p-2 rounded-lg ${
                 view === "friends"
-                  ? "bg-slate-500 hover:bg-slate-400"
-                  : "bg-slate-300 hover:bg-slate-400"
-              }`}
+                  ? "bg-slate-500 hover:bg-slate-400 text-white"
+                  : "bg-slate-300 hover:bg-slate-400 text-black"
+              } font-bold`}
               onClick={() => setView("friends")}
             >
               Friends
@@ -151,9 +151,9 @@ const Chat = () => {
             <button
               className={`p-2 rounded-lg ${
                 view === "people"
-                  ? "bg-slate-500 hover:bg-slate-400"
-                  : "bg-slate-300 hover:bg-slate-400"
-              }`}
+                  ? "bg-slate-500 hover:bg-slate-400 text-white"
+                  : "bg-slate-300 hover:bg-slate-400 text-black"
+              } font-bold`}
               onClick={handleSelectPeople}
             >
               People
@@ -172,7 +172,7 @@ const Chat = () => {
                             ? "bg-slate-500 text-white hover:bg-slate-600"
                             : conversationId === u.conversation._id &&
                               !isDarkMode
-                            ? "bg-slate-500 text-black hover:bg-slate-400"
+                            ? "bg-slate-500 text-white hover:bg-slate-400"
                             : isDarkMode
                             ? "bg-[#161c24] text-white hover:bg-slate-600"
                             : "bg-slate-300 text-black hover:bg-slate-400")
@@ -214,8 +214,8 @@ const Chat = () => {
                           </div>
                           <div className="flex w-3/4 pl-2 ml-2 mb-1">
                             <div className="flex flex-col">
-                              <div className="h-1/2 mb-1">{u.userName}</div>
-                              <div className="h-1/2">
+                              <div className={`h-1/2 mb-1 font-bold`}>{u.userName}</div>
+                              <div className={`h-1/2`}>
                                 <FetchLatestMessages u={u} />
                               </div>
                             </div>
@@ -243,7 +243,7 @@ const Chat = () => {
                           (selectId === unContact._id && isDarkMode
                             ? "bg-slate-500 text-white hover:bg-slate-600"
                             : selectId === unContact._id && !isDarkMode
-                            ? "bg-slate-500 text-black hover:bg-slate-400"
+                            ? "bg-slate-500 text-white hover:bg-slate-400"
                             : isDarkMode
                             ? "bg-[#161c24] text-white hover:bg-slate-600"
                             : "bg-slate-300 text-black hover:bg-slate-400")
@@ -287,7 +287,7 @@ const Chat = () => {
                             </div>
                           </div>
                           <div className="flex w-2/3 items-center justify-center">
-                            <div className="text-center">
+                            <div className="text-center font-bold">
                               {unContact.userName}
                             </div>
                           </div>
