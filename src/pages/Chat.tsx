@@ -225,7 +225,7 @@ const Chat = () => {
                               {getContactName(u.userName, onlineFriends)}
                             </div>
                           </div>
-                          <div className="flex w-3/4 pl-2 ml-2 mb-1">
+                          <div className="flex w-3/4 mb-1">
                             <div className="flex flex-col w-full">
                               <div className={`h-1/2 mb-1 font-bold w-full`}>{u.userName}</div>
                               <div className={`h-1/2 w-full`}>
@@ -299,7 +299,7 @@ const Chat = () => {
                               )}
                             </div>
                           </div>
-                          <div className="flex w-3/4 items-center justify-start pl-2 ml-2 mb-1">
+                          <div className="flex w-3/4 items-center justify-start mb-1">
                             <div className="flex font-bold w-full">
                               {unContact.userName}
                             </div>
