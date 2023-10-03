@@ -110,7 +110,6 @@ const Chat = () => {
     });
     setUsersList(data.users);
   };
-  console.log(usersList);
   useEffect(() => {
     fetchUsers();
     if (socket.current) {
