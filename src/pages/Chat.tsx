@@ -300,7 +300,7 @@ const Chat = () => {
                               )}
                             </div>
                           </div>
-                          <div className="flex w-3/4 items-center justify-start">
+                          <div className="flex w-3/4 items-center justify-start pl-2 ml-2 mb-1">
                             <div className="flex font-bold w-full">
                               {unContact.userName}
                             </div>
