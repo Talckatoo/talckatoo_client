@@ -15,19 +15,34 @@ type MyEventMap = {
   getUsers: (users: string[]) => void;
 };
 
-interface User {
+interface ContactedUser {
   _id: string;
   userName: string;
-  conversation: string;
-  profileImage: {
-    url: string;
-  };
+  profileImage: ProfileImage;
+  conversation: Conversation;
+  language: string;
+}
+
+interface Conversation {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ProfileImage {
+  public_id?: string;
+  url?: string;
+}
+
+interface UncontactedUser {
+  _id: string;
+  userName: string;
   language: string;
 }
 
 interface UsersList {
-  contactedUsers: User[];
-  uncontactedUsers: User[];
+  contactedUsers: ContactedUser[];
+  uncontactedUsers: UncontactedUser[];
 }
 
 const Chat = () => {
@@ -93,10 +108,9 @@ const Chat = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-
     setUsersList(data.users);
   };
-
+  console.log(usersList);
   useEffect(() => {
     fetchUsers();
     if (socket.current) {
@@ -250,8 +264,8 @@ const Chat = () => {
                         }
                         onClick={() => handleSelectUnContact(unContact)}
                       >
-                        <div className="flex flex-row gap-4">
-                          <div className="h-full w-1/3 items-center justify-between">
+                        <div className="flex flex-row w-full">
+                          <div className="flex h-full w-1/4 items-center justify-center mx-2">
                             <div className="relative">
                               <div
                                 className="w-10 h-10 rounded-full shadow-sm flex items-center justify-center"
@@ -286,8 +300,8 @@ const Chat = () => {
                               )}
                             </div>
                           </div>
-                          <div className="flex w-2/3 items-center justify-center">
-                            <div className="text-center font-bold">
+                          <div className="flex w-3/4 items-center justify-start">
+                            <div className="flex font-bold w-full">
                               {unContact.userName}
                             </div>
                           </div>
