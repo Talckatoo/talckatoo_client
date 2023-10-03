@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
@@ -9,13 +9,29 @@ import axios from "axios";
 import { BASE_URL } from "../util/url.ts";
 
 const Navbar = () => {
+  //Reference for dropdown menu
+  const dropdownRef = useRef<HTMLDivElement>();
+  //States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profileImage, setProfileImage] = useState("");
   const token: { token: string } | null = JSON.parse(
     localStorage.getItem("token") || "null"
   );
-
   const { user, setUser, isDarkMode, setIsDarkMode } = useContext(UserContext);
+
+  useEffect(()=>{
+    document.addEventListener("mousedown", handleOutsideClicks);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClicks);
+    }
+  }, [isDropdownOpen]);
+
+  const handleOutsideClicks:(event:MouseEvent)=>void = (event:MouseEvent) => {
+    console.log(isDropdownOpen, dropdownRef.current);
+    if(isDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)){
+      setIsDropdownOpen(false);
+    }
+  }
 
   useEffect(() => {
     setIsDropdownOpen(false);
@@ -143,7 +159,7 @@ const Navbar = () => {
               </button>
             )}
             {isDropdownOpen && (
-              <div className="ml-2 relative">
+              <div className="ml-2 relative" ref={dropdownRef}>
                 <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl z-999999">
                   <a
                     href="#"
