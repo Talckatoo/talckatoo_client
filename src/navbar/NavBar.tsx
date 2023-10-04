@@ -28,7 +28,6 @@ const Navbar = () => {
   }, [isDropdownOpen]);
 
   const handleOutsideClicks:(event:MouseEvent)=>void = (event:MouseEvent) => {
-    console.log(isDropdownOpen, dropdownRef.current);
     if(isDropdownOpen && dropdownRef.current && (!dropdownRef.current.contains(event.target as Node)) && (!profilePictureRef.current?.contains(event.target as Node))){
       setIsDropdownOpen(false);
     }
@@ -161,11 +160,11 @@ const Navbar = () => {
               </button>
             )}
             {isDropdownOpen && (
-              <div className="relative z-1" ref={dropdownRef}>
+              <div className="relative z-20" ref={dropdownRef}>
                 <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl">
                   <a
                     href="#"
-                    className={`block px-4 py-2 text-${
+                    className={`block px-4 py-2 rounded-lg text-${
                       isDarkMode ? "gray-800" : "gray-700"
                     } hover:bg-gray-300`}
                     onClick={handleProfileClick}
@@ -174,7 +173,7 @@ const Navbar = () => {
                   </a>
                   <a
                     href=""
-                    className={`block px-4 py-2 text-${
+                    className={`block px-4 py-2 rounded-lg text-${
                       isDarkMode ? "gray-800" : "gray-700"
                     } hover:bg-gray-300`}
                     onClick={handleLogout}
