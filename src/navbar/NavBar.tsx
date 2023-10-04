@@ -10,8 +10,8 @@ import { BASE_URL } from "../util/url.ts";
 
 const Navbar = () => {
   //Reference for dropdown menu
-  const dropdownRef = useRef<HTMLDivElement>();
-  const profilePictureRef = useRef<HTMLDivElement>();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const profilePictureRef = useRef<HTMLDivElement>(null);
   //States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profileImage, setProfileImage] = useState("");
@@ -86,7 +86,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`py-2 px-3 flex justify-between items-center drop-shadow-md ${
+      className={`relative z-10 py-2 px-3 flex justify-between items-center drop-shadow-md ${
         isDarkMode ? "bg-[#161c24]" : "bg-slate-100"
       }`}
     >
@@ -122,7 +122,7 @@ const Navbar = () => {
               <div
                 ref={profilePictureRef}
                 onClick={handleDropdownClick}
-                className="w-8 h-8 rounded-full shadow-xl flex items-center justify-center"
+                className="w-8 h-8 rounded-full shadow-xl flex items-center justify-center cursor-pointer"
                 style={{
                   backgroundImage: `url(${profileImage || COCKATOO})`,
                   backgroundSize: "cover",
@@ -161,8 +161,8 @@ const Navbar = () => {
               </button>
             )}
             {isDropdownOpen && (
-              <div className="relative" ref={dropdownRef}>
-                <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl z-999999">
+              <div className="relative z-1" ref={dropdownRef}>
+                <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl">
                   <a
                     href="#"
                     className={`block px-4 py-2 text-${
