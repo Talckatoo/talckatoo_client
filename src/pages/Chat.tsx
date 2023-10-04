@@ -15,19 +15,34 @@ type MyEventMap = {
   getUsers: (users: string[]) => void;
 };
 
-interface User {
+interface ContactedUser {
   _id: string;
   userName: string;
-  conversation: string;
-  profileImage: {
-    url: string;
-  };
+  profileImage: ProfileImage;
+  conversation: Conversation;
+  language: string;
+}
+
+interface Conversation {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ProfileImage {
+  public_id?: string;
+  url?: string;
+}
+
+interface UncontactedUser {
+  _id: string;
+  userName: string;
   language: string;
 }
 
 interface UsersList {
-  contactedUsers: User[];
-  uncontactedUsers: User[];
+  contactedUsers: ContactedUser[];
+  uncontactedUsers: UncontactedUser[];
 }
 
 const Chat = () => {
@@ -93,10 +108,8 @@ const Chat = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-
     setUsersList(data.users);
   };
-
   useEffect(() => {
     fetchUsers();
     if (socket.current) {
@@ -179,7 +192,7 @@ const Chat = () => {
                         }
                         onClick={() => handleSelectContact(u)}
                       >
-                        <div className="flex flex-row">
+                        <div className="flex flex-row w-full">
                           <div className="w-1/4 flex items-center justify-center mx-2">
                             <div className="relative">
                               <div
@@ -212,10 +225,10 @@ const Chat = () => {
                               {getContactName(u.userName, onlineFriends)}
                             </div>
                           </div>
-                          <div className="flex w-3/4 pl-2 ml-2 mb-1">
-                            <div className="flex flex-col">
-                              <div className={`h-1/2 mb-1 font-bold`}>{u.userName}</div>
-                              <div className={`h-1/2`}>
+                          <div className="flex w-3/4 mb-1">
+                            <div className="flex flex-col w-full">
+                              <div className={`h-1/2 mb-1 font-bold w-full`}>{u.userName}</div>
+                              <div className={`h-1/2 w-full`}>
                                 <FetchLatestMessages u={u} />
                               </div>
                             </div>
@@ -250,8 +263,8 @@ const Chat = () => {
                         }
                         onClick={() => handleSelectUnContact(unContact)}
                       >
-                        <div className="flex flex-row gap-4">
-                          <div className="h-full w-1/3 items-center justify-between">
+                        <div className="flex flex-row w-full">
+                          <div className="flex h-full w-1/4 items-center justify-center mx-2">
                             <div className="relative">
                               <div
                                 className="w-10 h-10 rounded-full shadow-sm flex items-center justify-center"
@@ -286,8 +299,8 @@ const Chat = () => {
                               )}
                             </div>
                           </div>
-                          <div className="flex w-2/3 items-center justify-center">
-                            <div className="text-center font-bold">
+                          <div className="flex w-3/4 items-center justify-start mb-1">
+                            <div className="flex font-bold w-full">
                               {unContact.userName}
                             </div>
                           </div>
