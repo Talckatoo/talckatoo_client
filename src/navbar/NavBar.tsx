@@ -11,6 +11,7 @@ import { BASE_URL } from "../util/url.ts";
 const Navbar = () => {
   //Reference for dropdown menu
   const dropdownRef = useRef<HTMLDivElement>();
+  const profilePictureRef = useRef<HTMLDivElement>();
   //States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profileImage, setProfileImage] = useState("");
@@ -28,7 +29,7 @@ const Navbar = () => {
 
   const handleOutsideClicks:(event:MouseEvent)=>void = (event:MouseEvent) => {
     console.log(isDropdownOpen, dropdownRef.current);
-    if(isDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)){
+    if(isDropdownOpen && dropdownRef.current && (!dropdownRef.current.contains(event.target as Node)) && (!profilePictureRef.current?.contains(event.target as Node))){
       setIsDropdownOpen(false);
     }
   }
@@ -119,6 +120,7 @@ const Navbar = () => {
             </h5>
             {profileImage ? (
               <div
+                ref={profilePictureRef}
                 onClick={handleDropdownClick}
                 className="w-8 h-8 rounded-full shadow-xl flex items-center justify-center"
                 style={{
@@ -159,7 +161,7 @@ const Navbar = () => {
               </button>
             )}
             {isDropdownOpen && (
-              <div className="ml-2 relative" ref={dropdownRef}>
+              <div className="relative" ref={dropdownRef}>
                 <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl z-999999">
                   <a
                     href="#"
