@@ -290,7 +290,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   return (
     <>
       <div
-        className={`flex flex-grow flex-col shadow  ${
+        className={`flex flex-grow flex-col shadow ${
           isDarkMode ? "bg-slate-800" : "bg-slate-200"
         }`}
       >
