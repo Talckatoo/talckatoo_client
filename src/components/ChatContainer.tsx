@@ -288,9 +288,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   return (
-    <>
       <div
-        className={`flex flex-grow flex-col shadow ${
+        className={`flex flex-grow flex-col shadow h-full ${
           isDarkMode ? "bg-slate-800" : "bg-slate-200"
         }`}
       >
@@ -320,7 +319,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           </div>
         </div>
         <div
-          className={`w-full flex-grow flex flex-col ${
+          className={`w-full flex flex-col h-full ${
             isDarkMode ? "bg-gray-800" : "bg-slate-200"
           }`}
         >
@@ -445,7 +444,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           ) : null}
         </div>
       </div>
-    </>
   );
 };
 
