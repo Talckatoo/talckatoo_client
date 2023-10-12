@@ -4,21 +4,28 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../util/url.ts";
 
-interface FetchLatestMessagesProps {
+interface ContactedUser {
   _id: string;
   userName: string;
-  conversation: {
-    createdAt: string;
-    updatedAt: string;
-    _id: string;
-  };
-  profileImage: {
-    url: string;
-  };
+  profileImage: ProfileImage;
+  conversation: Conversation;
   language: string;
 }
 
-const FetchLatestMessages: React.FC<FetchLatestMessagesProps> = ({ u }) => {
+interface Conversation {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ProfileImage {
+  public_id?: string;
+  url?: string;
+}
+
+const FetchLatestMessages: React.FC<{
+  u: ContactedUser;
+}> = ({ u }) => {
   const token: { token: string } | null = JSON.parse(
     localStorage.getItem("token") || "null"
   );
@@ -39,7 +46,7 @@ const FetchLatestMessages: React.FC<FetchLatestMessagesProps> = ({ u }) => {
           );
           const messages = data.conversation.messages;
           const lastMess = messages[messages.length - 1];
-          let truncateText;
+          let truncateText: string = "";
           if (lastMess && lastMess.message) {
             truncateText = lastMess.message.substring(0, 20);
             if (lastMess.message.length > 20) {
@@ -57,7 +64,7 @@ const FetchLatestMessages: React.FC<FetchLatestMessagesProps> = ({ u }) => {
     getMessages();
   }, []);
 
-  return <div className="text-slate-300 text-sm">{latestMessage}</div>;
+  return <div className="text-sm">{latestMessage}</div>;
 };
 
 export default FetchLatestMessages;

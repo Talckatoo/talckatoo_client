@@ -15,19 +15,34 @@ type MyEventMap = {
   getUsers: (users: string[]) => void;
 };
 
-interface User {
+interface ContactedUser {
   _id: string;
   userName: string;
-  conversation: string;
-  profileImage: {
-    url: string;
-  };
+  profileImage: ProfileImage;
+  conversation: Conversation;
+  language: string;
+}
+
+interface Conversation {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ProfileImage {
+  public_id?: string;
+  url?: string;
+}
+
+interface UncontactedUser {
+  _id: string;
+  userName: string;
   language: string;
 }
 
 interface UsersList {
-  contactedUsers: User[];
-  uncontactedUsers: User[];
+  contactedUsers: ContactedUser[];
+  uncontactedUsers: UncontactedUser[];
 }
 
 const Chat = () => {
@@ -94,10 +109,8 @@ const Chat = () => {
       },
     });
     console.log(data);
-
     setUsersList(data.users);
   };
-
   useEffect(() => {
     fetchUsers();
     if (socket.current) {
@@ -129,7 +142,7 @@ const Chat = () => {
   return (
     <>
       <div
-        className={`flex flex-1 h-[100vh] overflow-hidden flex-grow ${
+        className={`flex flex-1 h-[100vh] w-full overflow-hidden flex-grow ${
           isDarkMode ? "bg-dark" : "bg-light"
         }`}
       >
@@ -142,9 +155,9 @@ const Chat = () => {
             <button
               className={`p-2 rounded-lg ${
                 view === "friends"
-                  ? "bg-slate-500 hover:bg-slate-400"
-                  : "bg-slate-300 hover:bg-slate-400"
-              }`}
+                  ? "bg-slate-500 hover:bg-slate-400 text-white"
+                  : "bg-slate-300 hover:bg-slate-400 text-black"
+              } font-bold`}
               onClick={() => setView("friends")}
             >
               Friends
@@ -152,35 +165,35 @@ const Chat = () => {
             <button
               className={`p-2 rounded-lg ${
                 view === "people"
-                  ? "bg-slate-500 hover:bg-slate-400"
-                  : "bg-slate-300 hover:bg-slate-400"
-              }`}
+                  ? "bg-slate-500 hover:bg-slate-400 text-white"
+                  : "bg-slate-300 hover:bg-slate-400 text-black"
+              } font-bold`}
               onClick={handleSelectPeople}
             >
               People
             </button>
           </div>
           {view === "friends" && (
-            <div className="overflow-y-auto h-full ">
+            <div className="overflow-y-auto h-full">
               {usersList
                 ? usersList.contactedUsers.map((u) => {
                     return (
                       <div
                         key={u._id}
                         className={
-                          "flex rounded-lg m-2 p-1 cursor-pointer " +
+                          "flex rounded-lg m-2 p-1 cursor-pointer last:mb-[5rem] " +
                           (conversationId === u.conversation._id && isDarkMode
                             ? "bg-slate-500 text-white hover:bg-slate-600"
                             : conversationId === u.conversation._id &&
                               !isDarkMode
-                            ? "bg-slate-500 text-black hover:bg-slate-400"
+                            ? "bg-slate-500 text-white hover:bg-slate-400"
                             : isDarkMode
                             ? "bg-[#161c24] text-white hover:bg-slate-600"
                             : "bg-slate-300 text-black hover:bg-slate-400")
                         }
                         onClick={() => handleSelectContact(u)}
                       >
-                        <div className="flex flex-row">
+                        <div className="flex flex-row w-full">
                           <div className="w-1/4 flex items-center justify-center mx-2">
                             <div className="relative">
                               <div
@@ -213,10 +226,10 @@ const Chat = () => {
                               {getContactName(u.userName, onlineFriends)}
                             </div>
                           </div>
-                          <div className="flex w-3/4 pl-2 ml-2 mb-1">
-                            <div className="flex flex-col">
-                              <div className="h-1/3 mb-1">{u.userName}</div>
-                              <div className="h-1/3">
+                          <div className="flex w-3/4 mb-1">
+                            <div className="flex flex-col w-full">
+                              <div className={`h-1/2 mb-1 font-bold w-full`}>{u.userName}</div>
+                              <div className={`h-1/2 w-full`}>
                                 <FetchLatestMessages u={u} />
                               </div>
                               <div className="h-1/3">
@@ -235,7 +248,7 @@ const Chat = () => {
           )}
 
           {view === "people" && (
-            <div className="overflow-y-auto h-full ">
+            <div className="overflow-y-auto h-full">
               {usersList
                 ? usersList.uncontactedUsers.map((unContact) => {
                     if (unContact._id === user?._id) {
@@ -245,19 +258,19 @@ const Chat = () => {
                       <div
                         key={unContact._id}
                         className={
-                          "flex rounded-lg m-2 p-1 cursor-pointer " +
+                          "flex rounded-lg m-2 p-1 cursor-pointer last:mb-[5rem] " +
                           (selectId === unContact._id && isDarkMode
                             ? "bg-slate-500 text-white hover:bg-slate-600"
                             : selectId === unContact._id && !isDarkMode
-                            ? "bg-slate-500 text-black hover:bg-slate-400"
+                            ? "bg-slate-500 text-white hover:bg-slate-400"
                             : isDarkMode
                             ? "bg-[#161c24] text-white hover:bg-slate-600"
                             : "bg-slate-300 text-black hover:bg-slate-400")
                         }
                         onClick={() => handleSelectUnContact(unContact)}
                       >
-                        <div className="flex flex-row gap-4">
-                          <div className="h-full w-1/3 items-center justify-between">
+                        <div className="flex flex-row w-full">
+                          <div className="flex h-full w-1/4 items-center justify-center mx-2">
                             <div className="relative">
                               <div
                                 className="w-10 h-10 rounded-full shadow-sm flex items-center justify-center"
@@ -292,8 +305,8 @@ const Chat = () => {
                               )}
                             </div>
                           </div>
-                          <div className="flex w-2/3 items-center justify-center">
-                            <div className="text-center">
+                          <div className="flex w-3/4 items-center justify-start mb-1">
+                            <div className="flex font-bold w-full">
                               {unContact.userName}
                             </div>
                           </div>
@@ -305,8 +318,9 @@ const Chat = () => {
             </div>
           )}
         </div>
-
-        <ChatContainer socket={socket} />
+        <div className="flex w-full h-full">
+          <ChatContainer socket={socket} />
+        </div>
       </div>
     </>
   );
