@@ -109,7 +109,6 @@ const Chat = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(data);
     setUsersList(data.users);
   };
   useEffect(() => {
@@ -122,6 +121,7 @@ const Chat = () => {
   }, [socket.current, messages]);
 
   const handleSelectContact = (u: User) => {
+    console.log(u);
     setConversationId(u.conversation._id);
     setSelectId(u._id);
     setLanguage(u?.language);
@@ -233,7 +233,7 @@ const Chat = () => {
                                 <div className="w-11/12">
                                   {u.userName}
                                 </div>
-                                {u.conversation.unread.includes(user?._id) && (
+                                {u.conversation.unread.includes(user?._id) && u._id!==selectId && (
                                   <div className="flex justify-center items-center w-1/12 text-orange-400 animate__animated animate__heartBeat">
                                     <PiBirdFill></PiBirdFill>
                                   </div>

@@ -61,7 +61,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             },
           }
         );
-        console.log(data);
 
         const { messages } = data.conversation;
         const { users } = data.conversation;
@@ -138,7 +137,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
 
         const { message } = data;
-        console.log(data);
 
         socket.current.emit("sendMessage", {
           createdAt: message.createdAt,
@@ -205,6 +203,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   useEffect(() => {
     if (socket.current) {
+      updateConversation();
       socket.current.on("getMessage", (data: any) => {
         if (data.message) {
           setArrivalMessages({
@@ -310,7 +309,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             },
           }
         );
-        console.log(data);
       }
     } catch (err) {
       toast.error("Error updating messages, please try again");
