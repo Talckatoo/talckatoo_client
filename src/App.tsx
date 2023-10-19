@@ -4,6 +4,7 @@ import Main from "./pages/Main";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Navbar from "./navbar/NavBar";
 import Profile from "./pages/Profile";
+import Home from "./pages/Home";
 
 const App = () => {
   const navigate = useNavigate();
@@ -16,14 +17,15 @@ const App = () => {
   }, []);
 
   return (
-      <div className="flex flex-col h-full w-full ">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </div>
+    <div className="flex flex-col h-full w-full ">
+      {/* <Navbar /> */}
+      <Routes>
+        <Route path="/sign-in" element={<Main />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </div>
   );
 };
 
