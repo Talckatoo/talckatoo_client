@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="flex items-center p-0 justify-between container mt-[2rem]">
+    <footer className="flex items-center p-0 max-md:p-5 justify-between container mt-[2rem] max-md:mt-0 max-md:items-center text-center gap-3 max-sm:flex-col-reverse">
       <p className="sub-title-text ">
         Made with ❤️ by
         <span className="text-title-500"> Talckatoo</span>. All rights reserved.

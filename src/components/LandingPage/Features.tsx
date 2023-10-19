@@ -12,8 +12,8 @@ const Features = () => {
           us, the world is truly at your fingertips.
         </p>
 
-        <div className="grid grid-cols-3 gap-3 mt-[3rem] z-[1]">
-          <div className="flex flex-col items-center gap-36 mt-[4rem]">
+        <div className="grid grid-cols-3 gap-3 mt-[3rem] z-[1] max-md:grid-cols-1">
+          <div className="flex flex-col max-md:flex-row max-md:flex-wrap  items-center gap-36 max-md:gap-5 max-md:justify-center mt-[4rem]">
             <div className="bg-secondary-500 w-[342.6px] h-[115px] rounded-[25px] flex items-center  p-5 gap-4">
               <div className="flex items-center justify-center h-full w-[50px]">
                 <img src="/assets/icons/traduction.png" alt="translate" />
@@ -22,7 +22,7 @@ const Features = () => {
                 Real-time Translation
               </span>
             </div>
-            <div className="bg-secondary-500 w-[342.6px] h-[115px] ml-[-2rem] rounded-[25px] flex items-center p-4 gap-4">
+            <div className="bg-secondary-500 w-[342.6px] h-[115px] ml-[-2rem] max-md:ml-0 rounded-[25px] flex items-center p-4 gap-4">
               <div className="flex items-center justify-center h-full w-[50px]">
                 <img src="/assets/icons/notification.png" alt="translate" />
               </div>
@@ -38,7 +38,7 @@ const Features = () => {
               className="w-[300px] h-full object-cover"
             />
           </div>
-          <div className="flex flex-col items-center gap-36 mt-[4rem]">
+          <div className="flex flex-col max-md:flex-row max-md:flex-wrap items-center gap-36 max-md:gap-3 max-md:justify-center mt-[4rem]">
             <div className="bg-secondary-500 w-[342.6px] h-[115px] rounded-[25px] flex items-center p-4 gap-4">
               <div className="flex items-center justify-center h-full w-[50px]">
                 <img src="/assets/icons/voice.png" alt="translate" />
@@ -47,7 +47,7 @@ const Features = () => {
                 Voice-to-voice translation
               </span>
             </div>
-            <div className="bg-secondary-500 w-[342.6px] h-[115px] ml-[2rem] rounded-[25px] flex items-center p-4 gap-4">
+            <div className="bg-secondary-500 w-[342.6px] h-[115px] ml-[2rem] max-md:ml-0 rounded-[25px] flex items-center p-4 gap-4">
               <div className="flex items-center justify-center h-full w-[50px]">
                 <img src="/assets/icons/ai.png" alt="translate" />
               </div>

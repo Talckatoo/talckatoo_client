@@ -3,7 +3,7 @@ import Button from "../../UI/Button";
 
 const Hero = () => {
   return (
-    <section className="container mt-[5rem] ">
+    <section className="container mt-[5rem] p-1">
       <div className="flex flex-col items-center justify-center ">
         <h1 className="head-text text-center max-w-[983px] max-lg:max-w-[700px] z-[1]">
           Talckatoo: Bridging Conversations Across Languages

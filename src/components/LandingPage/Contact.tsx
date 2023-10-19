@@ -2,7 +2,7 @@ import Button from "../../UI/Button";
 
 const Contact = () => {
   return (
-    <section className="w-full max-w-[1110px] m-auto mt-[6rem] bg-[#0E131D]   p-16 z-[1] font-inter relative">
+    <section className="w-full mt-[6rem] bg-[#0E131D]   p-16 max-sm:p-6 z-[1] font-inter relative">
       <img
         src="/assets/img/shape3.svg"
         alt="shape"
@@ -16,7 +16,7 @@ const Contact = () => {
         just want to say hello, use the form below:
       </h2>
       <div className="flex flex-col z-[1]">
-        <div className="flex items-start gap-8 justify-between z-[1]">
+        <div className="flex items-start max-sm:flex-col gap-8 justify-between z-[1]">
           <input
             type="text"
             placeholder="Enter Your name"

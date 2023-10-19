@@ -39,7 +39,9 @@ const Home = () => {
       {/* testimoniails section */}
       <Testimonials />
       {/* End testimonials section */}
-      <Contact />
+      <div className="container p-0 max-md:p-5">
+        <Contact />
+      </div>
       <Footer />
       <br />
     </main>

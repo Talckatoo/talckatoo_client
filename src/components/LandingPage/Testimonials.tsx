@@ -3,7 +3,7 @@ import { testimonials } from "../../constants/testimonials";
 
 const Testimonials = () => {
   return (
-    <section className="my-[2rem] p-0 container ">
+    <section className="my-[2rem] p-0 max-md:p-5 container ">
       <div className="flex flex-col items-center justify-center w-full">
         <h2 className="head-text text-center max-w-[883px] z-[1]">
           Don't take our word for it...
@@ -12,7 +12,7 @@ const Testimonials = () => {
           Hear what our satisfied users have to say about Talckatoo.
         </p>
 
-        <div className="grid grid-cols-3 gap-10  items-center mt-[4rem] w-full z-[1] p-0  justify-between">
+        <div className="grid grid-cols-3 gap-10 max-md:grid-cols-2  max-sm:grid-cols-1 items-center mt-[4rem] w-full z-[1] p-0  justify-between">
           {testimonials.map((testimonial, index) => (
             <div
               className="flex flex-col justify-between relative bg-secondary-500 h-[393px] items-start gap-2 p-8"

@@ -25,7 +25,7 @@ const NavBar = () => {
 
   return (
     <header
-      className={`w-full py-4 sticky top-0 z-50 ${
+      className={`w-full py-4  sticky top-0 z-50 ${
         scrolled ? "bg-background-500" : ""
       }`}
     >
@@ -35,7 +35,12 @@ const NavBar = () => {
           <img
             src="/assets/logo.svg"
             alt="logo"
-            className="w-[210px] object-cover"
+            className="w-[210px] object-cover max-sm:hidden"
+          />
+          <img
+            src="/assets/logo_s.svg"
+            alt="logo"
+            className="w-[60px] object-cover hidden max-sm:block"
           />
         </div>
 

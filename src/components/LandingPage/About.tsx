@@ -3,7 +3,7 @@ import { MdDone } from "react-icons/md";
 
 const About = () => {
   return (
-    <section className="mt-[2rem] p-0 container">
+    <section className="mt-[2rem] p-0 max-md:p-5 container">
       <div className="flex flex-col items-center justify-center">
         <h2 className="head-text text-center max-w-[883px] z-[1]">
           One Chat Platform, Unlimited Opportunities
@@ -13,7 +13,7 @@ const About = () => {
           understood, every emotion felt.
         </p>
 
-        <div className="grid grid-cols-2 gap-10 items-center mt-[4rem] z-[1] w-full">
+        <div className="grid grid-cols-2 max-md:grid-cols-1 gap-10 items-center mt-[4rem] z-[1] w-full">
           <div className="flex flex-col items-start gap-2 max-w-[505px]">
             <span className="text-primary-500 text-[20px] font-archetic">
               Efficient and Cost-Effective
@@ -48,7 +48,7 @@ const About = () => {
               className="w-[90%] h-full  object-cover"
             />
           </div>
-          <div>
+          <div className="max-md:order-1">
             <img
               src="/assets/img/about2.svg"
               alt="hero"
