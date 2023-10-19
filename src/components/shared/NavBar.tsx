@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Button from "../../UI/Button";
 import { useNavigate } from "react-router-dom";
 
-const NavBar = () => {
+interface NavBarProps {
+  showSign?: boolean;
+}
+
+const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
 
@@ -47,26 +51,28 @@ const NavBar = () => {
         </div>
 
         {/* sign up and sign in button */}
-        <div className="flex items-center gap-4">
-          <Button
-            type="button"
-            className="mr-4 text-primary-500 border-primary-500 "
-            onClick={() => {
-              navigate("/sign");
-            }}
-          >
-            Sign In
-          </Button>
-          <Button
-            type="button"
-            className="bg-primary-500 text-white"
-            onClick={() => {
-              navigate("/sign");
-            }}
-          >
-            Sign Up
-          </Button>
-        </div>
+        {showSign && (
+          <div className="flex items-center gap-4">
+            <Button
+              type="button"
+              className="mr-4 text-primary-500 border-primary-500 "
+              onClick={() => {
+                navigate("/sign-in");
+              }}
+            >
+              Sign In
+            </Button>
+            <Button
+              type="button"
+              className="bg-primary-500 text-white"
+              onClick={() => {
+                navigate("/sign-up");
+              }}
+            >
+              Sign Up
+            </Button>
+          </div>
+        )}
       </div>
     </header>
   );

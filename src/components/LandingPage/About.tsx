@@ -50,7 +50,7 @@ const About = () => {
           </div>
           <div className="max-md:order-1">
             <img
-              src="/assets/img/about2.svg"
+              src="/assets/img/about2.png"
               alt="hero"
               className="w-[90%] h-full  object-cover"
             />

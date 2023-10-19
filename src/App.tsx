@@ -5,6 +5,8 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./navbar/NavBar";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import { SignUp } from "./pages/SignUp";
 
 const App = () => {
   const navigate = useNavigate();
@@ -20,9 +22,13 @@ const App = () => {
 
   return (
     <div className="flex flex-col h-full w-full ">
-      {location.pathname !== "/" && <Navbar />}
+      {location.pathname !== "/" &&
+        location.pathname !== "/sign-in" &&
+        location.pathname !== "/sign-up" && <Navbar />}
       <Routes>
         <Route path="/sign" element={<Main />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/profile" element={<Profile />} />
