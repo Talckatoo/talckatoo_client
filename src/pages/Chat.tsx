@@ -7,6 +7,7 @@ import { io, Socket } from "socket.io-client";
 import COCKATOO from "./.././assests/cockatoo.png";
 import FetchLatestMessages from "../util/FetchLatestMessages";
 import { BASE_URL } from "../util/url.ts";
+import {PiBirdFill} from "react-icons/pi"
 
 type MyEventMap = {
   connect: () => void;
@@ -15,19 +16,34 @@ type MyEventMap = {
   getUsers: (users: string[]) => void;
 };
 
-interface User {
+interface ContactedUser {
   _id: string;
   userName: string;
-  conversation: string;
-  profileImage: {
-    url: string;
-  };
+  profileImage: ProfileImage;
+  conversation: Conversation;
+  language: string;
+}
+
+interface Conversation {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ProfileImage {
+  public_id?: string;
+  url?: string;
+}
+
+interface UncontactedUser {
+  _id: string;
+  userName: string;
   language: string;
 }
 
 interface UsersList {
-  contactedUsers: User[];
-  uncontactedUsers: User[];
+  contactedUsers: ContactedUser[];
+  uncontactedUsers: UncontactedUser[];
 }
 
 const Chat = () => {
@@ -93,10 +109,8 @@ const Chat = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-
     setUsersList(data.users);
   };
-
   useEffect(() => {
     fetchUsers();
     if (socket.current) {
@@ -107,6 +121,7 @@ const Chat = () => {
   }, [socket.current, messages]);
 
   const handleSelectContact = (u: User) => {
+    console.log(u);
     setConversationId(u.conversation._id);
     setSelectId(u._id);
     setLanguage(u?.language);
@@ -128,12 +143,12 @@ const Chat = () => {
   return (
     <>
       <div
-        className={`flex flex-1 h-[100vh] overflow-hidden flex-grow ${
+        className={`flex flex-1 h-[100vh] w-full overflow-hidden flex-grow ${
           isDarkMode ? "bg-dark" : "bg-light"
         }`}
       >
         <div
-          className={`md:w-72  max-h-screen p-2 ${
+          className={`md:w-80  max-h-screen p-2 ${
             isDarkMode ? "bg-gray-800" : "bg-slate-200"
           }`}
         >
@@ -179,7 +194,7 @@ const Chat = () => {
                         }
                         onClick={() => handleSelectContact(u)}
                       >
-                        <div className="flex flex-row">
+                        <div className="flex flex-row w-full">
                           <div className="w-1/4 flex items-center justify-center mx-2">
                             <div className="relative">
                               <div
@@ -212,10 +227,19 @@ const Chat = () => {
                               {getContactName(u.userName, onlineFriends)}
                             </div>
                           </div>
-                          <div className="flex w-3/4 pl-2 ml-2 mb-1">
-                            <div className="flex flex-col">
-                              <div className={`h-1/2 mb-1 font-bold`}>{u.userName}</div>
-                              <div className={`h-1/2`}>
+                          <div className="flex w-3/4 mb-1">
+                            <div className="flex flex-col w-full gap-y-0">
+                              <div className={`mb-1 font-bold w-full flex`}>
+                                <div className="w-11/12">
+                                  {u.userName}
+                                </div>
+                                {u.conversation.unread.includes(user?._id) && u._id!==selectId && (
+                                  <div className="flex justify-center items-center w-1/12 text-orange-400 animate__animated animate__heartBeat">
+                                    <PiBirdFill></PiBirdFill>
+                                  </div>
+                                )}
+                              </div>
+                              <div className={`w-full`}>
                                 <FetchLatestMessages u={u} />
                               </div>
                             </div>
@@ -250,8 +274,8 @@ const Chat = () => {
                         }
                         onClick={() => handleSelectUnContact(unContact)}
                       >
-                        <div className="flex flex-row gap-4">
-                          <div className="h-full w-1/3 items-center justify-between">
+                        <div className="flex flex-row w-full">
+                          <div className="flex h-full w-1/4 items-center justify-center mx-2">
                             <div className="relative">
                               <div
                                 className="w-10 h-10 rounded-full shadow-sm flex items-center justify-center"
@@ -286,8 +310,8 @@ const Chat = () => {
                               )}
                             </div>
                           </div>
-                          <div className="flex w-2/3 items-center justify-center">
-                            <div className="text-center font-bold">
+                          <div className="flex w-3/4 items-center justify-start mb-1">
+                            <div className="flex font-bold w-full">
                               {unContact.userName}
                             </div>
                           </div>
@@ -299,8 +323,9 @@ const Chat = () => {
             </div>
           )}
         </div>
-
-        <ChatContainer socket={socket} />
+        <div className="flex w-full h-full">
+          <ChatContainer socket={socket} />
+        </div>
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
@@ -9,13 +9,29 @@ import axios from "axios";
 import { BASE_URL } from "../util/url.ts";
 
 const Navbar = () => {
+  //Reference for dropdown menu
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const profilePictureRef = useRef<HTMLDivElement>(null);
+  //States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profileImage, setProfileImage] = useState("");
   const token: { token: string } | null = JSON.parse(
     localStorage.getItem("token") || "null"
   );
-
   const { user, setUser, isDarkMode, setIsDarkMode } = useContext(UserContext);
+
+  useEffect(()=>{
+    document.addEventListener("mousedown", handleOutsideClicks);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClicks);
+    }
+  }, [isDropdownOpen]);
+
+  const handleOutsideClicks:(event:MouseEvent)=>void = (event:MouseEvent) => {
+    if(isDropdownOpen && dropdownRef.current && (!dropdownRef.current.contains(event.target as Node)) && (!profilePictureRef.current?.contains(event.target as Node))){
+      setIsDropdownOpen(false);
+    }
+  }
 
   useEffect(() => {
     setIsDropdownOpen(false);
@@ -69,7 +85,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`py-2 px-3 flex justify-between items-center drop-shadow-md ${
+      className={`relative z-10 py-2 px-3 flex justify-between items-center drop-shadow-md ${
         isDarkMode ? "bg-[#161c24]" : "bg-slate-100"
       }`}
     >
@@ -103,8 +119,9 @@ const Navbar = () => {
             </h5>
             {profileImage ? (
               <div
+                ref={profilePictureRef}
                 onClick={handleDropdownClick}
-                className="w-8 h-8 rounded-full shadow-xl flex items-center justify-center"
+                className="w-8 h-8 rounded-full shadow-xl flex items-center justify-center cursor-pointer"
                 style={{
                   backgroundImage: `url(${profileImage || COCKATOO})`,
                   backgroundSize: "cover",
@@ -143,11 +160,11 @@ const Navbar = () => {
               </button>
             )}
             {isDropdownOpen && (
-              <div className="ml-2 relative">
-                <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl z-999999">
+              <div className="relative z-20" ref={dropdownRef}>
+                <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl">
                   <a
                     href="#"
-                    className={`block px-4 py-2 text-${
+                    className={`block px-4 py-2 rounded-lg text-${
                       isDarkMode ? "gray-800" : "gray-700"
                     } hover:bg-gray-300`}
                     onClick={handleProfileClick}
@@ -156,7 +173,7 @@ const Navbar = () => {
                   </a>
                   <a
                     href=""
-                    className={`block px-4 py-2 text-${
+                    className={`block px-4 py-2 rounded-lg text-${
                       isDarkMode ? "gray-800" : "gray-700"
                     } hover:bg-gray-300`}
                     onClick={handleLogout}

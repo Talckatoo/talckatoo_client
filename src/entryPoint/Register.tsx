@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import languagesArray from "../util/languages";
 import { BASE_URL } from "../util/url.ts";
+import { AxiosError } from "axios";
 
 const Register = () => {
   const [userName, setUserName] = useState("");
@@ -15,24 +16,24 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [usernameError, setUsernameError] = useState({
-    error:false,
-    errorMessage: ""
+    error: false,
+    errorMessage: "",
   });
   const [emailError, setEmailError] = useState({
-    error:false,
-    errorMessage: ""
+    error: false,
+    errorMessage: "",
   });
   const [passwordError, setPasswordError] = useState({
-    error:false,
-    errorMessage: ""
+    error: false,
+    errorMessage: "",
   });
   const [confirmPasswordError, setConfirmPasswordError] = useState({
-    error:false,
-    errorMessage: ""
+    error: false,
+    errorMessage: "",
   });
   const [selectedLanguageError, setSelectedLanguageError] = useState({
-    error:true,
-    errorMessage: "* All fields are required"
+    error: true,
+    errorMessage: "* All fields are required",
   });
   const [isFormValid, setIsFormValid] = useState(false);
   const { setUser, isDarkMode } = useContext(UserContext);
@@ -41,7 +42,12 @@ const Register = () => {
 
   useEffect(() => {
     const validateForm = () => {
-      let isValid = (userName.trim()!=="" && email.trim()!=="" && password.trim()!=="" && confirmPassword.trim()!=="" && selectedLanguage.trim()!=="");
+      let isValid =
+        userName.trim() !== "" &&
+        email.trim() !== "" &&
+        password.trim() !== "" &&
+        confirmPassword.trim() !== "" &&
+        selectedLanguage.trim() !== "";
       return isValid;
     };
 
@@ -50,11 +56,11 @@ const Register = () => {
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
-    const userName = e.target.value
+    const userName = e.target.value;
     if (userName.trim() === "") {
-      setUsernameError({error:true,errorMessage:"*"});
+      setUsernameError({ error: true, errorMessage: "*" });
     } else {
-      setUsernameError({error:false,errorMessage:""});
+      setUsernameError({ error: false, errorMessage: "" });
     }
   };
 
@@ -62,33 +68,36 @@ const Register = () => {
     setEmail(e.target.value);
     const email = e.target.value;
     if (email.trim() === "") {
-      setEmailError({error:true,errorMessage:"*"});
+      setEmailError({ error: true, errorMessage: "*" });
     } else {
       if (!emailRegex.test(email)) {
-        setEmailError({error:true,errorMessage:"Invalid email format"});
+        setEmailError({ error: true, errorMessage: "Invalid email format" });
       } else {
-        setEmailError({error:false,errorMessage:""});
+        setEmailError({ error: false, errorMessage: "" });
       }
     }
   };
 
   const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedLanguage(e.target.value);
-    const selectedLanguage=e.target.value;
+    const selectedLanguage = e.target.value;
     if (selectedLanguage === "") {
-      setSelectedLanguageError({error:true,errorMessage:"* All fields are required"});
+      setSelectedLanguageError({
+        error: true,
+        errorMessage: "* All fields are required",
+      });
     } else {
-      setSelectedLanguageError({error:false,errorMessage:""});
+      setSelectedLanguageError({ error: false, errorMessage: "" });
     }
   };
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-    const password=e.target.value;
+    const password = e.target.value;
     if (password.trim() === "") {
-      setPasswordError({error:true,errorMessage:"*"});
+      setPasswordError({ error: true, errorMessage: "*" });
     } else {
-      setPasswordError({error:false,errorMessage:""});
+      setPasswordError({ error: false, errorMessage: "" });
     }
   };
 
@@ -96,11 +105,14 @@ const Register = () => {
     setConfirmPassword(e.target.value);
     const confirmPassword = e.target.value;
     if (confirmPassword.trim() === "") {
-      setConfirmPasswordError({error:true,errorMessage:"*"});
+      setConfirmPasswordError({ error: true, errorMessage: "*" });
     } else if (password !== confirmPassword) {
-      setConfirmPasswordError({error:true,errorMessage:"Passwords do not match"});
+      setConfirmPasswordError({
+        error: true,
+        errorMessage: "Passwords do not match",
+      });
     } else {
-      setConfirmPasswordError({error:false,errorMessage:""});
+      setConfirmPasswordError({ error: false, errorMessage: "" });
     }
   };
 
@@ -127,7 +139,17 @@ const Register = () => {
         toast.success("User signed up");
         navigate("/chat");
       } catch (error) {
-        toast.error("Error signing up");
+        if (axios.isAxiosError(error) && error.response) {
+          // If it's an Axios error with a response, show the error message
+          const errorMessage = error.response.data.message;
+          console.error(errorMessage); // Log the error message
+          console.log(error);
+          toast.error(errorMessage); // Display the error message to the user
+        } else {
+          // Handle any other errors or log a generic message
+          console.error("An error occurred:", error);
+          toast.error("Error signing up");
+        }
       }
     }
   };
@@ -278,11 +300,15 @@ const Register = () => {
         >
           {" "}
           <select
-            className={`w-full px-4 py-2 ${selectedLanguageError.error ? "border-b-2 border-b-red-500":"border-b-2 border-b-gray-300"} outline-none ${
-              isDarkMode ? "bg-gray-800" : "bg-gray-100"
-            } ${selectedLanguage === "" ? "text-gray-600" : ""} ${
-              isDarkMode ? "text-white" : "text-black"
-            } ${selectedLanguage === "" ? "placeholder-gray-400" : ""}`}
+            className={`w-full px-4 py-2 ${
+              selectedLanguageError.error
+                ? "border-b-2 border-b-red-500"
+                : "border-b-2 border-b-gray-300"
+            } outline-none ${isDarkMode ? "bg-gray-800" : "bg-gray-100"} ${
+              selectedLanguage === "" ? "text-gray-600" : ""
+            } ${isDarkMode ? "text-white" : "text-black"} ${
+              selectedLanguage === "" ? "placeholder-gray-400" : ""
+            }`}
             value={selectedLanguage}
             onChange={handleLanguageChange}
           >
@@ -307,7 +333,15 @@ const Register = () => {
         >
           <button
             type="submit"
-            className={`flex justify-center items-center ${isDarkMode ? "bg-gray-700 text-white": "bg-orange-50 text-black"} transition duration-150 ease-in-out hover:scale-105 ${isButtonDisabled ? "cursor-not-allowed":"hover:bg-green-900 hover:text-white"} px-8 py-3 text-xl lg:text-2xl w-full mt-4 mb-4 rounded-full shadow-md colors ${isDarkMode ? "text-white" : "text-black"}`}
+            className={`flex justify-center items-center ${
+              isDarkMode ? "bg-gray-700 text-white" : "bg-orange-50 text-black"
+            } transition duration-150 ease-in-out hover:scale-105 ${
+              isButtonDisabled
+                ? "cursor-not-allowed"
+                : "hover:bg-green-900 hover:text-white"
+            } px-8 py-3 text-xl lg:text-2xl w-full mt-4 mb-4 rounded-full shadow-md colors ${
+              isDarkMode ? "text-white" : "text-black"
+            }`}
             disabled={isButtonDisabled as boolean}
           >
             Sign In
