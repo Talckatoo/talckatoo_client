@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../UI/Button";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -49,14 +51,18 @@ const NavBar = () => {
           <Button
             type="button"
             className="mr-4 text-primary-500 border-primary-500 "
-            onClick={() => {}}
+            onClick={() => {
+              navigate("/sign");
+            }}
           >
             Sign In
           </Button>
           <Button
             type="button"
             className="bg-primary-500 text-white"
-            onClick={() => {}}
+            onClick={() => {
+              navigate("/sign");
+            }}
           >
             Sign Up
           </Button>

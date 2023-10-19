@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import Chat from "./pages/Chat";
 import Main from "./pages/Main";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./navbar/NavBar";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 
 const App = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/chat");
@@ -18,9 +20,9 @@ const App = () => {
 
   return (
     <div className="flex flex-col h-full w-full ">
-      {/* <Navbar /> */}
+      {location.pathname !== "/" && <Navbar />}
       <Routes>
-        <Route path="/sign-in" element={<Main />} />
+        <Route path="/sign" element={<Main />} />
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/profile" element={<Profile />} />

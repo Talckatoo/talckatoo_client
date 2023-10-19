@@ -1,7 +1,8 @@
-import React from "react";
 import Button from "../../UI/Button";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <section className="container mt-[5rem] p-1">
       <div className="flex flex-col items-center justify-center ">
@@ -15,7 +16,9 @@ const Hero = () => {
         <Button
           type="button"
           className="bg-primary-500 text-white mt-8 z-[1]"
-          onClick={() => {}}
+          onClick={() => {
+            navigate("/sign");
+          }}
         >
           Try Talckatoo Now
         </Button>
