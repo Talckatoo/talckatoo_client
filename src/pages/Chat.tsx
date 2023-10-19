@@ -7,6 +7,7 @@ import { io, Socket } from "socket.io-client";
 import COCKATOO from "./.././assests/cockatoo.png";
 import FetchLatestMessages from "../util/FetchLatestMessages";
 import { BASE_URL } from "../util/url.ts";
+import {PiBirdFill} from "react-icons/pi"
 
 type MyEventMap = {
   connect: () => void;
@@ -120,6 +121,7 @@ const Chat = () => {
   }, [socket.current, messages]);
 
   const handleSelectContact = (u: User) => {
+    console.log(u);
     setConversationId(u.conversation._id);
     setSelectId(u._id);
     setLanguage(u?.language);
@@ -146,7 +148,7 @@ const Chat = () => {
         }`}
       >
         <div
-          className={`md:w-72  max-h-screen p-2 ${
+          className={`md:w-80  max-h-screen p-2 ${
             isDarkMode ? "bg-gray-800" : "bg-slate-200"
           }`}
         >
@@ -226,9 +228,18 @@ const Chat = () => {
                             </div>
                           </div>
                           <div className="flex w-3/4 mb-1">
-                            <div className="flex flex-col w-full">
-                              <div className={`h-1/2 mb-1 font-bold w-full`}>{u.userName}</div>
-                              <div className={`h-1/2 w-full`}>
+                            <div className="flex flex-col w-full gap-y-0">
+                              <div className={`mb-1 font-bold w-full flex`}>
+                                <div className="w-11/12">
+                                  {u.userName}
+                                </div>
+                                {u.conversation.unread.includes(user?._id) && u._id!==selectId && (
+                                  <div className="flex justify-center items-center w-1/12 text-orange-400 animate__animated animate__heartBeat">
+                                    <PiBirdFill></PiBirdFill>
+                                  </div>
+                                )}
+                              </div>
+                              <div className={`w-full`}>
                                 <FetchLatestMessages u={u} />
                               </div>
                             </div>
