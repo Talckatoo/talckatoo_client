@@ -105,6 +105,8 @@ export const SignUp = () => {
           toast.error("Error signing up");
         }
       }
+    } else {
+      toast.warn("Please enter valid entries");
     }
   };
 
