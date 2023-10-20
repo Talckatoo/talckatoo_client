@@ -26,7 +26,6 @@ const App = () => {
         location.pathname !== "/sign-in" &&
         location.pathname !== "/sign-up" && <Navbar />}
       <Routes>
-        {/* <Route path="/sign" element={<Main />} /> */}
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/" element={<Home />} />
