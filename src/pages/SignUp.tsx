@@ -51,9 +51,9 @@ export const SignUp = () => {
       errors.email = "Enter a valid email address.";
     }
 
-    if (!formData.password || formData.password.length < 10) {
+    if (!formData.password || formData.password.length < 8) {
       isValid = false;
-      errors.password = "Password must be at least 10 characters.";
+      errors.password = "Password must be at least 8 characters.";
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -125,7 +125,7 @@ export const SignUp = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
-        <h1 className="head-text text-center my-[5rem]">
+        <h1 className="head-text text-center my-[2rem]">
           Join Talckatoo Today!
         </h1>
         {/* Sign up form  */}
@@ -133,31 +133,11 @@ export const SignUp = () => {
           className="flex flex-col items-center justify-center gap-2 max-w-[400px] m-auto"
           onSubmit={handleSubmit}
         >
-          {/* Google button red */}
-          <div className="w-full max-w-[400px] h-[48px]">
-            <Button
-              type="button"
-              className="bg-red-500 text-white w-full h-full flex items-center justify-start gap-2 z-[1]"
-              onClick={() => {}}
-            >
-              <div className="flex items-center gap-4 h-full ">
-                <img
-                  src="/assets/icons/google.svg"
-                  alt="google"
-                  className="w-6 h-6"
-                />
-                {/* verticule line */}
-                <div className="w-[2px] h-full bg-white opacity-70 z-[1]"></div>
-              </div>
-              <span className="mx-auto z-[1]">Sign Up with Google</span>
-            </Button>
-          </div>
-          {/* End of Google button red */}
-
-          <div className="flex items-center gap-4 w-full my-[2rem]">
+          
+          <div className="flex items-center gap-4 w-full my-[1rem]">
             <div className="w-full h-[2px] bg-[#33363A]"></div>
             <p className="text-title-500 whitespace-nowrap z-[1]">
-              Or, register with your email
+            register with your email
             </p>
             <div className="w-full h-[2px] bg-[#33363A] z-[1]"></div>
           </div>
@@ -190,7 +170,7 @@ export const SignUp = () => {
             label="Password"
             name="password"
             type="password"
-            placeholder="Password (at least 10 characters)"
+            placeholder="Password (at least 8 characters)"
             value={formData.password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })

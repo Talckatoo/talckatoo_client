@@ -39,9 +39,9 @@ const SignIn = () => {
       errors.email = "Enter a valid email address.";
     }
 
-    if (!formData.password || formData.password.length < 10) {
+    if (!formData.password || formData.password.length < 8) {
       isValid = false;
-      errors.password = "Password must be at least 10 characters.";
+      errors.password = "Password must be at least 8 characters.";
     }
 
     setFormErrors(errors);
@@ -151,7 +151,7 @@ const SignIn = () => {
             label="Password "
             type="password"
             name="password"
-            placeholder="Password (at least 10 characters)"
+            placeholder="Password (at least 8 characters)"
             value={formData.password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
