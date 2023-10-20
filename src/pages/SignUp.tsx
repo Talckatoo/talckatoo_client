@@ -1,8 +1,13 @@
-import React from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { UserContext } from "../context/user-context";
+import { BASE_URL } from "../util/url";
+import languagesArray from "../util/languages";
 
 interface FormData {
   name: string;
@@ -16,16 +21,19 @@ interface FormErrors {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  selectedLanguage?: string;
 }
 
 export const SignUp = () => {
   const navigate = useNavigate();
+  const { setUser, isDarkMode } = useContext(UserContext);
   const [formData, setFormData] = React.useState<FormData>({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  const [selectedLanguage, setSelectedLanguage] = useState("");
 
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
 
@@ -53,15 +61,50 @@ export const SignUp = () => {
       errors.confirmPassword = "Passwords must match.";
     }
 
+    if (!selectedLanguage) {
+      isValid = false;
+      errors.selectedLanguage = "Please select a language to continue";
+    }
     setFormErrors(errors);
 
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     if (validateForm()) {
-      // Perform API call here
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/api/v1/account/sign-up`,
+          {
+            userName: formData.name,
+            email: formData.email,
+            password: formData.password,
+            language: selectedLanguage,
+          }
+        );
+
+        const token = response.data.token;
+        localStorage.setItem("token", JSON.stringify(token));
+        setUser(response.data.user);
+
+        toast.success("User signed up");
+        navigate("/chat");
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          // If it's an Axios error with a response, show the error message
+          const errorMessage = error.response.data.message;
+          console.error(errorMessage); // Log the error message
+          console.log(error);
+          toast.error(errorMessage); // Display the error message to the user
+        } else {
+          // Handle any other errors or log a generic message
+          console.error("An error occurred:", error);
+          toast.error("Error signing up");
+        }
+      }
     }
   };
 
@@ -94,7 +137,7 @@ export const SignUp = () => {
           <div className="w-full max-w-[400px] h-[48px]">
             <Button
               type="button"
-              className="bg-red-500 text-white w-full h-full flex items-center justify-start gap-2"
+              className="bg-red-500 text-white w-full h-full flex items-center justify-start gap-2 z-[1]"
               onClick={() => {}}
             >
               <div className="flex items-center gap-4 h-full ">
@@ -104,19 +147,19 @@ export const SignUp = () => {
                   className="w-6 h-6"
                 />
                 {/* verticule line */}
-                <div className="w-[2px] h-full bg-white opacity-70"></div>
+                <div className="w-[2px] h-full bg-white opacity-70 z-[1]"></div>
               </div>
-              <span className="mx-auto">Sign Up with Google</span>
+              <span className="mx-auto z-[1]">Sign Up with Google</span>
             </Button>
           </div>
           {/* End of Google button red */}
 
           <div className="flex items-center gap-4 w-full my-[2rem]">
             <div className="w-full h-[2px] bg-[#33363A]"></div>
-            <p className="text-title-500 whitespace-nowrap">
+            <p className="text-title-500 whitespace-nowrap z-[1]">
               Or, register with your email
             </p>
-            <div className="w-full h-[2px] bg-[#33363A]"></div>
+            <div className="w-full h-[2px] bg-[#33363A] z-[1]"></div>
           </div>
 
           <Input
@@ -128,7 +171,7 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, name: e.target.value })
             }
-            className="bg-transparent border-[#33363A]"
+            className="bg-transparent border-[#33363A] z-[1]"
             error={formErrors.name}
           />
           <Input
@@ -140,7 +183,7 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="bg-transparent border-[#33363A]"
+            className="bg-transparent border-[#33363A] z-[1]"
             error={formErrors.email}
           />
           <Input
@@ -152,7 +195,7 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="bg-transparent border-[#33363A]"
+            className="bg-transparent border-[#33363A] z-[1]"
             error={formErrors.password}
           />
           <Input
@@ -164,28 +207,45 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, confirmPassword: e.target.value })
             }
-            className="bg-transparent border-[#33363A]"
+            className="bg-transparent border-[#33363A] z-[1]"
             error={formErrors.confirmPassword}
           />
 
+          <select
+            className={`p-3 w-full border text-white relative text-[16px] focus:outline-none z-[1] ${
+              formErrors.selectedLanguage ? "border-red-500" : ""
+            } bg-transparent border-[#33363A]`}
+            value={selectedLanguage}
+            onChange={(e) => setSelectedLanguage(e.target.value)}
+          >
+            <option value="" disabled hidden>
+              Select Language
+            </option>
+            {languagesArray?.map(({ code, language }) => (
+              <option key={code} value={code} className="bg-secondary-500">
+                {language}
+              </option>
+            ))}
+          </select>
+          {formErrors.selectedLanguage && (
+            <p className="mt-2 text-[16px] md:text-[18px] text-red-500">
+              {formErrors.selectedLanguage}
+            </p>
+          )}
+
           <Button
             type="submit"
-            className="bg-primary-500 text-white w-full h-[48px] mt-[2rem]"
+            className="bg-primary-500 text-white w-full h-[48px] mt-[2rem] z-[1]"
             onClick={() => {}}
           >
             Sign Up
           </Button>
 
-          <p className="text-title-500 mt-4">
+          <p className="text-title-500 mt-4 z-[1]">
             Already have an account?{" "}
-            <span
-              className="text-primary-500 cursor-pointer"
-              onClick={() => {
-                navigate("/sign-in");
-              }}
-            >
+            <Link className="text-primary-500 cursor-pointer" to="/sign-in">
               Sign In
-            </span>
+            </Link>
           </p>
         </form>
       </div>

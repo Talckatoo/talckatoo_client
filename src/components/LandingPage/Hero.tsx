@@ -17,7 +17,7 @@ const Hero = () => {
           type="button"
           className="bg-primary-500 text-white mt-8 z-[1]"
           onClick={() => {
-            navigate("/sign");
+            navigate("/sign-up");
           }}
         >
           Try Talckatoo Now

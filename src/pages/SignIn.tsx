@@ -1,35 +1,42 @@
-import React from "react";
+import React, { useContext } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../util/url";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { UserContext } from "../context/user-context";
 
 interface FormData {
-  name: string;
+  email: string;
   password: string;
 }
 
 interface FormErrors {
-  name?: string;
+  email?: string;
   password?: string;
 }
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = React.useState<FormData>({
-    name: "",
+    email: "",
     password: "",
   });
+  const { setUser, isDarkMode } = useContext(UserContext);
 
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
+
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const validateForm = (): boolean => {
     let isValid = true;
     const errors: FormErrors = {};
 
-    if (!formData.name || formData.name.length < 3) {
+    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
       isValid = false;
-      errors.name = "Name must be at least 3 characters.";
+      errors.email = "Enter a valid email address.";
     }
 
     if (!formData.password || formData.password.length < 10) {
@@ -42,10 +49,34 @@ const SignIn = () => {
     return isValid;
   };
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     if (validateForm()) {
-      // Perform your API call here
+      setLoading(true);
+      try {
+        const response = await axios.post(`${BASE_URL}/api/v1/account/log-in`, {
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (response.status === 200) {
+          const token = response.data.token;
+          localStorage.setItem("token", JSON.stringify(token));
+          setUser(response.data.user);
+
+          toast.success("User signed in");
+          setLoading(false);
+          navigate("/chat");
+        }
+      } catch (error) {
+        toast.error("Email or password is incorrect");
+        setLoading(false);
+      }
+    } else {
+      toast.warn("Please enter valid entries");
+      setLoading(false);
     }
   };
 
@@ -104,16 +135,16 @@ const SignIn = () => {
           </div>
 
           <Input
-            label="Full Name "
+            label="Email"
             type="text"
-            name="name"
-            placeholder="Enter your name"
-            value=""
+            name="email"
+            placeholder="Enter your email"
+            value={formData.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, name: e.target.value })
+              setFormData({ ...formData, email: e.target.value })
             }
             className="bg-transparent border-[#33363A]"
-            error={formErrors.name}
+            error={formErrors.email}
           />
 
           <Input
@@ -121,7 +152,7 @@ const SignIn = () => {
             type="password"
             name="password"
             placeholder="Password (at least 10 characters)"
-            value=""
+            value={formData.password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
@@ -131,16 +162,16 @@ const SignIn = () => {
 
           <Button
             type="submit"
-            className="bg-primary-500 text-white w-full h-[48px] mt-[2rem]"
+            className="bg-primary-500 text-white w-full h-[48px] mt-[2rem] z-[1]"
             onClick={() => {}}
           >
-            Sign In
+            {loading ? "Loading..." : "Sign In"}
           </Button>
 
-          <p className="text-title-500 mt-4">
+          <p className="text-title-500 mt-4 z-[1]">
             Don't have an account?{" "}
             <span
-              className="text-primary-500 cursor-pointer"
+              className="text-primary-500 cursor-pointer z-[1]"
               onClick={() => {
                 navigate("/sign-up");
               }}
