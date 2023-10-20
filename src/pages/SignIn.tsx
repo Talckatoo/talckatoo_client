@@ -109,7 +109,8 @@ const SignIn = () => {
           <div className="w-full max-w-[400px] h-[48px]">
             <Button
               type="button"
-              className="bg-red-500 text-white w-full h-full flex items-center justify-start gap-2"
+              className="bg-red-500 text-white w-full h-full flex items-center justify-start gap-2 "
+              disabled
               onClick={() => {}}
             >
               <div className="flex items-center gap-4 h-full ">

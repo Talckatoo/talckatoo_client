@@ -37,18 +37,20 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
     >
       <div className="container  w-full flex items-center justify-between ">
         {/* logo section */}
-        <div className="">
-          <img
-            src="/assets/logo.svg"
-            alt="logo"
-            className="w-[210px] object-cover max-sm:hidden"
-          />
-          <img
-            src="/assets/logo_s.svg"
-            alt="logo"
-            className="w-[60px] object-cover hidden max-sm:block"
-          />
-        </div>
+        <a href="/">
+          <div className="">
+            <img
+              src="/assets/logo.svg"
+              alt="logo"
+              className="w-[210px] object-cover max-sm:hidden"
+            />
+            <img
+              src="/assets/logo_s.svg"
+              alt="logo"
+              className="w-[60px] object-cover hidden max-sm:block"
+            />
+          </div>
+        </a>
 
         {/* sign up and sign in button */}
         {showSign && (
