@@ -199,7 +199,7 @@ export const SignUp = () => {
             onChange={(e) => setSelectedLanguage(e.target.value)}
           >
             <option value="" disabled hidden>
-              Select Language
+              Select Your Language
             </option>
             {languagesArray?.map(({ code, language }) => (
               <option key={code} value={code} className="bg-secondary-500">
