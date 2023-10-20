@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import Chat from "./pages/Chat";
-import Main from "./pages/Main";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./navbar/NavBar";
 import Profile from "./pages/Profile";

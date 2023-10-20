@@ -126,7 +126,7 @@ export const SignUp = () => {
       {/* End of Nav bar section */}
       <div className="container">
         <h1 className="head-text text-center my-[5rem]">
-          Join Talkcatoo Today!
+          Join Talckatoo Today!
         </h1>
         {/* Sign up form  */}
         <form

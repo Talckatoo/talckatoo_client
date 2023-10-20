@@ -98,7 +98,7 @@ const SignIn = () => {
       {/* End of Nav bar section */}
       <div className="container">
         <h1 className="head-text text-center my-[5rem]">
-          Wellcome Back to Talkcatoo!
+          Welcome Back to Talckatoo!
         </h1>
         {/* Sign up form  */}
         <form
