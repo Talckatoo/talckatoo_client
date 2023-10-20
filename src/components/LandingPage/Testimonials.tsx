@@ -38,7 +38,7 @@ const Testimonials = () => {
               </div>
               <div className="w-full">
                 <hr className="border-[#33363A]  bottom-14   h-2 w-full" />
-                <p className="sub-title-text text-title-500 max-w-[308px] flex items-center gap-1">
+                <p className="sub-title-text text-title-500 max-w-[308px] flex items-center gap-1 text-[16px]">
                   {testimonial.name}
                   <span className="text-secondary-500">/</span>
                   <span className="text-primary-500">{testimonial.title}</span>
