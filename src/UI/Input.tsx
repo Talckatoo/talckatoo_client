@@ -2,6 +2,7 @@ import React, { FC, ChangeEvent } from "react";
 
 interface InputProps {
   label: string;
+  type: string;
   name: string;
   placeholder: string;
   value: string;
@@ -12,6 +13,7 @@ interface InputProps {
 
 const Input: FC<InputProps> = ({
   label,
+  type,
   name,
   placeholder,
   value,
@@ -28,12 +30,12 @@ const Input: FC<InputProps> = ({
         {label} <span className="text-red-500">*</span>
       </label>
       <input
-        type="text"
+        type={type}
         name={name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`  p-3 w-full border  relative text-[16px] focus:outline-none ${
+        className={`  p-3 w-full border text-white relative text-[16px] focus:outline-none ${
           error ? "border-red-500" : ""
         } ${className}`}
       />
