@@ -1,12 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Chat from "./pages/Chat";
-import Main from "./pages/Main";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./navbar/NavBar";
 import Profile from "./pages/Profile";
+import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import { SignUp } from "./pages/SignUp";
 
 const App = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/chat");
@@ -16,14 +20,18 @@ const App = () => {
   }, []);
 
   return (
-      <div className="flex flex-col h-full w-full ">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </div>
+    <div className="flex flex-col h-full w-full ">
+      {location.pathname !== "/" &&
+        location.pathname !== "/sign-in" &&
+        location.pathname !== "/sign-up" && <Navbar />}
+      <Routes>
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </div>
   );
 };
 
