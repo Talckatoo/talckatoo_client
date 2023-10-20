@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import Button from "../../UI/Button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface NavBarProps {
   showSign?: boolean;
@@ -37,7 +37,7 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
     >
       <div className="container  w-full flex items-center justify-between ">
         {/* logo section */}
-        <a href="/">
+        <Link to="/">
           <div className="">
             <img
               src="/assets/logo.svg"
@@ -50,7 +50,7 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
               className="w-[60px] object-cover hidden max-sm:block"
             />
           </div>
-        </a>
+        </Link>
 
         {/* sign up and sign in button */}
         {showSign && (
