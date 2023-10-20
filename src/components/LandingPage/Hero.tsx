@@ -24,9 +24,9 @@ const Hero = () => {
         </Button>
         <div className="mt-[4rem] z-[1]">
           <img
-            src="/assets/img/hero.svg"
+            src="/assets/img/hero.png"
             alt="hero"
-            className="w-[1000px] max-lg:w-[700px] h-full object-cover"
+            className="w-[1000px] max-lg:w-[700px] h-full object-contain"
           />
         </div>
       </div>

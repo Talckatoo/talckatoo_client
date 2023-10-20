@@ -33,9 +33,9 @@ const Features = () => {
           </div>
           <div className="mt-[5rem] z-[1] items-center flex flex-col">
             <img
-              src="/assets/img/phone.svg"
+              src="/assets/img/phone.png"
               alt="hero"
-              className="w-[300px] h-full object-cover"
+              className="w-[300px] h-full object-contain"
             />
           </div>
           <div className="flex flex-col max-md:flex-row max-md:flex-wrap items-center gap-36 max-md:gap-3 max-md:justify-center mt-[4rem]">
