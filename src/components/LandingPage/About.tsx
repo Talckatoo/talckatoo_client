@@ -43,16 +43,16 @@ const About = () => {
 
           <div>
             <img
-              src="/assets/img/about1.svg"
+              src="/assets/img/about1.png"
               alt="hero"
-              className="w-[90%] h-full  object-cover"
+              className="w-[90%] h-full  object-cover max-h-[400px]"
             />
           </div>
           <div className="max-md:order-1">
             <img
               src="/assets/img/about2.png"
               alt="hero"
-              className="w-[90%] h-full  object-cover"
+              className="w-[90%] h-full   object-cover max-h-[400px]"
             />
           </div>
           <div className="flex flex-col items-start gap-2 max-w-[505px]">
