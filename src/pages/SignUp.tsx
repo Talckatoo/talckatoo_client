@@ -41,9 +41,9 @@ export const SignUp = () => {
     let isValid = true;
     const errors: FormErrors = {};
 
-    if (!formData.name || formData.name.length < 3) {
+    if (!formData.name || formData.name.length < 5) {
       isValid = false;
-      errors.name = "Name must be at least 3 characters.";
+      errors.name = "Name must be at least 5 characters.";
     }
 
     if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
@@ -136,13 +136,13 @@ export const SignUp = () => {
           onSubmit={handleSubmit}
         >
           
-          <div className="flex items-center gap-4 w-full my-[1rem]">
+          {/* <div className="flex items-center gap-4 w-full my-[1rem]">
             <div className="w-full h-[2px] bg-[#33363A]"></div>
             <p className="text-title-500 whitespace-nowrap z-[1]">
             register with your email
             </p>
             <div className="w-full h-[2px] bg-[#33363A] z-[1]"></div>
-          </div>
+          </div> */}
 
           <Input
             label="Full Name"
