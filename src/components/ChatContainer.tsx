@@ -7,11 +7,13 @@ import ChatWelcome from "../components/ChatWelcome";
 import { getTime } from "../util/getTime";
 import { v4 as uuidv4 } from "uuid";
 import JumpingDotsAnimation from "../UI/animation";
-import { HiOutlineLanguage } from "react-icons/hi2";
+import { HiArrowsRightLeft, HiOutlineLanguage } from "react-icons/hi2";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
 import { BASE_URL } from "../util/url.ts";
+import { MdHearing, MdTranscribe, MdTranslate } from "react-icons/md";
+import { PiArrowsLeftRightBold } from "react-icons/pi";
 
 interface Socket {
   current: any;
@@ -326,19 +328,32 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     >
       {language ? (
         <div
-          className={`w-full h-14 text-black pt-4 cursor-pointer rounded-tl-lg shadow text-center font-medium border-b-2 ${
+          className={`flex flex-row items-center w-full h-14 text-black cursor-pointer rounded-tl-lg shadow text-center font-medium border-b-2 ${
             isDarkMode
               ? "bg-gray-800 text-white border-slate-700"
               : "bg-slate-200 border-slate-300"
           }`}
         >
-          <div className="flex flex-row mx-2 px-2 gap-2">
-            <p>{recipient}</p>
-            <HiOutlineLanguage />
-            <span>
-              {" "}
-              {language} / {fullLanguage}{" "}
-            </span>
+          <div className="flex flex-row mx-2 px-2 gap-2 items-center justify-between w-full">
+            <div className="flex flex-row items-center gap-2">
+              <p>{recipient}</p>
+              <MdTranslate/>
+              <span>
+                {" "}
+                {language} / {fullLanguage}{" "}
+              </span>
+            </div>
+            <div className="flex flex-row items-center gap-2">
+              <HiArrowsRightLeft/>
+            </div>
+            <div className="flex flex-row items-center gap-2">
+              <p>{user?.userName}</p>
+              <MdTranslate/>
+              <span>
+                {" "}
+                {user?.language} / {languagesArray.map((l) => (l.code === user?.language) ? l.language : null)}{" "}
+              </span>
+            </div>
           </div>
         </div>
       ) : null}
