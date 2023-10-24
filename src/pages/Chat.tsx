@@ -137,6 +137,7 @@ const Chat = () => {
   const handleSelectPeople = () => {
     setConversationId(null);
     setSelectId(null);
+    setLanguage(null);
     setView("people");
   };
 
@@ -159,7 +160,12 @@ const Chat = () => {
                   ? "bg-slate-500 hover:bg-slate-400 text-white"
                   : "bg-slate-300 hover:bg-slate-400 text-black"
               } font-bold`}
-              onClick={() => setView("friends")}
+              onClick={() => {
+                if (view!=="friends"){
+                  setLanguage(null);
+                  setView("friends")
+                }
+              }}
             >
               Friends
             </button>
