@@ -33,6 +33,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     language,
   } = useContext(UserContext);
 
+  console.log({ Checkuser: user });
+
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
   const [typing, setTyping] = useState(false);
@@ -137,6 +139,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             },
           }
         );
+        console.log({ Checkdata: data });
 
         const { message } = data;
 
@@ -337,21 +340,24 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           <div className="flex flex-row mx-2 px-2 gap-2 items-center justify-between w-full">
             <div className="flex flex-row items-center gap-2">
               <p>{recipient}</p>
-              <MdTranslate/>
+              <MdTranslate />
               <span>
                 {" "}
                 {language} / {fullLanguage}{" "}
               </span>
             </div>
             <div className="flex flex-row items-center gap-2">
-              <HiArrowsRightLeft/>
+              <HiArrowsRightLeft />
             </div>
             <div className="flex flex-row items-center gap-2">
               <p>{user?.userName}</p>
-              <MdTranslate/>
+              <MdTranslate />
               <span>
                 {" "}
-                {user?.language} / {languagesArray.map((l) => (l.code === user?.language) ? l.language : null)}{" "}
+                {user?.language} /{" "}
+                {languagesArray.map((l) =>
+                  l.code === user?.language ? l.language : null
+                )}{" "}
               </span>
             </div>
           </div>
