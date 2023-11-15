@@ -33,8 +33,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     language,
   } = useContext(UserContext);
 
-  console.log({ Checkuser: user });
-
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
   const [typing, setTyping] = useState(false);
@@ -139,7 +137,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             },
           }
         );
-        console.log({ Checkdata: data });
 
         const { message } = data;
 
