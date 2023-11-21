@@ -49,7 +49,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   });
 
   const voiceCode = textToVoiceLanguages.find(
-    (la) => la.code === language
+    (la) => la.code === language?.toLowerCase()
   )?.voiceCode;
 
   const fetchMessages = async () => {
