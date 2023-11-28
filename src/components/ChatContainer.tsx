@@ -7,11 +7,13 @@ import ChatWelcome from "../components/ChatWelcome";
 import { getTime } from "../util/getTime";
 import { v4 as uuidv4 } from "uuid";
 import JumpingDotsAnimation from "../UI/animation";
-import { HiOutlineLanguage } from "react-icons/hi2";
+import { HiArrowsRightLeft, HiOutlineLanguage } from "react-icons/hi2";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
 import { BASE_URL } from "../util/url.ts";
+import { MdHearing, MdTranscribe, MdTranslate } from "react-icons/md";
+import { PiArrowsLeftRightBold } from "react-icons/pi";
 
 interface Socket {
   current: any;
@@ -47,7 +49,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   });
 
   const voiceCode = textToVoiceLanguages.find(
-    (la) => la.code === language
+    (la) => la.code === language?.toLowerCase()
   )?.voiceCode;
 
   const fetchMessages = async () => {
@@ -319,162 +321,170 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [selectId]);
 
   return (
-      <div
-        className={`flex flex-grow flex-col shadow h-full ${
-          isDarkMode ? "bg-slate-800" : "bg-slate-200"
-        }`}
-      >
+    <div
+      className={`flex flex-grow flex-col shadow h-full ${
+        isDarkMode ? "bg-slate-800" : "bg-slate-200"
+      }`}
+    >
+      {language ? (
         <div
-          className={`w-full h-14 text-black pt-4 cursor-pointer rounded-tl-lg shadow text-center font-medium border-b-2 ${
+          className={`flex flex-row items-center w-full h-14 text-black cursor-pointer rounded-tl-lg shadow text-center font-medium border-b-2 ${
             isDarkMode
               ? "bg-gray-800 text-white border-slate-700"
               : "bg-slate-200 border-slate-300"
           }`}
         >
-          <div className="flex flex-row mx-2 px-2 gap-2">
-            <p>{recipient}</p>
-            {language ? (
-              <>
-                <HiOutlineLanguage />
-                <span>
-                  {" "}
-                  {language} / {fullLanguage}{" "}
-                </span>
-              </>
-            ) : (
-              <>
-                <HiOutlineLanguage />
-                <span> en / English </span>
-              </>
-            )}
-          </div>
-        </div>
-        <div
-          className={`w-full flex flex-col h-full ${
-            isDarkMode ? "bg-gray-800" : "bg-slate-200"
-          }`}
-        >
-          <div className="relative h-full">
-            <div className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0">
-              {!!selectId && !!conversationId ? (
-                <div className="m-2 p-2">
-                  {messages
-                    ? messages.map((msg) => (
-                        <div
-                          className={
-                            "text-left " +
-                            (msg.sender === user?._id ? "text-right " : "") +
-                            (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
-                              ? "text-center"
-                              : "")
-                          }
-                          key={msg._id}
-                        >
-                          <div
-                            className={
-                              "max-w-md inline-block  rounded-lg m-2 p-2 " +
-                              (msg.sender === user?._id
-                                ? "bg-[#f8fafc] text-left "
-                                : "") +
-                              (msg.sender ==
-                              import.meta.env.VITE_AI_ASSISTANT_ID
-                                ? "bg-amber-100 text-center"
-                                : "bg-[#94a3b8]")
-                            }
-                          >
-                            {msg.sender !==
-                              import.meta.env.VITE_AI_ASSISTANT_ID &&
-                            msg.message &&
-                            msg.message.includes("\n") ? (
-                              msg.message
-                                .split("\n")
-                                .map((line, index, lines) => {
-                                  const prevLine =
-                                    index > 0 ? lines[index - 1] : null;
-                                  const isFirstLine =
-                                    index === 0 || line !== prevLine;
-
-                                  return (
-                                    <React.Fragment key={index}>
-                                      {isFirstLine && line}
-                                      {isFirstLine &&
-                                        index !== lines.length - 1 &&
-                                        line !== lines[index + 1] && (
-                                          <>
-                                            <br />
-                                            <img
-                                              width="15"
-                                              height="15"
-                                              src="https://img.icons8.com/ios-glyphs/30/right3.png"
-                                              alt="right3"
-                                            />
-                                          </>
-                                        )}
-                                    </React.Fragment>
-                                  );
-                                })
-                            ) : (
-                              <>{msg.message}</>
-                            )}
-
-                            <div className="flex flex-row gap-2">
-                              <div className="w-1/3 text-xxs text-gray-600 items-end">
-                                {getTime(msg.createdAt)}
-                              </div>
-
-                              <TextToSpeech convertedText={msg.message} />
-                            </div>
-                            {msg.voiceNote && (
-                              <audio className="w-60 h-15" controls>
-                                <source
-                                  src={msg.voiceNote?.url}
-                                  type="audio/mpeg"
-                                />
-                              </audio>
-                            )}
-                          </div>
-                          <div ref={scrollRef}></div>
-                        </div>
-                      ))
-                    : null}
-                </div>
-              ) : (
-                <ChatWelcome />
-              )}
+          <div className="flex flex-row mx-2 px-2 gap-2 items-center justify-between w-full">
+            <div className="flex flex-row items-center gap-2">
+              <p>{recipient}</p>
+              <MdTranslate />
+              <span>
+                {" "}
+                {language} / {fullLanguage}{" "}
+              </span>
+            </div>
+            <div className="flex flex-row items-center gap-2">
+              <HiArrowsRightLeft />
+            </div>
+            <div className="flex flex-row items-center gap-2">
+              <p>{user?.userName}</p>
+              <MdTranslate />
+              <span>
+                {" "}
+                {user?.language} /{" "}
+                {languagesArray.map((l) =>
+                  l.code === user?.language ? l.language : null
+                )}{" "}
+              </span>
             </div>
           </div>
         </div>
-        <hr
-          className={`mb-3 ${
-            isDarkMode ? "border-slate-700" : "border-slate-300"
-          }`}
-        />
-        {selectedTyping?.to === user?._id &&
-        selectedTyping?.from === selectId &&
-        isTyping ? (
-          <JumpingDotsAnimation />
-        ) : null}
-        <div
-          className={`w-full h-30 py-2 ${
-            isDarkMode ? "bg-gray-800" : "bg-slate-200"
-          }`}
-        >
-          {selectId ? (
-            <>
-              <ChatInput
-                onHandleSendMessage={sendMessage}
-                onHandleSendAIMessage={sendAIMessage}
-                socket={socket}
-                typing={typing}
-                setTyping={setTyping}
-                isTyping={isTyping}
-                setIsTyping={setIsTyping}
-                onHandleTranslateText={onHandleTranslateText}
-              />
-            </>
-          ) : null}
+      ) : null}
+      <div
+        className={`w-full flex flex-col h-full ${
+          isDarkMode ? "bg-gray-800" : "bg-slate-200"
+        }`}
+      >
+        <div className="relative h-full">
+          <div className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0">
+            {!!selectId && !!conversationId ? (
+              <div className="m-2 p-2">
+                {messages
+                  ? messages.map((msg) => (
+                      <div
+                        className={
+                          "text-left " +
+                          (msg.sender === user?._id ? "text-right " : "") +
+                          (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
+                            ? "text-center"
+                            : "")
+                        }
+                        key={msg._id}
+                      >
+                        <div
+                          className={
+                            "max-w-md inline-block  rounded-lg m-2 p-2 " +
+                            (msg.sender === user?._id
+                              ? "bg-[#f8fafc] text-left "
+                              : "") +
+                            (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
+                              ? "bg-amber-100 text-center"
+                              : "bg-[#94a3b8]")
+                          }
+                        >
+                          {msg.sender !==
+                            import.meta.env.VITE_AI_ASSISTANT_ID &&
+                          msg.message &&
+                          msg.message.includes("\n") ? (
+                            msg.message
+                              .split("\n")
+                              .map((line, index, lines) => {
+                                const prevLine =
+                                  index > 0 ? lines[index - 1] : null;
+                                const isFirstLine =
+                                  index === 0 || line !== prevLine;
+
+                                return (
+                                  <React.Fragment key={index}>
+                                    {isFirstLine && line}
+                                    {isFirstLine &&
+                                      index !== lines.length - 1 &&
+                                      line !== lines[index + 1] && (
+                                        <>
+                                          <br />
+                                          <img
+                                            width="15"
+                                            height="15"
+                                            src="https://img.icons8.com/ios-glyphs/30/right3.png"
+                                            alt="right3"
+                                          />
+                                        </>
+                                      )}
+                                  </React.Fragment>
+                                );
+                              })
+                          ) : (
+                            <>{msg.message}</>
+                          )}
+
+                          <div className="flex flex-row gap-2">
+                            <div className="w-1/3 text-xxs text-gray-600 items-end">
+                              {getTime(msg.createdAt)}
+                            </div>
+
+                            <TextToSpeech convertedText={msg.message} />
+                          </div>
+                          {msg.voiceNote && (
+                            <audio className="w-60 h-15" controls>
+                              <source
+                                src={msg.voiceNote?.url}
+                                type="audio/mpeg"
+                              />
+                            </audio>
+                          )}
+                        </div>
+                        <div ref={scrollRef}></div>
+                      </div>
+                    ))
+                  : null}
+              </div>
+            ) : (
+              <ChatWelcome />
+            )}
+          </div>
         </div>
       </div>
+      <hr
+        className={`mb-3 ${
+          isDarkMode ? "border-slate-700" : "border-slate-300"
+        }`}
+      />
+      {selectedTyping?.to === user?._id &&
+      selectedTyping?.from === selectId &&
+      isTyping ? (
+        <JumpingDotsAnimation />
+      ) : null}
+      <div
+        className={`w-full h-30 py-2 ${
+          isDarkMode ? "bg-gray-800" : "bg-slate-200"
+        }`}
+      >
+        {selectId ? (
+          <>
+            <ChatInput
+              onHandleSendMessage={sendMessage}
+              onHandleSendAIMessage={sendAIMessage}
+              socket={socket}
+              typing={typing}
+              setTyping={setTyping}
+              isTyping={isTyping}
+              setIsTyping={setIsTyping}
+              onHandleTranslateText={onHandleTranslateText}
+            />
+          </>
+        ) : null}
+      </div>
+    </div>
   );
 };
 
