@@ -33,7 +33,7 @@ export interface User {
     name: "user",
     initialState,
     reducers: {
-      setUser: (state, action: PayloadAction<UserState | null>) => {
+      setUserSelf: (state, action: PayloadAction<UserState | null>) => {
         state.user = action.payload;
       },
       setUsers: (state, action: PayloadAction<string[]>) => {
@@ -43,6 +43,6 @@ export interface User {
     },
   });
   
-  export const { setUser, setUsers } = userSlice.actions;
+  export const { setUserSelf, setUsers } = userSlice.actions;
   export default userSlice.reducer;
     

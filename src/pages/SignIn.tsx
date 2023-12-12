@@ -9,6 +9,7 @@ import { useLoginAuthMutation } from "../redux/services/AuthApi";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { UserContext } from "../context/user-context";
+import { setUserSelf } from "../redux/features/user/userSlice";
 
 interface FormData {
   email: string;
@@ -74,6 +75,7 @@ const SignIn = () => {
           const token = response.data.token;
           localStorage.setItem("token", JSON.stringify(token));
           setUser(response.data.user);
+          setUserSelf(response.data.user);
 
           toast.success("User signed in");
           setLoading(false);

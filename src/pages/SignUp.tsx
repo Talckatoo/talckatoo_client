@@ -5,9 +5,13 @@ import Button from "../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useRegisterAuthMutation } from "../redux/services/AuthApi";
 import { UserContext } from "../context/user-context";
 import { BASE_URL } from "../util/url";
+import { useDispatch } from 'react-redux';
 import languagesArray from "../util/languages";
+import { setUserSelf } from "../redux/features/user/userSlice";
+
 
 interface FormData {
   name: string;
@@ -36,7 +40,8 @@ export const SignUp = () => {
     confirmPassword: "",
   });
   const [selectedLanguage, setSelectedLanguage] = useState("");
-
+  const [registerAuth] = useRegisterAuthMutation();
+  const dispatch = useDispatch();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
 
   const validateForm = (): boolean => {
@@ -78,8 +83,7 @@ export const SignUp = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await axios.post(
-          `${BASE_URL}/api/v1/account/sign-up`,
+        const response = await registerAuth(  
           {
             userName: formData.name,
             email: formData.email,
@@ -91,6 +95,7 @@ export const SignUp = () => {
         const token = response.data.token;
         localStorage.setItem("token", JSON.stringify(token));
         setUser(response.data.user);
+        dispatch(setUserSelf(response.data.user));
 
         toast.success("User signed up");
         navigate("/chat");
