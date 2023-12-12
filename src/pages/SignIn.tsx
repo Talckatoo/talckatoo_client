@@ -75,7 +75,7 @@ const SignIn = () => {
           const token = response.data.token;
           localStorage.setItem("token", JSON.stringify(token));
           setUser(response.data.user);
-          setUserSelf(response.data.user);
+          dispatch(setUserSelf(response.data.user));
 
           toast.success("User signed in");
           setLoading(false);
