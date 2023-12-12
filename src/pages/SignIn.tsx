@@ -4,6 +4,8 @@ import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../util/url";
+import { useDispatch } from "react-redux";
+import { useLoginAuthMutation } from "../redux/services/AuthApi";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { UserContext } from "../context/user-context";
@@ -24,6 +26,8 @@ const SignIn = () => {
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
+  const [loginAuth] = useLoginAuthMutation();
   const { setUser, isDarkMode } = useContext(UserContext);
 
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
@@ -56,11 +60,16 @@ const SignIn = () => {
     if (validateForm()) {
       setLoading(true);
       try {
-        const response = await axios.post(`${BASE_URL}/api/v1/account/log-in`, {
-          email: formData.email,
-          password: formData.password,
-        });
+        // const response = await axios.post(`${BASE_URL}/api/v1/account/log-in`, {
+        //   email: formData.email,
+        //   password: formData.password,
+        // });
 
+        const response = await loginAuth({
+          email: formData.email.toLowerCase(),
+          formData: formData.password,
+        });
+  
         if (response.status === 200) {
           const token = response.data.token;
           localStorage.setItem("token", JSON.stringify(token));

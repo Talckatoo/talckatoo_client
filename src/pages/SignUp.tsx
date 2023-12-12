@@ -24,6 +24,8 @@ interface FormErrors {
   selectedLanguage?: string;
 }
 
+console.log(BASE_URL);
+
 export const SignUp = () => {
   const navigate = useNavigate();
   const { setUser, isDarkMode } = useContext(UserContext);
