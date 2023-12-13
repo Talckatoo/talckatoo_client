@@ -6,20 +6,16 @@ import About from "../components/LandingPage/About";
 import Testimonials from "../components/LandingPage/Testimonials";
 import Contact from "../components/LandingPage/Contact";
 import Footer from "../components/shared/Footer";
+import world from "../../public/assets/img/world.png"
 
 const Home = () => {
   return (
-    <main className="relative bg-background-500 h-full w-full font-inter ">
+    <main className="relative bg-white h-full w-full font-inter ">
       <div className="bg-background-500 fixed top-0 left-0 w-full h-full -z-20"></div>
       <img
-        src="/assets/img/shape1.svg"
+        src={world}
         alt="shape"
-        className="fixed top-[-5rem] right-0 max-lg:w-[350px]"
-      />
-      <img
-        src="/assets/img/shape2.svg"
-        alt="shape"
-        className="fixed  left-0  bottom-[-150px] max-lg:w-[350px]"
+        className="fixed  right-0  bottom-[-150px] "
       />
       {/* nav bar section */}
       <NavBar />
