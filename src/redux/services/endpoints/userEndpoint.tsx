@@ -13,6 +13,7 @@ type MyApiBaseQuery = BaseQueryFn<
 >;
 type MyTagTypes = string;
 type MyReducerPath = "UserApi";
+
 export const userEndpoints = (
   builder: EndpointBuilder<MyApiBaseQuery, MyTagTypes, MyReducerPath>
 ) => ({

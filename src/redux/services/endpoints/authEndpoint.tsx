@@ -1,10 +1,10 @@
-import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
+import { EndpointBuilder } from "@reduxjs/toolkit/query";
 import { UserState } from "../../features/user/userSlice";
 import {
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
-} from "@reduxjs/toolkit/dist/query";
+} from "@reduxjs/toolkit/query";
 
 type MyApiBaseQuery = BaseQueryFn<
   string | FetchArgs,

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -7,7 +7,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRegisterAuthMutation } from "../redux/services/AuthApi";
 import { UserContext } from "../context/user-context";
-import { BASE_URL } from "../util/url";
 import { useDispatch } from 'react-redux';
 import languagesArray from "../util/languages";
 import { setUserSelf } from "../redux/features/user/userSlice";
@@ -28,7 +27,6 @@ interface FormErrors {
   selectedLanguage?: string;
 }
 
-console.log(BASE_URL);
 
 export const SignUp = () => {
   const navigate = useNavigate();

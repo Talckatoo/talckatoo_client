@@ -3,10 +3,8 @@ import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../util/url";
 import { useDispatch } from "react-redux";
 import { useLoginAuthMutation } from "../redux/services/AuthApi";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { UserContext } from "../context/user-context";
 import { setUserSelf } from "../redux/features/user/userSlice";
@@ -29,7 +27,7 @@ const SignIn = () => {
   });
   const dispatch = useDispatch();
   const [loginAuth] = useLoginAuthMutation();
-  const { setUser, isDarkMode } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
 
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -59,13 +57,12 @@ const SignIn = () => {
     if (validateForm()) {
       setLoading(true);
       try {
-        console.log(formData.email.toLowerCase().trim(), formData.password);
         const response = await loginAuth({
-          email: formData.email.toLowerCase(),
-          formData: formData.password,
+          email: formData.email.toLowerCase().trim(),
+          password: formData.password,
         });
-        console.log(response);
-        if (response.status === 200) {
+        console.log(response.data);
+        if (response.status === "success") {
           const token = response.data.token;
           localStorage.setItem("token", JSON.stringify(token));
           setUser(response.data.user);
@@ -144,6 +141,7 @@ const SignIn = () => {
             label="Email"
             type="text"
             name="email"
+            id="email"
             placeholder="Enter your email"
             value={formData.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -154,7 +152,8 @@ const SignIn = () => {
           />
 
           <Input
-            label="Password "
+            label="Password"
+            id="password"
             type="password"
             name="password"
             placeholder="Password (at least 8 characters)"
