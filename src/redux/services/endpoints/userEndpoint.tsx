@@ -20,20 +20,20 @@ export const userEndpoints = (
     query: () => "users",
   }),
   fetchUserById: builder.query<UserState, { id: string }>({
-    query: ({ id }) => `users/${id}`,
+    query: ({ id }: { id: string }) => `users/${id}`,
   }),
   updateUser: builder.mutation<
     UserState,
     { id: string; data: Partial<UserState> }
   >({
-    query: ({ id, data }) => ({
+    query: ({ id, data }: { id: string; data: Partial<UserState> }) => ({
       url: `/users/${id}/update-user`,
       method: "PATCH",
       body: data,
     }),
   }),
   deleteUser: builder.mutation<UserState, Partial<UserState>>({
-    query: (body) => ({
+    query: (body: unknown) => ({
       url: "/users",
       method: "DELETE",
       body,

@@ -17,14 +17,14 @@ export const authEndpoints = (
   builder: EndpointBuilder<MyApiBaseQuery, MyTagTypes, MyReducerPath>
 ) => ({
   loginAuth: builder.mutation<UserState, { email: string; password: string }>({
-    query: ({ email, password }) => ({
+    query: ({ email, password }: { email: string; password: string }) => ({
       url: "/account/log-in",
       method: "POST",
       body: { email, password },
     }),
   }),
   registerAuth: builder.mutation<UserState, Partial<UserState>>({
-    query: ({ userName, email, password, language }) => ({
+    query: ({ userName, email, password, language }: { userName: string; email: string; password: string; language: string }) => ({
       url: "/account/sign-up",
       method: "POST",
       body: { userName, email, password, language },

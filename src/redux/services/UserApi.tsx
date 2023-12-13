@@ -1,13 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { API_CONFIG } from "./config";
-
 import { userEndpoints } from "./endpoints/userEndpoint";
 
 export const UserApi = createApi({
   reducerPath: "UserApi",
   refetchOnFocus: true,
   baseQuery: fetchBaseQuery({
-    baseUrl: API_CONFIG.API_URL,
+    baseUrl: import.meta.env.VITE_BASE_URL.API_URL,
     prepareHeaders: async (headers, { getState }) => {
       // Replace AsyncStorage with localStorage
       const token = localStorage.getItem("token");

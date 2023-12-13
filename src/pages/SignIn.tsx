@@ -30,7 +30,6 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const [loginAuth] = useLoginAuthMutation();
   const { setUser, isDarkMode } = useContext(UserContext);
-
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
 
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -53,7 +52,6 @@ const SignIn = () => {
 
     return isValid;
   };
-
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -61,16 +59,12 @@ const SignIn = () => {
     if (validateForm()) {
       setLoading(true);
       try {
-        // const response = await axios.post(`${BASE_URL}/api/v1/account/log-in`, {
-        //   email: formData.email,
-        //   password: formData.password,
-        // });
-
+        console.log(formData.email.toLowerCase().trim(), formData.password);
         const response = await loginAuth({
           email: formData.email.toLowerCase(),
           formData: formData.password,
         });
-  
+        console.log(response);
         if (response.status === 200) {
           const token = response.data.token;
           localStorage.setItem("token", JSON.stringify(token));
