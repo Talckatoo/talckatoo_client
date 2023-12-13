@@ -12,8 +12,28 @@
   font-family: "Inter", sans-serif;
 }
 
+.font-jakarta {
+  font-family: "Plus Jarkata Sans", sans-serif;
+}
+
 .font-archetic {
   font-family: "Architects Daughter", cursive;
+}
+
+.font-medium {
+  font-family: 16px;
+}
+
+.font-bold {
+  font-weight: 32px;
+}
+
+.font-semibold {
+  font-weight: 40px;
+}
+
+.font-semibold {
+  font-weight: 55px;
 }
 
 /* Chrome, Edge, and Safari */
