@@ -14,7 +14,6 @@ export const UserApi = createApi({
       }
       return headers;
     },
-    credentials: "include",
   }),
   endpoints: userEndpoints,
 });

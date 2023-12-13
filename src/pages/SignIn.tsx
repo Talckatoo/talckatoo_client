@@ -3,11 +3,11 @@ import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { useLoginAuthMutation } from "../redux/services/AuthApi";
 import { toast } from "react-toastify";
 import { UserContext } from "../context/user-context";
 import { setUserSelf } from "../redux/features/user/userSlice";
+import { useAppDispatch } from "../redux/hooks";
 
 interface FormData {
   email: string;
@@ -25,8 +25,8 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-  const dispatch = useDispatch();
-  const [loginAuth] = useLoginAuthMutation();
+  const dispatch = useAppDispatch();
+  const [loginAuth, { isLoading, error }] = useLoginAuthMutation();
   const { setUser } = useContext(UserContext);
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
 
@@ -58,7 +58,7 @@ const SignIn = () => {
       setLoading(true);
       try {
         const response = await loginAuth({
-          email: formData.email.toLowerCase().trim(),
+          email: formData.email,
           password: formData.password,
         });
         console.log(response.data);

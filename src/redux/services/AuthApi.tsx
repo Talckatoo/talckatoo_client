@@ -6,8 +6,8 @@ export const AuthApi = createApi({
   refetchOnFocus: true,
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_BASE_URL as string,
-    credentials: "include",
   }),
+
   endpoints: authEndpoints,
 });
 
