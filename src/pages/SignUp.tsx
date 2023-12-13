@@ -84,7 +84,7 @@ export const SignUp = () => {
         const response = await registerAuth(  
           {
             userName: formData.name,
-            email: formData.email,
+            email: formData.email.toLocaleLowerCase().trim(),
             password: formData.password,
             language: selectedLanguage,
           }

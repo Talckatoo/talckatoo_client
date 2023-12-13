@@ -58,19 +58,18 @@ const SignIn = () => {
       setLoading(true);
       try {
         const response = await loginAuth({
-          email: formData.email,
+          email: formData.email.toLocaleLowerCase().trim(),
           password: formData.password,
         });
-        console.log(response.data);
-        if (response.status === "success") {
-          const token = response.data.token;
-          localStorage.setItem("token", JSON.stringify(token));
-          setUser(response.data.user);
-          dispatch(setUserSelf(response.data.user));
 
-          toast.success("User signed in");
-          setLoading(false);
-          navigate("/chat");
+        const token = response.data.token;
+        localStorage.setItem("token", JSON.stringify(token));
+        setUser(response.data.user);
+        dispatch(setUserSelf(response.data.user));
+
+        navigate("/chat");
+        toast.success("User signed up");
+        if (response.status === "success") {
         }
       } catch (error) {
         toast.error("Email or password is incorrect");
