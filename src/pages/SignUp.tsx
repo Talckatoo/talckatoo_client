@@ -91,22 +91,19 @@ export const SignUp = () => {
         );
 
         const token = response.data.token;
+        const user = response.data.user;
         localStorage.setItem("token", JSON.stringify(token));
-        setUser(response.data.user);
-        dispatch(setUserSelf(response.data.user));
-
+        setUser(user);
+        dispatch(setUserSelf(user));
         toast.success("User signed up");
         navigate("/chat");
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           // If it's an Axios error with a response, show the error message
           const errorMessage = error.response.data.message;
-          console.error(errorMessage); // Log the error message
-          console.log(error);
           toast.error(errorMessage); // Display the error message to the user
         } else {
           // Handle any other errors or log a generic message
-          console.error("An error occurred:", error);
           toast.error("Error signing up");
         }
       }

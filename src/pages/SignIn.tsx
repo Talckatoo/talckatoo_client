@@ -26,7 +26,7 @@ const SignIn = () => {
     password: "",
   });
   const dispatch = useAppDispatch();
-  const [loginAuth, { isLoading, error }] = useLoginAuthMutation();
+  const [loginAuth] = useLoginAuthMutation();
   const { setUser } = useContext(UserContext);
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
 
@@ -69,8 +69,7 @@ const SignIn = () => {
 
         navigate("/chat");
         toast.success("User signed up");
-        if (response.status === "success") {
-        }
+        setLoading(false);
       } catch (error) {
         toast.error("Email or password is incorrect");
         setLoading(false);
