@@ -104,11 +104,12 @@ const Chat = () => {
   }, [onlineUsers, usersList?.contactedUsers, usersList?.uncontactedUsers]);
 
   const fetchUsers = async () => {
-    const { data } = await axios.get(`${BASE_URL}/api/v1/users`, {
+    const { data } = await axios.get(`${BASE_URL}/api/v1/users/friends`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(data);
     setUsersList(data.users);
   };
   useEffect(() => {
@@ -183,6 +184,7 @@ const Chat = () => {
             <div className="overflow-y-auto h-full">
               {usersList
                 ? usersList.contactedUsers.map((u) => {
+                    console.log(u);
                     return (
                       <div
                         key={u._id}
@@ -244,7 +246,7 @@ const Chat = () => {
                                   )}
                               </div>
                               <div className={`w-full`}>
-                                <FetchLatestMessages u={u} />
+                                <FetchLatestMessages u={u?.latestMessage} />
                               </div>
                             </div>
                           </div>
