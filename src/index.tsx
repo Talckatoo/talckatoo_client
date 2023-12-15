@@ -1,13 +1,13 @@
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-import "./index.css";
 import { UserContextProvider } from "./context/user-context";
 import { injectStyle } from "react-toastify/dist/inject-style";
 import { ToastContainer } from "react-toastify";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
+import App from "./App";
 import "react-toastify/dist/ReactToastify.css";
+import "./index.css";
 import "animate.css";
 
 // CALL IT ONCE IN YOUR APP

@@ -3,7 +3,6 @@ import {createSlice ,  PayloadAction } from '@reduxjs/toolkit';
 
 
 export interface User {
-    _id: string;
     email: string;
     userId: string;
     userName: string;
@@ -34,7 +33,7 @@ export interface User {
     name: "user",
     initialState,
     reducers: {
-      setUserSelf: (state, action: PayloadAction<UserState | null>) => {
+      setUser: (state, action: PayloadAction<UserState | null>) => {
         state.user = action.payload;
       },
       setUsers: (state, action: PayloadAction<string[]>) => {
@@ -44,6 +43,6 @@ export interface User {
     },
   });
   
-  export const { setUserSelf, setUsers } = userSlice.actions;
+  export const { setUser, setUsers } = userSlice.actions;
   export default userSlice.reducer;
     

@@ -6,10 +6,10 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRegisterAuthMutation } from "../redux/services/AuthApi";
-import { UserContext } from "../context/user-context";
+// import { UserContext } from "../context/user-context";
 import { useDispatch } from 'react-redux';
 import languagesArray from "../util/languages";
-import { setUserSelf } from "../redux/features/user/userSlice";
+import { setUser } from "../redux/features/user/userSlice";
 
 
 interface FormData {
@@ -30,7 +30,7 @@ interface FormErrors {
 
 export const SignUp = () => {
   const navigate = useNavigate();
-  const { setUser, isDarkMode } = useContext(UserContext);
+  // const { setUser, isDarkMode } = useContext(UserContext);
   const [formData, setFormData] = React.useState<FormData>({
     name: "",
     email: "",
@@ -93,8 +93,8 @@ export const SignUp = () => {
         const token = response.data.token;
         const user = response.data.user;
         localStorage.setItem("token", JSON.stringify(token));
-        setUser(user);
-        dispatch(setUserSelf(user));
+        // setUser(user);
+        dispatch(setUser(user));
         toast.success("User signed up");
         navigate("/chat");
       } catch (error) {

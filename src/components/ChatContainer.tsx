@@ -7,13 +7,11 @@ import ChatWelcome from "../components/ChatWelcome";
 import { getTime } from "../util/getTime";
 import { v4 as uuidv4 } from "uuid";
 import JumpingDotsAnimation from "../UI/animation";
-import { HiArrowsRightLeft, HiOutlineLanguage } from "react-icons/hi2";
+import { HiArrowsRightLeft } from "react-icons/hi2";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
-import { BASE_URL } from "../util/url.ts";
-import { MdHearing, MdTranscribe, MdTranslate } from "react-icons/md";
-import { PiArrowsLeftRightBold } from "react-icons/pi";
+import { MdTranslate } from "react-icons/md";
 
 interface Socket {
   current: any;
@@ -56,7 +54,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     try {
       if (user && !!conversationId) {
         const { data } = await axios.get(
-          `${BASE_URL}/api/v1/users/${user._id}/conversations/${conversationId}`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/users/${user._id}/conversations/${conversationId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -122,7 +120,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     if (selectId && conversationId) {
       try {
         const { data } = await axios.post(
-          `${BASE_URL}/api/v1/messages`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/messages`,
           {
             from: user?._id,
             to: selectId,
@@ -168,7 +166,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       setMessages([]);
       try {
         const { data } = await axios.post(
-          `${BASE_URL}/api/v1/messages`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/messages`,
           {
             from: user?._id,
             to: selectId,
@@ -257,7 +255,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     if (selectId && conversationId && translateText) {
       try {
         const { data } = await axios.post(
-          `${BASE_URL}/api/v1/messages`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/messages`,
           {
             from: user?._id,
             to: selectId,
@@ -304,7 +302,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     try {
       if (user && !!conversationId) {
         const { data } = await axios.get(
-          `${BASE_URL}/api/v1/users/${user._id}/conversations/${conversationId}/update`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/users/${user._id}/conversations/${conversationId}/update`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -6,7 +6,6 @@ import { getContactName } from "../util/getContactName";
 import { io, Socket } from "socket.io-client";
 import COCKATOO from "./.././assests/cockatoo.png";
 import FetchLatestMessages from "../util/FetchLatestMessages";
-import { BASE_URL } from "../util/url.ts";
 import { PiBirdFill } from "react-icons/pi";
 
 type MyEventMap = {
@@ -70,7 +69,8 @@ const Chat = () => {
   );
 
   useEffect(() => {
-    socket.current = io(`${BASE_URL}`);
+    console.log("connecting", import.meta.env.VITE_BASE_URL);
+    socket.current = io(`${import.meta.env.VITE_BASE_URL}`);
   }, []);
 
   useEffect(() => {
@@ -104,7 +104,7 @@ const Chat = () => {
   }, [onlineUsers, usersList?.contactedUsers, usersList?.uncontactedUsers]);
 
   const fetchUsers = async () => {
-    const { data } = await axios.get(`${BASE_URL}/api/v1/users`, {
+    const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -3,17 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
 import { FaArrowLeft, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { setUserSelf } from "../redux/features/user/userSlice";
+import { setUser } from "../redux/features/user/userSlice";
 import { useUpdateUserMutation } from "../redux/services/UserApi";
 
 import languagesArray from "../util/languages";
-import { useAppDispatch } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 
 const Profile = () => {
-  const { user, setUser, isDarkMode } = useContext(UserContext);
+  const { user, setUser1, isDarkMode } = useContext(UserContext);
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
+  const { userSelf } = useAppSelector((state) => state.user);
   const [updateLanguage, setUpdateLanguage] = useState("");
   const token: { token: string } | null = JSON.parse(
     localStorage.getItem("token") || "null"
@@ -49,14 +50,14 @@ const Profile = () => {
       }
 
       const response = await updateUser({
-        userId: user?._id,
+        userId: userSelf?._id,
         formData,
       });
-      
+
       toast.success("Profile updated successfully!");
       const updatedUser = response.data.user;
-      dispatch(setUserSelf(updatedUser));
-      setUser({ ...user, ...updatedUser });
+      dispatch(setUser(updatedUser));
+      setUser1({ ...user, ...updatedUser });
       navigateChat();
     } catch (error) {
       toast.error("Failed to update profile.");

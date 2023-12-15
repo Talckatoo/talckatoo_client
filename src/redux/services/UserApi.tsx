@@ -5,7 +5,7 @@ export const UserApi = createApi({
   reducerPath: "UserApi",
   refetchOnFocus: true,
   baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_BASE_URL as string,
+    baseUrl: import.meta.env.VITE_BASE_URL1 as string,
     prepareHeaders: async (headers) => {
       // Replace AsyncStorage with localStorage
       const token = localStorage.getItem("token");

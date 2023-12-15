@@ -5,9 +5,8 @@ import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
 import { useLoginAuthMutation } from "../redux/services/AuthApi";
 import { toast } from "react-toastify";
-import { UserContext } from "../context/user-context";
-import { setUserSelf } from "../redux/features/user/userSlice";
-import { useAppDispatch } from "../redux/hooks";
+import { setUser } from "../redux/features/user/userSlice";
+import { useAppDispatch , useAppSelector} from "../redux/hooks";
 
 interface FormData {
   email: string;
@@ -25,9 +24,9 @@ const SignIn = () => {
     email: "",
     password: "",
   });
+  
   const dispatch = useAppDispatch();
   const [loginAuth] = useLoginAuthMutation();
-  const { setUser } = useContext(UserContext);
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
 
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -62,11 +61,14 @@ const SignIn = () => {
           password: formData.password,
         });
 
+        console.log(response);
+
         const token = response.data.token;
         localStorage.setItem("token", JSON.stringify(token));
         setUser(response.data.user);
-        dispatch(setUserSelf(response.data.user));
-
+        dispatch(setUser(response.data.user));
+        
+        
         navigate("/chat");
         toast.success("User signed up");
         setLoading(false);

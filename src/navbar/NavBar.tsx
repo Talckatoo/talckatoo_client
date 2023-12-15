@@ -6,7 +6,6 @@ import { HiOutlineUserCircle } from "react-icons/hi";
 import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
 import COCKATOO from "./.././assests/cockatoo.png";
 import axios from "axios";
-import { BASE_URL } from "../util/url.ts";
 
 const Navbar = () => {
   //Reference for dropdown menu
@@ -41,7 +40,7 @@ const Navbar = () => {
     const fetchProfileImage = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/v1/users/${user._id}`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/users/${user._id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -5,7 +5,7 @@ export const AuthApi = createApi({
   reducerPath: "AuthApi",
   refetchOnFocus: true,
   baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_BASE_URL as string,
+    baseUrl: import.meta.env.VITE_BASE_URL1 as string,
   }),
 
   endpoints: authEndpoints,

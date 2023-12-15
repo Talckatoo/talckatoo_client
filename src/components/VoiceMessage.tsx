@@ -6,7 +6,6 @@ import { FaMicrophone, FaStop, FaPlay, FaPaperPlane } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import "./VoiceMessage.css";
 import RecordRTC from "recordrtc";
-import { BASE_URL } from "../util/url.ts";
 
 interface VoiceMessageProps {
   socket: Socket;
@@ -18,8 +17,7 @@ interface voiceCode {
 }
 
 const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
-  const WHISPER_TRANSCRIPTION_URL =
-    "https://api.openai.com/v1/audio/translations";
+  const WHISPER_TRANSCRIPTION_URL = import.meta.env.VITE_WHISPER_TRANSCRIPTION_URL
   const { user, selectId, setMessages, language } = useContext(UserContext);
   const [isReadyToSend, setIsReadyToSend] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -94,7 +92,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
 
       try {
         const { data } = await axios.post(
-          `${BASE_URL}/api/v1/messages/voice-note`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/messages/voice-note`,
           formData,
           {
             headers: {
