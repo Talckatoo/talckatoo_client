@@ -14,7 +14,7 @@ import { AuthApi } from "./services/AuthApi";
 // persist store
 
 import { persistReducer, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import storage from "redux-persist/lib/storage";
 import { PersistPartial } from "redux-persist/lib/persistReducer";
 
 const persistConfig = {
