@@ -16,17 +16,13 @@ injectStyle();
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
   <>
-    <UserContextProvider>
-      <Provider 
-      // store={store}
-      store={store}
-      >
-
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-      </Provider>
-    </UserContextProvider>
+    <Provider store={store}>
+      <UserContextProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </UserContextProvider>
+    </Provider>
     <ToastContainer />
   </>
 );

@@ -89,7 +89,7 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
       try {
         if (loggedInUserId) {
           const { data } = await axios.get(
-            `${BASE_URL}/api/v1/users/${loggedInUserId}`,
+            `${BASE_URL}/users/${loggedInUserId}`,
             {
               headers: {
                 Authorization: `Bearer ${userWithToken}`,
