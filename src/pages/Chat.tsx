@@ -1,5 +1,4 @@
 import { useState, useContext, useEffect, useRef } from "react";
-import axios from "axios";
 import ChatContainer from "../components/ChatContainer";
 import { UserContext } from "../context/user-context";
 import { getContactName } from "../util/getContactName";
@@ -7,6 +6,7 @@ import { io, Socket } from "socket.io-client";
 import COCKATOO from "./.././assests/cockatoo.png";
 import FetchLatestMessages from "../util/FetchLatestMessages";
 import { PiBirdFill } from "react-icons/pi";
+import { useFetchAllUsersQuery } from "../redux/services/UserApi";
 
 type MyEventMap = {
   connect: () => void;
@@ -58,18 +58,13 @@ const Chat = () => {
     language,
     setLanguage,
   } = useContext(UserContext);
-
+  const fetchAllUsers = useFetchAllUsersQuery();
   const socket = useRef<Socket<MyEventMap> | null>();
   const [usersList, setUsersList] = useState<UsersList | null>(null);
   const [onlineFriends, setOnlineFriends] = useState<User[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [view, setView] = useState<"friends" | "people">("friends");
-  const token: { token: string } | null = JSON.parse(
-    localStorage.getItem("token") || "null"
-  );
-
   useEffect(() => {
-    console.log("connecting", import.meta.env.VITE_BASE_URL);
     socket.current = io(`${import.meta.env.VITE_BASE_URL}`);
   }, []);
 
@@ -90,26 +85,23 @@ const Chat = () => {
   useEffect(() => {
     if (
       usersList?.contactedUsers &&
-      usersList?.uncontactedUsers &&
       onlineUsers
     ) {
       const onlContact = usersList.contactedUsers.filter((u) =>
         onlineUsers.includes(u._id)
       );
-      const onlUnContact = usersList.uncontactedUsers.filter((u) =>
-        onlineUsers.includes(u._id)
-      );
-      setOnlineFriends([...onlContact, ...onlUnContact]);
+      
+      setOnlineFriends([...onlContact]);
     }
-  }, [onlineUsers, usersList?.contactedUsers, usersList?.uncontactedUsers]);
+  }, [onlineUsers, usersList?.contactedUsers]);
 
   const fetchUsers = async () => {
-    const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/users`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    setUsersList(data.users);
+    // fetching all user using redux toolkit query
+    const response = fetchAllUsers();
+
+    console.log(response);
+
+    setUsersList(response.data);
   };
   useEffect(() => {
     fetchUsers();
@@ -124,20 +116,6 @@ const Chat = () => {
     setConversationId(u.conversation._id);
     setSelectId(u._id);
     setLanguage(u?.language);
-  };
-
-  const handleSelectUnContact = (unContact: User) => {
-    setConversationId(null);
-    setSelectId(unContact._id);
-    setRecipient(unContact.userName);
-    setLanguage(unContact.language);
-  };
-
-  const handleSelectPeople = () => {
-    setConversationId(null);
-    setSelectId(null);
-    setLanguage(null);
-    setView("people");
   };
 
   return (
@@ -168,16 +146,7 @@ const Chat = () => {
             >
               Friends
             </button>
-            <button
-              className={`p-2 rounded-lg ${
-                view === "people"
-                  ? "bg-slate-500 hover:bg-slate-400 text-white"
-                  : "bg-slate-300 hover:bg-slate-400 text-black"
-              } font-bold`}
-              onClick={handleSelectPeople}
-            >
-              People
-            </button>
+        
           </div>
           {view === "friends" && (
             <div className="overflow-y-auto h-full">
@@ -256,76 +225,7 @@ const Chat = () => {
             </div>
           )}
 
-          {view === "people" && (
-            <div className="overflow-y-auto h-full">
-              {usersList
-                ? usersList.uncontactedUsers.map((unContact) => {
-                    if (unContact._id === user?._id) {
-                      return null;
-                    }
-                    return (
-                      <div
-                        key={unContact._id}
-                        className={
-                          "flex rounded-lg m-2 p-1 cursor-pointer last:mb-[5rem] " +
-                          (selectId === unContact._id && isDarkMode
-                            ? "bg-slate-500 text-white hover:bg-slate-600"
-                            : selectId === unContact._id && !isDarkMode
-                            ? "bg-slate-500 text-white hover:bg-slate-400"
-                            : isDarkMode
-                            ? "bg-[#161c24] text-white hover:bg-slate-600"
-                            : "bg-slate-300 text-black hover:bg-slate-400")
-                        }
-                        onClick={() => handleSelectUnContact(unContact)}
-                      >
-                        <div className="flex flex-row w-full">
-                          <div className="flex h-full w-1/4 items-center justify-center mx-2">
-                            <div className="relative">
-                              <div
-                                className="w-10 h-10 rounded-full shadow-sm flex items-center justify-center"
-                                style={{
-                                  backgroundImage: `url(${
-                                    unContact.profileImage?.url || COCKATOO
-                                  })`,
-                                  backgroundSize: "cover",
-                                  backgroundPosition: "center",
-                                }}
-                              >
-                                {!unContact.profileImage && (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    className="w-6 h-6 text-gray-300"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                    />
-                                  </svg>
-                                )}
-                              </div>
-                              {getContactName(
-                                unContact.userName,
-                                onlineFriends
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex w-3/4 items-center justify-start mb-1">
-                            <div className="flex font-bold w-full">
-                              {unContact.userName}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })
-                : null}
-            </div>
-          )}
+         
         </div>
         <div className="flex w-full h-full">
           <ChatContainer socket={socket} />

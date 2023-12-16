@@ -4,22 +4,22 @@ import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
+import { useAppSelector } from "../redux/hooks";
 import COCKATOO from "./.././assests/cockatoo.png";
-import axios from "axios";
+import { useFetchUserByIdQuery } from "../redux/services/UserApi";
 
 const Navbar = () => {
   //Reference for dropdown menu
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const profilePictureRef = useRef<HTMLDivElement>(null);
   //States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profileImage, setProfileImage] = useState("");
-  const token: { token: string } | null = JSON.parse(
-    localStorage.getItem("token") || "null"
-  );
-  const { user, setUser, isDarkMode, setIsDarkMode } = useContext(UserContext);
-
-  useEffect(()=>{
+  const profilePictureRef = useRef()
+  const { user } = useAppSelector( (state) => state.auth);
+  const fetchUserById  = useFetchUserByIdQuery(user?._id);
+  const { setUser, isDarkMode, setIsDarkMode } = useContext(UserContext);
+  
+   useEffect(()=>{
     document.addEventListener("mousedown", handleOutsideClicks);
     return () => {
       document.removeEventListener("mousedown", handleOutsideClicks);
@@ -37,28 +37,14 @@ const Navbar = () => {
   }, [user]);
 
   useEffect(() => {
-    const fetchProfileImage = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/v1/users/${user._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.data.user.profileImage) {
-          setProfileImage(response.data.user.profileImage.url);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    if (user && user._id) {
-      fetchProfileImage();
+    
+    const response = fetchUserById;
+    console.log(response);
+    if (response.data) {
+      setProfileImage(response.data.profileImage?.url || "");
     }
-  }, [user, token]);
+  }
+  ), [user];
 
   const handleDropdownClick = () => {
     setIsDropdownOpen(!isDropdownOpen);

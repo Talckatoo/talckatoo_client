@@ -6,6 +6,10 @@ import requestSliceReducer from "./features/user/requestSlice";
 import { UserApi } from "./services/UserApi";
 import { AuthApi } from "./services/AuthApi";
 
+// persist store
+
+
+
 // Explicitly typing the middleware array
 const middleware: Array<ThunkMiddleware<unknown, AnyAction>> = [
   UserApi.middleware as ThunkMiddleware<unknown, AnyAction>,

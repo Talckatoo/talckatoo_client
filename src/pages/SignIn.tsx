@@ -7,6 +7,7 @@ import { useLoginAuthMutation } from "../redux/services/AuthApi";
 import { toast } from "react-toastify";
 import { setUser } from "../redux/features/user/userSlice";
 import { useAppDispatch , useAppSelector} from "../redux/hooks";
+import { setAuth } from "../redux/features/user/authSlice";
 
 interface FormData {
   email: string;
@@ -66,7 +67,7 @@ const SignIn = () => {
         const token = response.data.token;
         localStorage.setItem("token", JSON.stringify(token));
         setUser(response.data.user);
-        dispatch(setUser(response.data.user));
+        dispatch(setAuth(response.data.user));
         
         
         navigate("/chat");
