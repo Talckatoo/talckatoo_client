@@ -6,17 +6,14 @@ import { HiOutlineUserCircle } from "react-icons/hi";
 import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
 import { useAppSelector } from "../redux/hooks";
 import COCKATOO from "./.././assests/cockatoo.png";
-import { useFetchUserByIdQuery } from "../redux/services/UserApi";
 
 const Navbar = () => {
   //Reference for dropdown menu
   const dropdownRef = useRef<HTMLDivElement>(null);
   //States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState("");
   const profilePictureRef = useRef();
   const { user } = useAppSelector((state) => state.auth);
-  const fetchUserById = useFetchUserByIdQuery(user?._id);
   const { setUser, isDarkMode, setIsDarkMode } = useContext(UserContext);
 
   useEffect(() => {
@@ -33,7 +30,7 @@ const Navbar = () => {
       isDropdownOpen &&
       dropdownRef.current &&
       !dropdownRef.current.contains(event.target as Node) &&
-      !profilePictureRef.current?.contains(event.target as Node)
+      !((profilePictureRef.current as unknown as HTMLElement)?.contains(event.target as Node))
     ) {
       setIsDropdownOpen(false);
     }

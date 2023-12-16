@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useLoginAuthMutation } from "../redux/services/AuthApi";
 import { toast } from "react-toastify";
 import { setUser } from "../redux/features/user/userSlice";
-import { useAppDispatch , useAppSelector} from "../redux/hooks";
+import { useAppDispatch } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
 
 interface FormData {
@@ -56,26 +56,26 @@ const SignIn = () => {
     e.preventDefault();
     if (validateForm()) {
       setLoading(true);
+
       try {
         const response = await loginAuth({
           email: formData.email.toLocaleLowerCase().trim(),
           password: formData.password,
         });
 
-        console.log(response);
-
         const token = response.data.token;
-        localStorage.setItem("token", JSON.stringify(token));
+        localStorage.setItem("token", token);
         setUser(response.data.user);
         dispatch(setAuth(response.data.user));
-        
-        
         navigate("/chat");
         toast.success("User signed up");
         setLoading(false);
+
       } catch (error) {
+
         toast.error("Email or password is incorrect");
         setLoading(false);
+        
       }
     } else {
       toast.warn("Please enter valid entries");

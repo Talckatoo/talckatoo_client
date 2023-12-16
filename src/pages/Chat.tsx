@@ -6,7 +6,9 @@ import { io, Socket } from "socket.io-client";
 import COCKATOO from "./.././assests/cockatoo.png";
 import FetchLatestMessages from "../util/FetchLatestMessages";
 import { PiBirdFill } from "react-icons/pi";
+import { useAppSelector } from "../redux/hooks";
 import { useFetchAllUsersQuery } from "../redux/services/UserApi";
+import { User } from "../redux/features/user/userSlice";
 
 type MyEventMap = {
   connect: () => void;
@@ -47,23 +49,31 @@ interface UsersList {
 
 const Chat = () => {
   const {
-    user,
     conversationId,
-    setConversationId,
     selectId,
     setSelectId,
     isDarkMode,
-    setRecipient,
     messages,
-    language,
     setLanguage,
   } = useContext(UserContext);
-  const fetchAllUsers = useFetchAllUsersQuery();
   const socket = useRef<Socket<MyEventMap> | null>();
   const [usersList, setUsersList] = useState<UsersList | null>(null);
   const [onlineFriends, setOnlineFriends] = useState<User[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [view, setView] = useState<"friends" | "people">("friends");
+
+  const { users, user } = useAppSelector((state) => state.user);
+  const {data, isLoading} = useFetchAllUsersQuery(null, { skip: !user });
+
+
+  useEffect(() => {
+    if (data) {
+      setUsersList(data as unknown as UsersList | null);
+      console.log(data);
+    }
+  }, [data]);
+
+
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_BASE_URL}`);
   }, []);
@@ -91,29 +101,21 @@ const Chat = () => {
         onlineUsers.includes(u._id)
       );
       
-      setOnlineFriends([...onlContact]);
+      setOnlineFriends([...onlContact.map((contact) => ({ ...contact, email: '', userId: '', welcome: '' } as User))]);
     }
   }, [onlineUsers, usersList?.contactedUsers]);
 
-  const fetchUsers = async () => {
-    // fetching all user using redux toolkit query
-    const response = fetchAllUsers();
 
-    console.log(response);
-
-    setUsersList(response.data);
-  };
   useEffect(() => {
-    fetchUsers();
+    setUsersList(users);
     if (socket.current) {
       socket.current.on("getMessage", () => {
-        fetchUsers();
+        setUsersList(users);
       });
     }
   }, [socket.current, messages]);
 
   const handleSelectContact = (u: User) => {
-    setConversationId(u.conversation._id);
     setSelectId(u._id);
     setLanguage(u?.language);
   };

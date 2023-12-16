@@ -6,8 +6,7 @@ export const UserApi = createApi({
   refetchOnFocus: true,
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_BASE_URL as string,
-    prepareHeaders: async (headers) => {
-      // Replace AsyncStorage with localStorage
+    prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
         headers.set("authorization", `Bearer ${token}`);

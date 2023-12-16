@@ -1,10 +1,10 @@
-import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
+import { EndpointBuilder } from "@reduxjs/toolkit/query";
 import { UserState } from "../../features/user/userSlice";
 import {
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
-} from "@reduxjs/toolkit/dist/query";
+} from "@reduxjs/toolkit/query";
 
 type MyApiBaseQuery = BaseQueryFn<
   string | FetchArgs,
@@ -18,7 +18,10 @@ export const userEndpoints = (
   builder: EndpointBuilder<MyApiBaseQuery, MyTagTypes, MyReducerPath>
 ) => ({
   fetchAllUsers: builder.query<UserState[], null>({
-    query: () => "users",
+    query: () => ({
+      url: "/users/friends",
+      method: "GET",
+    }),
   }),
   fetchUserById: builder.query<UserState, { id: string }>({
     query: ({ id }: { id: string }) => `users/${id}`,

@@ -68,6 +68,7 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
   let loggedInUserId: string | undefined;
 
   const userWithToken = JSON.parse(localStorage.getItem("token") || "null");
+  console.log(userWithToken);
   if (userWithToken) {
     loggedInUser = jwt_decode(userWithToken);
     loggedInUserId = loggedInUser?.userId;
@@ -89,7 +90,7 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
       try {
         if (loggedInUserId) {
           const { data } = await axios.get(
-            `${import.meta.env.VITE_BASE_URL}/api/v1/users/${loggedInUserId}`,
+            `${import.meta.env.VITE_BASE_URL}/users/${loggedInUserId}`,
             {
               headers: {
                 Authorization: `Bearer ${userWithToken}`,
