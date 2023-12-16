@@ -25,9 +25,7 @@ interface ProfileImage {
 const FetchLatestMessages: React.FC<{
   u: ContactedUser;
 }> = ({ u }) => {
-  const token: { token: string } | null = JSON.parse(
-    localStorage.getItem("token") || "null"
-  );
+  const token  = localStorage.getItem("token")
   const [latestMessage, setLatestMessage] = useState("");
   const { user } = useContext(UserContext);
 

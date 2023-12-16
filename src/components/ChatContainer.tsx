@@ -37,9 +37,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [isTyping, setIsTyping] = useState(false);
   const [selectedTyping, setSelectedTyping] = useState();
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const token: { token: string } | null = JSON.parse(
-    localStorage.getItem("token") || "null"
-  );
+ 
   const idArray = usersArray?.map((obj) => obj._id);
 
   const fullLanguage = languagesArray.map((l) => {
@@ -54,7 +52,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     try {
       if (user && !!conversationId) {
         const { data } = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/v1/users/${user._id}/conversations/${conversationId}`,
+          `${import.meta.env.VITE_BASE_URL}/users/${user._id}/conversations/${conversationId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

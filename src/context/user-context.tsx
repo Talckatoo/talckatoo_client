@@ -3,7 +3,6 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { toast } from "react-toastify";
 
-
 interface Messages {
   createdAt?: string | null;
   message: string;
@@ -67,15 +66,6 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
   let loggedInUser: User | null;
   let loggedInUserId: string | undefined;
 
-  const userWithToken = JSON.parse(localStorage.getItem("token") || "null");
-  console.log(userWithToken);
-  if (userWithToken) {
-    loggedInUser = jwt_decode(userWithToken);
-    loggedInUserId = loggedInUser?.userId;
-  } else {
-    loggedInUser = null;
-  }
-
   const [user, setUser] = useState<User | null>(null);
   const [recipient, setRecipient] = useState<string | null>(null);
   const [language, setLanguage] = useState<string | null>(null);
@@ -84,28 +74,6 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
   const [selectId, setSelectId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Messages[] | null>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        if (loggedInUserId) {
-          const { data } = await axios.get(
-            `${import.meta.env.VITE_BASE_URL}/users/${loggedInUserId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${userWithToken}`,
-              },
-            }
-          );
-          setUser(data.user);
-        }
-      } catch (error) {
-        toast.error("Error getting user information");
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   return (
     <UserContext.Provider

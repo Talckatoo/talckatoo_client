@@ -6,9 +6,9 @@ import { io, Socket } from "socket.io-client";
 import COCKATOO from "./.././assests/cockatoo.png";
 import FetchLatestMessages from "../util/FetchLatestMessages";
 import { PiBirdFill } from "react-icons/pi";
-import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { useFetchAllUsersQuery } from "../redux/services/UserApi";
-import { User } from "../redux/features/user/userSlice";
+import { User, setUsers } from "../redux/features/user/userSlice";
 
 type MyEventMap = {
   connect: () => void;
@@ -62,17 +62,15 @@ const Chat = () => {
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [view, setView] = useState<"friends" | "people">("friends");
 
+  const dispatch = useAppDispatch();
   const { users, user } = useAppSelector((state) => state.user);
-  const {data, isLoading} = useFetchAllUsersQuery(null, { skip: !user });
-
+  const { data, isLoading } = useFetchAllUsersQuery(null) as any;
 
   useEffect(() => {
     if (data) {
-      setUsersList(data as unknown as UsersList | null);
-      console.log(data);
+      dispatch(setUsers(data.users));
     }
   }, [data]);
-
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_BASE_URL}`);
@@ -93,18 +91,19 @@ const Chat = () => {
   }, [socket.current, user]);
 
   useEffect(() => {
-    if (
-      usersList?.contactedUsers &&
-      onlineUsers
-    ) {
+    if (usersList?.contactedUsers && onlineUsers) {
       const onlContact = usersList.contactedUsers.filter((u) =>
         onlineUsers.includes(u._id)
       );
-      
-      setOnlineFriends([...onlContact.map((contact) => ({ ...contact, email: '', userId: '', welcome: '' } as User))]);
+
+      setOnlineFriends([
+        ...onlContact.map(
+          (contact) =>
+            ({ ...contact, email: "", userId: "", welcome: "" } as User)
+        ),
+      ]);
     }
   }, [onlineUsers, usersList?.contactedUsers]);
-
 
   useEffect(() => {
     setUsersList(users);
@@ -148,12 +147,11 @@ const Chat = () => {
             >
               Friends
             </button>
-        
           </div>
           {view === "friends" && (
             <div className="overflow-y-auto h-full">
-              {usersList
-                ? usersList.contactedUsers.map((u) => {
+              {users
+                ? users?.contactedUsers?.map((u) => {
                     return (
                       <div
                         key={u._id}
@@ -226,8 +224,6 @@ const Chat = () => {
                 : null}
             </div>
           )}
-
-         
         </div>
         <div className="flex w-full h-full">
           <ChatContainer socket={socket} />

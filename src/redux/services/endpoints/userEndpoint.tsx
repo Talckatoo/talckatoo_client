@@ -18,10 +18,7 @@ export const userEndpoints = (
   builder: EndpointBuilder<MyApiBaseQuery, MyTagTypes, MyReducerPath>
 ) => ({
   fetchAllUsers: builder.query<UserState[], null>({
-    query: () => ({
-      url: "/users/friends",
-      method: "GET",
-    }),
+    query: () => "users",
   }),
   fetchUserById: builder.query<UserState, { id: string }>({
     query: ({ id }: { id: string }) => `users/${id}`,
