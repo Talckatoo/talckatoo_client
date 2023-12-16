@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Chat from "./pages/Chat";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./navbar/NavBar";
