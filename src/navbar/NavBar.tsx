@@ -14,7 +14,7 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const profilePictureRef = useRef();
   const { user } = useAppSelector((state) => state.auth);
-  const { setUser, isDarkMode, setIsDarkMode } = useContext(UserContext);
+  const { isDarkMode, setIsDarkMode } = useContext(UserContext);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClicks);
@@ -30,7 +30,9 @@ const Navbar = () => {
       isDropdownOpen &&
       dropdownRef.current &&
       !dropdownRef.current.contains(event.target as Node) &&
-      !((profilePictureRef.current as unknown as HTMLElement)?.contains(event.target as Node))
+      !(profilePictureRef.current as unknown as HTMLElement)?.contains(
+        event.target as Node
+      )
     ) {
       setIsDropdownOpen(false);
     }
@@ -46,7 +48,6 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUser(null);
     toast.success("User signed out");
     navigate("/");
   };

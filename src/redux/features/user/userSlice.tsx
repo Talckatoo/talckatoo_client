@@ -18,6 +18,7 @@ export interface UserState {
   token: string | null;
   user: any;
   users?: string[];
+  recipient: any;
 }
 
 const initialState: UserState = {
@@ -25,6 +26,7 @@ const initialState: UserState = {
   token: null,
   user: null,
   users: [],
+  recipient: null,
 };
 
 export const userSlice = createSlice({
@@ -37,9 +39,12 @@ export const userSlice = createSlice({
     setUsers: (state, action: PayloadAction<any[]>) => {
       state.users = action.payload;
     },
+    setRecipient: (state, action: PayloadAction<UserState | null>) => {
+      state.recipient = action.payload;
+    },
     // Add other reducers as needed
   },
 });
 
-export const { setUser, setUsers } = userSlice.actions;
+export const { setUser, setUsers, setRecipient } = userSlice.actions;
 export default userSlice.reducer;

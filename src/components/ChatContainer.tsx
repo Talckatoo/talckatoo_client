@@ -12,6 +12,13 @@ import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
 import { MdTranslate } from "react-icons/md";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import {
+  addMessage,
+  setMessages,
+  updateMessagesFromBuffer,
+} from "../redux/features/messages/messageSlice";
+import { setConversation } from "../redux/features/conversation/conversationSlice";
 
 interface Socket {
   current: any;
@@ -19,17 +26,27 @@ interface Socket {
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const {
-    user,
-    conversationId,
     setConversationId,
-    selectId,
     isDarkMode,
     recipient,
     setRecipient,
-    messages,
-    setMessages,
+
     language,
   } = useContext(UserContext);
+
+  const dispatch = useAppDispatch();
+
+  const conversationState = useAppSelector((state) => state.conversation);
+  const user = useAppSelector((state) => state.auth.user);
+  const messages = useAppSelector((state) => state.messages.messages);
+
+  const selectedId = conversationState?.conversation?.selectedId;
+  const conversationId = conversationState?.conversation?.conversationId;
+
+  useEffect(() => {
+    console.log("selectedId", selectedId);
+    console.log("conversationId", conversationId);
+  }, [selectedId, conversationId]);
 
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
@@ -37,7 +54,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [isTyping, setIsTyping] = useState(false);
   const [selectedTyping, setSelectedTyping] = useState();
   const scrollRef = useRef<HTMLDivElement | null>(null);
- 
+
   const idArray = usersArray?.map((obj) => obj._id);
 
   const fullLanguage = languagesArray.map((l) => {
@@ -48,11 +65,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     (la) => la.code === language?.toLowerCase()
   )?.voiceCode;
 
+  const token = localStorage.getItem("token");
+
   const fetchMessages = async () => {
     try {
       if (user && !!conversationId) {
         const { data } = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/users/${user._id}/conversations/${conversationId}`,
+          `${import.meta.env.VITE_BASE_URL}/users/${
+            user._id
+          }/conversations/${conversationId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -68,7 +89,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         } else {
           setRecipient(users[0].userName);
         }
-        setMessages(messages);
+        // setMessages(messages);
+        dispatch(setMessages(messages));
         const AIuser = {
           userName: "AI Assistant",
           _id: import.meta.env.VITE_AI_ASSISTANT_ID,
@@ -92,40 +114,49 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   useEffect(() => {
     fetchMessages();
-  }, [selectId, conversationId]);
+  }, [selectedId, conversationId]);
 
   const sendAIMessage = (messageAI: any) => {
     socket.current.emit("sendMessageChatGPT", {
       message: messageAI,
       from: user?._id,
-      to: selectId,
+      to: selectedId,
       createdAt: Date.now(),
     });
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        createdAt: Date.now(),
+    // setMessages((prev) => [
+    //   ...prev,
+    //   {
+    //     createdAt: Date.now(),
+    //     message: messageAI,
+    //     sender: user?._id,
+    //     _id: uuidv4(),
+    //   },
+    // ]);
+
+    dispatch(
+      addMessage({
+        createdAt: Date.now().toString(),
         message: messageAI,
         sender: user?._id,
         _id: uuidv4(),
-      },
-    ]);
+      })
+    );
   };
 
   const sendMessage = async (messageText: any) => {
-    socket.current.emit("stopTyping", selectId);
-    if (selectId && conversationId) {
+    socket.current.emit("stopTyping", selectedId);
+    if (selectedId && conversationId) {
       try {
         const { data } = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/api/v1/messages`,
+          `${import.meta.env.VITE_BASE_URL}/messages`,
           {
             from: user?._id,
-            to: selectId,
+            to: selectedId,
             targetLanguage: language,
             message: messageText,
             status: false,
-            unread: selectId,
+            unread: selectedId,
           },
           {
             headers: {
@@ -136,42 +167,55 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         const { message } = data;
 
+        console.log("message", message);
+
         socket.current.emit("sendMessage", {
           createdAt: message.createdAt,
           from: user?._id,
-          to: selectId,
+          to: selectedId,
           targetLanguage: language,
           message: message.message,
           status: false,
-          unread: selectId,
+          unread: selectedId,
         });
 
-        setMessages((prev) => [
-          ...prev,
-          {
+        // setMessages((prev) => [
+        //   ...prev,
+        //   {
+        //     createdAt: message.createdAt,
+        //     message: message.message,
+        //     sender: user?._id,
+        //     _id: message._id,
+        //     status: false,
+        //     unread: selectedId,
+        //   },
+        // ]);
+
+        dispatch(
+          addMessage({
             createdAt: message.createdAt,
             message: message.message,
             sender: user?._id,
             _id: message._id,
-            status: false,
-            unread: selectId,
-          },
-        ]);
+            unread: selectedId,
+          })
+        );
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
-    } else if (selectId && conversationId === null) {
-      setMessages([]);
+    } else if (selectedId && conversationId === null) {
+      // setMessages([]);
+      dispatch(setMessages([]));
       try {
         const { data } = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/api/v1/messages`,
+          `${import.meta.env.VITE_BASE_URL}/messages`,
           {
             from: user?._id,
-            to: selectId,
+            to: selectedId,
             targetLanguage: language,
             message: messageText,
             status: false,
-            unread: selectId,
+            unread: selectedId,
           },
           {
             headers: {
@@ -181,17 +225,22 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
         const { message } = data;
         if (data.conversation._id) {
-          setConversationId(data.conversation._id);
+          dispatch(
+            setConversation({
+              conversationId: data.conversation._id,
+              selectedId: selectedId,
+            })
+          );
         }
 
         socket.current.emit("sendMessage", {
           createdAt: message.createdAt,
           from: user?._id,
-          to: selectId,
+          to: selectedId,
           targetLanguage: language,
           message: message.message,
           status: false,
-          unread: selectId,
+          unread: selectedId,
         });
       } catch (err) {
         toast.error("Error sending messages, please try again");
@@ -227,6 +276,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             autoClose: 1000,
             isLoading: false,
           });
+          console.log("data.messageReply", data.messageReply);
           setArrivalMessages({
             createdAt: data.messageReply.createdAt,
             message: data.messageReply.message,
@@ -239,9 +289,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current, arrivalMessages]);
 
   useEffect(() => {
+    console.log("arrivalMessages", arrivalMessages);
     arrivalMessages &&
       idArray?.includes(arrivalMessages.sender) &&
-      setMessages((prev) => [...prev, arrivalMessages]);
+      dispatch(setMessages([...messages, arrivalMessages]));
   }, [arrivalMessages]);
 
   useEffect(() => {
@@ -249,14 +300,14 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [messages]);
 
   const onHandleTranslateText = async (translateText: string) => {
-    socket.current.emit("stopTyping", selectId);
-    if (selectId && conversationId && translateText) {
+    socket.current.emit("stopTyping", selectedId);
+    if (selectedId && conversationId && translateText) {
       try {
         const { data } = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/api/v1/messages`,
+          `${import.meta.env.VITE_BASE_URL}/messages`,
           {
             from: user?._id,
-            to: selectId,
+            to: selectedId,
             targetLanguage: language,
             message: translateText.text,
             voiceTargetLanguage: voiceCode,
@@ -270,17 +321,29 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
 
         const { message } = data;
-        setMessages((prev) => [
-          ...prev,
-          {
+        console.log("message", message);
+        // setMessages((prev) => [
+        //   ...prev,
+        //   {
+        //     createdAt: message.createdAt,
+        //     voiceNote: {
+        //       url: message.voiceNote.url,
+        //     },
+        //     sender: user?._id,
+        //     _id: message._id,
+        //   },
+        // ]);
+
+        dispatch(
+          addMessage({
             createdAt: message.createdAt,
             voiceNote: {
               url: message.voiceNote.url,
             },
             sender: user?._id,
             _id: message._id,
-          },
-        ]);
+          })
+        );
 
         socket.current.emit("sendMessage", {
           createdAt: message.createdAt,
@@ -288,7 +351,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             url: message.voiceNote.url,
           },
           from: user?._id,
-          to: selectId,
+          to: selectedId,
         });
       } catch (err) {
         toast.error("Error sending messages, please try again");
@@ -300,7 +363,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     try {
       if (user && !!conversationId) {
         const { data } = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/v1/users/${user._id}/conversations/${conversationId}/update`,
+          `${import.meta.env.VITE_BASE_URL}/users/${
+            user._id
+          }/conversations/${conversationId}/update`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -314,7 +379,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
   useEffect(() => {
     updateConversation();
-  }, [selectId]);
+  }, [selectedId]);
 
   return (
     <div
@@ -363,7 +428,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       >
         <div className="relative h-full">
           <div className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0">
-            {!!selectId && !!conversationId ? (
+            {!!selectedId && !!conversationId ? (
               <div className="m-2 p-2">
                 {messages
                   ? messages.map((msg) => (
@@ -456,7 +521,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }`}
       />
       {selectedTyping?.to === user?._id &&
-      selectedTyping?.from === selectId &&
+      selectedTyping?.from === selectedId &&
       isTyping ? (
         <JumpingDotsAnimation />
       ) : null}
@@ -465,7 +530,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           isDarkMode ? "bg-gray-800" : "bg-slate-200"
         }`}
       >
-        {selectId ? (
+        {selectedId ? (
           <>
             <ChatInput
               onHandleSendMessage={sendMessage}

@@ -6,6 +6,9 @@ import { FaMicrophone, FaStop, FaPlay, FaPaperPlane } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import "./VoiceMessage.css";
 import RecordRTC from "recordrtc";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { addMessage } from "../redux/features/messages/messageSlice";
+import { Socket } from "socket.io-client";
 
 interface VoiceMessageProps {
   socket: Socket;
@@ -17,23 +20,24 @@ interface voiceCode {
 }
 
 const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
-  const WHISPER_TRANSCRIPTION_URL = import.meta.env.VITE_WHISPER_TRANSCRIPTION_URL
-  const { user, selectId, setMessages, language } = useContext(UserContext);
+  const WHISPER_TRANSCRIPTION_URL = import.meta.env
+    .VITE_WHISPER_TRANSCRIPTION_URL;
+
+  const { user } = useAppSelector((state) => state.auth);
+  const { messages } = useAppSelector((state) => state.messages);
+  const conversationState = useAppSelector((state) => state.conversation);
+
+  const selectedId = conversationState?.conversation?.selectedId;
+  const conversationId = conversationState?.conversation?.conversationId;
+
+  const dispatch = useAppDispatch();
+
   const [isReadyToSend, setIsReadyToSend] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
-  const [audioData, setAudioData] = useState(null);
-  const audioRef = useRef(null);
-  const [audioURL, setAudioURL] = useState<string | null>(null);
-  const token: { token: string } | null = JSON.parse(
-    localStorage.getItem("token") || "null"
-  );
 
-  // const fullLanguage = languagesArray.map((l) => {
-  //   if (l.code === language) return l.language
-  // })
-
+  const token = localStorage.getItem("token");
   const startRecording = () => {
     setIsRecording(true);
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -88,11 +92,11 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
 
       formData.append("audio", recordedAudio);
       formData.append("from", user?._id);
-      formData.append("to", selectId);
+      formData.append("to", selectedId);
 
       try {
         const { data } = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/api/v1/messages/voice-note`,
+          `${import.meta.env.VITE_BASE_URL}/messages/voice-note`,
           formData,
           {
             headers: {
@@ -101,17 +105,29 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
           }
         );
         const { message } = data;
-        setMessages((prev) => [
-          ...prev,
-          {
+
+        // setMessages((prev) => [
+        //   ...prev,
+        //   {
+        //     createdAt: message.createdAt,
+        //     voiceNote: {
+        //       url: message.voiceNote.url,
+        //     },
+        //     sender: user?._id,
+        //     _id: message._id,
+        //   },
+        // ]);
+
+        dispatch(
+          addMessage({
             createdAt: message.createdAt,
             voiceNote: {
               url: message.voiceNote.url,
             },
             sender: user?._id,
             _id: message._id,
-          },
-        ]);
+          })
+        );
 
         socket.current.emit("sendMessage", {
           createdAt: message.createdAt,
@@ -119,7 +135,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
             url: message.voiceNote.url,
           },
           from: user?._id,
-          to: selectId,
+          to: selectedId,
         });
         setRecordedAudio(null);
       } catch (err) {
@@ -162,6 +178,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
         body: formData,
       });
       const data = await response.json();
+      console.log("data from the voice translation", data);
       onHandleTranslateText(data);
     } catch (err) {
       console.log(err);

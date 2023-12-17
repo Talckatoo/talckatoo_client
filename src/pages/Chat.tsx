@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect, useRef } from "react";
+import axios from "axios";
 import ChatContainer from "../components/ChatContainer";
 import { UserContext } from "../context/user-context";
 import { getContactName } from "../util/getContactName";
@@ -7,8 +8,7 @@ import COCKATOO from "./.././assests/cockatoo.png";
 import FetchLatestMessages from "../util/FetchLatestMessages";
 import { PiBirdFill } from "react-icons/pi";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { useFetchAllUsersQuery } from "../redux/services/UserApi";
-import { User, setUsers } from "../redux/features/user/userSlice";
+import { setConversation } from "../redux/features/conversation/conversationSlice";
 
 type MyEventMap = {
   connect: () => void;
@@ -48,32 +48,26 @@ interface UsersList {
 }
 
 const Chat = () => {
-  const {
-    conversationId,
-    selectId,
-    setSelectId,
-    isDarkMode,
-    messages,
-    setLanguage,
-  } = useContext(UserContext);
+  const { isDarkMode, setRecipient, language, setLanguage } =
+    useContext(UserContext);
+
+  const { user } = useAppSelector((state) => state.auth);
   const socket = useRef<Socket<MyEventMap> | null>();
   const [usersList, setUsersList] = useState<UsersList | null>(null);
   const [onlineFriends, setOnlineFriends] = useState<User[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [view, setView] = useState<"friends" | "people">("friends");
-
+  const token = localStorage.getItem("token");
   const dispatch = useAppDispatch();
-  const { users, user } = useAppSelector((state) => state.user);
-  const { data, isLoading } = useFetchAllUsersQuery(null) as any;
+  const conversationState = useAppSelector((state) => state.conversation);
+  const messages = useAppSelector((state) => state.messages.messages);
 
+  const selectedId = conversationState?.conversation?.selectedId;
+  const conversationId = conversationState?.conversation?.conversationId;
   useEffect(() => {
-    if (data) {
-      dispatch(setUsers(data.users));
-    }
-  }, [data]);
-
-  useEffect(() => {
-    socket.current = io(`${import.meta.env.VITE_BASE_URL}`);
+    socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`, {
+      transports: ["websocket"],
+    });
   }, []);
 
   useEffect(() => {
@@ -91,32 +85,70 @@ const Chat = () => {
   }, [socket.current, user]);
 
   useEffect(() => {
-    if (usersList?.contactedUsers && onlineUsers) {
+    if (
+      usersList?.contactedUsers &&
+      usersList?.uncontactedUsers &&
+      onlineUsers
+    ) {
       const onlContact = usersList.contactedUsers.filter((u) =>
         onlineUsers.includes(u._id)
       );
-
-      setOnlineFriends([
-        ...onlContact.map(
-          (contact) =>
-            ({ ...contact, email: "", userId: "", welcome: "" } as User)
-        ),
-      ]);
+      const onlUnContact = usersList.uncontactedUsers.filter((u) =>
+        onlineUsers.includes(u._id)
+      );
+      setOnlineFriends([...onlContact, ...onlUnContact]);
     }
-  }, [onlineUsers, usersList?.contactedUsers]);
+  }, [onlineUsers, usersList?.contactedUsers, usersList?.uncontactedUsers]);
 
+  const fetchUsers = async () => {
+    const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/users`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(data);
+    setUsersList(data.users);
+  };
   useEffect(() => {
-    setUsersList(users);
+    fetchUsers();
     if (socket.current) {
       socket.current.on("getMessage", () => {
-        setUsersList(users);
+        fetchUsers();
       });
     }
   }, [socket.current, messages]);
 
   const handleSelectContact = (u: User) => {
-    setSelectId(u._id);
+    dispatch(
+      setConversation({
+        conversationId: u.conversation._id,
+        selectedId: u._id,
+      })
+    );
     setLanguage(u?.language);
+  };
+
+  const handleSelectUnContact = (unContact: User) => {
+    dispatch(
+      setConversation({
+        conversationId: null,
+        selectedId: unContact._id,
+      })
+    );
+
+    setRecipient(unContact.userName);
+    setLanguage(unContact.language);
+  };
+
+  const handleSelectPeople = () => {
+    dispatch(
+      setConversation({
+        conversationId: null,
+        selectedId: null,
+      })
+    );
+    setLanguage(null);
+    setView("people");
   };
 
   return (
@@ -147,11 +179,22 @@ const Chat = () => {
             >
               Friends
             </button>
+            <button
+              className={`p-2 rounded-lg ${
+                view === "people"
+                  ? "bg-slate-500 hover:bg-slate-400 text-white"
+                  : "bg-slate-300 hover:bg-slate-400 text-black"
+              } font-bold`}
+              onClick={handleSelectPeople}
+            >
+              People
+            </button>
           </div>
           {view === "friends" && (
             <div className="overflow-y-auto h-full">
-              {users
-                ? users?.contactedUsers?.map((u) => {
+              {usersList
+                ? usersList.contactedUsers.map((u) => {
+                    console.log(u);
                     return (
                       <div
                         key={u._id}
@@ -206,15 +249,86 @@ const Chat = () => {
                               <div className={`mb-1 font-bold w-full flex`}>
                                 <div className="w-11/12">{u.userName}</div>
                                 {u.conversation.unread.includes(user?._id) &&
-                                  u._id !== selectId && (
+                                  u._id !== selectedId && (
                                     <div className="flex justify-center items-center w-1/12 text-orange-400 animate__animated animate__heartBeat">
                                       <PiBirdFill></PiBirdFill>
                                     </div>
                                   )}
                               </div>
                               <div className={`w-full`}>
-                                <FetchLatestMessages u={u} />
+                                <FetchLatestMessages u={u?.latestMessage} />
                               </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                : null}
+            </div>
+          )}
+
+          {view === "people" && (
+            <div className="overflow-y-auto h-full">
+              {usersList
+                ? usersList.uncontactedUsers.map((unContact) => {
+                    if (unContact._id === user?._id) {
+                      return null;
+                    }
+                    return (
+                      <div
+                        key={unContact._id}
+                        className={
+                          "flex rounded-lg m-2 p-1 cursor-pointer last:mb-[5rem] " +
+                          (selectedId === unContact._id && isDarkMode
+                            ? "bg-slate-500 text-white hover:bg-slate-600"
+                            : selectedId === unContact._id && !isDarkMode
+                            ? "bg-slate-500 text-white hover:bg-slate-400"
+                            : isDarkMode
+                            ? "bg-[#161c24] text-white hover:bg-slate-600"
+                            : "bg-slate-300 text-black hover:bg-slate-400")
+                        }
+                        onClick={() => handleSelectUnContact(unContact)}
+                      >
+                        <div className="flex flex-row w-full">
+                          <div className="flex h-full w-1/4 items-center justify-center mx-2">
+                            <div className="relative">
+                              <div
+                                className="w-10 h-10 rounded-full shadow-sm flex items-center justify-center"
+                                style={{
+                                  backgroundImage: `url(${
+                                    unContact.profileImage?.url || COCKATOO
+                                  })`,
+                                  backgroundSize: "cover",
+                                  backgroundPosition: "center",
+                                }}
+                              >
+                                {!unContact.profileImage && (
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    className="w-6 h-6 text-gray-300"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                    />
+                                  </svg>
+                                )}
+                              </div>
+                              {getContactName(
+                                unContact.userName,
+                                onlineFriends
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex w-3/4 items-center justify-start mb-1">
+                            <div className="flex font-bold w-full">
+                              {unContact.userName}
                             </div>
                           </div>
                         </div>

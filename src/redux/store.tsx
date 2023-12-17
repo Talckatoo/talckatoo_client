@@ -7,6 +7,8 @@ import {
 import userSliceReducer from "./features/user/userSlice";
 import authSliceReducer from "./features/user/authSlice";
 import requestSliceReducer from "./features/user/requestSlice";
+import conversationSliceReducer from "./features/conversation/conversationSlice";
+import messagesSliceReducer from "./features/messages/messageSlice";
 
 import { UserApi } from "./services/UserApi";
 import { AuthApi } from "./services/AuthApi";
@@ -23,9 +25,11 @@ const persistConfig = {
 };
 
 export interface RootState extends PersistPartial {
+  messages: any;
   user: any;
   request: any;
   auth: any;
+  conversation: any;
   [UserApi.reducerPath]: any;
   [AuthApi.reducerPath]: any;
 }
@@ -36,6 +40,9 @@ const persistedReducer = persistReducer(
     user: userSliceReducer,
     request: requestSliceReducer,
     auth: authSliceReducer,
+    conversation: conversationSliceReducer,
+    messages: messagesSliceReducer,
+
     [UserApi.reducerPath]: UserApi.reducer,
     [AuthApi.reducerPath]: AuthApi.reducer,
   }) as any
