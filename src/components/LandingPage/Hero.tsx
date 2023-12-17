@@ -7,7 +7,7 @@ import ellipse from "../../../public/assets/img/Ellipse.png";
 const Hero = () => {
   const navigate = useNavigate();
   return (
-    <section className="container lg:py-[10rem] xl:py-[15rem]">
+    <section className="container py-[2rem] lg:py-[8rem] xl:py-[10rem]">
       <div className="flex flex-col md:flex-row  md:items-center justify-center">
         <div className=" w-full md:w-[50%]">
           <div className="w-full flex flex-col">
@@ -19,7 +19,7 @@ const Hero = () => {
             </p>
             <Button
               type="button"
-              className="bg-black max-md:mx-auto text-white mt-4 z-[1]"
+              className="bg-black mx-auto md:mx-0 text-white mt-4 z-[1] bt-size"
               onClick={() => {
              navigate("/sign-up");
              }}
