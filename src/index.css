@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+  
+
 
 /* ===== Scrollbar CSS ===== */
 * {
@@ -16,12 +19,16 @@
   font-family: "Plus Jarkata Sans", sans-serif;
 }
 
+.font-dms {
+  font-family: 'DM Sans', sans-serif;
+}
+
 .font-archetic {
   font-family: "Architects Daughter", cursive;
 }
 
 .font-medium {
-  font-family: 16px;
+  font-weight: 16px !important;
 }
 
 .font-bold {
@@ -62,6 +69,8 @@ body {
   /* Sizing */
   width: 100%;
   min-width: 100%;
+  font-family: "inter", sans-serif;
+  font-size: 16px;
 }
 
 #root {
@@ -76,6 +85,11 @@ body {
   min-height: 100vh;
 }
 
+
+.bt-size {
+  width: fit-content;
+}
+
 @layer components {
   /* main */
   .main-container {
@@ -87,7 +101,7 @@ body {
   }
   /* Head Text */
   .head-text {
-    @apply text-title-500 text-[52px] max-lg:text-[32px]  font-extrabold;
+    @apply text-title-500 text-[38px] max-lg:text-[25px]  font-extrabold;
   }
 
   .title-text {
