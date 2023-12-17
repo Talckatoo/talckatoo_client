@@ -39,9 +39,9 @@ const SignIn = () => {
       errors.email = "Enter a valid email address.";
     }
 
-    if (!formData.password || formData.password.length < 8) {
+    if (!formData.password || formData.password.length < 6) {
       isValid = false;
-      errors.password = "Password must be at least 8 characters.";
+      errors.password = "Password must be at least 6 characters.";
     }
 
     setFormErrors(errors);

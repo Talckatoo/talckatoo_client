@@ -17,10 +17,13 @@ const Hero = () => {
           type="button"
           className="bg-primary-500 text-white mt-8 z-[1]"
           onClick={() => {
-            navigate("/sign-up");
+            window.open(
+              "https://expo.dev/artifacts/eas/oVz1pg9Wb24GCuudYfzcu1.apk",
+              "_self"
+            );
           }}
         >
-          Try Talckatoo Now
+          Download Now
         </Button>
         <div className="mt-[4rem] z-[1]">
           <img

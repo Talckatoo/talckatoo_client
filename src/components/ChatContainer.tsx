@@ -119,7 +119,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const sendMessage = async (messageText: any) => {
     socket.current.emit("stopTyping", selectId);
-    if (selectId && conversationId) {
+    if (selectId && conversationId) { 
       try {
         const { data } = await axios.post(
           `${BASE_URL}/api/v1/messages`,
