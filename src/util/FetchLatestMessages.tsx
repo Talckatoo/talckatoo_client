@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import { UserContext } from "../context/user-context";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { BASE_URL } from "../util/url.ts";
 
 interface ContactedUser {
   _id: string;
@@ -26,9 +25,7 @@ interface ProfileImage {
 const FetchLatestMessages: React.FC<{
   u: ContactedUser;
 }> = ({ u }) => {
-  const token: { token: string } | null = JSON.parse(
-    localStorage.getItem("token") || "null"
-  );
+  const token  = localStorage.getItem("token")
   const [latestMessage, setLatestMessage] = useState("");
   const { user } = useContext(UserContext);
 
@@ -37,7 +34,7 @@ const FetchLatestMessages: React.FC<{
       try {
         if (user && u._id) {
           const { data } = await axios.get(
-            `${BASE_URL}/api/v1/users/${user._id}/conversations/${u.conversation._id}`,
+            `${import.meta.env.VITE_BASE_URL}/api/v1/users/${user._id}/conversations/${u.conversation._id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,

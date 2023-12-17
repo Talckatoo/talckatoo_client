@@ -1,13 +1,16 @@
-import React, { ChangeEvent, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { UserContext } from "../context/user-context";
-import { BASE_URL } from "../util/url";
+import { useRegisterAuthMutation } from "../redux/services/AuthApi";
+// import { UserContext } from "../context/user-context";
+import { useDispatch } from 'react-redux';
 import languagesArray from "../util/languages";
+import { setUser } from "../redux/features/user/userSlice";
+
 
 interface FormData {
   name: string;
@@ -24,9 +27,10 @@ interface FormErrors {
   selectedLanguage?: string;
 }
 
+
 export const SignUp = () => {
   const navigate = useNavigate();
-  const { setUser, isDarkMode } = useContext(UserContext);
+  // const { setUser, isDarkMode } = useContext(UserContext);
   const [formData, setFormData] = React.useState<FormData>({
     name: "",
     email: "",
@@ -34,7 +38,8 @@ export const SignUp = () => {
     confirmPassword: "",
   });
   const [selectedLanguage, setSelectedLanguage] = useState("");
-
+  const [registerAuth] = useRegisterAuthMutation();
+  const dispatch = useDispatch();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
 
   const validateForm = (): boolean => {
@@ -76,32 +81,29 @@ export const SignUp = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await axios.post(
-          `${BASE_URL}/api/v1/account/sign-up`,
+        const response = await registerAuth(  
           {
             userName: formData.name,
-            email: formData.email,
+            email: formData.email.toLocaleLowerCase().trim(),
             password: formData.password,
             language: selectedLanguage,
           }
         );
 
         const token = response.data.token;
+        const user = response.data.user;
         localStorage.setItem("token", JSON.stringify(token));
-        setUser(response.data.user);
-
+        // setUser(user);
+        dispatch(setUser(user));
         toast.success("User signed up");
         navigate("/chat");
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           // If it's an Axios error with a response, show the error message
           const errorMessage = error.response.data.message;
-          console.error(errorMessage); // Log the error message
-          console.log(error);
           toast.error(errorMessage); // Display the error message to the user
         } else {
           // Handle any other errors or log a generic message
-          console.error("An error occurred:", error);
           toast.error("Error signing up");
         }
       }
