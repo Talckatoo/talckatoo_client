@@ -22,6 +22,7 @@ import { PersistPartial } from "redux-persist/lib/persistReducer";
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ["auth", "user", "conversation", "messages"],
 };
 
 export interface RootState extends PersistPartial {

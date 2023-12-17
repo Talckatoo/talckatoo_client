@@ -303,6 +303,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     socket.current.emit("stopTyping", selectedId);
     if (selectedId && conversationId && translateText) {
       try {
+        console.log("translateText", translateText);
+        console.log("language", language);
+        console.log("voiceCode", voiceCode);
         const { data } = await axios.post(
           `${import.meta.env.VITE_BASE_URL}/messages`,
           {
