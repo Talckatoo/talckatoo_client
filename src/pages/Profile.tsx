@@ -3,20 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
 import { FaArrowLeft, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { setUser } from "../redux/features/user/userSlice";
+import { useUpdateUserMutation } from "../redux/services/UserApi";
+
 import languagesArray from "../util/languages";
-import { BASE_URL } from "../util/url.ts";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+
 
 const Profile = () => {
-  const { user, setUser, isDarkMode } = useContext(UserContext);
+  const { user, setUser1, isDarkMode } = useContext(UserContext);
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
+  const { userSelf } = useAppSelector((state) => state.user);
   const [updateLanguage, setUpdateLanguage] = useState("");
   const token: { token: string } | null = JSON.parse(
     localStorage.getItem("token") || "null"
   );
-
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [updateUser] = useUpdateUserMutation();
 
   const navigateChat = () => {
     navigate("/chat");
@@ -44,19 +49,15 @@ const Profile = () => {
         formData.append("language", updateLanguage || user.language);
       }
 
-      const response = await axios.patch(
-        `${BASE_URL}/api/v1/users/${user?._id}/update-user`,
+      const response = await updateUser({
+        userId: userSelf?._id,
         formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      });
+
       toast.success("Profile updated successfully!");
       const updatedUser = response.data.user;
-      setUser({ ...user, ...updatedUser });
+      dispatch(setUser(updatedUser));
+      setUser1({ ...user, ...updatedUser });
       navigateChat();
     } catch (error) {
       toast.error("Failed to update profile.");

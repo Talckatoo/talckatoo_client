@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Button from "../../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
 

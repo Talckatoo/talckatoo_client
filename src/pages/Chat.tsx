@@ -6,8 +6,9 @@ import { getContactName } from "../util/getContactName";
 import { io, Socket } from "socket.io-client";
 import COCKATOO from "./.././assests/cockatoo.png";
 import FetchLatestMessages from "../util/FetchLatestMessages";
-import { BASE_URL } from "../util/url.ts";
 import { PiBirdFill } from "react-icons/pi";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { setConversation } from "../redux/features/conversation/conversationSlice";
 
 type MyEventMap = {
   connect: () => void;
@@ -47,30 +48,26 @@ interface UsersList {
 }
 
 const Chat = () => {
-  const {
-    user,
-    conversationId,
-    setConversationId,
-    selectId,
-    setSelectId,
-    isDarkMode,
-    setRecipient,
-    messages,
-    language,
-    setLanguage,
-  } = useContext(UserContext);
+  const { isDarkMode, setRecipient, language, setLanguage } =
+    useContext(UserContext);
 
+  const { user } = useAppSelector((state) => state.auth);
   const socket = useRef<Socket<MyEventMap> | null>();
   const [usersList, setUsersList] = useState<UsersList | null>(null);
   const [onlineFriends, setOnlineFriends] = useState<User[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [view, setView] = useState<"friends" | "people">("friends");
-  const token: { token: string } | null = JSON.parse(
-    localStorage.getItem("token") || "null"
-  );
+  const token = localStorage.getItem("token");
+  const dispatch = useAppDispatch();
+  const conversationState = useAppSelector((state) => state.conversation);
+  const messages = useAppSelector((state) => state.messages.messages);
 
+  const selectedId = conversationState?.conversation?.selectedId;
+  const conversationId = conversationState?.conversation?.conversationId;
   useEffect(() => {
-    socket.current = io(`${BASE_URL}`);
+    socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`, {
+      transports: ["websocket"],
+    });
   }, []);
 
   useEffect(() => {
@@ -104,11 +101,12 @@ const Chat = () => {
   }, [onlineUsers, usersList?.contactedUsers, usersList?.uncontactedUsers]);
 
   const fetchUsers = async () => {
-    const { data } = await axios.get(`${BASE_URL}/api/v1/users`, {
+    const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(data);
     setUsersList(data.users);
   };
   useEffect(() => {
@@ -121,21 +119,34 @@ const Chat = () => {
   }, [socket.current, messages]);
 
   const handleSelectContact = (u: User) => {
-    setConversationId(u.conversation._id);
-    setSelectId(u._id);
+    dispatch(
+      setConversation({
+        conversationId: u.conversation._id,
+        selectedId: u._id,
+      })
+    );
     setLanguage(u?.language);
   };
 
   const handleSelectUnContact = (unContact: User) => {
-    setConversationId(null);
-    setSelectId(unContact._id);
+    dispatch(
+      setConversation({
+        conversationId: null,
+        selectedId: unContact._id,
+      })
+    );
+
     setRecipient(unContact.userName);
     setLanguage(unContact.language);
   };
 
   const handleSelectPeople = () => {
-    setConversationId(null);
-    setSelectId(null);
+    dispatch(
+      setConversation({
+        conversationId: null,
+        selectedId: null,
+      })
+    );
     setLanguage(null);
     setView("people");
   };
@@ -183,6 +194,7 @@ const Chat = () => {
             <div className="overflow-y-auto h-full">
               {usersList
                 ? usersList.contactedUsers.map((u) => {
+                    console.log(u);
                     return (
                       <div
                         key={u._id}
@@ -237,14 +249,14 @@ const Chat = () => {
                               <div className={`mb-1 font-bold w-full flex`}>
                                 <div className="w-11/12">{u.userName}</div>
                                 {u.conversation.unread.includes(user?._id) &&
-                                  u._id !== selectId && (
+                                  u._id !== selectedId && (
                                     <div className="flex justify-center items-center w-1/12 text-orange-400 animate__animated animate__heartBeat">
                                       <PiBirdFill></PiBirdFill>
                                     </div>
                                   )}
                               </div>
                               <div className={`w-full`}>
-                                <FetchLatestMessages u={u} />
+                                <FetchLatestMessages u={u?.latestMessage} />
                               </div>
                             </div>
                           </div>
@@ -268,9 +280,9 @@ const Chat = () => {
                         key={unContact._id}
                         className={
                           "flex rounded-lg m-2 p-1 cursor-pointer last:mb-[5rem] " +
-                          (selectId === unContact._id && isDarkMode
+                          (selectedId === unContact._id && isDarkMode
                             ? "bg-slate-500 text-white hover:bg-slate-600"
-                            : selectId === unContact._id && !isDarkMode
+                            : selectedId === unContact._id && !isDarkMode
                             ? "bg-slate-500 text-white hover:bg-slate-400"
                             : isDarkMode
                             ? "bg-[#161c24] text-white hover:bg-slate-600"

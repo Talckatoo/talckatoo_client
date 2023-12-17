@@ -4,62 +4,43 @@ import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
+import { useAppSelector } from "../redux/hooks";
 import COCKATOO from "./.././assests/cockatoo.png";
-import axios from "axios";
-import { BASE_URL } from "../util/url.ts";
 
 const Navbar = () => {
   //Reference for dropdown menu
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const profilePictureRef = useRef<HTMLDivElement>(null);
   //States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState("");
-  const token: { token: string } | null = JSON.parse(
-    localStorage.getItem("token") || "null"
-  );
-  const { user, setUser, isDarkMode, setIsDarkMode } = useContext(UserContext);
+  const profilePictureRef = useRef();
+  const { user } = useAppSelector((state) => state.auth);
+  const { isDarkMode, setIsDarkMode } = useContext(UserContext);
 
-  useEffect(()=>{
+  useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClicks);
     return () => {
       document.removeEventListener("mousedown", handleOutsideClicks);
-    }
+    };
   }, [isDropdownOpen]);
 
-  const handleOutsideClicks:(event:MouseEvent)=>void = (event:MouseEvent) => {
-    if(isDropdownOpen && dropdownRef.current && (!dropdownRef.current.contains(event.target as Node)) && (!profilePictureRef.current?.contains(event.target as Node))){
+  const handleOutsideClicks: (event: MouseEvent) => void = (
+    event: MouseEvent
+  ) => {
+    if (
+      isDropdownOpen &&
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node) &&
+      !(profilePictureRef.current as unknown as HTMLElement)?.contains(
+        event.target as Node
+      )
+    ) {
       setIsDropdownOpen(false);
     }
-  }
+  };
 
   useEffect(() => {
     setIsDropdownOpen(false);
   }, [user]);
-
-  useEffect(() => {
-    const fetchProfileImage = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/api/v1/users/${user._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.data.user.profileImage) {
-          setProfileImage(response.data.user.profileImage.url);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    if (user && user._id) {
-      fetchProfileImage();
-    }
-  }, [user, token]);
 
   const handleDropdownClick = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -67,7 +48,6 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUser(null);
     toast.success("User signed out");
     navigate("/");
   };
@@ -117,18 +97,20 @@ const Navbar = () => {
                 ""
               )}
             </h5>
-            {profileImage ? (
+            {user?.profileImage?.url ? (
               <div
                 ref={profilePictureRef}
                 onClick={handleDropdownClick}
                 className="w-8 h-8 rounded-full shadow-xl flex items-center justify-center cursor-pointer"
                 style={{
-                  backgroundImage: `url(${profileImage || COCKATOO})`,
+                  backgroundImage: `url(${
+                    user?.profileImage?.url || COCKATOO
+                  })`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               >
-                {!profileImage && (
+                {!user?.profileImage?.url && (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
