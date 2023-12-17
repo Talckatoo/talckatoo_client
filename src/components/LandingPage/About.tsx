@@ -4,17 +4,19 @@ import { MdDone } from "react-icons/md";
 const About = () => {
   return (
     <section className="mt-[2rem] p-0 max-md:p-5 container">
-      <div className="flex flex-col items-center justify-center">
-        <h2 className="head-text text-center max-w-[883px] z-[1]">
+      <div className="flex flex-col ">
+        <div>
+        <h2 className="head-text text-black text-start max-w-[883px] z-[1]">
           One Chat Platform, Unlimited Opportunities
         </h2>
-        <p className="sub-title-text text-center mt-4 max-w-[768px] z-[1]">
-          From casual conversations to professional meetings, make every word
-          understood, every emotion felt.
+        <p className=" mt-4 max-w-[800px] z-[1]">
+        From casual conversations to professional meetings, make every word understood, every emotion felt.
         </p>
 
+        </div>
+        
         <div className="grid grid-cols-2 max-md:grid-cols-1 gap-10 items-center mt-[4rem] z-[1] w-full">
-          <div className="flex flex-col items-start gap-2 max-w-[505px]">
+          <div className="flex flex-col items-start gap-2 max-w-[505px] bg-light-bg py-8 px-12 rounded-[25px]">
             <span className="text-primary-500 text-[20px] font-archetic">
               Efficient and Cost-Effective
             </span>
@@ -41,21 +43,21 @@ const About = () => {
             </ul>
           </div>
 
-          <div>
+          <div className="">
             <img
               src="/assets/img/about1.png"
               alt="hero"
-              className="w-[90%] h-full  object-cover max-h-[400px]"
+              className="w-[90%] h-full  object-cover max-h-[400px]  rounded-[25px]"
             />
           </div>
           <div className="max-md:order-1">
             <img
               src="/assets/img/about2.png"
               alt="hero"
-              className="w-[90%] h-full   object-cover max-h-[400px]"
+              className="w-[90%] h-full   object-cover max-h-[400px]  rounded-[25px]"
             />
           </div>
-          <div className="flex flex-col items-start gap-2 max-w-[505px]">
+          <div className="flex flex-col items-start gap-2 max-w-[505px] bg-light-bg py-8 px-12 rounded-[25px]">
             <span className="text-primary-500 text-[20px] font-archetic">
               Simple, Yet Powerful
             </span>
