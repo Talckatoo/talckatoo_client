@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Chat from "./pages/Chat";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./navbar/NavBar";
@@ -6,6 +6,7 @@ import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
+import { useAppSelector } from "./redux/hooks";
 
 const App = () => {
   const navigate = useNavigate();

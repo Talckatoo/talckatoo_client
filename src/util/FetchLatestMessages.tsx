@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import { UserContext } from "../context/user-context";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { BASE_URL } from "../util/url.ts";
 
 const FetchLatestMessages: React.FC<{
   u;

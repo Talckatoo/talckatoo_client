@@ -7,5 +7,6 @@ export default defineConfig(() => {
       outDir: "build",
     },
     plugins: [react()],
+    ENV_KEY: process.env.ENV_KEY,
   };
 });

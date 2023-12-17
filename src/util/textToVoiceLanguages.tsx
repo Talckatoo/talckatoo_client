@@ -16,7 +16,7 @@ const textToVoiceLanguages =
       "name": "Catalan"
     },
     {
-      "code": "zh-CN",
+      "code": "zh",
       "voiceCode": "zh-cn",
       "name": "Chinese (China)"
     },
