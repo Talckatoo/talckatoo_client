@@ -101,12 +101,15 @@ const Chat = () => {
   }, [onlineUsers, usersList?.contactedUsers, usersList?.uncontactedUsers]);
 
   const fetchUsers = async () => {
-    const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/users`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    console.log(data);
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_BASE_URL}/users/friends`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
     setUsersList(data.users);
   };
   useEffect(() => {
@@ -194,7 +197,6 @@ const Chat = () => {
             <div className="overflow-y-auto h-full">
               {usersList
                 ? usersList.contactedUsers.map((u) => {
-                    console.log(u);
                     return (
                       <div
                         key={u._id}
