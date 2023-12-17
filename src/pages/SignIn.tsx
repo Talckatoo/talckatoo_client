@@ -3,10 +3,11 @@ import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../util/url";
-import axios from "axios";
+import { useLoginAuthMutation } from "../redux/services/AuthApi";
 import { toast } from "react-toastify";
-import { UserContext } from "../context/user-context";
+import { setUser } from "../redux/features/user/userSlice";
+import { useAppDispatch } from "../redux/hooks";
+import { setAuth } from "../redux/features/user/authSlice";
 
 interface FormData {
   email: string;
@@ -24,8 +25,9 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-  const { setUser, isDarkMode } = useContext(UserContext);
-
+  
+  const dispatch = useAppDispatch();
+  const [loginAuth] = useLoginAuthMutation();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
 
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -39,40 +41,41 @@ const SignIn = () => {
       errors.email = "Enter a valid email address.";
     }
 
-    if (!formData.password || formData.password.length < 8) {
+    if (!formData.password || formData.password.length < 6) {
       isValid = false;
-      errors.password = "Password must be at least 8 characters.";
+      errors.password = "Password must be at least 6 characters.";
     }
 
     setFormErrors(errors);
 
     return isValid;
   };
-
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
     if (validateForm()) {
       setLoading(true);
+
       try {
-        const response = await axios.post(`${BASE_URL}/api/v1/account/log-in`, {
-          email: formData.email,
+        const response = await loginAuth({
+          email: formData.email.toLocaleLowerCase().trim(),
           password: formData.password,
         });
 
-        if (response.status === 200) {
-          const token = response.data.token;
-          localStorage.setItem("token", JSON.stringify(token));
-          setUser(response.data.user);
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        setUser(response.data.user);
+        dispatch(setAuth(response.data.user));
+        navigate("/chat");
+        toast.success("User signed up");
+        setLoading(false);
 
-          toast.success("User signed in");
-          setLoading(false);
-          navigate("/chat");
-        }
       } catch (error) {
+
         toast.error("Email or password is incorrect");
         setLoading(false);
+        
       }
     } else {
       toast.warn("Please enter valid entries");
@@ -139,6 +142,7 @@ const SignIn = () => {
             label="Email"
             type="text"
             name="email"
+            id="email"
             placeholder="Enter your email"
             value={formData.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -149,7 +153,8 @@ const SignIn = () => {
           />
 
           <Input
-            label="Password "
+            label="Password"
+            id="password"
             type="password"
             name="password"
             placeholder="Password (at least 8 characters)"
