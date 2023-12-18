@@ -19,29 +19,25 @@ import {
   updateMessagesFromBuffer,
 } from "../redux/features/messages/messageSlice";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
+import { setRecipient } from "../redux/features/user/userSlice";
 
 interface Socket {
   current: any;
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
-  const {
-    setConversationId,
-    isDarkMode,
-    recipient,
-    setRecipient,
-
-    language,
-  } = useContext(UserContext);
+  const { setConversationId, isDarkMode } = useContext(UserContext);
 
   const dispatch = useAppDispatch();
 
   const conversationState = useAppSelector((state) => state.conversation);
   const user = useAppSelector((state) => state.auth.user);
   const messages = useAppSelector((state) => state.messages.messages);
+  const { recipient } = useAppSelector((state) => state.user);
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
+  const language = conversationState?.conversation?.language;
 
   useEffect(() => {
     console.log("selectedId", selectedId);
@@ -85,9 +81,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         const { users } = data.conversation;
 
         if (users[0].userName === user?.userName) {
-          setRecipient(users[1].userName);
+          dispatch(setRecipient(users[1].userName));
         } else {
-          setRecipient(users[0].userName);
+          dispatch(setRecipient(users[0].userName));
         }
         // setMessages(messages);
         dispatch(setMessages(messages));

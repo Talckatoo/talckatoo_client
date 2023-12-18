@@ -9,6 +9,7 @@ import FetchLatestMessages from "../util/FetchLatestMessages";
 import { PiBirdFill } from "react-icons/pi";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
+import { setRecipient } from "../redux/features/user/userSlice";
 
 type MyEventMap = {
   connect: () => void;
@@ -48,8 +49,7 @@ interface UsersList {
 }
 
 const Chat = () => {
-  const { isDarkMode, setRecipient, language, setLanguage } =
-    useContext(UserContext);
+  const { isDarkMode } = useContext(UserContext);
 
   const { user } = useAppSelector((state) => state.auth);
   const socket = useRef<Socket<MyEventMap> | null>();
@@ -123,9 +123,10 @@ const Chat = () => {
       setConversation({
         conversationId: u.conversation._id,
         selectedId: u._id,
+        language: u.language,
       })
     );
-    setLanguage(u?.language);
+    dispatch(setRecipient(u.userName));
   };
 
   const handleSelectUnContact = (unContact: User) => {
@@ -133,11 +134,11 @@ const Chat = () => {
       setConversation({
         conversationId: null,
         selectedId: unContact._id,
+        language: unContact.language,
       })
     );
 
-    setRecipient(unContact.userName);
-    setLanguage(unContact.language);
+    dispatch(setRecipient(unContact.userName));
   };
 
   const handleSelectPeople = () => {
@@ -145,9 +146,9 @@ const Chat = () => {
       setConversation({
         conversationId: null,
         selectedId: null,
+        language: null,
       })
     );
-    setLanguage(null);
     setView("people");
   };
 
@@ -172,7 +173,12 @@ const Chat = () => {
               } font-bold`}
               onClick={() => {
                 if (view !== "friends") {
-                  setLanguage(null);
+                  dispatch(
+                    setConversation({
+                      language: null,
+                    })
+                  );
+
                   setView("friends");
                 }
               }}
