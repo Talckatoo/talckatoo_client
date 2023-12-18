@@ -163,8 +163,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         const { message } = data;
 
-        console.log("message", message);
-
         socket.current.emit("sendMessage", {
           createdAt: message.createdAt,
           from: user?._id,
@@ -272,7 +270,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             autoClose: 1000,
             isLoading: false,
           });
-          console.log("data.messageReply", data.messageReply);
+
           setArrivalMessages({
             createdAt: data.messageReply.createdAt,
             message: data.messageReply.message,
@@ -285,7 +283,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current, arrivalMessages]);
 
   useEffect(() => {
-    console.log("arrivalMessages", arrivalMessages);
     arrivalMessages &&
       idArray?.includes(arrivalMessages.sender) &&
       dispatch(setMessages([...messages, arrivalMessages]));
@@ -299,9 +296,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     socket.current.emit("stopTyping", selectedId);
     if (selectedId && conversationId && translateText) {
       try {
-        console.log("translateText", translateText);
-        console.log("language", language);
-        console.log("voiceCode", voiceCode);
         const { data } = await axios.post(
           `${import.meta.env.VITE_BASE_URL}/messages`,
           {
@@ -320,7 +314,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
 
         const { message } = data;
-        console.log("message", message);
         // setMessages((prev) => [
         //   ...prev,
         //   {
