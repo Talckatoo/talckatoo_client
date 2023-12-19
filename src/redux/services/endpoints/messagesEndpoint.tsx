@@ -31,12 +31,20 @@ export const messagesEndpoints = (
     }: {
       userId: string;
       conversationId: string;
-    }) => `/users/${userId}/conversations/${conversationId}`,
+    }) => `/users/${userId}/conversations/${conversationId}?page=1&limit=10`,
   }),
   // send message using socket
   sendMessage: builder.mutation<Message, any>({
     query: (body: any) => ({
       url: "/messages",
+      method: "POST",
+      body,
+    }),
+  }),
+  // send Audio
+  sendAudio: builder.mutation<Message, any>({
+    query: (body: any) => ({
+      url: "/messages/voice-note",
       method: "POST",
       body,
     }),

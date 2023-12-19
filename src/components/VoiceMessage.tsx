@@ -9,6 +9,7 @@ import RecordRTC from "recordrtc";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { addMessage } from "../redux/features/messages/messageSlice";
 import { Socket } from "socket.io-client";
+import { useSendAudioMutation } from "../redux/services/MessagesApi";
 
 interface VoiceMessageProps {
   socket: Socket;
@@ -29,6 +30,8 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
+
+  const [sendAudio, { isLoading: isSendingAudio }] = useSendAudioMutation();
 
   const dispatch = useAppDispatch();
 
@@ -86,7 +89,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   //   }
   // };
 
-  const sendAudio = async () => {
+  const handleSendAudio = async () => {
     if (recordedAudio) {
       const formData = new FormData();
 
@@ -95,37 +98,27 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
       formData.append("to", selectedId);
 
       try {
-        const { data } = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/messages/voice-note`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const { message } = data;
+        const response = await sendAudio(formData).unwrap();
 
-        // setMessages((prev) => [
-        //   ...prev,
+        // const { data } = await axios.post(
+        //   `${import.meta.env.VITE_BASE_URL}/messages/voice-note`,
+        //   formData,
         //   {
-        //     createdAt: message.createdAt,
-        //     voiceNote: {
-        //       url: message.voiceNote.url,
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
         //     },
-        //     sender: user?._id,
-        //     _id: message._id,
-        //   },
-        // ]);
+        //   }
+        // );
+        const { message } = response;
 
         dispatch(
           addMessage({
-            createdAt: message.createdAt,
+            createdAt: message?.createdAt,
             voiceNote: {
-              url: message.voiceNote.url,
+              url: message?.voiceNote.url,
             },
             sender: user?._id,
-            _id: message._id,
+            _id: message?._id,
           })
         );
 
@@ -214,7 +207,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
                 <MdDelete />
               </button>
               <button
-                onClick={sendAudio}
+                onClick={handleSendAudio}
                 className="bg-slate-300 hover:bg-green-300 rounded-full h-9 px-2.5"
                 disabled={!isReadyToSend}
               >

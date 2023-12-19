@@ -9,7 +9,6 @@ export interface Message {
   voiceNote?: any;
   unread?: string;
   createdAt?: string | null;
-  conversation?: any;
 }
 
 export interface MessageState {

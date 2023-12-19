@@ -18,7 +18,7 @@ import {
   setMessages,
 } from "../redux/features/messages/messageSlice";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
-import { setRecipient } from "../redux/features/user/userSlice";
+import userSlice, { setRecipient } from "../redux/features/user/userSlice";
 import {
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
@@ -44,15 +44,22 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // RTK Query
   // fetch all messages by conversation id
-  const { data: messagesData } = useFetchMessagesByConversationIdQuery(
-    { userId: user?._id, conversationId: conversationId },
-    { skip: !conversationId }
-  ) as any;
+  const { data: messagesData, refetch: refetchMessages } =
+    useFetchMessagesByConversationIdQuery(
+      { userId: user?._id, conversationId: conversationId },
+      { skip: !conversationId }
+    ) as any;
 
   // Post Message
   const [sendMessage, { isLoading }] = useSendMessageMutation();
 
-  const [usersArray, setUsersArray] = useState<any>([]);
+  useEffect(() => {
+    if (conversationId) {
+      refetchMessages();
+    }
+  }, [conversationId]);
+
+  const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -84,20 +91,22 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     const { messages } = messagesData?.conversation || {};
     const { users } = messagesData?.conversation || {};
+    console.log("messages", messagesData);
     if (users) {
-      // if (users[0]?.userName === user?.userName) {
-      //   dispatch(setRecipient(users[1]?.userName));
-      // } else {
-      //   dispatch(setRecipient(users[0]?.userName));
-      // }
+      if (users[0]?.userName === user?.userName) {
+        dispatch(setRecipient(users[1]?.userName));
+      } else {
+        dispatch(setRecipient(users[0]?.userName));
+      }
+
+      const AIuser = {
+        userName: "AI Assistant",
+        _id: import.meta.env.VITE_AI_ASSISTANT_ID,
+      };
+      setUsersArray([...users, AIuser]);
     }
     // setMessages(messages);
     dispatch(setMessages(messages));
-    const AIuser = {
-      userName: "AI Assistant",
-      _id: import.meta.env.VITE_AI_ASSISTANT_ID,
-    };
-    setUsersArray([...messagesData?.conversation.users, AIuser]);
   }, [messagesData]);
 
   const sendAIMessage = (messageAI: any) => {
@@ -131,6 +140,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           unread: selectedId,
         }).unwrap();
 
+        console.log("response", response);
+
         const { message } = response;
 
         socket.current.emit("sendMessage", {
@@ -142,6 +153,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         });
+
+        // modify the latest message   in the users redux
 
         dispatch(
           addMessage({
@@ -169,22 +182,21 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }).unwrap();
 
         const { message } = response;
-        const { conversation } = response;
-        if (conversation?._id) {
+        if (response?.conversation._id) {
           dispatch(
             setConversation({
-              conversationId: conversation?._id,
+              conversationId: response?.conversation._id,
               selectedId: selectedId,
             })
           );
         }
 
         socket.current.emit("sendMessage", {
-          createdAt: message?.createdAt,
+          createdAt: message.createdAt,
           from: user?._id,
           to: selectedId,
           targetLanguage: language,
-          message: message?.message,
+          message: message.message,
           status: false,
           unread: selectedId,
         });
@@ -240,8 +252,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       dispatch(setMessages([...messages, arrivalMessages]));
   }, [arrivalMessages]);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  // }, [messages]);
+
+  const scrollToBottom = () => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  };
+  useEffect(() => {
+    scrollToBottom();
   }, [messages]);
 
   const onHandleTranslateText = async (translateText: string) => {
@@ -252,9 +271,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           from: user?._id,
           to: selectedId,
           targetLanguage: language,
-          message: translateText,
-          status: false,
-          unread: selectedId,
+          message: translateText.text,
+          voiceTargetLanguage: voiceCode,
+          voiceToVoice: true,
         }).unwrap();
 
         const { message } = response;

@@ -21,6 +21,7 @@ export const {
   useFetchAllMessagesQuery,
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
+  useSendAudioMutation,
   useSendFileMutation,
   useDeleteMessageMutation,
   useDeleteConversationMutation,

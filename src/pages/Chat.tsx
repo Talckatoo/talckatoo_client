@@ -52,6 +52,15 @@ const Chat = () => {
 
   useEffect(() => {
     if (socket.current && user) {
+      socket.current.on("getMessage", (data: any) => {
+        refetchFriends();
+      });
+    }
+  }),
+    [refetchFriends, socket.current];
+
+  useEffect(() => {
+    if (socket.current && user) {
       socket.current.emit("addUser", user._id);
       socket.current.on("getUsers", (users: unknown[]) => {
         let usersMap = new Set();
@@ -78,6 +87,7 @@ const Chat = () => {
 
   useEffect(() => {
     refetchFriends();
+    console.log("messages", messages);
   }, [refetchFriends, messages]);
 
   const handleSelectContact = (u: any) => {
@@ -88,7 +98,7 @@ const Chat = () => {
         language: u.language,
       })
     );
-    dispatch(setRecipient(u.userName));
+    dispatch(setRecipient(u.userName as any));
   };
 
   return (
