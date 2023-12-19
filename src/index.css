@@ -1,9 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,600&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-  
-
 
 /* ===== Scrollbar CSS ===== */
 * {
@@ -20,7 +18,7 @@
 }
 
 .font-dms {
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
 }
 
 .font-archetic {
@@ -85,7 +83,6 @@ body {
   min-height: 100vh;
 }
 
-
 .bt-size {
   width: fit-content;
 }
@@ -97,7 +94,7 @@ body {
   }
 
   .container {
-    @apply w-full max-w-[1110px] m-auto;
+    @apply w-full max-w-[1284px] m-auto;
   }
   /* Head Text */
   .head-text {

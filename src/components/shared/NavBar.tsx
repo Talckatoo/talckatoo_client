@@ -31,11 +31,13 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
 
   return (
     <header
-      className={`w-full py-4  sticky top-0 z-50 ${
-        scrolled ? "backdrop-filter bg-slate-200 backdrop-blur-2xl bg-opacity-60" : ""
+      className={`w-full py-4  m-auto  sticky top-0 z-50 ${
+        scrolled
+          ? "backdrop-filter bg-slate-200 backdrop-blur-2xl bg-opacity-60"
+          : ""
       }`}
     >
-      <div className="container  w-full flex items-center justify-between ">
+      <div className="  w-full flex items-center justify-between max-w-[95%] m-auto">
         {/* logo section */}
         <Link to="/" className="font-jakarta font-medium">
           <span>TALCKATOO</span>
@@ -58,7 +60,7 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
               className="bg-black text-white"
               onClick={() => {
                 navigate("/sign-up");
-              }}     
+              }}
             >
               Sign Up
             </Button>

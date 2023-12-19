@@ -16,7 +16,7 @@ const About = () => {
         </div>
         
         <div className="grid grid-cols-2 max-md:grid-cols-1 gap-10 items-center mt-[4rem] z-[1] w-full">
-          <div className="flex flex-col items-start gap-2 md:w-full  sm:w-[80%] md:max-w-[565px] md:h-full bg-light-bg py-8 px-12 rounded-[25px]">
+          <div className="flex flex-col items-start gap-2 md:w-full  sm:w-[80%]  md:h-full bg-light-bg py-8 px-12 rounded-[25px]">
             <span className="text-primary-500 text-[20px] font-archetic">
               Efficient and Cost-Effective
             </span>
@@ -47,14 +47,14 @@ const About = () => {
             <img
               src="/assets/img/about1.png"
               alt="hero"
-              className=" sm:w-[80%] md:w-[90%] h-full object-cover rounded-[25px]"
+              className=" w-full h-full object-cover rounded-[25px]"
             />
           </div>
-          <div className="max-md:order-1">
+          <div className="max-md:order-1 w-full">
             <img
               src="/assets/img/about2.png"
               alt="hero"
-              className=" sm:w-[80%] md:w-[90%] h-full object-cover rounded-[25px]"
+              className=" w-full h-full object-cover rounded-[25px]"
             />
           </div>
           <div className="flex flex-col items-start gap-2 sm:w-[80%] md:w-full max-w-[565px] md:h-full bg-light-bg py-8 px-12 rounded-[25px]">
