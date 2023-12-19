@@ -56,6 +56,26 @@
   border: 3px double #231f1f;
 }
 
+.card:first-child {
+  position: relative;
+  top: 9rem;
+
+}
+
+.card:nth-child(2) {
+  position: relative;
+  bottom: 3rem;
+}
+
+.card:nth-child(3) {
+  visibility: hidden;
+}
+
+.p-card {
+  position: relative;
+  bottom: 10rem;
+}
+
 body {
   /* Display */
   display: flex;
@@ -68,7 +88,7 @@ body {
   width: 100%;
   min-width: 100%;
   font-family: "inter", sans-serif;
-  font-size: 16px;
+  /* font-size: 16px; */
 }
 
 #root {
