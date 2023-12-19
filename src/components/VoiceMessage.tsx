@@ -178,7 +178,6 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
         body: formData,
       });
       const data = await response.json();
-      console.log("data from the voice translation", data);
       onHandleTranslateText(data);
     } catch (err) {
       console.log(err);

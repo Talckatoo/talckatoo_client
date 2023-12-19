@@ -18,6 +18,7 @@ import { AuthApi } from "./services/AuthApi";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { PersistPartial } from "redux-persist/lib/persistReducer";
+import { MessagesApi } from "./services/MessagesApi";
 
 const persistConfig = {
   key: "root",
@@ -32,6 +33,7 @@ export interface RootState extends PersistPartial {
   conversation: any;
   [UserApi.reducerPath]: any;
   [AuthApi.reducerPath]: any;
+  [MessagesApi.reducerPath]: any;
 }
 
 const persistedReducer = persistReducer(
@@ -45,6 +47,7 @@ const persistedReducer = persistReducer(
 
     [UserApi.reducerPath]: UserApi.reducer,
     [AuthApi.reducerPath]: AuthApi.reducer,
+    [MessagesApi.reducerPath]: MessagesApi.reducer,
   }) as any
 );
 
@@ -52,6 +55,7 @@ const persistedReducer = persistReducer(
 const middleware: Array<ThunkMiddleware<unknown, AnyAction>> = [
   UserApi.middleware as ThunkMiddleware<unknown, AnyAction>,
   AuthApi.middleware as ThunkMiddleware<unknown, AnyAction>,
+  MessagesApi.middleware as ThunkMiddleware<unknown, AnyAction>,
 ];
 
 export const store = configureStore({

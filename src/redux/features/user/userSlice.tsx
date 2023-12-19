@@ -18,7 +18,7 @@ export interface UserState {
   token: string | null;
   user: any;
   users?: string[];
-  recipient: any;
+  recipient?: any;
 }
 
 const initialState: UserState = {
