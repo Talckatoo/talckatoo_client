@@ -33,7 +33,7 @@ const Hero = () => {
               Best chat app in market!
             </h2>
           </div>
-          <p className="pt-2  text-center md:text-start  lg:text-[13px]">
+          <p className="pt-2  text-center md:text-start text-[18px] max-md:text-[16px]">
             Talkcatoo has revolutionized how our team communicates. The
             real-time translation feature means we can work seamlessly with
             international partners without missing a beat!
