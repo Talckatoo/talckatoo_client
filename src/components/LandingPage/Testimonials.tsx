@@ -3,7 +3,7 @@ import { testimonials } from "../../constants/testimonials";
 
 const Testimonials = () => {
   return (
-    <section className="my-[2rem] max-md:p-5 container mt-[5rem] ">
+    <section className=" max-md:p-5 container mt-[8rem] ">
       <div className="flex flex-col w-full ">
         <div className="flex justify-center md:justify-start  gap-4 uppercase">
           <img src="/assets/icons/Rectangle.svg" alt="rectangle" />
@@ -20,15 +20,22 @@ const Testimonials = () => {
           </p>
         </div>
 
-        <div className="grid  gap-10 md:grid-cols-2  max-sm:grid-cols-1 sm:w-[80%] sm:mx-auto items-center mt-[4rem] w-full z-[1] p-0  justify-between p-card">
+        <div className="grid  gap-10 md:grid-cols-2  max-sm:grid-cols-1  sm:mx-auto items-center mt-[4rem] w-full z-[1]   justify-between p-card">
           {testimonials.map((item, index) => (
-            <div key={index} className="p-8 bg-light-bg border border-[#EFF0F6] rounded-[20px] card">
+            <div
+              key={index}
+              className="p-16 bg-light-bg border border-[#EFF0F6] rounded-[20px] card"
+            >
               <p className="max-md:text-[16px]  text-[18px]">{item.text}</p>
               <div className="flex items-center gap-4  mt-4">
                 <img src={item.image} alt="i" />
                 <div className="flex flex-col">
-                  <h4 className="max-md:text-[16px]  text-[18px] font-bold">{item.name}</h4>
-                  <span className="max-md:text-[16px]  text-[18px]">{item.title}</span>
+                  <h4 className="max-md:text-[16px]  text-[18px] font-bold">
+                    {item.name}
+                  </h4>
+                  <span className="max-md:text-[16px]  text-[18px]">
+                    {item.title}
+                  </span>
                 </div>
               </div>
             </div>

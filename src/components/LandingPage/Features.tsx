@@ -2,11 +2,11 @@ import React from "react";
 
 const Features = () => {
   return (
-    <section className=" container mt-[5rem] ">
+    <section className=" container mt-[8rem] ">
       <div className="flex flex-col md:flex-row gap-5 w-full">
         <div className="w-full md:w-[50%]">
         <div className="flex flex-col justify-center items-center md:items-start">
-          <h2 className=" head-text text-black  md:text-start max-w-[983px] z-[1]">
+          <h2 className=" head-text text-black text-center  md:text-start max-w-[983px] z-[1]">
           Why Choose Talckatoo?
           </h2>
           <p className="mt-4 max-w-[533px] md-max:text-[16px] text-[18px] z-[1] text-center md:text-start">
