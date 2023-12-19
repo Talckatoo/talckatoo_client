@@ -8,7 +8,7 @@ const Hero = () => {
       <div className="flex flex-col md:flex-row  md:items-center justify-center">
         <div className=" w-full md:w-[50%]">
           <div className="w-full flex flex-col">
-            <h1 className="head-text max-md:mx-auto text-[50px] text-center md:text-start max-w-[536px]  z-[1] text-black ">
+            <h1 className="head-text max-md:mx-auto max-md:text-[32px] text-[50px] text-center  md:text-start max-w-[536px]  z-[1] text-black ">
               Bridging Conversations Across Languages
             </h1>
             <p className="text-back max-md:mx-auto text-[18px] max-md:text-[16px] text-center md:text-start  mt-4  max-w-[536px] z-[1]">

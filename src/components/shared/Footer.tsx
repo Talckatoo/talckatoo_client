@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="flex items-center p-0 max-md:p-5 justify-between container mt-[2rem] max-md:mt-0 max-md:items-center text-center gap-3 max-sm:flex-col-reverse">
+    <footer className="flex items-center max-md:p-5 px-[2.5rem] justify-between container mt-[2rem] max-md:mt-0 max-md:items-center text-center gap-3 max-sm:flex-col-reverse">
       <p className="">
         Made with by
         <span className=" text-[#5D5DFF]"> Talckatoo</span>. All rights reserved.

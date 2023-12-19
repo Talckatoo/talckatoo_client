@@ -12,7 +12,7 @@ const Testimonials = () => {
           </span>
         </div>
         <div className="flex flex-col items-center md:items-start">
-          <h2 className=" text-center md:text-start font-dms text-black text-[30px] md:text-[40px]  max-w-[883px] z-[1]">
+          <h2 className=" text-center md:text-start font-dms text-black max-md:text-[25px] md:text-[40px]  max-w-[883px] z-[1]">
             Don't take our word for it...
           </h2>
           <p className=" mt-3 max-md:text-[16px]  text-[18px] text-center md:text-start md:max-w-[433px] z-[1]">

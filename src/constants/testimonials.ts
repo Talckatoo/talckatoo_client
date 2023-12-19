@@ -12,6 +12,12 @@ export const testimonials = [
     text: "Being a freelancer means constantly communicating with clients from all over the world. Talkcatoo makes this so much easier. No more language barriers, just clear communication. It's a game-changer!",
   },
   {
+    image: "",
+    name:  "",
+    title: "",
+    text: "",
+  },
+  {
     image: "/assets/img/mike.png",
     name:  "Mike Warren",
     title: "Product Manager at Zapier",

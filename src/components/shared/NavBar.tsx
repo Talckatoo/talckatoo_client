@@ -31,7 +31,7 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
 
   return (
     <header
-      className={`w-full py-4  m-auto  sticky top-0 z-50 ${
+      className={`w-full py-4  sticky top-0 z-50 ${
         scrolled
           ? "backdrop-filter bg-slate-200 backdrop-blur-2xl bg-opacity-60"
           : ""
@@ -39,16 +39,16 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
     >
       <div className="  w-full flex items-center justify-between max-w-[95%] m-auto">
         {/* logo section */}
-        <Link to="/" className="font-jakarta font-medium">
+        <Link to="/" className="font-jakarta text-[16px] font-bold">
           <span>TALCKATOO</span>
         </Link>
-
+        <img src="/assets/icons/Menubar.svg" alt="svg" className="md:hidden"/>
         {/* sign up and sign in button */}
         {showSign && (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 max-md:hidden">
             <Button
               type="button"
-              className="mr-4 bg-light-bg text-black border border-[#000]"
+              className="mr-4 px-7 py-2  rounded-[3px]      text-black border border-[#000]"
               onClick={() => {
                 navigate("/sign-in");
               }}
@@ -57,7 +57,7 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
             </Button>
             <Button
               type="button"
-              className="bg-black text-white"
+              className="bg-black rounded-[3px]   text-white px-7 py-2"
               onClick={() => {
                 navigate("/sign-up");
               }}
@@ -65,6 +65,7 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
               Sign Up
             </Button>
           </div>
+          
         )}
       </div>
     </header>

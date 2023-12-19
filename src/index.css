@@ -56,25 +56,45 @@
   border: 3px double #231f1f;
 }
 
-.card:first-child {
-  position: relative;
-  top: 9rem;
 
-}
+@media (min-width: 868px) {
 
-.card:nth-child(2) {
-  position: relative;
-  bottom: 3rem;
+   .p-card {
+    position: relative;
+    bottom: 10rem;
+  }
+
+  .card:first-child {
+    position: relative;
+    top: 9rem;
+  
+  }
+  
+  .card:nth-child(2) {
+    position: relative;
+    bottom: 3rem;
+  }
+  
+  .card:nth-child(3) {
+    visibility: hidden;
+  }
+
+  .card:nth-child(4) {
+    position: relative;
+    top: 0rem;
+  }
+    
 }
 
 .card:nth-child(3) {
   visibility: hidden;
 }
 
-.p-card {
+.card:nth-child(4) {
   position: relative;
-  bottom: 10rem;
+  bottom: 9rem;
 }
+
 
 body {
   /* Display */
