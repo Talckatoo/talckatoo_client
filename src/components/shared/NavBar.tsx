@@ -32,7 +32,7 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
   return (
     <header
       className={`w-full py-4  sticky top-0 z-50 ${
-        scrolled ? "bg-[#cecece]" : ""
+        scrolled ? "backdrop-filter bg-slate-200 backdrop-blur-2xl bg-opacity-60" : ""
       }`}
     >
       <div className="container  w-full flex items-center justify-between ">
