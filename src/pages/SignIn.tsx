@@ -25,7 +25,7 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-  
+
   const dispatch = useAppDispatch();
   const [loginAuth] = useLoginAuthMutation();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
@@ -63,19 +63,20 @@ const SignIn = () => {
           password: formData.password,
         });
 
-        const token = response.data.token;
-        localStorage.setItem("token", token);
-        setUser(response.data.user);
-        dispatch(setAuth(response.data.user));
-        navigate("/chat");
-        toast.success("User signed up");
-        setLoading(false);
-
+        if ("data" in response) {
+          const token = response.data.token;
+          localStorage.setItem("token", token as string);
+          dispatch(setAuth(response.data.user));
+          navigate("/chat");
+          toast.success("User signed up");
+          setLoading(false);
+        } else {
+          toast.error("Email or password is incorrect");
+          setLoading(false);
+        }
       } catch (error) {
-
         toast.error("Email or password is incorrect");
         setLoading(false);
-        
       }
     } else {
       toast.warn("Please enter valid entries");

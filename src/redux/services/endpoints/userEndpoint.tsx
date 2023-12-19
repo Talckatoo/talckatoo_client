@@ -18,16 +18,16 @@ export const userEndpoints = (
   builder: EndpointBuilder<MyApiBaseQuery, MyTagTypes, MyReducerPath>
 ) => ({
   fetchAllUsers: builder.query<UserState[], null>({
-    query: () => "users",
+    query: () => "/users",
+  }),
+  fetchAllFriends: builder.query<UserState[], null>({
+    query: () => "/users/friends",
   }),
   fetchUserById: builder.query<UserState, { id: string }>({
     query: ({ id }: { id: string }) => `users/${id}`,
   }),
-  updateUser: builder.mutation<
-    UserState,
-    { id: string; data: Partial<UserState> }
-  >({
-    query: ({ id, data }: { id: string; data: Partial<UserState> }) => ({
+  updateUser: builder.mutation<UserState, { id: string; data: any }>({
+    query: ({ id, data }: { id: string; data: any }) => ({
       url: `/users/${id}/update-user`,
       method: "PATCH",
       body: data,

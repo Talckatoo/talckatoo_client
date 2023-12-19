@@ -10,6 +10,7 @@ import { PiBirdFill } from "react-icons/pi";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import { setRecipient } from "../redux/features/user/userSlice";
+import { useFetchAllFriendsQuery } from "../redux/services/UserApi";
 
 type MyEventMap = {
   connect: () => void;
@@ -62,6 +63,17 @@ const Chat = () => {
   const conversationState = useAppSelector((state) => state.conversation);
   const messages = useAppSelector((state) => state.messages.messages);
 
+  // RTK Query
+  const { data: friends, refetch: refetchFriends } = useFetchAllFriendsQuery(
+    null
+  ) as any;
+
+  useEffect(() => {
+    if (friends) {
+      setUsersList(friends.users);
+    }
+  }, [friends]);
+
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   useEffect(() => {
@@ -100,20 +112,10 @@ const Chat = () => {
     }
   }, [onlineUsers, usersList?.contactedUsers, usersList?.uncontactedUsers]);
 
-  const fetchUsers = async () => {
-    const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/users`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    console.log(data);
-    setUsersList(data.users);
-  };
   useEffect(() => {
-    fetchUsers();
     if (socket.current) {
       socket.current.on("getMessage", () => {
-        fetchUsers();
+        refetchFriends();
       });
     }
   }, [socket.current, messages]);

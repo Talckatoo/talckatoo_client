@@ -8,17 +8,15 @@ import { useUpdateUserMutation } from "../redux/services/UserApi";
 
 import languagesArray from "../util/languages";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-
+import { setAuth } from "../redux/features/user/authSlice";
 
 const Profile = () => {
-  const { user, setUser1, isDarkMode } = useContext(UserContext);
+  const { isDarkMode } = useContext(UserContext);
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
-  const { userSelf } = useAppSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.auth);
   const [updateLanguage, setUpdateLanguage] = useState("");
-  const token: { token: string } | null = JSON.parse(
-    localStorage.getItem("token") || "null"
-  );
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [updateUser] = useUpdateUserMutation();
@@ -50,15 +48,16 @@ const Profile = () => {
       }
 
       const response = await updateUser({
-        userId: userSelf?._id,
-        formData,
+        id: user?._id,
+        data: formData,
       });
 
       toast.success("Profile updated successfully!");
-      const updatedUser = response.data.user;
-      dispatch(setUser(updatedUser));
-      setUser1({ ...user, ...updatedUser });
-      navigateChat();
+      if ("data" in response) {
+        const updatedUser = response.data.user;
+        dispatch(setAuth(updatedUser));
+        navigateChat();
+      }
     } catch (error) {
       toast.error("Failed to update profile.");
       console.error(error);
