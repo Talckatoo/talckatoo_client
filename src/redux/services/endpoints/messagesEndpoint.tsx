@@ -41,8 +41,8 @@ export const messagesEndpoints = (
       body,
     }),
   }),
-  // send Audio
-  sendAudio: builder.mutation<Message, any>({
+  // send Audio accept formData
+  sendAudio: builder.mutation<Message, FormData>({
     query: (body: any) => ({
       url: "/messages/voice-note",
       method: "POST",
