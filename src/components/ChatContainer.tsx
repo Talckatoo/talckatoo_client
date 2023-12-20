@@ -474,12 +474,14 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                       line !== lines[index + 1] && (
                                         <>
                                           <br />
-                                          <img
+                                          <div className="h-1 border-b border-gray-500"></div>
+
+                                          {/* <img
                                             width="15"
                                             height="15"
                                             src="https://img.icons8.com/ios-glyphs/30/right3.png"
                                             alt="right3"
-                                          />
+                                          /> */}
                                         </>
                                       )}
                                   </React.Fragment>
@@ -489,8 +491,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             <>{msg.message}</>
                           )}
 
-                          <div className="flex flex-row gap-2">
-                            <div className="w-1/3 text-xxs text-gray-600 items-end">
+                          <div className="flex flex-row gap-4">
+                            <div className="w-1/2 text-gray-500 items-end text-x-small-regular">
                               {getTime(msg.createdAt)}
                             </div>
 
