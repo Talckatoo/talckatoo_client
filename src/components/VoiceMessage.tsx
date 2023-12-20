@@ -100,15 +100,6 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
       try {
         const response = await sendAudio(formData).unwrap();
 
-        // const { data } = await axios.post(
-        //   `${import.meta.env.VITE_BASE_URL}/messages/voice-note`,
-        //   formData,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //     },
-        //   }
-        // );
         const { message } = response;
 
         dispatch(

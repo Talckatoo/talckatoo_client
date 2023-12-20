@@ -23,15 +23,20 @@ export const messagesEndpoints = (
   }),
   fetchMessagesByConversationId: builder.query<
     any,
-    { userId: string; conversationId: string }
+    { conversationId: string; page: number; limit: number; userId: string }
   >({
     query: ({
       userId,
       conversationId,
+      page,
+      limit,
     }: {
       userId: string;
       conversationId: string;
-    }) => `/users/${userId}/conversations/${conversationId}?page=1&limit=10`,
+      page: number;
+      limit: number;
+    }) =>
+      `/users/${userId}/conversations/${conversationId}?page=${page}&limit=${limit}`,
   }),
   // send message using socket
   sendMessage: builder.mutation<Message, any>({

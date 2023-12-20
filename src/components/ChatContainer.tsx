@@ -32,6 +32,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
 
   const dispatch = useAppDispatch();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const conversationState = useAppSelector((state) => state.conversation);
   const user = useAppSelector((state) => state.auth.user);
@@ -46,18 +48,24 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   // fetch all messages by conversation id
   const { data: messagesData, refetch: refetchMessages } =
     useFetchMessagesByConversationIdQuery(
-      { userId: user?._id, conversationId: conversationId },
+      { userId: user?._id, conversationId: conversationId, page, limit },
       { skip: !conversationId }
     ) as any;
 
   // Post Message
   const [sendMessage, { isLoading }] = useSendMessageMutation();
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
 
   useEffect(() => {
-    if (conversationId) {
+    if (selectedId || conversationId) {
+      setPage(1);
+      setLimit(10);
+      setHasMoreMessages(true);
+      setIsFetchingMore(false);
       refetchMessages();
     }
-  }, [conversationId]);
+  }, [selectedId, conversationId]);
 
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
@@ -106,7 +114,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       setUsersArray([...users, AIuser]);
     }
     // setMessages(messages);
-    dispatch(setMessages(messages));
+    if (messagesData) dispatch(setMessages(messages));
   }, [messagesData]);
 
   const sendAIMessage = (messageAI: any) => {
@@ -252,16 +260,62 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       dispatch(setMessages([...messages, arrivalMessages]));
   }, [arrivalMessages]);
 
-  // useEffect(() => {
-  //   scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  // }, [messages]);
-
+  const scrollRefBottom = useRef<HTMLDivElement | null>(null);
   const scrollToBottom = () => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    if (scrollRefBottom.current) {
+      scrollRefBottom.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
   };
   useEffect(() => {
+    if (isFetchingMore) return;
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isFetchingMore]);
+
+  const fetchNextPage = async () => {
+    if (!hasMoreMessages) {
+      return;
+    }
+
+    try {
+      const response = await refetchMessages();
+
+      const newMessages = response.data?.conversation?.messages;
+
+      if (newMessages && newMessages.length > 0) {
+        // add the new messages on top of the old ones
+        setIsFetchingMore(true);
+        setLimit(limit + 10);
+      } else {
+        // No more messages to fetch
+        setHasMoreMessages(false);
+        setIsFetchingMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching next page:", error);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = (e) => {
+      const { scrollTop } = e.target;
+      // almost the top
+      const isScrolledToTop = scrollTop < 250;
+
+      if (isScrolledToTop && messages) {
+        fetchNextPage();
+      }
+    };
+
+    const scrollContainer = scrollRef.current;
+    scrollContainer?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      scrollContainer?.removeEventListener("scroll", handleScroll);
+    };
+  }, [fetchNextPage, messages]);
 
   const onHandleTranslateText = async (translateText: string) => {
     socket.current.emit("stopTyping", selectedId);
@@ -371,9 +425,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }`}
       >
         <div className="relative h-full">
-          <div className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0">
+          <div
+            ref={scrollRef}
+            className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0"
+          >
             {!!selectedId && !!conversationId ? (
-              <div className="m-2 p-2">
+              <div className="m-2 p-2 ">
                 {messages
                   ? messages.map((msg) => (
                       <div
@@ -448,7 +505,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             </audio>
                           )}
                         </div>
-                        <div ref={scrollRef}></div>
+                        <div ref={scrollRefBottom}></div>
                       </div>
                     ))
                   : null}
