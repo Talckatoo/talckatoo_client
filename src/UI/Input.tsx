@@ -28,7 +28,7 @@ const Input: FC<InputProps> = ({
         htmlFor={name}
         className="block text-[14px] font-medium text-title-500"
       >
-        {label} <span className="text-red-500">*</span>
+        {label}
       </label>
       <input
         type={type}
