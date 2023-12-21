@@ -102,7 +102,9 @@ const Chat = () => {
         language: u.language,
       })
     );
+
     dispatch(setRecipient(u.userName as any));
+
   };
 
   return (
