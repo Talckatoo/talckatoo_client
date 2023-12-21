@@ -9,6 +9,7 @@ import { useUpdateUserMutation } from "../redux/services/UserApi";
 import languagesArray from "../util/languages";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
+import { setConversation } from "../redux/features/conversation/conversationSlice";
 
 const Profile = () => {
   const { isDarkMode } = useContext(UserContext);
@@ -56,6 +57,11 @@ const Profile = () => {
       if ("data" in response) {
         const updatedUser = response.data.user;
         dispatch(setAuth(updatedUser));
+        dispatch(
+          setConversation({
+            language: updateLanguage,
+          })
+        );
         navigateChat();
       }
     } catch (error) {

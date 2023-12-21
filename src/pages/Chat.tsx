@@ -60,6 +60,10 @@ const Chat = () => {
     [refetchFriends, socket.current];
 
   useEffect(() => {
+    refetchFriends();
+  }, [messages]);
+
+  useEffect(() => {
     if (socket.current && user) {
       socket.current.emit("addUser", user._id);
       socket.current.on("getUsers", (users: unknown[]) => {

@@ -67,6 +67,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, [selectedId, conversationId]);
 
+  // useEffect(() => {
+  //   if (messagesData?.conversation?.messages?.length !== 0) {
+  //     refetchMessages();
+  //   }
+  // }, [messagesData]);
+
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
   const [typing, setTyping] = useState(false);
@@ -138,6 +144,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleSendMessage = async (messageText: any) => {
     socket.current.emit("stopTyping", selectedId);
     if (selectedId && conversationId) {
+      setIsFetchingMore(false);
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -269,6 +276,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       });
     }
   };
+
   useEffect(() => {
     if (isFetchingMore) return;
     scrollToBottom();
