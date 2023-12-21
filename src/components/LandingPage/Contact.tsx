@@ -20,21 +20,21 @@ const Contact = () => {
           <input
             type="text"
             placeholder="Enter Your name"
-            className="w-full h-[50px] bg-[#fafafa] border-[#353434] border-2  p-4 text-black z-[1]"
+            className="w-full h-[50px] bg-[#fafafa]  border-2  p-4 text-black z-[1]"
           />
           <input
             type="email email-text"
             placeholder="Your best email…"
-            className=" w-full h-[50px] bg-[#fafafa] border-[#353434] border-2  p-4 text-black z-[1]"
+            className=" w-full h-[50px] bg-[#fafafa] border-2  p-4 text-black z-[1]"
           />
         </div>
         <textarea
           placeholder="Enter your message"
-          className="w-full h-[100px] bg-[#fafafa] border-[#353434] border-2  p-4 text-black mt-[2rem] resize-none z-[1]"
+          className="w-full h-[100px] bg-[#fafafa]  border-2  p-4 text-black mt-[2rem] resize-none z-[1]"
         />
         <Button
           type="button"
-          className="bg-[#fff] text-black mt-8 z-[1] w-fit ml-auto px-12 hover:bg-black hover:text-white border rounded-xl"
+          className="bg-[#fff] text-black mt-8 z-[1] w-fit ml-auto px-12 hover:text-white border rounded-xl"
           onClick={() => {}}
         >
           Send
