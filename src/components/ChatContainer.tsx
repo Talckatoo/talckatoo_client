@@ -16,19 +16,27 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
   addMessage,
   setMessages,
-  updateMessagesFromBuffer,
 } from "../redux/features/messages/messageSlice";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
-import { setRecipient } from "../redux/features/user/userSlice";
+import userSlice, { setRecipient } from "../redux/features/user/userSlice";
+import {
+  useFetchMessagesByConversationIdQuery,
+  useSendMessageMutation,
+} from "../redux/services/MessagesApi";
+
 
 interface Socket {
   current: any;
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
-  const { setConversationId, isDarkMode } = useContext(UserContext);
+
+  const { isDarkMode } = useContext(UserContext);
+
 
   const dispatch = useAppDispatch();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const conversationState = useAppSelector((state) => state.conversation);
   const user = useAppSelector((state) => state.auth.user);
@@ -39,10 +47,37 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
 
+
+  // RTK Query
+  // fetch all messages by conversation id
+  const { data: messagesData, refetch: refetchMessages } =
+    useFetchMessagesByConversationIdQuery(
+      { userId: user?._id, conversationId: conversationId, page, limit },
+      { skip: !conversationId }
+    ) as any;
+
+  // Post Message
+  const [sendMessage, { isLoading }] = useSendMessageMutation();
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+
   useEffect(() => {
-    console.log("selectedId", selectedId);
-    console.log("conversationId", conversationId);
+    if (selectedId || conversationId) {
+      setPage(1);
+      setLimit(10);
+      setHasMoreMessages(true);
+      setIsFetchingMore(false);
+      refetchMessages();
+    }
   }, [selectedId, conversationId]);
+
+  // useEffect(() => {
+  //   if (messagesData?.conversation?.messages?.length !== 0) {
+  //     refetchMessages();
+  //   }
+  // }, [messagesData]);
+
+
 
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
@@ -63,40 +98,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const token = localStorage.getItem("token");
 
-  const fetchMessages = async () => {
-    try {
-      if (user && !!conversationId) {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/users/${
-            user._id
-          }/conversations/${conversationId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const { messages } = data.conversation;
-        const { users } = data.conversation;
-
-        if (users[0].userName === user?.userName) {
-          dispatch(setRecipient(users[1].userName));
-        } else {
-          dispatch(setRecipient(users[0].userName));
-        }
-        // setMessages(messages);
-        dispatch(setMessages(messages));
-        const AIuser = {
-          userName: "AI Assistant",
-          _id: import.meta.env.VITE_AI_ASSISTANT_ID,
-        };
-        setUsersArray([...data.conversation.users, AIuser]);
-      }
-    } catch (err) {
-      toast.error("Error fetching messages, please try again");
-    }
-  };
 
   useEffect(() => {
     if (socket.current) {
@@ -109,8 +110,25 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current]);
 
   useEffect(() => {
-    fetchMessages();
-  }, [selectedId, conversationId]);
+    const { messages } = messagesData?.conversation || {};
+    const { users } = messagesData?.conversation || {};
+    console.log("messages", messagesData);
+    if (users) {
+      if (users[0]?.userName === user?.userName) {
+        dispatch(setRecipient(users[1]?.userName));
+      } else {
+        dispatch(setRecipient(users[0]?.userName));
+      }
+
+      const AIuser = {
+        userName: "AI Assistant",
+        _id: import.meta.env.VITE_AI_ASSISTANT_ID,
+      };
+      setUsersArray([...users, AIuser]);
+    }
+    // setMessages(messages);
+    if (messagesData) dispatch(setMessages(messages));
+  }, [messagesData]);
 
   const sendAIMessage = (messageAI: any) => {
     socket.current.emit("sendMessageChatGPT", {
@@ -119,16 +137,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       to: selectedId,
       createdAt: Date.now(),
     });
-
-    // setMessages((prev) => [
-    //   ...prev,
-    //   {
-    //     createdAt: Date.now(),
-    //     message: messageAI,
-    //     sender: user?._id,
-    //     _id: uuidv4(),
-    //   },
-    // ]);
 
     dispatch(
       addMessage({
@@ -140,57 +148,42 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     );
   };
 
-  const sendMessage = async (messageText: any) => {
+  const handleSendMessage = async (messageText: any) => {
     socket.current.emit("stopTyping", selectedId);
     if (selectedId && conversationId) {
+      setIsFetchingMore(false);
       try {
-        const { data } = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/messages`,
-          {
-            from: user?._id,
-            to: selectedId,
-            targetLanguage: language,
-            message: messageText,
-            status: false,
-            unread: selectedId,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const { message } = data;
-
-        socket.current.emit("sendMessage", {
-          createdAt: message.createdAt,
+        const response = await sendMessage({
           from: user?._id,
           to: selectedId,
           targetLanguage: language,
-          message: message.message,
+          message: messageText,
+          status: false,
+          unread: selectedId,
+        }).unwrap();
+
+        console.log("response", response);
+
+        const { message } = response;
+
+        socket.current.emit("sendMessage", {
+          createdAt: message?.createdAt,
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          message: message?.message,
           status: false,
           unread: selectedId,
         });
 
-        // setMessages((prev) => [
-        //   ...prev,
-        //   {
-        //     createdAt: message.createdAt,
-        //     message: message.message,
-        //     sender: user?._id,
-        //     _id: message._id,
-        //     status: false,
-        //     unread: selectedId,
-        //   },
-        // ]);
+        // modify the latest message   in the users redux
 
         dispatch(
           addMessage({
-            createdAt: message.createdAt,
-            message: message.message,
+            createdAt: message?.createdAt,
+            message: message?.message,
             sender: user?._id,
-            _id: message._id,
+            _id: message?._id,
             unread: selectedId,
           })
         );
@@ -201,27 +194,20 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       // setMessages([]);
       dispatch(setMessages([]));
       try {
-        const { data } = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/messages`,
-          {
-            from: user?._id,
-            to: selectedId,
-            targetLanguage: language,
-            message: messageText,
-            status: false,
-            unread: selectedId,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const { message } = data;
-        if (data.conversation._id) {
+        const response = await sendMessage({
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          message: messageText,
+          status: false,
+          unread: selectedId,
+        }).unwrap();
+
+        const { message } = response;
+        if (response?.conversation._id) {
           dispatch(
             setConversation({
-              conversationId: data.conversation._id,
+              conversationId: response?.conversation._id,
               selectedId: selectedId,
             })
           );
@@ -288,59 +274,94 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       dispatch(setMessages([...messages, arrivalMessages]));
   }, [arrivalMessages]);
 
+  const scrollRefBottom = useRef<HTMLDivElement | null>(null);
+  const scrollToBottom = () => {
+    if (scrollRefBottom.current) {
+      scrollRefBottom.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  };
+
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages]);
+    if (isFetchingMore) return;
+    scrollToBottom();
+  }, [messages, isFetchingMore]);
+
+  const fetchNextPage = async () => {
+    if (!hasMoreMessages) {
+      return;
+    }
+
+    try {
+      const response = await refetchMessages();
+
+      const newMessages = response.data?.conversation?.messages;
+
+      if (newMessages && newMessages.length > 0) {
+        // add the new messages on top of the old ones
+        setIsFetchingMore(true);
+        setLimit(limit + 10);
+      } else {
+        // No more messages to fetch
+        setHasMoreMessages(false);
+        setIsFetchingMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching next page:", error);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = (e) => {
+      const { scrollTop } = e.target;
+      // almost the top
+      const isScrolledToTop = scrollTop < 250;
+
+      if (isScrolledToTop && messages) {
+        fetchNextPage();
+      }
+    };
+
+    const scrollContainer = scrollRef.current;
+    scrollContainer?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      scrollContainer?.removeEventListener("scroll", handleScroll);
+    };
+  }, [fetchNextPage, messages]);
 
   const onHandleTranslateText = async (translateText: string) => {
     socket.current.emit("stopTyping", selectedId);
     if (selectedId && conversationId && translateText) {
       try {
-        const { data } = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/messages`,
-          {
-            from: user?._id,
-            to: selectedId,
-            targetLanguage: language,
-            message: translateText.text,
-            voiceTargetLanguage: voiceCode,
-            voiceToVoice: true,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await sendMessage({
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          message: translateText.text,
+          voiceTargetLanguage: voiceCode,
+          voiceToVoice: true,
+        }).unwrap();
 
-        const { message } = data;
-        // setMessages((prev) => [
-        //   ...prev,
-        //   {
-        //     createdAt: message.createdAt,
-        //     voiceNote: {
-        //       url: message.voiceNote.url,
-        //     },
-        //     sender: user?._id,
-        //     _id: message._id,
-        //   },
-        // ]);
+        const { message } = response;
 
         dispatch(
           addMessage({
-            createdAt: message.createdAt,
+            createdAt: message?.createdAt,
             voiceNote: {
-              url: message.voiceNote.url,
+              url: message?.voiceNote.url,
             },
             sender: user?._id,
-            _id: message._id,
+            _id: message?._id,
           })
         );
 
         socket.current.emit("sendMessage", {
-          createdAt: message.createdAt,
+          createdAt: message?.createdAt,
           voiceNote: {
-            url: message.voiceNote.url,
+            url: message?.voiceNote.url,
           },
           from: user?._id,
           to: selectedId,
@@ -419,9 +440,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }`}
       >
         <div className="relative h-full">
-          <div className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0">
+          <div
+            ref={scrollRef}
+            className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0"
+          >
             {!!selectedId && !!conversationId ? (
-              <div className="m-2 p-2">
+              <div className="m-2 p-2 ">
                 {messages
                   ? messages.map((msg) => (
                       <div
@@ -465,12 +489,14 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                       line !== lines[index + 1] && (
                                         <>
                                           <br />
-                                          <img
+                                          <div className="h-1 border-b border-gray-500"></div>
+
+                                          {/* <img
                                             width="15"
                                             height="15"
                                             src="https://img.icons8.com/ios-glyphs/30/right3.png"
                                             alt="right3"
-                                          />
+                                          /> */}
                                         </>
                                       )}
                                   </React.Fragment>
@@ -480,8 +506,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             <>{msg.message}</>
                           )}
 
-                          <div className="flex flex-row gap-2">
-                            <div className="w-1/3 text-xxs text-gray-600 items-end">
+                          <div className="flex flex-row gap-4">
+                            <div className="w-1/2 text-gray-500 items-end text-x-small-regular">
                               {getTime(msg.createdAt)}
                             </div>
 
@@ -496,7 +522,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             </audio>
                           )}
                         </div>
-                        <div ref={scrollRef}></div>
+                        <div ref={scrollRefBottom}></div>
                       </div>
                     ))
                   : null}
@@ -525,7 +551,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         {selectedId ? (
           <>
             <ChatInput
-              onHandleSendMessage={sendMessage}
+              onHandleSendMessage={handleSendMessage}
               onHandleSendAIMessage={sendAIMessage}
               socket={socket}
               typing={typing}

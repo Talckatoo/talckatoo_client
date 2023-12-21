@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 
-
-
 interface TextToSpeechProps {
   convertedText: string;
-
 }
 
-const TextToSpeech:React.FC<TextToSpeechProps> = ({ convertedText }) => {
+const TextToSpeech: React.FC<TextToSpeechProps> = ({ convertedText }) => {
   const [show, setShow] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(null);
+  const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(
+    null
+  );
   const [voice, setVoice] = useState<null | SpeechSynthesisVoice>(null);
   const [pitch, setPitch] = useState(1);
   const [rate, setRate] = useState(0.9);
@@ -18,25 +17,24 @@ const TextToSpeech:React.FC<TextToSpeechProps> = ({ convertedText }) => {
 
   useEffect(() => {
     if (convertedText) {
-        const synth = window.speechSynthesis;
-        const u = new SpeechSynthesisUtterance(convertedText);
-        setUtterance(u);
-        setShow(true)
-    
-        // Add an event listener to the speechSynthesis object to listen for the voices changed event
-        synth.addEventListener("voiceschanged", () => {
-          const voices = synth.getVoices();
-          setVoice(voices[0]);
-        });
-    
-        return () => {
-          synth.cancel();
-          synth.removeEventListener("voiceschanged", () => {
-            setVoice(null);
-          });
-        };
-    }
+      const synth = window.speechSynthesis;
+      const u = new SpeechSynthesisUtterance(convertedText);
+      setUtterance(u);
+      setShow(true);
 
+      // Add an event listener to the speechSynthesis object to listen for the voices changed event
+      synth.addEventListener("voiceschanged", () => {
+        const voices = synth.getVoices();
+        setVoice(voices[0]);
+      });
+
+      return () => {
+        synth.cancel();
+        synth.removeEventListener("voiceschanged", () => {
+          setVoice(null);
+        });
+      };
+    }
   }, [convertedText]);
 
   const handlePlay = () => {
@@ -46,11 +44,11 @@ const TextToSpeech:React.FC<TextToSpeechProps> = ({ convertedText }) => {
       synth.resume();
     } else {
       if (utterance) {
-      utterance.voice = voice;
-      utterance.pitch = pitch;
-      utterance.rate = rate;
-      utterance.volume = volume;
-      synth.speak(utterance);
+        utterance.voice = voice;
+        utterance.pitch = pitch;
+        utterance.rate = rate;
+        utterance.volume = volume;
+        synth.speak(utterance);
       }
     }
 
@@ -69,10 +67,10 @@ const TextToSpeech:React.FC<TextToSpeechProps> = ({ convertedText }) => {
     synth.cancel();
   };
 
-//   const handleVoiceChange = (event) => {
-//     const voices = window.speechSynthesis.getVoices();
-//     setVoice(voices.find((v) => v.name === event.target.value));
-//   };
+  //   const handleVoiceChange = (event) => {
+  //     const voices = window.speechSynthesis.getVoices();
+  //     setVoice(voices.find((v) => v.name === event.target.value));
+  //   };
 
   // const handlePitchChange = (event) => {
   //   setPitch(parseFloat(event.target.value));
@@ -86,29 +84,23 @@ const TextToSpeech:React.FC<TextToSpeechProps> = ({ convertedText }) => {
   //   setVolume(parseFloat(event.target.value));
   // };
 
-
-
   return (
     <>
-    {show ? 
-<>
-    <div className="w-2/3 flex flex-row gap-2 ">
-    <div className='text-xxs text-gray-600 text-right ml-'>
-    <button
-        onClick={handlePlay}>{isPaused ? "Resume" : "Play"}
-        </button>
-    </div>
-      
-     <div className='text-xxs text-gray-600 text-right'>
-     <button
-      onClick={handleStop}>Stop
-      </button>
-     </div>
-     </div>
-    
-</>
-      : null
-    }
+      {show ? (
+        <>
+          <div className="w-1/2 flex flex-row gap-2 ">
+            <div className="text-x-small-regular text-gray-600 ml-2">
+              <button onClick={handlePlay}>
+                {isPaused ? "Resume" : "Play"}
+              </button>
+            </div>
+
+            <div className="text-x-small-regular text-gray-600 ml-2 pr-2">
+              <button onClick={handleStop}>Stop</button>
+            </div>
+          </div>
+        </>
+      ) : null}
     </>
   );
 };

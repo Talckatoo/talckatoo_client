@@ -32,32 +32,23 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
   return (
     <header
       className={`w-full py-4  sticky top-0 z-50 ${
-        scrolled ? "bg-background-500" : ""
+        scrolled
+          ? "backdrop-filter bg-slate-200 backdrop-blur-2xl bg-opacity-60"
+          : ""
       }`}
     >
-      <div className="container  w-full flex items-center justify-between ">
+      <div className="  w-full flex items-center justify-between max-w-[95%] m-auto">
         {/* logo section */}
-        <Link to="/">
-          <div className="">
-            <img
-              src="/assets/logo.svg"
-              alt="logo"
-              className="w-[210px] object-cover max-sm:hidden"
-            />
-            <img
-              src="/assets/logo_s.svg"
-              alt="logo"
-              className="w-[60px] object-cover hidden max-sm:block"
-            />
-          </div>
+        <Link to="/" className="font-jakarta text-[16px] font-bold">
+          <span>TALCKATOO</span>
         </Link>
-
+        <img src="/assets/icons/Menubar.svg" alt="svg" className="md:hidden"/>
         {/* sign up and sign in button */}
         {showSign && (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 max-md:hidden">
             <Button
               type="button"
-              className="mr-4 text-primary-500 border-primary-500 "
+              className="mr-4 px-7 py-2  rounded-[3px]      text-black border border-[#000]"
               onClick={() => {
                 navigate("/sign-in");
               }}
@@ -66,7 +57,7 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
             </Button>
             <Button
               type="button"
-              className="bg-primary-500 text-white"
+              className="bg-black rounded-[3px]   text-white px-7 py-2"
               onClick={() => {
                 navigate("/sign-up");
               }}
@@ -74,6 +65,7 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
               Sign Up
             </Button>
           </div>
+          
         )}
       </div>
     </header>

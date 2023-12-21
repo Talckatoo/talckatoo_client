@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Message {
   _id: string;
-  message?: string;
+  message?: string | null;
   audioURL?: string;
   sender: string | null;
   voiceNote?: any;

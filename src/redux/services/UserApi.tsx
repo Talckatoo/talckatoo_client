@@ -19,6 +19,7 @@ export const UserApi = createApi({
 
 export const {
   useFetchAllUsersQuery,
+  useFetchAllFriendsQuery,
   useFetchUserByIdQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,

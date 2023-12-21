@@ -117,6 +117,13 @@ export default {
           fontWeight: "600",
         },
       ],
+      "x-small-regular": [
+        "12px",
+        {
+          lineHeight: "130%",
+          fontWeight: "300",
+        },
+      ],
       "small-regular": [
         "14px",
         {
@@ -186,6 +193,8 @@ export default {
         "light-3": "#7878A3",
         "light-4": "#5C5C7B",
         "gray-1": "#697C89",
+        "light-bg": "#FAFAFA",
+        "light-st": "EFF0F6",
         glassmorphism: "rgba(16, 16, 18, 0.60)",
       },
       boxShadow: {

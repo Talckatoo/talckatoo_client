@@ -1,5 +1,4 @@
 import { useState, useContext, useEffect, useRef } from "react";
-import axios from "axios";
 import ChatContainer from "../components/ChatContainer";
 import { UserContext } from "../context/user-context";
 import { getContactName } from "../util/getContactName";
@@ -9,7 +8,8 @@ import FetchLatestMessages from "../util/FetchLatestMessages";
 import { PiBirdFill } from "react-icons/pi";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
-import { setRecipient } from "../redux/features/user/userSlice";
+import { User, setRecipient, setUsers } from "../redux/features/user/userSlice";
+import { useFetchAllFriendsQuery } from "../redux/services/UserApi";
 
 type MyEventMap = {
   connect: () => void;
@@ -18,49 +18,29 @@ type MyEventMap = {
   getUsers: (users: string[]) => void;
 };
 
-interface ContactedUser {
-  _id: string;
-  userName: string;
-  profileImage: ProfileImage;
-  conversation: Conversation;
-  language: string;
-}
-
-interface Conversation {
-  _id: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface ProfileImage {
-  public_id?: string;
-  url?: string;
-}
-
-interface UncontactedUser {
-  _id: string;
-  userName: string;
-  language: string;
-}
-
-interface UsersList {
-  contactedUsers: ContactedUser[];
-  uncontactedUsers: UncontactedUser[];
-}
-
 const Chat = () => {
   const { isDarkMode } = useContext(UserContext);
 
   const { user } = useAppSelector((state) => state.auth);
   const socket = useRef<Socket<MyEventMap> | null>();
-  const [usersList, setUsersList] = useState<UsersList | null>(null);
   const [onlineFriends, setOnlineFriends] = useState<User[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [view, setView] = useState<"friends" | "people">("friends");
-  const token = localStorage.getItem("token");
   const dispatch = useAppDispatch();
   const conversationState = useAppSelector((state) => state.conversation);
   const messages = useAppSelector((state) => state.messages.messages);
+  const { users } = useAppSelector((state) => state.user);
+
+  // RTK Query
+  const { data: friends, refetch: refetchFriends } = useFetchAllFriendsQuery(
+    null
+  ) as any;
+
+  useEffect(() => {
+    if (friends) {
+      dispatch(setUsers(friends.users));
+    }
+  }, [friends]);
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
@@ -69,6 +49,19 @@ const Chat = () => {
       transports: ["websocket"],
     });
   }, []);
+
+  useEffect(() => {
+    if (socket.current && user) {
+      socket.current.on("getMessage", (data: any) => {
+        refetchFriends();
+      });
+    }
+  }),
+    [refetchFriends, socket.current];
+
+  useEffect(() => {
+    refetchFriends();
+  }, [messages]);
 
   useEffect(() => {
     if (socket.current && user) {
@@ -85,43 +78,23 @@ const Chat = () => {
   }, [socket.current, user]);
 
   useEffect(() => {
-    if (
-      usersList?.contactedUsers &&
-      usersList?.uncontactedUsers &&
-      onlineUsers
-    ) {
-      const onlContact = usersList.contactedUsers.filter((u) =>
+    if (users?.contactedUsers && users?.uncontactedUsers && onlineUsers) {
+      const onlContact = users.contactedUsers.filter((u: { _id: string }) =>
         onlineUsers.includes(u._id)
       );
-      const onlUnContact = usersList.uncontactedUsers.filter((u) =>
+      const onlUnContact = users.uncontactedUsers.filter((u: { _id: string }) =>
         onlineUsers.includes(u._id)
       );
       setOnlineFriends([...onlContact, ...onlUnContact]);
     }
-  }, [onlineUsers, usersList?.contactedUsers, usersList?.uncontactedUsers]);
+  }, [onlineUsers, users?.contactedUsers, users?.uncontactedUsers]);
 
-  const fetchUsers = async () => {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_BASE_URL}/users/friends`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    setUsersList(data.users);
-  };
   useEffect(() => {
-    fetchUsers();
-    if (socket.current) {
-      socket.current.on("getMessage", () => {
-        fetchUsers();
-      });
-    }
-  }, [socket.current, messages]);
+    refetchFriends();
+    console.log("messages", messages);
+  }, [refetchFriends, messages]);
 
-  const handleSelectContact = (u: User) => {
+  const handleSelectContact = (u: any) => {
     dispatch(
       setConversation({
         conversationId: u.conversation._id,
@@ -129,30 +102,9 @@ const Chat = () => {
         language: u.language,
       })
     );
-    dispatch(setRecipient(u.userName));
-  };
 
-  const handleSelectUnContact = (unContact: User) => {
-    dispatch(
-      setConversation({
-        conversationId: null,
-        selectedId: unContact._id,
-        language: unContact.language,
-      })
-    );
+    dispatch(setRecipient(u.userName as any));
 
-    dispatch(setRecipient(unContact.userName));
-  };
-
-  const handleSelectPeople = () => {
-    dispatch(
-      setConversation({
-        conversationId: null,
-        selectedId: null,
-        language: null,
-      })
-    );
-    setView("people");
   };
 
   return (
@@ -188,21 +140,11 @@ const Chat = () => {
             >
               Friends
             </button>
-            <button
-              className={`p-2 rounded-lg ${
-                view === "people"
-                  ? "bg-slate-500 hover:bg-slate-400 text-white"
-                  : "bg-slate-300 hover:bg-slate-400 text-black"
-              } font-bold`}
-              onClick={handleSelectPeople}
-            >
-              People
-            </button>
           </div>
           {view === "friends" && (
             <div className="overflow-y-auto h-full">
-              {usersList
-                ? usersList.contactedUsers.map((u) => {
+              {users
+                ? users?.contactedUsers?.map((u: any) => {
                     return (
                       <div
                         key={u._id}
@@ -266,77 +208,6 @@ const Chat = () => {
                               <div className={`w-full`}>
                                 <FetchLatestMessages u={u?.latestMessage} />
                               </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })
-                : null}
-            </div>
-          )}
-
-          {view === "people" && (
-            <div className="overflow-y-auto h-full">
-              {usersList
-                ? usersList.uncontactedUsers.map((unContact) => {
-                    if (unContact._id === user?._id) {
-                      return null;
-                    }
-                    return (
-                      <div
-                        key={unContact._id}
-                        className={
-                          "flex rounded-lg m-2 p-1 cursor-pointer last:mb-[5rem] " +
-                          (selectedId === unContact._id && isDarkMode
-                            ? "bg-slate-500 text-white hover:bg-slate-600"
-                            : selectedId === unContact._id && !isDarkMode
-                            ? "bg-slate-500 text-white hover:bg-slate-400"
-                            : isDarkMode
-                            ? "bg-[#161c24] text-white hover:bg-slate-600"
-                            : "bg-slate-300 text-black hover:bg-slate-400")
-                        }
-                        onClick={() => handleSelectUnContact(unContact)}
-                      >
-                        <div className="flex flex-row w-full">
-                          <div className="flex h-full w-1/4 items-center justify-center mx-2">
-                            <div className="relative">
-                              <div
-                                className="w-10 h-10 rounded-full shadow-sm flex items-center justify-center"
-                                style={{
-                                  backgroundImage: `url(${
-                                    unContact.profileImage?.url || COCKATOO
-                                  })`,
-                                  backgroundSize: "cover",
-                                  backgroundPosition: "center",
-                                }}
-                              >
-                                {!unContact.profileImage && (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    className="w-6 h-6 text-gray-300"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                    />
-                                  </svg>
-                                )}
-                              </div>
-                              {getContactName(
-                                unContact.userName,
-                                onlineFriends
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex w-3/4 items-center justify-start mb-1">
-                            <div className="flex font-bold w-full">
-                              {unContact.userName}
                             </div>
                           </div>
                         </div>
