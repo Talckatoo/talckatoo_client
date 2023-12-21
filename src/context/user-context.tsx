@@ -23,77 +23,36 @@ interface User {
 }
 
 interface UserContextProviderProps {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  recipient: string | null;
-  setRecipient: React.Dispatch<React.SetStateAction<string | null>>;
   isDarkMode: boolean;
   setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
-  conversationId: string | null;
-  setConversationId: React.Dispatch<React.SetStateAction<string | null>>;
-  selectId: string | null;
-  setSelectId: React.Dispatch<React.SetStateAction<string | null>>;
-  messages: Messages[] | null;
-  setMessages: React.Dispatch<React.SetStateAction<Messages[] | null>>;
+
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  language: string | null;
-  setLanguage: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export const UserContext = createContext<UserContextProviderProps>({
-  user: null,
-  setUser: () => {},
-  recipient: null,
-  setRecipient: () => {},
   isDarkMode: false,
   setIsDarkMode: () => {},
-  conversationId: null,
-  setConversationId: () => {},
-  selectId: null,
-  setSelectId: () => {},
-  messages: null,
-  setMessages: () => {},
+
   isLoading: false,
   setIsLoading: () => {},
-  language: null,
-  setLanguage: () => {},
 });
 
 export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  let loggedInUser: User | null;
-  let loggedInUserId: string | undefined;
-
-  const [user, setUser] = useState<User | null>(null);
-  const [recipient, setRecipient] = useState<string | null>(null);
-  const [language, setLanguage] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [conversationId, setConversationId] = useState<string | null>(null);
-  const [selectId, setSelectId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Messages[] | null>([]);
+
   const [isLoading, setIsLoading] = useState(false);
 
   return (
     <UserContext.Provider
       value={{
-        user,
-        setUser,
-        conversationId,
-        setConversationId,
-        selectId,
-        setSelectId,
         isDarkMode,
         setIsDarkMode,
-        recipient,
-        setRecipient,
-        messages,
-        setMessages,
+
         isLoading,
         setIsLoading,
-        language,
-        setLanguage,
       }}
     >
       {children}

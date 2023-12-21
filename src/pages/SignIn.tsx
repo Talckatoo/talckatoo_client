@@ -25,7 +25,7 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-  
+
   const dispatch = useAppDispatch();
   const [loginAuth] = useLoginAuthMutation();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
@@ -63,19 +63,20 @@ const SignIn = () => {
           password: formData.password,
         });
 
-        const token = response.data.token;
-        localStorage.setItem("token", token);
-        setUser(response.data.user);
-        dispatch(setAuth(response.data.user));
-        navigate("/chat");
-        toast.success("User signed up");
-        setLoading(false);
-
+        if ("data" in response) {
+          const token = response.data.token;
+          localStorage.setItem("token", token as string);
+          dispatch(setAuth(response.data.user));
+          navigate("/chat");
+          toast.success("User signed up");
+          setLoading(false);
+        } else {
+          toast.error("Email or password is incorrect");
+          setLoading(false);
+        }
       } catch (error) {
-
         toast.error("Email or password is incorrect");
         setLoading(false);
-        
       }
     } else {
       toast.warn("Please enter valid entries");
@@ -100,9 +101,7 @@ const SignIn = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
-        <h1 className="head-text text-center my-[5rem]">
-          Welcome Back to Talckatoo!
-        </h1>
+        <h1 className="head-text text-center my-[5rem]">Welcome back</h1>
         {/* Sign up form  */}
         <form
           className="flex flex-col items-center justify-center gap-2 max-w-[400px] m-auto"
@@ -139,39 +138,42 @@ const SignIn = () => {
           </div>
 
           <Input
-            label="Email"
+            label=""
             type="text"
             name="email"
             id="email"
-            placeholder="Enter your email"
+            placeholder="Email"
             value={formData.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="bg-transparent border-[#33363A]"
+            className="bg-transparent border-[#33363A] rounded-lg"
             error={formErrors.email}
           />
 
           <Input
-            label="Password"
+            label=""
             id="password"
             type="password"
             name="password"
-            placeholder="Password (at least 8 characters)"
+            placeholder="Password"
             value={formData.password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="bg-transparent border-[#33363A]"
+            className="bg-transparent border-[#33363A] rounded-lg"
             error={formErrors.password}
           />
+          <Button type="submit" onClick={() => {}} className="text-white">
+            Forgot password?
+          </Button>
 
           <Button
             type="submit"
             className="bg-primary-500 text-white w-full h-[48px] mt-[2rem] z-[1]"
             onClick={() => {}}
           >
-            {loading ? "Loading..." : "Sign In"}
+            {loading ? "Loading..." : "Log in"}
           </Button>
 
           <p className="text-title-500 mt-4 z-[1]">

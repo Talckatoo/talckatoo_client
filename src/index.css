@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,600&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,8 +13,32 @@
   font-family: "Inter", sans-serif;
 }
 
+.font-jakarta {
+  font-family: "Plus Jarkata Sans", sans-serif;
+}
+
+.font-dms {
+  font-family: "DM Sans", sans-serif;
+}
+
 .font-archetic {
   font-family: "Architects Daughter", cursive;
+}
+
+.font-medium {
+  font-weight: 16px !important;
+}
+
+.font-bold {
+  font-weight: 32px;
+}
+
+.font-semibold {
+  font-weight: 40px;
+}
+
+.font-semibold {
+  font-weight: 55px;
 }
 
 /* Chrome, Edge, and Safari */
@@ -31,6 +56,46 @@
   border: 3px double #231f1f;
 }
 
+
+@media (min-width: 868px) {
+
+   .p-card {
+    position: relative;
+    bottom: 10rem;
+  }
+
+  .card:first-child {
+    position: relative;
+    top: 9rem;
+  
+  }
+  
+  .card:nth-child(2) {
+    position: relative;
+    bottom: 3rem;
+  }
+  
+  .card:nth-child(3) {
+    visibility: hidden;
+  }
+
+  .card:nth-child(4) {
+    position: relative;
+    top: 0rem;
+  }
+    
+}
+
+.card:nth-child(3) {
+  visibility: hidden;
+}
+
+.card:nth-child(4) {
+  position: relative;
+  bottom: 9rem;
+}
+
+
 body {
   /* Display */
   display: flex;
@@ -42,6 +107,8 @@ body {
   /* Sizing */
   width: 100%;
   min-width: 100%;
+  font-family: "inter", sans-serif;
+  /* font-size: 16px; */
 }
 
 #root {
@@ -56,6 +123,10 @@ body {
   min-height: 100vh;
 }
 
+.bt-size {
+  width: fit-content;
+}
+
 @layer components {
   /* main */
   .main-container {
@@ -63,11 +134,11 @@ body {
   }
 
   .container {
-    @apply w-full max-w-[1110px] m-auto;
+    @apply w-full max-w-[1284px] m-auto;
   }
   /* Head Text */
   .head-text {
-    @apply text-title-500 text-[52px] max-lg:text-[32px]  font-extrabold;
+    @apply text-title-500 text-[38px] max-lg:text-[25px]  font-extrabold;
   }
 
   .title-text {
