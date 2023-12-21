@@ -15,17 +15,17 @@ const Contact = () => {
         We're always eager to hear from you. If you have questions, feedback, or
         just want to say hello, use the form below:
       </h2>
-      <div className="flex flex-col z-[1]">
-        <div className="flex items-start max-sm:flex-col gap-8 justify-between z-[1]">
+      <div className="form flex flex-col z-[1]">
+        <div className="  flex items-start max-sm:flex-col gap-8 justify-between z-[1]">
           <input
             type="text"
             placeholder="Enter Your name"
             className="w-full h-[50px] bg-[#fafafa] border-[#353434] border-2  p-4 text-black z-[1]"
           />
           <input
-            type="text"
+            type="email email-text"
             placeholder="Your best email…"
-            className="w-full h-[50px] bg-[#fafafa] border-[#353434] border-2  p-4 text-black z-[1]"
+            className=" w-full h-[50px] bg-[#fafafa] border-[#353434] border-2  p-4 text-black z-[1]"
           />
         </div>
         <textarea

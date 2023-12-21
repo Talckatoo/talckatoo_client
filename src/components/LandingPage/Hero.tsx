@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Hero = () => {
   const navigate = useNavigate();
   return (
-    <section className="container py-[2rem]  ">
+    <section className="container py-[2rem] mt-[5rem]  ">
       <div className="flex flex-col md:flex-row  md:items-center justify-center">
         <div className=" w-full md:w-[50%]">
           <div className="w-full flex flex-col">

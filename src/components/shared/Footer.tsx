@@ -8,7 +8,7 @@ const Footer = () => {
         <span className=" text-[#5D5DFF]"> Talckatoo</span>. All rights reserved.
       </p>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 res">
         <div className="bg-secondary-500 rounded-full w-[50px] h-[50px] flex flex-col items-center justify-center">
           <img src="/assets/icons/facbook.svg" alt="facebook" />
         </div>

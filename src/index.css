@@ -111,6 +111,36 @@ body {
   /* font-size: 16px; */
 }
 
+.res img {
+  transition: transform 0.3s;
+}
+
+.res img:hover {
+  color: #52eeca;
+  transform: translateY(-0.7rem);
+}
+.form {
+  transition: .5s all ease;
+  animation-duration: 1.5s;
+
+  input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #DADCE0;
+      border-radius: 5px;
+      outline: none;
+      margin-bottom: 20px;
+      transition: .3s;
+
+      &:focus {
+          border: 1px solid #5D5DFF;
+          box-shadow: inset 1px 1px 0 #5D5DFF, inset -1px -1px 0 #4285F4;
+      }    
+      
+
+  }
+}
+ 
 #root {
   /* Display */
   display: flex;
