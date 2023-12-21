@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { userEndpoints } from "./endpoints/userEndpoint";
+import { messagesEndpoints } from "./endpoints/messagesEndpoint";
 
-export const UserApi = createApi({
-  reducerPath: "UserApi",
+export const MessagesApi = createApi({
+  reducerPath: "MessagesApi",
   refetchOnFocus: true,
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_BASE_URL as string,
@@ -14,13 +14,15 @@ export const UserApi = createApi({
       return headers;
     },
   }),
-  endpoints: userEndpoints,
+  endpoints: messagesEndpoints,
 });
 
 export const {
-  useFetchAllUsersQuery,
-  useFetchAllFriendsQuery,
-  useFetchUserByIdQuery,
-  useUpdateUserMutation,
-  useDeleteUserMutation,
-} = UserApi;
+  useFetchAllMessagesQuery,
+  useFetchMessagesByConversationIdQuery,
+  useSendMessageMutation,
+  useSendAudioMutation,
+  useSendFileMutation,
+  useDeleteMessageMutation,
+  useDeleteConversationMutation,
+} = MessagesApi;

@@ -24,7 +24,17 @@ export const authEndpoints = (
     }),
   }),
   registerAuth: builder.mutation<UserState, Partial<UserState>>({
-    query: ({ userName, email, password, language }: { userName: string; email: string; password: string; language: string }) => ({
+    query: ({
+      userName,
+      email,
+      password,
+      language,
+    }: {
+      userName: string;
+      email: string;
+      password: string;
+      language: string;
+    }) => ({
       url: "/account/sign-up",
       method: "POST",
       body: { userName, email, password, language },

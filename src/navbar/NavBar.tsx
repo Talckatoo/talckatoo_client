@@ -4,8 +4,17 @@ import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
-import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import COCKATOO from "./.././assests/cockatoo.png";
+import { setAuth } from "../redux/features/user/authSlice";
+import {
+  setRecipient,
+  setUser,
+  setUsers,
+} from "../redux/features/user/userSlice";
+import { setConversation } from "../redux/features/conversation/conversationSlice";
+import { setMessages } from "../redux/features/messages/messageSlice";
+import { setRequest } from "../redux/features/user/requestSlice";
 
 const Navbar = () => {
   //Reference for dropdown menu
@@ -46,9 +55,20 @@ const Navbar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const dispatch = useAppDispatch();
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     toast.success("User signed out");
+    // clear persisted state
+    dispatch(setAuth(null));
+    dispatch(setUser(null));
+    dispatch(setUsers([]));
+    dispatch(setConversation({}));
+    dispatch(setMessages([]));
+    dispatch(setRequest(null));
+    dispatch(setRecipient(null));
+
     navigate("/");
   };
 

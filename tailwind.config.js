@@ -117,6 +117,13 @@ export default {
           fontWeight: "600",
         },
       ],
+      "x-small-regular": [
+        "12px",
+        {
+          lineHeight: "130%",
+          fontWeight: "300",
+        },
+      ],
       "small-regular": [
         "14px",
         {

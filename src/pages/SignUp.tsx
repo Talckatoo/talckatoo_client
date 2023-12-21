@@ -7,10 +7,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRegisterAuthMutation } from "../redux/services/AuthApi";
 // import { UserContext } from "../context/user-context";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import languagesArray from "../util/languages";
 import { setUser } from "../redux/features/user/userSlice";
-
 
 interface FormData {
   name: string;
@@ -26,7 +25,6 @@ interface FormErrors {
   confirmPassword?: string;
   selectedLanguage?: string;
 }
-
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -81,14 +79,12 @@ export const SignUp = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await registerAuth(  
-          {
-            userName: formData.name,
-            email: formData.email.toLocaleLowerCase().trim(),
-            password: formData.password,
-            language: selectedLanguage,
-          }
-        );
+        const response = await registerAuth({
+          userName: formData.name,
+          email: formData.email.toLocaleLowerCase().trim(),
+          password: formData.password,
+          language: selectedLanguage,
+        });
 
         const token = response.data.token;
         const user = response.data.user;
@@ -129,15 +125,14 @@ export const SignUp = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
-        <h1 className="head-text text-center my-[2rem]">
-          Join Talckatoo Today!
+        <h1 className="head-text text-white text-center my-[2rem]">
+          Create your account
         </h1>
         {/* Sign up form  */}
         <form
           className="flex flex-col items-center justify-center gap-2 max-w-[400px] m-auto"
           onSubmit={handleSubmit}
         >
-          
           {/* <div className="flex items-center gap-4 w-full my-[1rem]">
             <div className="w-full h-[2px] bg-[#33363A]"></div>
             <p className="text-title-500 whitespace-nowrap z-[1]">
@@ -147,31 +142,31 @@ export const SignUp = () => {
           </div> */}
 
           <Input
-            label="Full Name"
+            label=""
             type="text"
             name="name"
-            placeholder="Enter your name"
+            placeholder="Username"
             value={formData.name}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, name: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1]"
+            className="bg-transparent border-[#33363A] z-[1] rounded-lg"
             error={formErrors.name}
           />
           <Input
-            label="Email"
+            label=""
             type="text"
             name="email"
-            placeholder="Enter your email"
+            placeholder="Email"
             value={formData.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1]"
+            className="bg-transparent border-[#33363A] z-[1] rounded-lg"
             error={formErrors.email}
           />
           <Input
-            label="Password"
+            label=""
             name="password"
             type="password"
             placeholder="Password (at least 8 characters)"
@@ -179,11 +174,11 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1]"
+            className="bg-transparent border-[#33363A] z-[1] rounded-lg"
             error={formErrors.password}
           />
           <Input
-            label="Confirm Password"
+            label=""
             name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
@@ -191,12 +186,12 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, confirmPassword: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1]"
+            className="bg-transparent border-[#33363A] z-[1] rounded-lg"
             error={formErrors.confirmPassword}
           />
 
           <select
-            className={`p-3 w-full border text-white relative text-[16px] focus:outline-none z-[1] ${
+            className={`rounded-lg p-3 w-full border text-white relative text-[16px] focus:outline-none z-[1] ${
               formErrors.selectedLanguage ? "border-red-500" : ""
             } bg-transparent border-[#33363A]`}
             value={selectedLanguage}
@@ -228,7 +223,7 @@ export const SignUp = () => {
           <p className="text-title-500 mt-4 z-[1]">
             Already have an account?{" "}
             <Link className="text-primary-500 cursor-pointer" to="/sign-in">
-              Sign In
+              Log In
             </Link>
           </p>
         </form>

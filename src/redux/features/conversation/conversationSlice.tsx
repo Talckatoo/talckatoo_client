@@ -2,8 +2,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Conversation {
-  conversationId: string | null;
-  selectedId: string | null;
+  conversationId?: string | null;
+  selectedId?: string | null;
+  language?: string | null;
 }
 
 export interface ConversationState {
