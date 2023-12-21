@@ -24,12 +24,15 @@ import {
   useSendMessageMutation,
 } from "../redux/services/MessagesApi";
 
+
 interface Socket {
   current: any;
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
+
   const { isDarkMode } = useContext(UserContext);
+
 
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
@@ -43,6 +46,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
+
 
   // RTK Query
   // fetch all messages by conversation id
@@ -73,6 +77,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   //   }
   // }, [messagesData]);
 
+
+
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
   const [typing, setTyping] = useState(false);
@@ -91,6 +97,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   )?.voiceCode;
 
   const token = localStorage.getItem("token");
+
 
   useEffect(() => {
     if (socket.current) {
