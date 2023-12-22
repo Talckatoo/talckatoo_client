@@ -24,29 +24,22 @@ import {
   useSendMessageMutation,
 } from "../redux/services/MessagesApi";
 
-
 interface Socket {
   current: any;
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
-
   const { isDarkMode } = useContext(UserContext);
-
-
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-
   const conversationState = useAppSelector((state) => state.conversation);
   const user = useAppSelector((state) => state.auth.user);
   const messages = useAppSelector((state) => state.messages.messages);
   const { recipient } = useAppSelector((state) => state.user);
-
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
-
 
   // RTK Query
   // fetch all messages by conversation id
@@ -77,8 +70,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   //   }
   // }, [messagesData]);
 
-
-
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
   const [typing, setTyping] = useState(false);
@@ -98,10 +89,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const token = localStorage.getItem("token");
 
-
   useEffect(() => {
     if (socket.current) {
       socket.current.on("isTyping", (data: any) => {
+        console.log(data);
         setSelectedTyping(data);
         setIsTyping(true);
       });
@@ -112,7 +103,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     const { messages } = messagesData?.conversation || {};
     const { users } = messagesData?.conversation || {};
-    console.log("messages", messagesData);
     if (users) {
       if (users[0]?.userName === user?.userName) {
         dispatch(setRecipient(users[1]?.userName));
@@ -161,8 +151,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         }).unwrap();
-
-        console.log("response", response);
 
         const { message } = response;
 
