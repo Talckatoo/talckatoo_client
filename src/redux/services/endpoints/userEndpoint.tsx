@@ -17,6 +17,20 @@ type MyReducerPath = "UserApi";
 export const userEndpoints = (
   builder: EndpointBuilder<MyApiBaseQuery, MyTagTypes, MyReducerPath>
 ) => ({
+  passwordReset: builder.mutation<UserState, { email: any }>({
+    query: (body: unknown) => ({
+      url: "/account/forgot-password",
+      method: "POST",
+      body,
+    }),
+  }),
+  passwordResetConfirm: builder.mutation<UserState, { data: any }>({
+    query: (body: unknown) => ({
+      url: `/account/reset-password/${userToken}`,
+      method: "POST",
+      body,
+    }),
+  }),
   fetchAllUsers: builder.query<UserState[], null>({
     query: () => "/users",
   }),
