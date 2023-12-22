@@ -16,7 +16,7 @@ const About = () => {
         </div>
         
         <div className="grid grid-cols-2 grid-rows-2 max-md:grid-cols-1 gap-x-[4rem] gap-y-12 items-center mt-[4rem] z-[1] w-full ">
-          <div className="flex flex-col items-start gap-2 max-w-[565px]  md:h-full bg-light-bg py-8 px-12 rounded-[25px] border border-[#EFF0F6]">
+          <div className="flex flex-col items-start gap-2 shadow-lg max-w-[565px]  md:h-full bg-light-bg py-8 px-12 rounded-[25px] border border-[#EFF0F6]">
             <span className="text-primary-500 max-md:text-[16px] text-[20px] font-archetic">
               Efficient and Cost-Effective
             </span>
@@ -57,7 +57,7 @@ const About = () => {
               className=" md:w-[96%] max-h-[411px] object-cover rounded-[25px]"
             />
           </div>
-          <div className="flex flex-col items-start gap-2 max-w-[565px] md:h-full bg-light-bg py-8 px-12 rounded-[25px] border border-[#EFF0F6]">
+          <div className="flex flex-col items-start shadow-lg gap-2 max-w-[565px] md:h-full bg-light-bg py-8 px-12 rounded-[25px] border border-[#EFF0F6]">
             <span className="text-primary-500 max-md:text-[16px] text-[20px] font-archetic">
               Simple, Yet Powerful
             </span>
