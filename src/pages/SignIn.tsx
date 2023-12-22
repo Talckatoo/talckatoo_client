@@ -25,7 +25,6 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-  const userToken = window.location.pathname.split("/")[2];
   const dispatch = useAppDispatch();
   const [loginAuth] = useLoginAuthMutation();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
@@ -113,7 +112,7 @@ const SignIn = () => {
               type="button"
               className="bg-red-500 text-white w-full h-full flex items-center justify-start gap-2 "
               disabled
-              onClick={() => {}}
+              onClick={() => { }}
             >
               <div className="flex items-center gap-4 h-full ">
                 <img
@@ -166,30 +165,30 @@ const SignIn = () => {
           />
           {/* forgot password */}
           <div className="flex items-center justify-between w-full">
-  <div className="flex justify-center">
-    <input
-      type="checkbox"
-      id="keepSignedIn"
-      className="w-4 h-4 mr-1 bg-transparent border-[#33363A] rounded-lg"
-    />
-    <label htmlFor="keepSignedIn" className="text-white">Keep me signed in</label>
-  </div>
-  <Button
-    type="button"
-    className="text-primary-500"
-    onClick={() => {
-      navigate(`/reset-password`);
-    }}
-  >
-    Forgot password?
-  </Button>
-</div>
+            <div className="flex justify-center">
+              <input
+                type="checkbox"
+                id="keepSignedIn"
+                className="w-4 h-4 mr-1 bg-transparent border-[#33363A] rounded-lg"
+              />
+              <label htmlFor="keepSignedIn" className="text-white">Keep me signed in</label>
+            </div>
+            <Button
+              type="button"
+              className="text-primary-500"
+              onClick={() => {
+                navigate(`/reset-password`);
+              }}
+            >
+              Forgot password?
+            </Button>
+          </div>
 
           {/* end */}
           <Button
             type="submit"
             className="bg-primary-500 text-white w-full h-[48px] mt-[2rem] z-[1]"
-            onClick={() => {}}
+            onClick={() => { }}
           >
             {loading ? "Loading..." : "Log in"}
           </Button>

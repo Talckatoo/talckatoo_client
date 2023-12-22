@@ -14,8 +14,20 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [resetPassword] = usePasswordResetMutation();
+  const [error, setError] = useState<string>("");
+  const validateEmail = () => {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    if (!regex.test(email)) {
+      setError("Please enter a valid email");
+    } else {
+      setError("");
+    }
+  };
+
 
   const handleSendResetLink = async () => {
+    validateEmail();
     try {
       setLoading(true);
       // Make a POST request to reset the password
@@ -31,7 +43,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
         }, 3000);
       } else {
         // Handle error response
-        toast.error("Password reset failed");
+        toast.error("this email is not registered");
       }
     } catch (error) {
       // Handle network or other errors
@@ -43,29 +55,31 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
 
   return (
     <div className="bg-white h-full w-full font-inter flex justify-center items-center ">
-      <div  className=" bg-[#fafafa] flex flex-col items-center justify-center gap-4 border rounded-2xl w-[600px] p-12 m-auto shadow-sm shadow-slate-800 ">
-      <h2 className="text-black text-heading1-bold">Reset Your Password</h2>
-      <Input
-        label= 'email'
-        type="email"
-        name='email'
-        id='email'
-        className="border rounded-xl"
-        placeholder="Enter your email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <Button
-        type="button"
-        onClick={handleSendResetLink}
-        disabled={loading}
-        className="bg-red-500 text-white w-full h-full flex items-center justify-start gap-2 border rounded-xl"  
-      >
-        {loading ? "Resetting..." : "Reset Password"}
-      </Button>
+      <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-4 border rounded-2xl w-[600px] p-12 m-auto shadow-sm shadow-slate-800 ">
+        <h2 className="text-black text-heading1-bold">Reset Your Password</h2>
+        <Input
+          label='email'
+          type="email"
+          name='email'
+          id='email'
+          className="border rounded-xl"
+          placeholder="Enter your email"
+          value={email}
+          error={error}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Button
+          type="button"
+          onClick={handleSendResetLink}
+          disabled={loading}
+          className="bg-red-500 text-white w-full h-full flex items-center justify-center gap-2 border rounded-xl"
+        >
+          {loading ? "Resetting..." : "Reset Password"}
+        </Button>
       </div>
     </div>
   );
 };
 
 export default ResetPassword;
+
