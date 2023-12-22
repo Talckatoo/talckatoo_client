@@ -17,7 +17,7 @@ export interface UserState {
   _id: any;
   token: string | null;
   user: any;
-  users?: string[];
+  users?: any;
   recipient?: any;
 }
 
@@ -25,7 +25,10 @@ const initialState: UserState = {
   _id: null,
   token: null,
   user: null,
-  users: [],
+  users: {
+    contactedUsers: [],
+    uncontactedUsers: [],
+  },
   recipient: null,
 };
 
@@ -39,6 +42,22 @@ export const userSlice = createSlice({
     setUsers: (state, action: PayloadAction<any[]>) => {
       state.users = action.payload;
     },
+    updateContactedUserById: (state, action: PayloadAction<any>) => {
+      const { from, userName, image, language } = action.payload;
+      state.users.contactedUsers = state.users.contactedUsers.map(
+        (user: any) => {
+          if (user._id === from) {
+            return {
+              ...user,
+              userName,
+              profileImage: { url: image },
+              language,
+            };
+          }
+          return user;
+        }
+      );
+    },
     setRecipient: (state, action: PayloadAction<UserState | null>) => {
       state.recipient = action.payload;
     },
@@ -46,5 +65,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, setUsers, setRecipient } = userSlice.actions;
+export const { setUser, setUsers, setRecipient, updateContactedUserById } =
+  userSlice.actions;
 export default userSlice.reducer;

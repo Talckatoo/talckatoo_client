@@ -202,11 +202,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }
 
         socket.current.emit("sendMessage", {
-          createdAt: message.createdAt,
+          createdAt: message?.createdAt,
           from: user?._id,
           to: selectedId,
           targetLanguage: language,
-          message: message.message,
+          message: message?.message,
           status: false,
           unread: selectedId,
         });
@@ -273,7 +273,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   useEffect(() => {
-    if (isFetchingMore) return;
     scrollToBottom();
   }, [messages, isFetchingMore]);
 
@@ -305,7 +304,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const handleScroll = (e) => {
       const { scrollTop } = e.target;
       // almost the top
-      const isScrolledToTop = scrollTop < 250;
+      const isScrolledToTop = scrollTop === 0;
 
       if (isScrolledToTop && messages) {
         fetchNextPage();

@@ -26,6 +26,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationState = useAppSelector((state) => state.conversation);
   const messages = useAppSelector((state) => state.messages.messages);
   const { users } = useAppSelector((state) => state.user);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   // RTK Query
   const { data: friends, refetch: refetchFriends } = useFetchAllFriendsQuery(
@@ -49,6 +50,25 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }),
     [refetchFriends, socket.current];
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("getUpdateProfile", (data: any) => {
+        console.log("data", data);
+        console.log("selectedUser", selectedUser);
+        if (selectedUser?._id === data.from) {
+          dispatch(
+            setConversation({
+              conversationId: conversationId,
+              selectedId: selectedId,
+              language: data.language,
+            })
+          );
+          dispatch(setRecipient(data.userName));
+        }
+      });
+    }
+  }, [socket.current, selectedUser]);
 
   useEffect(() => {
     refetchFriends();
@@ -85,6 +105,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [refetchFriends, messages]);
 
   const handleSelectContact = (u: any) => {
+    setSelectedUser(u);
     dispatch(
       setConversation({
         conversationId: u.conversation._id,
@@ -95,6 +116,19 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
 
     dispatch(setRecipient(u.userName as any));
   };
+
+  useEffect(() => {
+    console.log("selectedUser", selectedUser);
+    dispatch(
+      setConversation({
+        conversationId: selectedUser?.conversation?._id,
+        selectedId: selectedUser?._id,
+        language: selectedUser?.language,
+      })
+    );
+
+    dispatch(setRecipient(selectedUser?.userName as any));
+  }, [selectedUser]);
 
   return (
     <>

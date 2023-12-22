@@ -7,6 +7,11 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { io, Socket } from "socket.io-client";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
+import {
+  updateContactedUserById,
+  updateContactedUsers,
+} from "./redux/features/user/userSlice";
 
 type MyEventMap = {
   connect: () => void;
@@ -18,12 +23,18 @@ type MyEventMap = {
 
 const App = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const socket = useRef<Socket<MyEventMap> | null>();
+  const { users } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
   }, []);
+
+  useEffect(() => {
+    console.log("users", users);
+  }, [users]);
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -36,10 +47,15 @@ const App = () => {
   useEffect(() => {
     if (socket.current) {
       socket.current.on("getUpdateProfile", (data: any) => {
-        console.log(data);
+        console.log("data", data);
+        dispatch(updateContactedUserById(data));
       });
     }
   }, [socket.current]);
+
+  useEffect(() => {
+    console.log("users", users);
+  }, [users]);
 
   return (
     <div className="flex flex-col h-full w-full ">
