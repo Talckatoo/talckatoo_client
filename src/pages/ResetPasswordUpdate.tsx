@@ -3,7 +3,7 @@ import Input from '../UI/Input';
 import { usePasswordResetConfirmMutation } from '../redux/services/UserApi';
 import Button from '../UI/Button';
 import { toast } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ResetPaaswordUpdate = () => {
   const [newPassword, setNewPassword] = useState<string>("");
@@ -13,6 +13,7 @@ const ResetPaaswordUpdate = () => {
   const [passwordResetConfirm] = usePasswordResetConfirmMutation();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { token } = useParams();  
 
   const validationPassword = () => {
     if (newPassword.length < 8) {
@@ -28,11 +29,16 @@ const ResetPaaswordUpdate = () => {
   }
 
   const handleResetPassword = async (e: any) => {
-    e.preventDefault()
-    setLoading(true)
-    validationPassword()
+    e.preventDefault();
+    setLoading(true);
+    validationPassword();
     try {
-      const response = await passwordResetConfirm({ data: { newPassword } })
+      const response = await passwordResetConfirm({
+        token: token as string,
+        data: {
+          password: newPassword as string,
+        },
+      });
       if ("data" in response) {
         // Password reset successful, handle accordingly
         toast.success("your password has been changed");
@@ -44,8 +50,9 @@ const ResetPaaswordUpdate = () => {
       // Password reset failed, handle accordingly
       toast.error("your password has not been changed");
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
+
   return (
     <div className="bg-white h-full w-full font-inter flex justify-center items-center ">
       <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-4 border rounded-2xl w-[600px] p-12 m-auto shadow-sm shadow-slate-800 ">

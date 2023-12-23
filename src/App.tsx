@@ -11,16 +11,16 @@ import ResetPassword from "./pages/ResetPassword";
 
 
 const App = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/chat");
-    } else {
-      navigate("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.getItem("token")) {
+  //     navigate("/chat");
+  //   } else {
+  //     navigate("/");
+  //   }
+  // }, []);
 
   return (
     <div className="flex flex-col h-full w-full ">

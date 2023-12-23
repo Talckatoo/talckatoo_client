@@ -24,11 +24,17 @@ export const userEndpoints = (
       body,
     }),
   }),
-  passwordResetConfirm: builder.mutation<UserState, { data: any }>({
-    query: (body: unknown) => ({
-      url: `/account/reset-password/${userToken}`,
+  passwordResetConfirm: builder.mutation<
+    UserState,
+    {
+      token: string;
+      data: any;
+    }
+  >({
+    query: ({ token, data }: { token: string; data: any }) => ({
+      url: `/account/reset-password/${token}`,
       method: "POST",
-      body,
+      body: data,
     }),
   }),
   fetchAllUsers: builder.query<UserState[], null>({
