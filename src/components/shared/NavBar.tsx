@@ -29,38 +29,45 @@ const NavBar: FC<NavBarProps> = ({ showSign = true }) => {
     };
   }, []);
 
+  const handleSignInClick = () => {
+    // Check if token exists in local storage
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      // Token exists, navigate to chat page
+      navigate("/chat");
+    } else {
+      // Token doesn't exist, navigate to sign-in page
+      navigate("/sign-in");
+    }
+  };
+
   return (
-    <header
-      className="w-full py-4   fixed bg-white top-0 z-50"
-    >
-      <div className="  w-full flex items-center justify-between max-w-[95%] m-auto">
+    <header className="w-full py-4 fixed bg-white top-0 z-50">
+      <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
         {/* logo section */}
         <Link to="/" className="font-jakarta text-[16px] font-bold">
           <span>TALCKATOO</span>
         </Link>
         {/* sign up and sign in button */}
-        
-          <div className="flex items-center gap-4">
-            <Button
-              type="button"
-              className=" max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2  rounded-[3px]       text-black border border-[#000]"
-              onClick={() => {
-                navigate("/sign-in");
-              }}
-            >
-              Sign In
-            </Button>
-            <Button
-              type="button"
-              className="bg-black rounded-[3px]  max-md:px-4 max-md:py-2 ; text-white px-7 py-2"
-              onClick={() => {
-                navigate("/sign-up");
-              }}
-            >
-              Sign Up
-            </Button>
-          </div>
-          
+        <div className="flex items-center gap-4">
+          <Button
+            type="button"
+            className="max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000]"
+            onClick={handleSignInClick}
+          >
+            Sign In
+          </Button>
+          <Button
+            type="button"
+            className="bg-black rounded-[3px] max-md:px-4 max-md:py-2 text-white px-7 py-2"
+            onClick={() => {
+              navigate("/sign-up");
+            }}
+          >
+            Sign Up
+          </Button>
+        </div>
       </div>
     </header>
   );
