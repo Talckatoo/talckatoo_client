@@ -1,35 +1,32 @@
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useContext, useEffect } from "react";
 import ChatContainer from "../components/ChatContainer";
 import { UserContext } from "../context/user-context";
 import { getContactName } from "../util/getContactName";
-import { io, Socket } from "socket.io-client";
 import COCKATOO from "./.././assests/cockatoo.png";
 import FetchLatestMessages from "../util/FetchLatestMessages";
 import { PiBirdFill } from "react-icons/pi";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import { User, setRecipient, setUsers } from "../redux/features/user/userSlice";
+import { setOnlineFriends } from "../redux/features/socket/socketSlice";
 import { useFetchAllFriendsQuery } from "../redux/services/UserApi";
 
-type MyEventMap = {
-  connect: () => void;
-  disconnect: () => void;
-  addUser: (userID: string) => void;
-  getUsers: (users: string[]) => void;
-};
+interface Socket {
+  current: any;
+}
 
-const Chat = () => {
+const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
 
   const { user } = useAppSelector((state) => state.auth);
-  const socket = useRef<Socket<MyEventMap> | null>();
-  const [onlineFriends, setOnlineFriends] = useState<User[]>([]);
+  const { onlineFriends } = useAppSelector((state) => state.socket);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [view, setView] = useState<"friends" | "people">("friends");
   const dispatch = useAppDispatch();
   const conversationState = useAppSelector((state) => state.conversation);
   const messages = useAppSelector((state) => state.messages.messages);
   const { users } = useAppSelector((state) => state.user);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   // RTK Query
   const { data: friends, refetch: refetchFriends } = useFetchAllFriendsQuery(
@@ -44,11 +41,6 @@ const Chat = () => {
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
-  useEffect(() => {
-    socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`, {
-      transports: ["websocket"],
-    });
-  }, []);
 
   useEffect(() => {
     if (socket.current && user) {
@@ -58,6 +50,25 @@ const Chat = () => {
     }
   }),
     [refetchFriends, socket.current];
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("getUpdateProfile", (data: any) => {
+        console.log("data", data);
+        console.log("selectedUser", selectedUser);
+        if (selectedUser?._id === data.from) {
+          dispatch(
+            setConversation({
+              conversationId: conversationId,
+              selectedId: selectedId,
+              language: data.language,
+            })
+          );
+          dispatch(setRecipient(data.userName));
+        }
+      });
+    }
+  }, [socket.current, selectedUser]);
 
   useEffect(() => {
     refetchFriends();
@@ -85,16 +96,16 @@ const Chat = () => {
       const onlUnContact = users.uncontactedUsers.filter((u: { _id: string }) =>
         onlineUsers.includes(u._id)
       );
-      setOnlineFriends([...onlContact, ...onlUnContact]);
+      dispatch(setOnlineFriends([...onlContact, ...onlUnContact]));
     }
   }, [onlineUsers, users?.contactedUsers, users?.uncontactedUsers]);
 
   useEffect(() => {
     refetchFriends();
-    console.log("messages", messages);
   }, [refetchFriends, messages]);
 
   const handleSelectContact = (u: any) => {
+    setSelectedUser(u);
     dispatch(
       setConversation({
         conversationId: u.conversation._id,
@@ -104,8 +115,20 @@ const Chat = () => {
     );
 
     dispatch(setRecipient(u.userName as any));
-
   };
+
+  useEffect(() => {
+    console.log("selectedUser", selectedUser);
+    dispatch(
+      setConversation({
+        conversationId: selectedUser?.conversation?._id,
+        selectedId: selectedUser?._id,
+        language: selectedUser?.language,
+      })
+    );
+
+    dispatch(setRecipient(selectedUser?.userName as any));
+  }, [selectedUser]);
 
   return (
     <>

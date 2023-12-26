@@ -45,6 +45,8 @@ const ResetPaaswordUpdate = () => {
         setTimeout(() => {
           navigate("/sign-in");
         }, 3000);
+      }else{
+        toast.error("your token is expired please try reset again! ");
       }
     } catch (error) {
       // Password reset failed, handle accordingly
@@ -54,7 +56,7 @@ const ResetPaaswordUpdate = () => {
   };
 
   return (
-    <div className="bg-white h-full w-full font-inter flex justify-center items-center ">
+    <div className="bg-white z-50 h-full w-full font-inter flex justify-center items-center absolute">
       <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-4 border rounded-2xl w-[600px] p-12 m-auto shadow-sm shadow-slate-800 ">
         <h2 className="text-black text-heading1-bold">Change Your Password</h2>
         {/* reset with form newPassword and confirm newPasword   */}

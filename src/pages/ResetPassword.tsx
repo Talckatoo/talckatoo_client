@@ -72,7 +72,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
           type="button"
           onClick={handleSendResetLink}
           disabled={loading}
-          className="bg-red-500 text-white w-full h-full flex items-center justify-center gap-2 border rounded-xl"
+          className="bg-black text-white w-full h-full flex items-center justify-center gap-2 border rounded-xl"
         >
           {loading ? "Resetting..." : "Reset Password"}
         </Button>
