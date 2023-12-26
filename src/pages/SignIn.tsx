@@ -85,8 +85,8 @@ const SignIn = () => {
   };
 
   return (
-    <section className="relative bg-background-500 h-full w-full font-inter">
-      <div className="bg-background-500 fixed top-0 left-0 w-full h-full -z-20"></div>
+    <section className="relative bg-white h-full w-full font-inter">
+      <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
       <img
         src="/assets/img/shape1.svg"
         alt="shape"
@@ -101,17 +101,19 @@ const SignIn = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
-        <h1 className="head-text text-center my-[5rem]">Welcome back</h1>
+        <h2 className="head-text text-center mt-[5rem] mb-10 text-black">
+          Welcome back
+        </h2>
         {/* Sign up form  */}
         <form
           className="flex flex-col items-center justify-center gap-2 max-w-[400px] m-auto"
           onSubmit={handleSubmit}
         >
           {/* Google button red */}
-          <div className="w-full max-w-[400px] h-[48px]">
+          <div className="w-full max-w-[400px] h-[44px]">
             <Button
               type="button"
-              className="bg-red-500 text-white w-full h-full flex items-center justify-start gap-2 "
+              className="bg-red-500 text-black w-full h-full flex items-center justify-start gap-2 "
               disabled
               onClick={() => {}}
             >
@@ -122,16 +124,16 @@ const SignIn = () => {
                   className="w-6 h-6"
                 />
                 {/* verticule line */}
-                <div className="w-[2px] h-full bg-white opacity-70"></div>
+                <div className="w-[2px] h-full bg-white "></div>
               </div>
-              <span className="mx-auto">Sign In with Google</span>
+              <span className="mx-auto text-black">Sign In with Google</span>
             </Button>
           </div>
           {/* End of Google button red */}
 
           <div className="flex items-center gap-4 w-full my-[2rem]">
             <div className="w-full h-[2px] bg-[#33363A]"></div>
-            <p className="text-title-500 whitespace-nowrap">
+            <p className="text-black whitespace-nowrap">
               Or, sign in with your email
             </p>
             <div className="w-full h-[2px] bg-[#33363A]"></div>
@@ -147,7 +149,7 @@ const SignIn = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="bg-transparent border-[#33363A] rounded-lg"
+            className="bg-transparent border-[#33363A] rounded-lg text-black"
             error={formErrors.email}
           />
 
@@ -161,25 +163,25 @@ const SignIn = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="bg-transparent border-[#33363A] rounded-lg"
+            className="bg-transparent border-[#33363A] rounded-lg text-black"
             error={formErrors.password}
           />
-          <Button type="submit" onClick={() => {}} className="text-white">
+          <Button type="submit" onClick={() => {}} className="text-black">
             Forgot password?
           </Button>
 
           <Button
             type="submit"
-            className="bg-primary-500 text-white w-full h-[48px] mt-[2rem] z-[1]"
+            className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1]"
             onClick={() => {}}
           >
             {loading ? "Loading..." : "Log in"}
           </Button>
 
-          <p className="text-title-500 mt-4 z-[1]">
+          <p className="text-black mt-4 z-[1] ">
             Don't have an account?{" "}
             <span
-              className="text-primary-500 cursor-pointer z-[1]"
+              className="text-black cursor-pointer z-[1]"
               onClick={() => {
                 navigate("/sign-up");
               }}

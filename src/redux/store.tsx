@@ -9,6 +9,7 @@ import authSliceReducer from "./features/user/authSlice";
 import requestSliceReducer from "./features/user/requestSlice";
 import conversationSliceReducer from "./features/conversation/conversationSlice";
 import messagesSliceReducer from "./features/messages/messageSlice";
+import socketSliceReducer from "./features/socket/socketSlice";
 
 import { UserApi } from "./services/UserApi";
 import { AuthApi } from "./services/AuthApi";
@@ -45,6 +46,7 @@ const persistedReducer = persistReducer(
     auth: authSliceReducer,
     conversation: conversationSliceReducer,
     messages: messagesSliceReducer,
+    socket: socketSliceReducer,
 
     [UserApi.reducerPath]: UserApi.reducer,
     [AuthApi.reducerPath]: AuthApi.reducer,

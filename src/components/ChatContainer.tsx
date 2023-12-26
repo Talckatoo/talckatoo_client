@@ -24,29 +24,22 @@ import {
   useSendMessageMutation,
 } from "../redux/services/MessagesApi";
 
-
 interface Socket {
   current: any;
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
-
   const { isDarkMode } = useContext(UserContext);
-
-
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-
   const conversationState = useAppSelector((state) => state.conversation);
   const user = useAppSelector((state) => state.auth.user);
   const messages = useAppSelector((state) => state.messages.messages);
   const { recipient } = useAppSelector((state) => state.user);
-
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
-
 
   // RTK Query
   // fetch all messages by conversation id
@@ -77,8 +70,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   //   }
   // }, [messagesData]);
 
-
-
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
   const [typing, setTyping] = useState(false);
@@ -98,10 +89,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const token = localStorage.getItem("token");
 
-
   useEffect(() => {
     if (socket.current) {
       socket.current.on("isTyping", (data: any) => {
+        console.log(data);
         setSelectedTyping(data);
         setIsTyping(true);
       });
@@ -112,7 +103,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     const { messages } = messagesData?.conversation || {};
     const { users } = messagesData?.conversation || {};
-    console.log("messages", messagesData);
     if (users) {
       if (users[0]?.userName === user?.userName) {
         dispatch(setRecipient(users[1]?.userName));
@@ -161,8 +151,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         }).unwrap();
-
-        console.log("response", response);
 
         const { message } = response;
 
@@ -214,11 +202,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }
 
         socket.current.emit("sendMessage", {
-          createdAt: message.createdAt,
+          createdAt: message?.createdAt,
           from: user?._id,
           to: selectedId,
           targetLanguage: language,
-          message: message.message,
+          message: message?.message,
           status: false,
           unread: selectedId,
         });
@@ -285,8 +273,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   useEffect(() => {
-    if (isFetchingMore) return;
-    scrollToBottom();
+    !isFetchingMore && scrollToBottom();
   }, [messages, isFetchingMore]);
 
   const fetchNextPage = async () => {
@@ -317,8 +304,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const handleScroll = (e) => {
       const { scrollTop } = e.target;
       // almost the top
-      const isScrolledToTop = scrollTop < 250;
-
+      const isScrolledToTop = scrollTop < 400;
       if (isScrolledToTop && messages) {
         fetchNextPage();
       }
@@ -334,6 +320,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const onHandleTranslateText = async (translateText: string) => {
     socket.current.emit("stopTyping", selectedId);
+    setIsFetchingMore(false);
     if (selectedId && conversationId && translateText) {
       try {
         const response = await sendMessage({

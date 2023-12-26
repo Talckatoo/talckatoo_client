@@ -3,24 +3,29 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
 import { FaArrowLeft, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { setUser } from "../redux/features/user/userSlice";
 import { useUpdateUserMutation } from "../redux/services/UserApi";
-
 import languagesArray from "../util/languages";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
+import { userEndpoints } from "../redux/services/endpoints/userEndpoint";
 
-const Profile = () => {
+interface Socket {
+  current: any;
+}
+
+const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
   const { user } = useAppSelector((state) => state.auth);
   const [updateLanguage, setUpdateLanguage] = useState("");
-
+  const conversationState = useAppSelector((state) => state.conversation);
+  const selectedId = conversationState?.conversation?.selectedId;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [updateUser] = useUpdateUserMutation();
+  const { onlineFriends } = useAppSelector((state) => state.socket);
 
   const navigateChat = () => {
     navigate("/chat");
@@ -43,7 +48,7 @@ const Profile = () => {
       if (user) {
         formData.append("userName", name || user.userName);
         if (image) {
-          formData.append("image", image);
+          formData.append("image", image || user.profileImage.url);
         }
         formData.append("language", updateLanguage || user.language);
       }
@@ -51,6 +56,15 @@ const Profile = () => {
       const response = await updateUser({
         id: user?._id,
         data: formData,
+      });
+
+      socket.current.emit("updateProfile", {
+        userName: name || user.userName,
+        image: image ? image : user.profileImage.url,
+        language: updateLanguage || user.language,
+        from: user?._id,
+        to: selectedId,
+        onlineFriends: onlineFriends,
       });
 
       toast.success("Profile updated successfully!");
