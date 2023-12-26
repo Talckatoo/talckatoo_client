@@ -18,11 +18,13 @@ const ResetPaaswordUpdate = () => {
   const validationPassword = () => {
     if (newPassword.length < 8) {
       setPasswordError("password must be at least 8 characters")
+      return
     } else {
       setPasswordError("")
     }
     if (newPassword !== confirmNewPassword) {
       setError("password not match")
+      return
     } else {
       setError("")
     }
@@ -46,7 +48,7 @@ const ResetPaaswordUpdate = () => {
           navigate("/sign-in");
         }, 3000);
       }else{
-        toast.error("your token is expired please try reset again! ");
+        console.log(response.error)
       }
     } catch (error) {
       // Password reset failed, handle accordingly
