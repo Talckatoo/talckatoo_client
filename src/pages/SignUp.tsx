@@ -109,8 +109,8 @@ export const SignUp = () => {
   };
 
   return (
-    <section className="relative bg-background-500 h-full w-full font-inter">
-      <div className="bg-background-500 fixed top-0 left-0 w-full h-full -z-20"></div>
+    <section className="relative bg-white h-full w-full font-inter">
+      <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
       <img
         src="/assets/img/shape1.svg"
         alt="shape"
@@ -125,8 +125,8 @@ export const SignUp = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
-        <h1 className="head-text text-white text-center my-[2rem]">
-          Create your account
+        <h1 className="head-text text-center mt-[6rem] mb-6 text-black">
+          Join Talckatoo Today!
         </h1>
         {/* Sign up form  */}
         <form
@@ -142,31 +142,31 @@ export const SignUp = () => {
           </div> */}
 
           <Input
-            label=""
+            // label="Username"
             type="text"
             name="name"
-            placeholder="Username"
+            placeholder="Enter your name"
             value={formData.name}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, name: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1] rounded-lg"
+            className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
             error={formErrors.name}
           />
           <Input
-            label=""
+            // label="Email"
             type="text"
             name="email"
-            placeholder="Email"
+            placeholder="Enter your email"
             value={formData.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1] rounded-lg"
+            className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
             error={formErrors.email}
           />
           <Input
-            label=""
+            // label="Password"
             name="password"
             type="password"
             placeholder="Password (at least 8 characters)"
@@ -174,11 +174,11 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1] rounded-lg"
+            className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
             error={formErrors.password}
           />
           <Input
-            label=""
+            // label="Confirm Password"
             name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
@@ -191,7 +191,7 @@ export const SignUp = () => {
           />
 
           <select
-            className={`rounded-lg p-3 w-full border text-white relative text-[16px] focus:outline-none z-[1] ${
+            className={`rounded-lg p-3 w-full border text-black relative text-[16px] focus:outline-none z-[1] ${
               formErrors.selectedLanguage ? "border-red-500" : ""
             } bg-transparent border-[#33363A]`}
             value={selectedLanguage}
@@ -214,16 +214,19 @@ export const SignUp = () => {
 
           <Button
             type="submit"
-            className="bg-primary-500 text-white w-full h-[48px] mt-[2rem] z-[1]"
+            className="bg-black text-white w-full h-[48px] mt-[2rem] z-[1] rounded-lg"
             onClick={() => {}}
           >
             Sign Up
           </Button>
 
-          <p className="text-title-500 mt-4 z-[1]">
+          <p className="text-black mt-4 z-[1]">
             Already have an account?{" "}
-            <Link className="text-primary-500 cursor-pointer" to="/sign-in">
-              Log In
+            <Link
+              className="text-black cursor-pointer rounded-lg"
+              to="/sign-in"
+            >
+              Sign In
             </Link>
           </p>
         </form>

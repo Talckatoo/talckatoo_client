@@ -24,7 +24,7 @@ const Testimonials = () => {
           {testimonials.map((item, index) => (
             <div
               key={index}
-              className="p-16 bg-light-bg border border-[#EFF0F6] rounded-[20px] card"
+              className="p-16 bg-light-bg border shadow-lg border-[#EFF0F6] rounded-[20px] card"
             >
               <p className="max-md:text-[16px]  text-[18px]">{item.text}</p>
               <div className="flex items-center gap-4  mt-4">
