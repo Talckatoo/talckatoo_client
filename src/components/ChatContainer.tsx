@@ -141,7 +141,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleSendMessage = async (messageText: any) => {
     socket.current.emit("stopTyping", selectedId);
     if (selectedId && conversationId) {
-      setIsFetchingMore(false);
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -153,6 +152,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }).unwrap();
         const { message } = response;
         console.log(message);
+        setIsFetchingMore(false);
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
@@ -191,6 +191,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           unread: selectedId,
         }).unwrap();
 
+        setIsFetchingMore(false);
         const { message } = response;
         if (response?.conversation._id) {
           dispatch(
@@ -309,7 +310,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         fetchNextPage();
       }
     };
-
     const scrollContainer = scrollRef.current;
     scrollContainer?.addEventListener("scroll", handleScroll);
 

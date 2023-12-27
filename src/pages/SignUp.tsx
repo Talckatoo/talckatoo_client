@@ -133,13 +133,6 @@ export const SignUp = () => {
           className="flex flex-col items-center justify-center gap-2 max-w-[400px] m-auto"
           onSubmit={handleSubmit}
         >
-          {/* <div className="flex items-center gap-4 w-full my-[1rem]">
-            <div className="w-full h-[2px] bg-[#33363A]"></div>
-            <p className="text-title-500 whitespace-nowrap z-[1]">
-            register with your email
-            </p>
-            <div className="w-full h-[2px] bg-[#33363A] z-[1]"></div>
-          </div> */}
 
           <Input
             // label="Username"
@@ -147,48 +140,36 @@ export const SignUp = () => {
             name="name"
             placeholder="Enter your name"
             value={formData.name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
             className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
-            error={formErrors.name}
-          />
+            error={formErrors.name} label={""} id={""}          />
           <Input
             // label="Email"
             type="text"
             name="email"
             placeholder="Enter your email"
             value={formData.email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
             className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
-            error={formErrors.email}
-          />
+            error={formErrors.email} label={""} id={""}          />
           <Input
             // label="Password"
             name="password"
             type="password"
             placeholder="Password (at least 8 characters)"
             value={formData.password}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, password: e.target.value })}
             className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
-            error={formErrors.password}
-          />
+            error={formErrors.password} label={""} id={""}          />
           <Input
             // label="Confirm Password"
             name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
             value={formData.confirmPassword}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, confirmPassword: e.target.value })
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, confirmPassword: e.target.value })}
             className="bg-transparent border-[#33363A] z-[1] rounded-lg"
-            error={formErrors.confirmPassword}
-          />
+            error={formErrors.confirmPassword} label={""} id={""}          />
 
           <select
             className={`rounded-lg p-3 w-full border text-black relative text-[16px] focus:outline-none z-[1] ${
@@ -201,7 +182,7 @@ export const SignUp = () => {
               Select Your Language
             </option>
             {languagesArray?.map(({ code, language }) => (
-              <option key={code} value={code} className="bg-secondary-500">
+              <option key={code} value={code} className="bg-white">
                 {language}
               </option>
             ))}
@@ -223,7 +204,7 @@ export const SignUp = () => {
           <p className="text-black mt-4 z-[1]">
             Already have an account?{" "}
             <Link
-              className="text-black cursor-pointer rounded-lg"
+              className="text-black cursor-pointer rounded-lg underline font-semibold"
               to="/sign-in"
             >
               Sign In
