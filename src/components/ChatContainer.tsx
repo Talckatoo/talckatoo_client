@@ -151,8 +151,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         }).unwrap();
-
         const { message } = response;
+        console.log(message);
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
