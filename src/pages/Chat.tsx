@@ -54,8 +54,6 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     if (socket.current) {
       socket.current.on("getUpdateProfile", (data: any) => {
-        console.log("data", data);
-        console.log("selectedUser", selectedUser);
         if (selectedUser?._id === data.from) {
           dispatch(
             setConversation({
