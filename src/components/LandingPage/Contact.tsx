@@ -34,7 +34,7 @@ const Contact = () => {
         />
         <Button
           type="button"
-          className="bg-[#fff] text-black mt-8 z-[1] w-fit ml-auto px-12 hover:text-white border rounded-xl"
+          className="bg-[#fff] text-black mt-8 z-[1] w-fit ml-auto px-12 hover:text-white hover:bg-black border rounded-xl"
           onClick={() => {}}
         >
           Send

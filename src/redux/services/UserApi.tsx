@@ -23,4 +23,6 @@ export const {
   useFetchUserByIdQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  usePasswordResetMutation,
+  usePasswordResetConfirmMutation,
 } = UserApi;

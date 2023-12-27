@@ -5,7 +5,6 @@ import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
 import { useLoginAuthMutation } from "../redux/services/AuthApi";
 import { toast } from "react-toastify";
-import { setUser } from "../redux/features/user/userSlice";
 import { useAppDispatch } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
 
@@ -25,7 +24,6 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-
   const dispatch = useAppDispatch();
   const [loginAuth] = useLoginAuthMutation();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
@@ -109,24 +107,22 @@ const SignIn = () => {
           className="flex flex-col items-center justify-center gap-2 max-w-[400px] m-auto"
           onSubmit={handleSubmit}
         >
-          {/* Google button red */}
+          {/* Google button */}
           <div className="w-full max-w-[400px] h-[44px]">
             <Button
               type="button"
-              className="bg-red-500 text-black w-full h-full flex items-center justify-start gap-2 "
+              className="bg-[#fafafa] text-black w-full h-full flex justify-center items-center border-[0.5px] border-[#33363A] rounded-lg shadow-sm-2xl "
               disabled
-              onClick={() => {}}
+              onClick={() => { }}
             >
-              <div className="flex items-center gap-4 h-full ">
+           
                 <img
-                  src="/assets/icons/google.svg"
+                  src="/assets/icons/google-g-2015.svg"
                   alt="google"
-                  className="w-6 h-6"
+                  className="w-8 h-8"
                 />
-                {/* verticule line */}
-                <div className="w-[2px] h-full bg-white "></div>
-              </div>
-              <span className="mx-auto text-black">Sign In with Google</span>
+              
+              <span className="text-black">Sign In with Google</span>
             </Button>
           </div>
           {/* End of Google button red */}
@@ -166,14 +162,16 @@ const SignIn = () => {
             className="bg-transparent border-[#33363A] rounded-lg text-black"
             error={formErrors.password}
           />
-          <Button type="submit" onClick={() => {}} className="text-black">
+          <Button type="reset"   onClick={() => {
+                navigate(`/reset-password`);
+              }} className="text-black">
             Forgot password?
           </Button>
 
           <Button
             type="submit"
             className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1]"
-            onClick={() => {}}
+            
           >
             {loading ? "Loading..." : "Log in"}
           </Button>
@@ -181,7 +179,7 @@ const SignIn = () => {
           <p className="text-black mt-4 z-[1] ">
             Don't have an account?{" "}
             <span
-              className="text-black cursor-pointer z-[1]"
+              className="text-black cursor-pointer z-[1] underline font-semibold"
               onClick={() => {
                 navigate("/sign-up");
               }}
