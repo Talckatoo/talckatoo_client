@@ -49,7 +49,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
       });
     }
   }),
-    [refetchFriends, socket.current];
+    [refetchFriends, socket.current, messages];
 
   useEffect(() => {
     if (socket.current) {

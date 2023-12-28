@@ -13,6 +13,7 @@ import socketSliceReducer from "./features/socket/socketSlice";
 
 import { UserApi } from "./services/UserApi";
 import { AuthApi } from "./services/AuthApi";
+import { MediaApi } from "./services/MediaApi";
 
 // persist store
 
@@ -51,6 +52,7 @@ const persistedReducer = persistReducer(
     [UserApi.reducerPath]: UserApi.reducer,
     [AuthApi.reducerPath]: AuthApi.reducer,
     [MessagesApi.reducerPath]: MessagesApi.reducer,
+    [MediaApi.reducerPath]: MediaApi.reducer,
   }) as any
 );
 
@@ -59,6 +61,7 @@ const middleware: Array<ThunkMiddleware<unknown, AnyAction>> = [
   UserApi.middleware as ThunkMiddleware<unknown, AnyAction>,
   AuthApi.middleware as ThunkMiddleware<unknown, AnyAction>,
   MessagesApi.middleware as ThunkMiddleware<unknown, AnyAction>,
+  MediaApi.middleware as ThunkMiddleware<unknown, AnyAction>,
 ];
 
 export const store = configureStore({

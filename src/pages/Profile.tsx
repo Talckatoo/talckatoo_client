@@ -8,7 +8,7 @@ import languagesArray from "../util/languages";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
-import { userEndpoints } from "../redux/services/endpoints/userEndpoint";
+import { useUploadFileMutation } from "../redux/services/MediaApi";
 
 interface Socket {
   current: any;
@@ -26,6 +26,8 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const navigate = useNavigate();
   const [updateUser] = useUpdateUserMutation();
   const { onlineFriends } = useAppSelector((state) => state.socket);
+  const [uploadFile] = useUploadFileMutation();
+  const [uploadedFile, setUploadedFile] = useState(null);
 
   const navigateChat = () => {
     navigate("/chat");
@@ -40,6 +42,32 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     setImage(file);
   };
 
+  const handleUpload = async (e: any) => {
+    let formData = new FormData();
+    let response: any = null;
+    if (e && e.target && e.target?.files) {
+      const file = e.target.files[0];
+      setImage(file);
+      formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", "image");
+      formData.append("altText", "image");
+
+      response = await uploadFile(formData);
+
+      if ("data" in response) {
+        if (response.data && !response.data.error) {
+          console.log("response", response.data);
+          setUploadedFile(response?.data?.media?.url);
+        } else {
+          console.log("error", response.data.error);
+        }
+      } else {
+        console.log("error", response.error);
+      }
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -47,8 +75,8 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
       const formData = new FormData();
       if (user) {
         formData.append("userName", name || user.userName);
-        if (image) {
-          formData.append("image", image || user.profileImage.url);
+        if (uploadedFile) {
+          formData.append("fileUrl", uploadedFile || user.profileImage.url);
         }
         formData.append("language", updateLanguage || user.language);
       }
@@ -60,7 +88,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
       socket.current.emit("updateProfile", {
         userName: name || user.userName,
-        image: image ? image : user.profileImage.url,
+        image: uploadedFile ? uploadedFile : user.profileImage.url,
         language: updateLanguage || user.language,
         from: user?._id,
         to: selectedId,
@@ -131,7 +159,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
                 type="file"
                 accept="image/*"
                 className="absolute inset-0 opacity-0 cursor-pointer"
-                onChange={handleImageUpload}
+                onChange={handleUpload}
               />
             </div>
             <div className="m-2">Current Username: {user?.userName}</div>
