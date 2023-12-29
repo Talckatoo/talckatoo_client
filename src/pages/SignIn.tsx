@@ -86,15 +86,15 @@ const SignIn = () => {
     <section className="relative bg-white h-full w-full font-inter">
       <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
       <img
-        src="/assets/img/shape1.svg"
+        src="/assets/img/wave.svg"
         alt="shape"
         className="fixed top-[-5rem] right-0 max-lg:w-[350px]"
       />
-      <img
-        src="/assets/img/shape2.svg"
+      {/* <img
+        src="/assets/img/wave.svg"
         alt="shape"
-        className="fixed  left-0  bottom-[-150px] max-lg:w-[350px]"
-      />
+        className="fixed  left-0  bottom-[-50px] max-lg:w-[200px]"
+      /> */}
       {/* Nav bar section */}
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
@@ -113,15 +113,14 @@ const SignIn = () => {
               type="button"
               className="bg-[#fafafa] text-black w-full h-full flex justify-center items-center border-[0.5px] border-[#33363A] rounded-lg shadow-sm-2xl "
               disabled
-              onClick={() => { }}
+              onClick={() => {}}
             >
-           
-                <img
-                  src="/assets/icons/google-g-2015.svg"
-                  alt="google"
-                  className="w-8 h-8"
-                />
-              
+              <img
+                src="/assets/icons/google-g-2015.svg"
+                alt="google"
+                className="w-8 h-8"
+              />
+
               <span className="text-black">Sign In with Google</span>
             </Button>
           </div>
@@ -162,16 +161,19 @@ const SignIn = () => {
             className="bg-transparent border-[#33363A] rounded-lg text-black"
             error={formErrors.password}
           />
-          <Button type="reset"   onClick={() => {
-                navigate(`/reset-password`);
-              }} className="text-black">
+          <Button
+            type="reset"
+            onClick={() => {
+              navigate(`/reset-password`);
+            }}
+            className="text-black"
+          >
             Forgot password?
           </Button>
 
           <Button
             type="submit"
             className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1]"
-            
           >
             {loading ? "Loading..." : "Log in"}
           </Button>
