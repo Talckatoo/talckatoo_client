@@ -100,6 +100,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
         navigateChat();
+        window.location.reload();
       }
     } catch (error) {
       toast.error("Failed to update profile.");

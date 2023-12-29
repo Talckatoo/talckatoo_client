@@ -41,16 +41,13 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationId = conversationState?.conversation?.conversationId;
 
   useEffect(() => {
+    refetch();
     if (socket.current) {
       socket.current.on("getMessage", () => {
         refetch();
       });
     }
   }, [socket.current, messages]);
-
-  // useEffect(() => {
-  //   refetchFriends();
-  // }, [refetchFriends, messages]);
 
   useEffect(() => {
     if (socket.current) {

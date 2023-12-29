@@ -150,7 +150,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           unread: selectedId,
         }).unwrap();
         const { message } = response;
-        console.log(message);
 
         setIsFetchingMore(false);
 
