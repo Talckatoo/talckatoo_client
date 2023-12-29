@@ -29,9 +29,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   // RTK Query
-  const { data: friends, refetch: refetchFriends } = useFetchAllFriendsQuery(
-    null
-  ) as any;
+  const { data: friends, refetch } = useFetchAllFriendsQuery(null) as any;
 
   useEffect(() => {
     if (friends) {
@@ -43,9 +41,16 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationId = conversationState?.conversation?.conversationId;
 
   useEffect(() => {
-    refetchFriends();
-  }),
-    [socket.current, messages];
+    if (socket.current) {
+      socket.current.on("getMessage", () => {
+        refetch();
+      });
+    }
+  }, [socket.current, messages]);
+
+  // useEffect(() => {
+  //   refetchFriends();
+  // }, [refetchFriends, messages]);
 
   useEffect(() => {
     if (socket.current) {
