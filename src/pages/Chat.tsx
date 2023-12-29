@@ -43,13 +43,9 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationId = conversationState?.conversation?.conversationId;
 
   useEffect(() => {
-    if (socket.current && user) {
-      socket.current.on("getMessage", (data: any) => {
-        refetchFriends();
-      });
-    }
+    refetchFriends();
   }),
-    [refetchFriends, socket.current, messages];
+    [socket.current, messages];
 
   useEffect(() => {
     if (socket.current) {
@@ -67,10 +63,6 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
       });
     }
   }, [socket.current, selectedUser]);
-
-  useEffect(() => {
-    refetchFriends();
-  }, [messages]);
 
   useEffect(() => {
     if (socket.current && user) {
@@ -97,10 +89,6 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
       dispatch(setOnlineFriends([...onlContact, ...onlUnContact]));
     }
   }, [onlineUsers, users?.contactedUsers, users?.uncontactedUsers]);
-
-  useEffect(() => {
-    refetchFriends();
-  }, [refetchFriends, messages]);
 
   const handleSelectContact = (u: any) => {
     setSelectedUser(u);
