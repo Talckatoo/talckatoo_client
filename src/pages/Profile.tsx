@@ -42,8 +42,69 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     setImage(file);
   };
 
+  const updateProfile = async ({ response }: { response: any }) => {
+    try {
+      const formData = new FormData();
+      if (user) {
+        formData.append("userName", name || user.userName);
+
+        formData.append(
+          "fileUrl",
+          response?.data?.media?.url || user.profileImage.url
+        );
+
+        formData.append("language", updateLanguage || user.language);
+      }
+
+      const result = await updateUser({
+        id: user?._id,
+        data: formData,
+      });
+
+      socket.current.emit("updateProfile", {
+        userName: name || user.userName,
+        image: response?.data?.media?.url
+          ? response?.data?.media?.url
+          : user.profileImage.url,
+        language: updateLanguage || user.language,
+        from: user?._id,
+        to: selectedId,
+        onlineFriends: onlineFriends,
+      });
+
+      if ("data" in result) {
+        const updatedUser = result.data.user;
+        toast.success("Profile updated successfully!");
+
+        dispatch(
+          setAuth({
+            ...user,
+            userName: updatedUser.userName,
+            profileImage: {
+              url: response?.data?.media?.url,
+            },
+            language: updatedUser.language,
+          })
+        );
+        dispatch(
+          setConversation({
+            language: updateLanguage,
+          })
+        );
+        navigateChat();
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    if (!image) {
+      updateProfile({ response: { data: { media: { url: "" } } } });
+      return;
+    }
 
     let response: any = null;
     let formData = new FormData();
@@ -55,61 +116,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
     if ("data" in response) {
       if (response.data && !response.data.error) {
-        try {
-          const formData = new FormData();
-          if (user) {
-            formData.append("userName", name || user.userName);
-
-            formData.append(
-              "fileUrl",
-              response?.data?.media?.url || user.profileImage.url
-            );
-
-            formData.append("language", updateLanguage || user.language);
-          }
-
-          const result = await updateUser({
-            id: user?._id,
-            data: formData,
-          });
-
-          socket.current.emit("updateProfile", {
-            userName: name || user.userName,
-            image: response?.data?.media?.url
-              ? response?.data?.media?.url
-              : user.profileImage.url,
-            language: updateLanguage || user.language,
-            from: user?._id,
-            to: selectedId,
-            onlineFriends: onlineFriends,
-          });
-
-          if ("data" in result) {
-            const updatedUser = result.data.user;
-            toast.success("Profile updated successfully!");
-
-            dispatch(
-              setAuth({
-                ...user,
-                userName: updatedUser.userName,
-                profileImage: {
-                  url: response?.data?.media?.url,
-                },
-                language: updatedUser.language,
-              })
-            );
-            dispatch(
-              setConversation({
-                language: updateLanguage,
-              })
-            );
-            navigateChat();
-            window.location.reload();
-          }
-        } catch (error) {
-          toast.error("Failed to update profile.");
-          console.error(error);
-        }
+        updateProfile({ response });
       } else {
         console.log("error", response.data.error);
       }
