@@ -220,8 +220,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     if (socket.current) {
       updateConversation();
+      setIsFetchingMore(false);
       socket.current.on("getMessage", (data: any) => {
-        console.log(data);
         if (data.message) {
           setArrivalMessages({
             createdAt: data.createdAt,
