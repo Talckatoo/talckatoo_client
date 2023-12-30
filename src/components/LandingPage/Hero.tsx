@@ -1,8 +1,4 @@
-import Button from "../../UI/Button";
-import { useNavigate } from "react-router-dom";
-
 const Hero = () => {
-  const navigate = useNavigate();
   return (
     <section className="container py-[2rem] mt-[5rem]  ">
       <div className="flex flex-col md:flex-row  md:items-center justify-center">
@@ -15,26 +11,17 @@ const Hero = () => {
               Seamlessly chat with individuals across language barriers. No more
               copy-pasting. Just real-time, in-chat translations.
             </p>
-            <Button
-              type="button"
-              className="bg-black mx-auto md:mx-0 text-white mt-4 z-[1] bt-size"
-              onClick={() => {
-                navigate("/sign-up");
-              }}
-            >
-              Download Now
-            </Button>
           </div>
           <div className="mt-[3rem] w-full flex flex-col justify-center  md:justify-start">
             <div className="flex gap-1 max-md:mx-auto">
               <img src="/assets/icons/Star.svg" alt="SVG" />
             </div>
             <h2 className="font-jakarta mt-4 font-bold max-md:mx-auto">
-              Best chat app in market!
+              Best translation chat app in market!
             </h2>
           </div>
           <p className="pt-2  text-center md:text-start text-[18px] max-md:text-[16px]">
-            Talkcatoo has revolutionized how our team communicates. The
+            Talckatoo has revolutionized how our team communicates. The
             real-time translation feature means we can work seamlessly with
             international partners without missing a beat!
           </p>

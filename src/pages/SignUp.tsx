@@ -112,15 +112,15 @@ export const SignUp = () => {
     <section className="relative bg-white h-full w-full font-inter">
       <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
       <img
-        src="/assets/img/shape1.svg"
+        src="/assets/img/wave.svg"
         alt="shape"
         className="fixed top-[-5rem] right-0 max-lg:w-[350px]"
       />
-      <img
-        src="/assets/img/shape2.svg"
+      {/* <img
+        src="/assets/img/wave.svg"
         alt="shape"
         className="fixed  left-0  bottom-[-150px] max-lg:w-[350px]"
-      />
+      /> */}
       {/* Nav bar section */}
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
@@ -133,43 +133,62 @@ export const SignUp = () => {
           className="flex flex-col items-center justify-center gap-2 max-w-[400px] m-auto"
           onSubmit={handleSubmit}
         >
-
           <Input
             // label="Username"
             type="text"
             name="name"
             placeholder="Enter your name"
             value={formData.name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormData({ ...formData, name: e.target.value })
+            }
             className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
-            error={formErrors.name} label={""} id={""}          />
+            error={formErrors.name}
+            label={""}
+            id={""}
+          />
           <Input
             // label="Email"
             type="text"
             name="email"
             placeholder="Enter your email"
             value={formData.email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
-            error={formErrors.email} label={""} id={""}          />
+            error={formErrors.email}
+            label={""}
+            id={""}
+          />
           <Input
             // label="Password"
             name="password"
             type="password"
             placeholder="Password (at least 8 characters)"
             value={formData.password}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, password: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
             className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
-            error={formErrors.password} label={""} id={""}          />
+            error={formErrors.password}
+            label={""}
+            id={""}
+          />
           <Input
             // label="Confirm Password"
             name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
             value={formData.confirmPassword}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, confirmPassword: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormData({ ...formData, confirmPassword: e.target.value })
+            }
             className="bg-transparent border-[#33363A] z-[1] rounded-lg"
-            error={formErrors.confirmPassword} label={""} id={""}          />
+            error={formErrors.confirmPassword}
+            label={""}
+            id={""}
+          />
 
           <select
             className={`rounded-lg p-3 w-full border text-black relative text-[16px] focus:outline-none z-[1] ${
