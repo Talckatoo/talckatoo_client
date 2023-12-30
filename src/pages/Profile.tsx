@@ -37,11 +37,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     setName(e.target.value);
   };
 
-  const handleImageUpload = (e: any) => {
-    const file = e.target.files[0];
-    setImage(file);
-  };
-
   const handleUpload = async (e: any) => {
     let formData = new FormData();
     let response: any = null;
@@ -57,7 +52,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
       if ("data" in response) {
         if (response.data && !response.data.error) {
-          console.log("response", response.data);
           setUploadedFile(response?.data?.media?.url);
         } else {
           console.log("error", response.data.error);
@@ -98,6 +92,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
       toast.success("Profile updated successfully!");
       if ("data" in response) {
         const updatedUser = response.data.user;
+
         dispatch(setAuth(updatedUser));
         dispatch(
           setConversation({
@@ -105,6 +100,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
         navigateChat();
+        window.location.reload();
       }
     } catch (error) {
       toast.error("Failed to update profile.");

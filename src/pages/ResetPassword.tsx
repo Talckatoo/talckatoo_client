@@ -4,6 +4,7 @@ import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { usePasswordResetMutation } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
+import NavBar from "../components/shared/NavBar";
 
 interface ResetPasswordProps {
   // Define your props here
@@ -24,7 +25,6 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
       setError("");
     }
   };
-
 
   const handleSendResetLink = async () => {
     validateEmail();
@@ -54,32 +54,35 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
   };
 
   return (
-    <div className="bg-white h-full w-full font-inter flex justify-center items-center ">
-      <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-4 border rounded-2xl w-[600px] p-12 m-auto shadow-sm shadow-slate-800 ">
-        <h2 className="text-black text-heading1-bold">Reset Your Password</h2>
-        <Input
-          label='email'
-          type="email"
-          name='email'
-          id='email'
-          className="border rounded-xl"
-          placeholder="Enter your email"
-          value={email}
-          error={error}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <Button
-          type="button"
-          onClick={handleSendResetLink}
-          disabled={loading}
-          className="bg-black text-white w-full h-full flex items-center justify-center gap-2 border rounded-xl"
-        >
-          {loading ? "Resetting..." : "Reset Password"}
-        </Button>
+    <>
+      <NavBar showSign={false} />
+
+      <div className="bg-white h-full w-full font-inter flex justify-center items-center ">
+        <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-2 border rounded-2xl w-[600px] p-6 m-auto shadow-sm shadow-slate-800 ">
+          <h2 className="text-black text-heading1-bold">Reset Your Password</h2>
+          <Input
+            label=""
+            type="email"
+            name="email"
+            id="email"
+            className="border rounded-xl mt-4"
+            placeholder="Enter your email"
+            value={email}
+            error={error}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Button
+            type="button"
+            onClick={handleSendResetLink}
+            disabled={loading}
+            className="bg-black text-white h-full flex items-center justify-center gap-2 border rounded-xl"
+          >
+            {loading ? "Resetting..." : "Reset Password"}
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
 export default ResetPassword;
-

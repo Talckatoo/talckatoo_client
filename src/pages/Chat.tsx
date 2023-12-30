@@ -29,9 +29,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   // RTK Query
-  const { data: friends, refetch: refetchFriends } = useFetchAllFriendsQuery(
-    null
-  ) as any;
+  const { data: friends, refetch } = useFetchAllFriendsQuery(null) as any;
 
   useEffect(() => {
     if (friends) {
@@ -43,13 +41,13 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationId = conversationState?.conversation?.conversationId;
 
   useEffect(() => {
-    if (socket.current && user) {
-      socket.current.on("getMessage", (data: any) => {
-        refetchFriends();
+    refetch();
+    if (socket.current) {
+      socket.current.on("getMessage", () => {
+        refetch();
       });
     }
-  }),
-    [refetchFriends, socket.current, messages];
+  }, [socket.current, messages]);
 
   useEffect(() => {
     if (socket.current) {
@@ -67,10 +65,6 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
       });
     }
   }, [socket.current, selectedUser]);
-
-  useEffect(() => {
-    refetchFriends();
-  }, [messages]);
 
   useEffect(() => {
     if (socket.current && user) {
@@ -97,10 +91,6 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
       dispatch(setOnlineFriends([...onlContact, ...onlUnContact]));
     }
   }, [onlineUsers, users?.contactedUsers, users?.uncontactedUsers]);
-
-  useEffect(() => {
-    refetchFriends();
-  }, [refetchFriends, messages]);
 
   const handleSelectContact = (u: any) => {
     setSelectedUser(u);

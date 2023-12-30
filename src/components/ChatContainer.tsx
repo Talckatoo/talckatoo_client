@@ -92,7 +92,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     if (socket.current) {
       socket.current.on("isTyping", (data: any) => {
-        console.log(data);
         setSelectedTyping(data);
         setIsTyping(true);
       });
@@ -151,7 +150,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           unread: selectedId,
         }).unwrap();
         const { message } = response;
-        console.log(message);
+
         setIsFetchingMore(false);
 
         socket.current.emit("sendMessage", {
