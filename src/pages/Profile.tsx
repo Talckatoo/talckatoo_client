@@ -38,73 +38,83 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const handleUpload = async (e: any) => {
-    let formData = new FormData();
-    let response: any = null;
-    if (e && e.target && e.target?.files) {
-      const file = e.target.files[0];
-      setImage(file);
-      formData = new FormData();
-      formData.append("file", file);
-      formData.append("type", "image");
-      formData.append("altText", "image");
-
-      response = await uploadFile(formData);
-
-      if ("data" in response) {
-        if (response.data && !response.data.error) {
-          setUploadedFile(response?.data?.media?.url);
-        } else {
-          console.log("error", response.data.error);
-        }
-      } else {
-        console.log("error", response.error);
-      }
-    }
+    const file = e?.target?.files?.[0];
+    setImage(file);
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    try {
-      const formData = new FormData();
-      if (user) {
-        formData.append("userName", name || user.userName);
-        if (uploadedFile) {
-          formData.append("fileUrl", uploadedFile || user.profileImage.url);
+    let response: any = null;
+    let formData = new FormData();
+    formData = new FormData();
+    formData.append("file", image as any);
+    formData.append("type", "image");
+    formData.append("altText", "image");
+    response = await uploadFile(formData);
+
+    if ("data" in response) {
+      if (response.data && !response.data.error) {
+        try {
+          const formData = new FormData();
+          if (user) {
+            formData.append("userName", name || user.userName);
+            if (response?.data?.media?.url) {
+              formData.append(
+                "fileUrl",
+                response?.data?.media?.url || user.profileImage.url
+              );
+            }
+            formData.append("language", updateLanguage || user.language);
+          }
+
+          const result = await updateUser({
+            id: user?._id,
+            data: formData,
+          });
+
+          socket.current.emit("updateProfile", {
+            userName: name || user.userName,
+            image: response?.data?.media?.url
+              ? response?.data?.media?.url
+              : user.profileImage.url,
+            language: updateLanguage || user.language,
+            from: user?._id,
+            to: selectedId,
+            onlineFriends: onlineFriends,
+          });
+
+          if ("data" in result) {
+            const updatedUser = result.data.user;
+            toast.success("Profile updated successfully!");
+
+            dispatch(
+              setAuth({
+                ...user,
+                userName: updatedUser.userName,
+                profileImage: {
+                  url: response?.data?.media?.url,
+                },
+                language: updatedUser.language,
+              })
+            );
+            dispatch(
+              setConversation({
+                language: updateLanguage,
+              })
+            );
+            navigateChat();
+            window.location.reload();
+          }
+        } catch (error) {
+          toast.error("Failed to update profile.");
+          console.error(error);
         }
-        formData.append("language", updateLanguage || user.language);
+      } else {
+        console.log("error", response.data.error);
       }
-
-      const response = await updateUser({
-        id: user?._id,
-        data: formData,
-      });
-
-      socket.current.emit("updateProfile", {
-        userName: name || user.userName,
-        image: uploadedFile ? uploadedFile : user.profileImage.url,
-        language: updateLanguage || user.language,
-        from: user?._id,
-        to: selectedId,
-        onlineFriends: onlineFriends,
-      });
-
-      toast.success("Profile updated successfully!");
-      if ("data" in response) {
-        const updatedUser = response.data.user;
-
-        dispatch(setAuth(updatedUser));
-        dispatch(
-          setConversation({
-            language: updateLanguage,
-          })
-        );
-        navigateChat();
-        window.location.reload();
-      }
-    } catch (error) {
-      toast.error("Failed to update profile.");
-      console.error(error);
+    } else {
+      console.log("error", response.error);
     }
   };
 
