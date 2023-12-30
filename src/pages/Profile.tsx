@@ -102,7 +102,9 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!image) {
-      updateProfile({ response: { data: { media: { url: "" } } } });
+      updateProfile({
+        response: { data: { media: { url: user.profileImage.url } } },
+      });
       return;
     }
 
