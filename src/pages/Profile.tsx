@@ -59,12 +59,12 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           const formData = new FormData();
           if (user) {
             formData.append("userName", name || user.userName);
-            if (response?.data?.media?.url) {
-              formData.append(
-                "fileUrl",
-                response?.data?.media?.url || user.profileImage.url
-              );
-            }
+
+            formData.append(
+              "fileUrl",
+              response?.data?.media?.url || user.profileImage.url
+            );
+
             formData.append("language", updateLanguage || user.language);
           }
 
