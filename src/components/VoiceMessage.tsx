@@ -40,7 +40,6 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   const [recorder, setRecorder] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
 
-  const token = localStorage.getItem("token");
   const startRecording = () => {
     setIsRecording(true);
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
