@@ -35,14 +35,6 @@ const App = () => {
     if (socket.current) {
       socket.current.on("getUpdateProfile", (data: any) => {
         dispatch(updateContactedUserById(data));
-        dispatch(
-          setAuth({
-            user: {
-              ...user,
-              welcome: data.welcome,
-            },
-          })
-        );
       });
     }
   }, [socket.current]);

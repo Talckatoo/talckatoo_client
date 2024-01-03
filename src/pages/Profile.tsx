@@ -69,7 +69,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
         language: updateLanguage || user.language,
         from: user?._id,
         to: selectedId,
-        welcome: result?.data?.user?.welcome ?? "",
         onlineFriends: onlineFriends,
       });
 
