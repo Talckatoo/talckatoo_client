@@ -5,14 +5,13 @@ import Navbar from "./navbar/NavBar";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
+import VideoCall from "./pages/VideoCall";
 import { SignUp } from "./pages/SignUp";
 import ResetPaaswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
 import { io, Socket } from "socket.io-client";
 import { useAppDispatch } from "./redux/hooks";
-import {
-  updateContactedUserById
-} from "./redux/features/user/userSlice";
+import { updateContactedUserById } from "./redux/features/user/userSlice";
 
 type MyEventMap = {
   connect: () => void;
@@ -43,17 +42,21 @@ const App = () => {
     <div className="flex flex-col h-full w-full ">
       {location.pathname !== "/" &&
         location.pathname !== "/sign-in" &&
-        location.pathname !== "/sign-up" && location.pathname !== "/reset-password"
-        && location.pathname !== "/reset-password/:token"
-        && <Navbar />}
+        location.pathname !== "/sign-up" &&
+        location.pathname !== "/reset-password" &&
+        location.pathname !== "/reset-password/:token" && <Navbar />}
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPaaswordUpdate />} />
+        <Route
+          path="/reset-password/:token"
+          element={<ResetPaaswordUpdate />}
+        />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat socket={socket} />} />
         <Route path="/profile" element={<Profile socket={socket} />} />
+        <Route path="/videoCall" element={<VideoCall socket={socket} />} />
       </Routes>
     </div>
   );
