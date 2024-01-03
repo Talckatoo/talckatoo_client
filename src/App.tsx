@@ -10,8 +10,9 @@ import { SignUp } from "./pages/SignUp";
 import ResetPaaswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
 import { io, Socket } from "socket.io-client";
-import { useAppDispatch } from "./redux/hooks";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { updateContactedUserById } from "./redux/features/user/userSlice";
+import { setAuth } from "./redux/features/user/authSlice";
 
 type MyEventMap = {
   connect: () => void;
@@ -25,6 +26,7 @@ const App = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const socket = useRef<Socket<MyEventMap> | null>();
+  const { user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
