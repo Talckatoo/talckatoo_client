@@ -11,6 +11,7 @@ export interface User {
   };
   language: string;
   welcome: string;
+  data: any;
 }
 
 export interface UserState {
@@ -19,6 +20,7 @@ export interface UserState {
   user: any;
   users?: any;
   recipient?: any;
+  data: any;
 }
 
 const initialState: UserState = {
@@ -30,6 +32,7 @@ const initialState: UserState = {
     uncontactedUsers: [],
   },
   recipient: null,
+  data: null,
 };
 
 export const userSlice = createSlice({
