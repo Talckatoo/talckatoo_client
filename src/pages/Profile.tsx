@@ -84,6 +84,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               url: response?.data?.media?.url,
             },
             language: updatedUser.language,
+            welcome: result?.data?.user?.welcome,
           })
         );
         dispatch(
