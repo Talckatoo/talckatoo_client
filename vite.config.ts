@@ -7,9 +7,15 @@ export default defineConfig(() => {
       outDir: "build",
     },
     plugins: [react()],
-    define: {
-      global: {},
-    },
+    // define: {
+    //   global: {},
+    // },
     ENV_KEY: process.env.ENV_KEY,
+    resolve: {
+      alias: {
+        // ...
+        "simple-peer": "simple-peer/simplepeer.min.js",
+      },
+    },
   };
 });
