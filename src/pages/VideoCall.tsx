@@ -74,7 +74,7 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
     });
 
     peer.on("signal", (data) => {
-      socket.emit("callUser", {
+      socket.current.emit("callUser", {
         userToCall: selectedId,
         signalData: data,
         from: user._id,
@@ -86,7 +86,8 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
       userVideo.current.srcObject = currentStream;
     });
 
-    socket.on("callAccepted", (signal) => {
+    socket.current.on("callAccepted", (signal) => {
+      console.log("call accept");
       setCallAccepted(true);
       peer.signal(signal);
     });
