@@ -1,7 +1,5 @@
-import { useState, useContext, useRef, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
-import { UserContext } from "../context/user-context";
 import { FaMicrophone, FaStop, FaPlay, FaPaperPlane } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import "./VoiceMessage.css";

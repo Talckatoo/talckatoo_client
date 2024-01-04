@@ -5,6 +5,7 @@ import Navbar from "./navbar/NavBar";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
+import VideoCall from "./pages/VideoCall";
 import { SignUp } from "./pages/SignUp";
 import ResetPaaswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
@@ -57,6 +58,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat socket={socket} />} />
         <Route path="/profile" element={<Profile socket={socket} />} />
+        <Route path="/videoCall" element={<VideoCall socket={socket} />} />
       </Routes>
     </div>
   );
