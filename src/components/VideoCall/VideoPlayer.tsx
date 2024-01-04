@@ -13,7 +13,6 @@ export default function VideoPlayer({
   const conversationState = useAppSelector((state) => state.conversation);
   const selectedId = conversationState?.conversation?.selectedId;
   const { recipient } = useAppSelector((state) => state.user);
-  console.log(recipient);
 
   return (
     <div>

@@ -78,7 +78,7 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
         userToCall: selectedId,
         signalData: data,
         from: user._id,
-        username,
+        username: user.userName,
       });
     });
 
@@ -112,8 +112,19 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
           stream={stream}
           call={call}
         />
-        <Options>
-          <Notifications />
+        <Options
+          callAccepted={callAccepted}
+          callEnded={callEnded}
+          myVideo={myVideo}
+          userVideo={userVideo}
+          leaveCall={leaveCall}
+          callUser={callUser}
+        >
+          <Notifications
+            answerCall={answerCall}
+            call={call}
+            callAccepted={callAccepted}
+          />
         </Options>
       </div>
     </>
