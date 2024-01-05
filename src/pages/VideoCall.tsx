@@ -23,6 +23,10 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const userVideo = useRef();
   const connectionRef = useRef();
 
+  console.log({ callAccepted: callAccepted });
+  console.log({ call: call });
+  console.log({ stream: stream });
+
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia({
@@ -39,11 +43,12 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
       socket.current.on(
         "callUser",
         ({ signal, from, username: callerName }) => {
+          console.log(signal, from, callerName);
           setCall({ isReceivedCall: true, from, username: callerName, signal });
         }
       );
     }
-  }, []);
+  }, [socket.current]);
 
   const answerCall = () => {
     setCallAccepted(true);
@@ -67,6 +72,7 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const callUser = () => {
+    console.log("call");
     const peer = new Peer({
       initiator: true,
       trickle: false,

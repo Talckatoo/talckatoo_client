@@ -30,7 +30,7 @@ const App = () => {
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
-  }, []);
+  }, [socket.current]);
 
   useEffect(() => {
     if (socket.current) {

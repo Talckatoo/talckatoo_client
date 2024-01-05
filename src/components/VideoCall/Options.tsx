@@ -9,6 +9,7 @@ export default function Options({
   userVideo,
   leaveCall,
   callUser,
+  children,
 }) {
   const { user } = useAppSelector((state) => state.auth);
   const conversationState = useAppSelector((state) => state.conversation);
@@ -32,6 +33,7 @@ export default function Options({
           Call
         </button>
       )}
+      {children}
     </div>
   );
 }
