@@ -1,0 +1,36 @@
+import { useEffect, useState, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+
+export default function VideoPlayer({
+  callAccepted,
+  myVideo,
+  userVideo,
+  callEnded,
+  stream,
+  call,
+}) {
+  const { user } = useAppSelector((state) => state.auth);
+  const conversationState = useAppSelector((state) => state.conversation);
+  const selectedId = conversationState?.conversation?.selectedId;
+  const { recipient } = useAppSelector((state) => state.user);
+
+  return (
+    <div>
+      {/* My Video  */}
+      {stream && (
+        <>
+          <span>{user.userName}</span>
+          <video playsInline muted ref={myVideo} autoPlay></video>
+        </>
+      )}
+
+      {/* Other User Video */}
+      {callAccepted && !callEnded && (
+        <>
+          <span>{recipient.userName}</span>
+          <video playsInline muted ref={userVideo} autoPlay></video>
+        </>
+      )}
+    </div>
+  );
+}

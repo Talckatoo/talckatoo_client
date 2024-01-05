@@ -13,6 +13,7 @@ import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
 import { MdDownload, MdTranslate } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { Link, useNavigate } from "react-router-dom";
 import {
   addMessage,
   setMessages,
@@ -42,6 +43,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
+  const navigate = useNavigate();
 
   // RTK Query
   // fetch all messages by conversation id
@@ -55,6 +57,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [sendMessage, { isLoading }] = useSendMessageMutation();
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+  // navigate
+  const navigateVideoCall = () => {
+    navigate("/videoCall");
+  };
 
   useEffect(() => {
     if (selectedId || conversationId) {
@@ -488,6 +495,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     updateConversation();
   }, [selectedId]);
 
+  const handleCall = () => {
+    navigateVideoCall();
+  };
+
   return (
     <div
       className={`flex flex-grow flex-col shadow h-full ${
@@ -528,6 +539,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           </div>
         </div>
       ) : null}
+      <button className="text-white" onClick={handleCall}>
+        Call
+      </button>
       <div
         className={`w-full flex flex-col h-full ${
           isDarkMode ? "bg-gray-800" : "bg-slate-200"
