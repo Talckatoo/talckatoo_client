@@ -13,6 +13,8 @@ import SpeechToText from "./SpeechToText";
 import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
 import { useAppSelector } from "../redux/hooks";
+import { useUploadFileMutation } from "../redux/services/MediaApi";
+import { FaCloudUploadAlt } from "react-icons/fa";
 
 interface ChatInputProps {
   socket: any;
@@ -23,6 +25,7 @@ interface ChatInputProps {
   onHandleSendMessage: (message: string) => void;
   onHandleSendAIMessage: (messageAI: string) => void;
   onHandleTranslateText: (voiceMessage: string) => void;
+  onHandleSendFile: (fileId: string, media: any) => void;
 }
 const ChatInput = ({
   socket,
@@ -31,6 +34,7 @@ const ChatInput = ({
   typing,
   setTyping,
   onHandleTranslateText,
+  onHandleSendFile,
 }: ChatInputProps): JSX.Element => {
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
   const AIcall = import.meta.env.VITE_AI_ASSISTANT_CALL;
@@ -40,6 +44,7 @@ const ChatInput = ({
   const conversationState = useAppSelector((state) => state.conversation);
   const selectedId = conversationState?.conversation?.selectedId;
 
+  const [uploadFile] = useUploadFileMutation();
 
   const handleShowEmoji = () => {
     setShowEmoji(!showEmoji);
@@ -70,6 +75,29 @@ const ChatInput = ({
         setTyping(false);
       }
     }, timeLength);
+  };
+
+  const handleUpload = async (e: any) => {
+    let response: any = null;
+    let formData = new FormData();
+    formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    formData.append("type", e.target.files[0].type.split("/")[0]);
+    formData.append("altText", e.target.files[0].name);
+
+    console.log("file", e.target.files[0]);
+    response = await uploadFile(formData);
+
+    if ("data" in response) {
+      if (response.data && !response.data.error) {
+        console.log("response", response.data.media._id);
+        onHandleSendFile(response.data.media._id, response.data.media);
+      } else {
+        console.log("error", response.data.error);
+      }
+    } else {
+      console.log("error", response.error);
+    }
   };
 
   const handleSendMessage = (e: ChangeEvent<HTMLFormElement>) => {
@@ -168,6 +196,23 @@ const ChatInput = ({
               socket={socket}
               onHandleTranslateText={onHandleTranslateText}
             />
+            {/* upload image or video */}
+            <div className="flex items-center justify-center">
+              <label className="flex flex-col items-center p-2 rounded-full bg-white  cursor-pointer hover:bg-gray-200 hover:text-white">
+                <FaCloudUploadAlt
+                  style={{
+                    width: "25px",
+                    height: "25px",
+                    color:"black",
+                  }}
+                />
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => handleUpload(e)}
+                />
+              </label>
+            </div>
           </div>
         </div>
       </div>
