@@ -24,7 +24,6 @@ import {
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
 } from "../redux/services/MessagesApi";
-import { Link } from "react-router-dom";
 import { FaFile } from "react-icons/fa";
 
 interface Socket {
