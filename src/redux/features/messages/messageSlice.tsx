@@ -7,6 +7,7 @@ export interface Message {
   audioURL?: string;
   sender: string | null;
   voiceNote?: any;
+  media?: any;
   unread?: string;
   createdAt?: string | null;
 }

@@ -11,8 +11,9 @@ import { HiArrowsRightLeft } from "react-icons/hi2";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
-import { MdTranslate } from "react-icons/md";
+import { MdDownload, MdTranslate } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { Link, useNavigate } from "react-router-dom";
 import {
   addMessage,
   setMessages,
@@ -23,6 +24,7 @@ import {
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
 } from "../redux/services/MessagesApi";
+import { FaFile } from "react-icons/fa";
 
 interface Socket {
   current: any;
@@ -40,6 +42,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
+  const navigate = useNavigate();
 
   // RTK Query
   // fetch all messages by conversation id
@@ -53,6 +56,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [sendMessage, { isLoading }] = useSendMessageMutation();
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+  // navigate
+  const navigateVideoCall = () => {
+    navigate("/videoCall");
+  };
 
   useEffect(() => {
     if (selectedId || conversationId) {
@@ -149,6 +157,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         }).unwrap();
+
         const { message } = response;
 
         setIsFetchingMore(false);
@@ -192,14 +201,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         setIsFetchingMore(false);
         const { message } = response;
-        if (response?.conversation._id) {
-          dispatch(
-            setConversation({
-              conversationId: response?.conversation._id,
-              selectedId: selectedId,
-            })
-          );
-        }
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
@@ -210,6 +211,107 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         });
+      } catch (err) {
+        toast.error("Error sending messages, please try again");
+      }
+    }
+  };
+
+  const onHandleSendFile = async (fileId: string, media: any) => {
+    socket.current.emit("stopTyping", selectedId);
+    if (selectedId && conversationId) {
+      try {
+        const response = await sendMessage({
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          media: fileId,
+          status: false,
+          unread: selectedId,
+        }).unwrap();
+
+        const { message } = response;
+
+        setIsFetchingMore(false);
+
+        socket.current.emit("sendMessage", {
+          createdAt: message?.createdAt,
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          media: {
+            url: media.url,
+            type: media.type,
+            altText: media.altText,
+          },
+          status: false,
+          unread: selectedId,
+        });
+
+        // modify the latest message   in the users redux
+
+        dispatch(
+          addMessage({
+            createdAt: message?.createdAt,
+            media: {
+              url: media.url,
+              type: media.type,
+              altText: media.altText,
+            },
+            sender: user?._id,
+            _id: message?._id,
+            unread: selectedId,
+          })
+        );
+      } catch (err) {
+        toast.error("Error sending messages, please try again");
+      }
+    } else if (selectedId && conversationId === null) {
+      // setMessages([]);
+      dispatch(setMessages([]));
+      try {
+        const response = await sendMessage({
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          media: fileId,
+          status: false,
+          unread: selectedId,
+        }).unwrap();
+
+        setIsFetchingMore(false);
+
+        const { message } = response;
+
+        socket.current.emit("sendMessage", {
+          createdAt: message?.createdAt,
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          media: {
+            url: media.url,
+            type: media.type,
+            altText: media.altText,
+          },
+          status: false,
+          unread: selectedId,
+        });
+
+        // modify the latest message   in the users redux
+
+        dispatch(
+          addMessage({
+            createdAt: message?.createdAt,
+            media: {
+              url: media.url,
+              type: media.type,
+              altText: media.altText,
+            },
+            sender: user?._id,
+            _id: message?._id,
+            unread: selectedId,
+          })
+        );
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
@@ -233,6 +335,17 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             createdAt: data.createdAt,
             voiceNote: {
               url: data.voiceNote.url,
+            },
+            sender: data.from,
+            _id: uuidv4(),
+          });
+        } else if (data.media) {
+          setArrivalMessages({
+            createdAt: data.createdAt,
+            media: {
+              type: data.media.type,
+              url: data.media.url,
+              altText: data.media.altText,
             },
             sender: data.from,
             _id: uuidv4(),
@@ -381,6 +494,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     updateConversation();
   }, [selectedId]);
 
+  const handleCall = () => {
+    navigateVideoCall();
+  };
+
   return (
     <div
       className={`flex flex-grow flex-col shadow h-full ${
@@ -421,6 +538,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           </div>
         </div>
       ) : null}
+      <button className="text-white" onClick={handleCall}>
+        Call
+      </button>
       <div
         className={`w-full flex flex-col h-full ${
           isDarkMode ? "bg-gray-800" : "bg-slate-200"
@@ -508,6 +628,55 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                               />
                             </audio>
                           )}
+                          {msg.media &&
+                            (msg.media.type === "image" ? (
+                              <div className="relative">
+                                <img
+                                  src={msg.media.url}
+                                  alt="media"
+                                  className="w-60 h-60 object-contain"
+                                />
+                                <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                  <Link to={msg.media.url} download>
+                                    <MdDownload className="text-[24px]" />
+                                  </Link>
+                                </div>
+                              </div>
+                            ) : msg.media.type === "video" ? (
+                              <div className="relative">
+                                <video
+                                  src={msg.media.url}
+                                  className="w-60 h-60"
+                                  controls
+                                />
+                                <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                  <Link to={msg.media.url} download>
+                                    <MdDownload className="text-[24px]" />
+                                  </Link>
+                                </div>
+                              </div>
+                            ) : msg.media.type === "audio" ? (
+                              <audio className="w-60 h-15" controls>
+                                <source src={msg.media.url} type="audio/mpeg" />
+                              </audio>
+                            ) : (
+                              <div className=" flex items-center w-[240px]">
+                                <Link
+                                  to={msg.media.url}
+                                  download
+                                  className="flex w-full items-center justify-between"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <FaFile className="text-[25px]" />
+                                    <p className="text-xs">
+                                      {msg.media.altText}
+                                    </p>
+                                  </div>
+
+                                  <MdDownload className="text-[35px] bg-white p-2 rounded-full shadow-md" />
+                                </Link>
+                              </div>
+                            ))}
                         </div>
                         <div ref={scrollRefBottom}></div>
                       </div>
@@ -546,6 +715,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
               isTyping={isTyping}
               setIsTyping={setIsTyping}
               onHandleTranslateText={onHandleTranslateText}
+              onHandleSendFile={onHandleSendFile}
             />
           </>
         ) : null}
