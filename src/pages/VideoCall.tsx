@@ -13,7 +13,6 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
   const conversationState = useAppSelector((state) => state.conversation);
   const selectedId = conversationState?.conversation?.selectedId;
-
   const [stream, setStream] = useState(null);
   const [call, setCall] = useState({});
   const [callAccepted, setCallAccepted] = useState(false);
@@ -22,10 +21,6 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const myVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
-
-  console.log({ callAccepted: callAccepted });
-  console.log({ call: call });
-  console.log({ stream: stream });
 
   useEffect(() => {
     navigator.mediaDevices
@@ -50,12 +45,95 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, [socket.current]);
 
+  // CALL USER //
+
+  const callUser = () => {
+    console.log("call other");
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream,
+    });
+
+    peer.on("connect", () => {
+      console.log("CONNECT");
+      peer.send("whatever" + Math.random());
+    });
+
+    peer.on("error", (err) => {
+      console.error("Peer error during call:", err);
+    });
+
+    peer.on("iceStateChange", (event) => {
+      console.log("ICE state change:", event);
+    });
+
+    peer.on("icecandidate", (event) => {
+      if (event.candidate) {
+        console.log("ICE candidate:", event.candidate);
+      }
+    });
+
+    peer.on("signal", (data) => {
+      console.log({
+        "get data in signal from the recipient": JSON.stringify(data),
+      });
+      socket.current.emit("callUser", {
+        userToCall: selectedId,
+        signalData: data,
+        from: user._id,
+        username: user.userName,
+      });
+    });
+
+    peer.on("stream", (currentStream) => {
+      if (userVideo && userVideo.current) {
+        userVideo.current.srcObject = currentStream;
+      }
+    });
+
+    // Listen to the signal from the other user
+
+    socket.current.on("callAccepted", (signal) => {
+      setCallAccepted(true);
+      peer.signal(signal);
+    });
+
+    connectionRef.current = peer;
+  };
+
+  // ANSWER CALL //   // ANSWER CALL //   // ANSWER CALL //   // ANSWER CALL //   // ANSWER CALL //
+
   const answerCall = () => {
+    console.log("answer call");
     setCallAccepted(true);
     const peer = new Peer({
       initiator: false,
       trickle: false,
       stream,
+    });
+
+    peer.on("connect", () => {
+      console.log("CONNECT");
+      peer.send("whatever" + Math.random());
+    });
+
+    peer.on("error", (err) => {
+      console.error("Peer error during call:", err);
+    });
+
+    peer.on("close", () => {
+      console.log("Peer connection closed.");
+    });
+
+    peer.on("iceStateChange", (event) => {
+      console.log("ICE state change:", event);
+    });
+
+    peer.on("icecandidate", (event) => {
+      if (event.candidate) {
+        console.log("ICE candidate:", event.candidate);
+      }
     });
 
     peer.on("signal", (data) => {
@@ -71,41 +149,13 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
     connectionRef.current = peer;
   };
 
-  const callUser = () => {
-    console.log("call");
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream,
-    });
-
-    peer.on("signal", (data) => {
-      socket.current.emit("callUser", {
-        userToCall: selectedId,
-        signalData: data,
-        from: user._id,
-        username: user.userName,
-      });
-    });
-
-    peer.on("stream", (currentStream) => {
-      userVideo.current.srcObject = currentStream;
-    });
-
-    socket.current.on("callAccepted", (signal) => {
-      console.log("call accept");
-      setCallAccepted(true);
-      peer.signal(signal);
-    });
-
-    connectionRef.current = peer;
-  };
-
   const leaveCall = () => {
     setCallEnded(true);
     connectionRef.current.destroy();
     window.location.reload();
   };
+  console.log({ callAccepted: callAccepted });
+  console.log({ call: call });
 
   return (
     <>

@@ -15,22 +15,29 @@ export default function VideoPlayer({
   const { recipient } = useAppSelector((state) => state.user);
 
   return (
-    <div>
-      {/* My Video  */}
-      {stream && (
-        <>
-          <span>{user.userName}</span>
-          <video playsInline muted ref={myVideo} autoPlay></video>
-        </>
-      )}
-
-      {/* Other User Video */}
-      {callAccepted && !callEnded && (
-        <>
-          <span>{recipient.userName}</span>
-          <video playsInline muted ref={userVideo} autoPlay></video>
-        </>
-      )}
-    </div>
+    <>
+      <div>
+        <div>
+          {/* My Video  */}
+          {stream && (
+            <>
+              <span>{user.userName}</span>
+              <video playsInline muted ref={myVideo} autoPlay></video>
+            </>
+          )}
+        </div>
+        <div>
+          <span>{call.username || "name"}'s video</span>
+          {/* Other User Video */}
+          {callAccepted && !callEnded && (
+            <>
+              <div>
+                <video playsInline ref={userVideo} autoPlay></video>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
