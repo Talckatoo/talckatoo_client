@@ -43,7 +43,7 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
         }
       );
     }
-  }, [socket.current]);
+  }, []);
 
   // CALL USER //
 
@@ -95,6 +95,9 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
     // Listen to the signal from the other user
 
     socket.current.on("callAccepted", (signal) => {
+      console.log({ "signal from CallAccept": signal });
+
+      console.log("accept call");
       setCallAccepted(true);
       peer.signal(signal);
     });
