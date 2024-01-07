@@ -30,6 +30,11 @@ const App = () => {
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
   }, []);
 
   useEffect(() => {

@@ -9,12 +9,12 @@ export default function Options({
   userVideo,
   leaveCall,
   callUser,
+  children,
 }) {
   const { user } = useAppSelector((state) => state.auth);
   const conversationState = useAppSelector((state) => state.conversation);
   const selectedId = conversationState?.conversation?.selectedId;
   const { recipient } = useAppSelector((state) => state.user);
-  console.log(selectedId);
   return (
     <div>
       {callAccepted && !callEnded ? (
@@ -27,11 +27,12 @@ export default function Options({
       ) : (
         <button
           className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
-          onClick={() => callUser(selectedId)}
+          onClick={() => callUser()}
         >
           Call
         </button>
       )}
+      {children}
     </div>
   );
 }
