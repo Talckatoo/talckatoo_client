@@ -43,7 +43,7 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
         }
       );
     }
-  }, []);
+  }, [socket.current]);
 
   // CALL USER //
 
@@ -192,3 +192,8 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
 };
 
 export default VideoCall;
+
+// https://www.instagram.com/call/
+// ?has_video=true
+// &ig_thread_id=340282366841710301244259118731407541646
+// &server_info_data=GANmcmMYFVJPT006NzA2NjUwMjI3Njc5Nzc0NRgQVUpOamR1V1ByS2F4SWRjRwA%3D
