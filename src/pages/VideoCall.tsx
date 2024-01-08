@@ -4,6 +4,7 @@ import Options from "../components/VideoCall/Options";
 import { useEffect, useState, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import Peer from "simple-peer";
+import { useNavigate } from "react-router-dom";
 
 interface Socket {
   current: any;
@@ -17,10 +18,18 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const [call, setCall] = useState({});
   const [callAccepted, setCallAccepted] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
+  const [calleeEnded, setCalleeEnded] = useState(false);
+  const navigate = useNavigate();
+
+  console.log({ selectedId: selectedId });
 
   const myVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
+
+  const navigateChat = () => {
+    navigate("/chat");
+  };
 
   useEffect(() => {
     navigator.mediaDevices
@@ -42,6 +51,18 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
           setCall({ isReceivedCall: true, from, username: callerName, signal });
         }
       );
+      socket.current.on("leaveCall", () => {
+        // Handle the call ending notification
+        console.log("Call ended by the caller");
+        setCallEnded(true);
+        setCallAccepted(false);
+        setCall({ isReceivedCall: false });
+        setCalleeEnded(true);
+        if (connectionRef.current) {
+          connectionRef.current.destroy();
+        }
+        // You can update the UI or show a notification to inform the callee
+      });
     }
   }, []);
 
@@ -108,7 +129,6 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
   // ANSWER CALL //   // ANSWER CALL //   // ANSWER CALL //   // ANSWER CALL //   // ANSWER CALL //
 
   const answerCall = () => {
-    console.log("answer call");
     setCallAccepted(true);
     const peer = new Peer({
       initiator: false,
@@ -144,7 +164,9 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
     });
 
     peer.on("stream", (currentStream) => {
-      userVideo.current.srcObject = currentStream;
+      if (userVideo && userVideo.current) {
+        userVideo.current.srcObject = currentStream;
+      }
     });
 
     peer.signal(call.signal);
@@ -153,12 +175,18 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const leaveCall = () => {
+    if (socket.current) {
+      socket.current.emit("leaveCall", {
+        userToCall: selectedId,
+      });
+    }
     setCallEnded(true);
-    connectionRef.current.destroy();
+    if (connectionRef.current) {
+      connectionRef.current.destroy();
+    }
+    // navigateChat();
     window.location.reload();
   };
-  console.log({ callAccepted: callAccepted });
-  console.log({ call: call });
 
   return (
     <>
@@ -184,6 +212,7 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
             answerCall={answerCall}
             call={call}
             callAccepted={callAccepted}
+            calleeEnded={calleeEnded}
           />
         </Options>
       </div>

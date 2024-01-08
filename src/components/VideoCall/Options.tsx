@@ -15,6 +15,7 @@ export default function Options({
   const conversationState = useAppSelector((state) => state.conversation);
   const selectedId = conversationState?.conversation?.selectedId;
   const { recipient } = useAppSelector((state) => state.user);
+
   return (
     <div>
       {callAccepted && !callEnded ? (
@@ -22,14 +23,14 @@ export default function Options({
           className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
           onClick={leaveCall}
         >
-          Hang up
+          Leave Call
         </button>
       ) : (
         <button
           className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
           onClick={() => callUser()}
         >
-          Call
+          Call {recipient}
         </button>
       )}
       {children}

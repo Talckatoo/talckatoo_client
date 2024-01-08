@@ -26,19 +26,18 @@ export default function VideoPlayer({
         {/* My Video  */}
         {stream && (
           <>
-            <span>{user.userName}</span>
+            {/* <span>{user.userName}</span> */}
             <video playsInline muted ref={myVideo} autoPlay></video>
           </>
         )}
       </div>
       <div>
-        <span>{call.username || "name"}'s video</span>
         {/* Other User Video */}
         {callAccepted && !callEnded && (
           <>
-            <div>
-              <video playsInline ref={userVideo} autoPlay></video>
-            </div>
+            <span>{call.username || "Your"}'s video</span>
+
+            <video playsInline ref={userVideo} autoPlay></video>
           </>
         )}
       </div>

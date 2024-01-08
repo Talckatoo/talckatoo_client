@@ -1,8 +1,11 @@
-export default function Notifications({ answerCall, call, callAccepted }) {
+export default function Notifications({
+  answerCall,
+  call,
+  callAccepted,
+  calleeEnded,
+}) {
   return (
     <>
-      <span>Notifications</span>
-
       {call.isReceivedCall && !callAccepted && (
         <div>
           <h2 className="text-black">{call.username} is calling</h2>
@@ -14,6 +17,11 @@ export default function Notifications({ answerCall, call, callAccepted }) {
           </button>
         </div>
       )}
+      {calleeEnded ? (
+        <div>
+          <span>Call has been ended</span>
+        </div>
+      ) : null}
     </>
   );
 }
