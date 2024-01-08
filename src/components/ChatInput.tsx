@@ -13,6 +13,7 @@ import SpeechToText from "./SpeechToText";
 import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
 import { useAppSelector } from "../redux/hooks";
+import Input from "../UI/Input";
 
 interface ChatInputProps {
   socket: any;
@@ -39,7 +40,6 @@ const ChatInput = ({
   const { user } = useAppSelector((state) => state.auth);
   const conversationState = useAppSelector((state) => state.conversation);
   const selectedId = conversationState?.conversation?.selectedId;
-
 
   const handleShowEmoji = () => {
     setShowEmoji(!showEmoji);
@@ -92,82 +92,28 @@ const ChatInput = ({
 
   return (
     <>
-      <div className="flex flex-col">
-        <div className="w-full h-1/2">
-          <form onSubmit={handleSendMessage} className="flex flex-row">
-            <div className="m-auto pl-6 relative" onClick={handleShowEmoji}>
-              {showEmoji && (
-                <div className="absolute top-0 transform -translate-y-full bg-white rounded shadow-lg p-2">
-                  <span
-                    className="flex items-center justify-end cursor-pointer"
-                    onClick={handleShowEmoji}
-                  >
-                    <MdOutlineClose />
-                  </span>
-                  <div className="h-full w-full">
-                    <EmojiPicker onEmojiClick={handleEmojiClick} />
-                  </div>
-                </div>
-              )}
-
-              <span className="cursor-pointer">
-                <BsEmojiSmile
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    color: isDarkMode ? "white" : "black",
-                  }}
-                />
-              </span>
-            </div>
-
-            <input
+      <div className="w-full py-2">
+        <div className=" flex flex-col md:w-[700px] max-w-[995px] mx-auto h-[132px] pt-2">
+          <form onSubmit={handleSendMessage}>
+            <Input
+              label=""
+              name="name"
               type="text"
-              placeholder="Type your message or type @birdie to call AI Assistant"
-              className={`mx-8 mb-2 p-2 flex-grow rounded-xl hover:border-white focus:outline-none shadow-lg 
-            ${
-              isDarkMode
-                ? "bg-[#161c24]  text-slate-100"
-                : "bg-slate-200  text-black"
-            } ${messageText.startsWith(AIcall) ? "text-yellow-200" : ""}`}
               value={messageText}
+              id=""
               onChange={handleTyping}
+              placeholder="Type your message or type @birdie to call AI Assistant"
+              className="mb-0 rounded-[20px] py-8 border border-[#0E131D]"
             />
-
-            <button
-              type="submit"
-              className={`mr-6 my-2 w-10 h-10 rounded-lg flex items-center justify-center ease-in-out duration-300
-            ${
-              isDarkMode
-                ? "bg-slate-800  text-slate-100"
-                : "bg-slate-200  text-black"
-            }
-            `}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="items-center justify-center w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                />
-              </svg>
-            </button>
           </form>
-        </div>
-        <div className="w-full h-1/2">
-          <div className="flex flex-row items-center justify-center gap-10">
-            <SpeechToText setMessageText={setMessageText} />
-            <VoiceMessage
-              socket={socket}
-              onHandleTranslateText={onHandleTranslateText}
-            />
+          <div className="flex justify-between items-center relative bottom-10 bg-[#25282C] p-2 rounded-b-[20px] px-5">
+              <div className="flex gap-4">
+                   <img src="./assets/img/mic.png" className="i" /> 
+                   <img src="./assets/img/line.png" className="i" />
+                   <img src="./assets/img/emoji.png" className="i" />
+                   <img src="./assets/img/file.png" className="i" />
+              </div>
+              <img src="./assets/img/send.png" className="i" />
           </div>
         </div>
       </div>
