@@ -41,11 +41,6 @@ const App = () => {
 
   return (
     <div className="flex flex-col h-full w-full ">
-      {location.pathname !== "/" &&
-        location.pathname !== "/sign-in" &&
-        location.pathname !== "/sign-up" && location.pathname !== "/reset-password"
-        && location.pathname !== "/reset-password/:token"
-        && <Navbar />}
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/reset-password" element={<ResetPassword />} />
