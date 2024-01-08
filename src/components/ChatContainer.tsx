@@ -382,54 +382,22 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [selectedId]);
 
   return (
-    <div
-      className={`flex flex-grow flex-col shadow h-full ${
-        isDarkMode ? "bg-slate-800" : "bg-[#b83e3e]"
-      }`}
-    >
-      {language ? (
-        <div
-          className={`flex flex-row items-center w-full h-14 text-black cursor-pointer rounded-tl-lg shadow text-center font-medium border-b-2 ${
-            isDarkMode
-              ? "bg-gray-800 text-white border-slate-700"
-              : "bg-slate-200 border-slate-300"
-          }`}
-        >
-          <div className="flex flex-row mx-2 px-2 gap-2 items-center justify-between w-full">
-            <div className="flex flex-row items-center gap-2">
-              <p>{recipient}</p>
-              <MdTranslate />
-              <span>
-                {" "}
-                {language} / {fullLanguage}{" "}
-              </span>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <HiArrowsRightLeft />
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <p>{user?.userName}</p>
-              <MdTranslate />
-              <span>
-                {" "}
-                {user?.language} /{" "}
-                {languagesArray.map((l) =>
-                  l.code === user?.language ? l.language : null
-                )}{" "}
-              </span>
-            </div>
-          </div>
-        </div>
-      ) : null}
-      <div
-        className={`w-full flex flex-col h-full ${
-          isDarkMode ? "bg-gray-800" : "bg-slate-200"
-        }`}
-      >
-        <div className="relative h-full">
+    <div className="flex flex-col shadow h-full  bg-white   ">
+        <img
+        src="/assets/img/Shapes.png"
+        alt="shape"
+        className="fixed left-[-5rem]  bottom-[5px] w-[40%] z-[1] "
+        />
+      <div className="w-full flex flex-col h-full">
+      <img
+        src="/assets/img/Shape.png"
+        alt="shape"
+        className="fixed right-[1rem]  top-[1px] w-[30%] z-[1] "
+      />
+        <div className="relative h-full z-[5] ">
           <div
             ref={scrollRef}
-            className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0"
+            className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0 px-[8rem]"
           >
             {!!selectedId && !!conversationId ? (
               <div className="m-2 p-2 ">
@@ -447,7 +415,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                       >
                         <div
                           className={
-                            "max-w-md inline-block  rounded-lg m-2 p-2 " +
+                            "max-w-md inline-block  rounded-lg m-2 p-2  " +
                             (msg.sender === user?._id
                               ? "bg-[#f8fafc] text-left "
                               : "") +
@@ -520,21 +488,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           </div>
         </div>
       </div>
-      <hr
-        className={`mb-3 ${
-          isDarkMode ? "border-slate-700" : "border-slate-300"
-        }`}
-      />
       {selectedTyping?.to === user?._id &&
       selectedTyping?.from === selectedId &&
       isTyping ? (
         <JumpingDotsAnimation />
       ) : null}
-      <div
-        className={`w-full h-30 py-2 ${
-          isDarkMode ? "bg-gray-800" : "bg-slate-200"
-        }`}
-      >
+      <div className="w-full h-30 py-2 bg-white">
         {selectedId ? (
           <>
             <ChatInput
