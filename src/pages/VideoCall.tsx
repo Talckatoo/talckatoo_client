@@ -43,7 +43,7 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
         }
       );
     }
-  }, [socket.current]);
+  }, []);
 
   // CALL USER //
 
