@@ -88,15 +88,15 @@ const TextToSpeech: React.FC<TextToSpeechProps> = ({ convertedText }) => {
     <>
       {show ? (
         <>
-          <div className="w-1/2 flex flex-row gap-2 ">
+          <div className="w-1/2 flex flex-row gap-2 relative top-[3.5rem] ">
             <div className="text-x-small-regular text-gray-600 ml-2">
               <button onClick={handlePlay}>
-                {isPaused ? "Resume" : "Play"}
+                {isPaused ? ( <img src="./assets/img/stop.png" alt="stop" />) : (<img src="./assets/img/videoplay.png" alt="play" />)}
               </button>
             </div>
 
             <div className="text-x-small-regular text-gray-600 ml-2 pr-2">
-              <button onClick={handleStop}>Stop</button>
+              <button onClick={handleStop}><img src="./assets/img/stop.png" alt="stop" /></button>
             </div>
           </div>
         </>

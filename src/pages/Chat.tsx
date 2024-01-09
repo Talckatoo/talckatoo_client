@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import ChatContainer from "../components/ChatContainer";
+import Navbar from "../navbar/NavBar";
 import { UserContext } from "../context/user-context";
 import { getContactName } from "../util/getContactName";
 import COCKATOO from "./.././assests/cockatoo.png";
@@ -130,12 +131,10 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   return (
     <>
       <div
-        className={`flex flex-1 h-[100vh] w-full overflow-hidden flex-grow ${
-          isDarkMode ? "bg-dark" : "bg-light"
-        }`}
+        className="flex flex-1 h-[100vh] w-full overflow-hidden flex-grow bg-white"
       >
         <div
-          className={`md:w-80  max-h-screen p-2 ${
+          className={`md:w-80  max-h-screen p-2 relative z-[5] ${
             isDarkMode ? "bg-gray-800" : "bg-slate-200"
           }`}
         >
@@ -238,7 +237,8 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
             </div>
           )}
         </div>
-        <div className="flex w-full h-full">
+        <div className=" w-full h-full flex flex-col bg-white">
+          <Navbar />
           <ChatContainer socket={socket} />
         </div>
       </div>

@@ -383,21 +383,21 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   return (
     <div className="flex flex-col shadow h-full  bg-white   ">
-        <img
+      <img
         src="/assets/img/Shapes.png"
         alt="shape"
         className="fixed left-[-5rem]  bottom-[5px] w-[40%] z-[1] "
-        />
-      <div className="w-full flex flex-col h-full">
-      <img
-        src="/assets/img/Shape.png"
-        alt="shape"
-        className="fixed right-[1rem]  top-[1px] w-[30%] z-[1] "
       />
+      <div className="w-full flex flex-col h-full">
+        <img
+          src="/assets/img/Shape.png"
+          alt="shape"
+          className="fixed right-[1rem]  top-[1px] w-[30%] z-[1] "
+        />
         <div className="relative h-full z-[5] ">
           <div
             ref={scrollRef}
-            className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0 px-[8rem]"
+            className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0 md:px-[8rem]"
           >
             {!!selectedId && !!conversationId ? (
               <div className="m-2 p-2 ">
@@ -413,15 +413,21 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                         }
                         key={msg._id}
                       >
-                        <div
+                        <div className="i">
+                        <img
+                          src="./assets/img/mike.png"
+                          alt="profile"
+                          className=" w-[36px] h-[36px]"
+                        />
+                        <div 
                           className={
-                            "max-w-md inline-block  rounded-lg m-2 p-2  " +
+                            "md:w-[40%] max-md:w-[50%] inline-block  rounded-t-[20px] rounded-br-[20px] m-2 p-6 " +
                             (msg.sender === user?._id
-                              ? "bg-[#f8fafc] text-left "
+                              ? " bg-[#E9E9EF] text-left rounded-bl-[20px]"
                               : "") +
                             (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
-                              ? "bg-amber-100 text-center"
-                              : "bg-[#94a3b8]")
+                              ? "bg-[#fff] text-center"
+                              : "bg-[#25282C]")
                           }
                         >
                           {msg.sender !==
@@ -462,7 +468,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                           )}
 
                           <div className="flex flex-row gap-4">
-                            <div className="w-1/2 text-gray-500 items-end text-x-small-regular">
+                            <div className="w-1/2  text-white items-end text-x-small-regular">
                               {getTime(msg.createdAt)}
                             </div>
 
@@ -477,7 +483,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             </audio>
                           )}
                         </div>
+
                         <div ref={scrollRefBottom}></div>
+                      </div>
                       </div>
                     ))
                   : null}
