@@ -413,79 +413,85 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                         }
                         key={msg._id}
                       >
-                        <div className="i">
-                        <img
-                          src="./assets/img/mike.png"
-                          alt="profile"
-                          className=" w-[36px] h-[36px]"
-                        />
-                        <div 
+                        <div
                           className={
-                            "md:w-[40%] max-md:w-[50%] inline-block  rounded-t-[20px] rounded-br-[20px] m-2 p-6 " +
-                            (msg.sender === user?._id
-                              ? " bg-[#E9E9EF] text-left rounded-bl-[20px]"
-                              : "") +
-                            (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
-                              ? "bg-[#fff] text-center"
-                              : "bg-[#25282C]")
+                            "flex flex-row gap-4 " +
+                            (msg.sender === user?._id ? "flex-row-reverse" : "")
                           }
                         >
-                          {msg.sender !==
-                            import.meta.env.VITE_AI_ASSISTANT_ID &&
-                          msg.message &&
-                          msg.message.includes("\n") ? (
-                            msg.message
-                              .split("\n")
-                              .map((line, index, lines) => {
-                                const prevLine =
-                                  index > 0 ? lines[index - 1] : null;
-                                const isFirstLine =
-                                  index === 0 || line !== prevLine;
+                          <img
+                            src="./assets/img/mike.png"
+                            alt="profile"
+                            className=" w-[36px] h-[36px]"
+                          />
+                          <div
+                            className={
+                              "md:w-[40%] max-md:w-[50%] b inline-block  rounded-t-[20px] rounded-br-[20px] m-2 p-6 " +
+                              (msg.sender === user?._id
+                                ? " bg-[#E9E9EF] text-right rounded-bl-[20px]"
+                                : "") +
+                              (msg.sender ==
+                              import.meta.env.VITE_AI_ASSISTANT_ID
+                                ? "bg-[#fff] text-center"
+                                : "bg-[#25282C]")
+                            }
+                          >
+                            {msg.sender !==
+                              import.meta.env.VITE_AI_ASSISTANT_ID &&
+                            msg.message &&
+                            msg.message.includes("\n") ? (
+                              msg.message
+                                .split("\n")
+                                .map((line, index, lines) => {
+                                  const prevLine =
+                                    index > 0 ? lines[index - 1] : null;
+                                  const isFirstLine =
+                                    index === 0 || line !== prevLine;
 
-                                return (
-                                  <React.Fragment key={index}>
-                                    {isFirstLine && line}
-                                    {isFirstLine &&
-                                      index !== lines.length - 1 &&
-                                      line !== lines[index + 1] && (
-                                        <>
-                                          <br />
-                                          <div className="h-1 border-b border-gray-500"></div>
+                                  return (
+                                    <React.Fragment key={index}>
+                                      {isFirstLine && line}
+                                      {isFirstLine &&
+                                        index !== lines.length - 1 &&
+                                        line !== lines[index + 1] && (
+                                          <>
+                                            <br />
+                                            <div className="h-1 border-b border-gray-500"></div>
 
-                                          {/* <img
+                                            {/* <img
                                             width="15"
                                             height="15"
                                             src="https://img.icons8.com/ios-glyphs/30/right3.png"
                                             alt="right3"
                                           /> */}
-                                        </>
-                                      )}
-                                  </React.Fragment>
-                                );
-                              })
-                          ) : (
-                            <>{msg.message}</>
-                          )}
+                                          </>
+                                        )}
+                                    </React.Fragment>
+                                  );
+                                })
+                            ) : (
+                              <>{msg.message}</>
+                            )}
 
-                          <div className="flex flex-row gap-4">
-                            <div className="w-1/2  text-white items-end text-x-small-regular">
-                              {getTime(msg.createdAt)}
+                            <div className="flex flex-row gap-4">
+                              <div className="w-1/2  text-white items-end text-x-small-regular">
+                                {getTime(msg.createdAt)}
+                              </div>
+
+                              <TextToSpeech convertedText={msg.message} />
                             </div>
-
-                            <TextToSpeech convertedText={msg.message} />
+                            {msg.voiceNote && (
+                              <audio className="w-60 h-15" controls>
+                                <source
+                                  src={msg.voiceNote?.url}
+                                  type="audio/mpeg"
+                                />
+                              </audio>
+                            )}
                           </div>
-                          {msg.voiceNote && (
-                            <audio className="w-60 h-15" controls>
-                              <source
-                                src={msg.voiceNote?.url}
-                                type="audio/mpeg"
-                              />
-                            </audio>
-                          )}
-                        </div>
 
-                        <div ref={scrollRefBottom}></div>
-                      </div>
+                          <div ref={scrollRefBottom}></div>
+                        </div>
                       </div>
                     ))
                   : null}
