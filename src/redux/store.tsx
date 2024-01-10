@@ -10,6 +10,7 @@ import requestSliceReducer from "./features/user/requestSlice";
 import conversationSliceReducer from "./features/conversation/conversationSlice";
 import messagesSliceReducer from "./features/messages/messageSlice";
 import socketSliceReducer from "./features/socket/socketSlice";
+import callSliceReducer from "./features/call/callSlice";
 
 import { UserApi } from "./services/UserApi";
 import { AuthApi } from "./services/AuthApi";
@@ -34,6 +35,7 @@ export interface RootState extends PersistPartial {
   request: any;
   auth: any;
   conversation: any;
+  call: any;
   [UserApi.reducerPath]: any;
   [AuthApi.reducerPath]: any;
   [MessagesApi.reducerPath]: any;
@@ -48,6 +50,7 @@ const persistedReducer = persistReducer(
     conversation: conversationSliceReducer,
     messages: messagesSliceReducer,
     socket: socketSliceReducer,
+    call: callSliceReducer,
 
     [UserApi.reducerPath]: UserApi.reducer,
     [AuthApi.reducerPath]: AuthApi.reducer,

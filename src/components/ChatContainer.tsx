@@ -20,28 +20,37 @@ import {
 } from "../redux/features/messages/messageSlice";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import userSlice, { setRecipient } from "../redux/features/user/userSlice";
+import setCall from "../redux/features/call/callSlice";
 import {
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
 } from "../redux/services/MessagesApi";
-
+import CallUser from "./VideoCall/services/callUser";
+import GetMedia from "./VideoCall/services/GetMedia";
+import AnswerCall from "./VideoCall/services/AnswerCall";
 interface Socket {
   current: any;
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
+  const [stream, setStream] = useState(null);
+  const myVideo = useRef(null); // Initialize the ref
+
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const conversationState = useAppSelector((state) => state.conversation);
   const user = useAppSelector((state) => state.auth.user);
+  const call = useAppSelector((state) => state.call.call);
   const messages = useAppSelector((state) => state.messages.messages);
   const { recipient } = useAppSelector((state) => state.user);
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
   const navigate = useNavigate();
+
+  // *******************CALL******************
 
   // RTK Query
   // fetch all messages by conversation id
@@ -71,12 +80,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, [selectedId, conversationId]);
 
-  // useEffect(() => {
-  //   if (messagesData?.conversation?.messages?.length !== 0) {
-  //     refetchMessages();
-  //   }
-  // }, [messagesData]);
-
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
   const [typing, setTyping] = useState(false);
@@ -103,7 +106,44 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         setIsTyping(true);
       });
       socket.current.on("stopTyping", () => setIsTyping(false));
+
+      // **************** call *********************
+
+      socket.current.on(
+        "callUser",
+        ({ signal, from, username, roomId, userToCall }) => {
+          // console.log(signal, from, callerName, roomId);
+          console.log(`${username} is calling`);
+          alert(`${username} is calling`);
+          dispatch(
+            setCall({
+              isReceivedCall: true,
+              from,
+              username,
+              signal,
+              roomId,
+              userToCall,
+            })
+          );
+        }
+      );
+
+      // socket.current.on("leaveCall", () => {
+      //   // Handle the call ending notification
+      //   console.log("Call ended by the caller");
+      //   setCallEnded(true);
+      //   setCallAccepted(false);
+      //   setCall({ isReceivedCall: false });
+      //   setCalleeEnded(true);
+      //   if (connectionRef.current) {
+      //     connectionRef.current.destroy();
+      //   }
+      //   // You can update the UI or show a notification to inform the callee
+      // });
+
+      // **************** call *********************
     }
+    console.log(call);
   }, [socket.current]);
 
   useEffect(() => {
@@ -388,8 +428,18 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     updateConversation();
   }, [selectedId]);
 
+  // *************************** VIDEO CALL *****************************
+
   const handleCall = () => {
-    navigateVideoCall();
+    const videoCallUrl = `/call/${Math.random()
+      .toString(36)
+      .slice(2)}/${selectedId}/${user._id}/${user.userName}`;
+    window.open(videoCallUrl, "_blank");
+  };
+
+  const handleAnswerCall = () => {
+    const videoCallUrl = `/call/${call.roomId}/${call.userToCall}/${call.from}/${call.username}`;
+    window.open(videoCallUrl, "_blank");
   };
 
   return (
@@ -435,6 +485,22 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       <button className="text-white" onClick={handleCall}>
         Call
       </button>
+      {call?.isReceivedCall && (
+        <div>
+          <h2 className="text-black">{call?.username} is calling</h2>
+          <button
+            className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
+            onClick={() => handleAnswerCall()}
+          >
+            Answer
+          </button>
+        </div>
+      )}
+      {/* {calleeEnded ? (
+        <div>
+          <span>Call has been ended</span>
+        </div>
+      ) : null} */}
       <div
         className={`w-full flex flex-col h-full ${
           isDarkMode ? "bg-gray-800" : "bg-slate-200"
