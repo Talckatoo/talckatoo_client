@@ -405,8 +405,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                   ? messages.map((msg) => (
                       <div
                         className={
-                          "text-left " +
-                          (msg.sender === user?._id ? "text-right " : "") +
+                          "" +
+                          (msg.sender === user?._id ? "text-right mb-6" : "") +
                           (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
                             ? "text-center"
                             : "")
@@ -415,15 +415,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                       >
                         <div
                           className={
-                            "flex flex-row gap-4 " +
-                            (msg.sender === user?._id ? "flex-row-reverse" : "")
+                            "flex items-end mb-6" +
+                            (msg.sender === user?._id ? " flex text-right w-full justify-end items-end" : "")
                           }
                         >
-                          <img
-                            src="./assets/img/mike.png"
-                            alt="profile"
-                            className=" w-[36px] h-[36px]"
-                          />
+                          
                           <div
                             className={
                               "md:w-[40%] max-md:w-[50%] b inline-block  rounded-t-[20px] rounded-br-[20px] m-2 p-6 " +
@@ -489,7 +485,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                               </audio>
                             )}
                           </div>
-
+                          <img
+                            src="./assets/img/mike.png"
+                            alt="profile"
+                            className=" w-[36px] h-[36px]"
+                          />
                           <div ref={scrollRefBottom}></div>
                         </div>
                       </div>

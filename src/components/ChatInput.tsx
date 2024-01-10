@@ -105,16 +105,22 @@ const ChatInput = ({
               placeholder="Type your message or type @birdie to call AI Assistant"
               className="mb-0 rounded-[20px] py-8 border border-[#0E131D]"
             />
-          </form>
-          <div className="flex justify-between items-center relative bottom-10 bg-[#25282C] p-2 rounded-b-[20px] px-5">
+
+            <div className="flex justify-between items-center relative bottom-10 bg-[#25282C] py-3 rounded-b-[20px] px-5">
               <div className="flex gap-4">
-                   <img src="./assets/img/mic.png" className="i" /> 
-                   <img src="./assets/img/line.png" className="i" />
-                   <img src="./assets/img/emoji.png" className="i" />
-                   <img src="./assets/img/file.png" className="i" />
+                <VoiceMessage
+                  socket={socket}
+                  onHandleTranslateText={onHandleTranslateText}
+                />
+                <img src="./assets/img/line.png" className="i" />
+                <img src="./assets/img/emoji.png" className="i" />
+                <img src="./assets/img/file.png" className="i" />
               </div>
-              <img src="./assets/img/send.png" className="i" />
-          </div>
+              <button>
+                <img src="./assets/img/send.png" className="i" />
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </>

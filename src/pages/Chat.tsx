@@ -28,6 +28,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const messages = useAppSelector((state) => state.messages.messages);
   const { users } = useAppSelector((state) => state.user);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  // const {recipient} = useAppSelector((state) => state.recipient);
 
   // RTK Query
   const { data: friends, refetch: refetchFriends } = useFetchAllFriendsQuery(
