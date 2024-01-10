@@ -143,7 +143,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
       // **************** call *********************
     }
-    console.log(call);
   }, [socket.current]);
 
   useEffect(() => {
