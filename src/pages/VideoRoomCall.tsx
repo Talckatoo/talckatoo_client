@@ -14,7 +14,11 @@ interface Socket {
 
 const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
-  const call = useAppSelector((state) => state.call.call);
+  const { call } = useAppSelector((state) => state.call);
+
+  useEffect(() => {
+    console.log(call);
+  }, [call]);
 
   const { roomId, selectedId, userId, userName } = useParams();
   const [stream, setStream] = useState(null);

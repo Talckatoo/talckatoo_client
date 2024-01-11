@@ -20,7 +20,6 @@ import {
 } from "../redux/features/messages/messageSlice";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import userSlice, { setRecipient } from "../redux/features/user/userSlice";
-import setCall from "../redux/features/call/callSlice";
 import {
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
@@ -28,6 +27,7 @@ import {
 import CallUser from "./VideoCall/services/callUser";
 import GetMedia from "./VideoCall/services/GetMedia";
 import AnswerCall from "./VideoCall/services/AnswerCall";
+import { setCall } from "../redux/features/call/callSlice";
 interface Socket {
   current: any;
 }
@@ -111,7 +111,19 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
       socket.current.on(
         "callUser",
-        ({ signal, from, username, roomId, userToCall }) => {
+        ({
+          signal,
+          from,
+          username,
+          roomId,
+          userToCall,
+        }: {
+          signal: any;
+          from: any;
+          username: any;
+          roomId: any;
+          userToCall: any;
+        }) => {
           // console.log(signal, from, callerName, roomId);
           console.log(`${username} is calling`);
           alert(`${username} is calling`);
@@ -120,9 +132,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
               isReceivedCall: true,
               from,
               username,
-              signal,
               roomId,
               userToCall,
+              signal,
             })
           );
         }

@@ -2,10 +2,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Call {
-  call: null;
+  isReceivedCall: boolean;
+  from: string;
+  username: string;
+  roomId: string;
+  userToCall: string;
+  signal: any;
 }
 
-export interface CallState {
+interface CallState {
   call: Call | null;
 }
 
@@ -13,7 +18,7 @@ const initialState: CallState = {
   call: null,
 };
 
-export const callSlice = createSlice({
+const callSlice = createSlice({
   name: "call",
   initialState,
   reducers: {
@@ -24,5 +29,4 @@ export const callSlice = createSlice({
 });
 
 export const { setCall } = callSlice.actions;
-
 export default callSlice.reducer;

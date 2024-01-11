@@ -46,7 +46,7 @@ const VideoCall = ({ socket }: { socket: Socket }): JSX.Element => {
         "callUser",
         ({ signal, from, username: callerName }) => {
           console.log(signal, from, callerName);
-          setCall({ isReceivedCall: true, from, username: callerName, signal });
+          // setCall({ isReceivedCall: true, from, username: callerName, signal });
         }
       );
       socket.current.on("leaveCall", () => {
