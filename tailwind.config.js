@@ -181,6 +181,7 @@ export default {
         "title-500": "#D9E3EA",
         "border-500": "#979797",
         "background-500": "#151719",
+        "red-badge-500": "#DD0000",
         blue: "#0095F6",
         "logout-btn": "#FF5A5A",
         "navbar-menu": "rgba(16, 16, 18, 0.6)",
