@@ -25,8 +25,11 @@ const callSlice = createSlice({
     setCall: (state, action: PayloadAction<Call | null>) => {
       state.call = action.payload;
     },
+    clearCall: (state) => {
+      state.call = null;
+    },
   },
 });
 
-export const { setCall } = callSlice.actions;
+export const { setCall, clearCall } = callSlice.actions;
 export default callSlice.reducer;

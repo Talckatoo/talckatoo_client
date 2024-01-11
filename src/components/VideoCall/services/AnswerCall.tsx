@@ -6,7 +6,10 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import Peer from "simple-peer";
 import { useNavigate } from "react-router-dom";
 
-const AnswerCall = (setCallAccepted, stream, call) => {
+
+const AnswerCall = (stream, setCallAccepted, call, socket, connectionRef, userVideo)=> {
+  console.log('answer')
+
   setCallAccepted(true);
   const peer = new Peer({
     initiator: false,
@@ -38,14 +41,14 @@ const AnswerCall = (setCallAccepted, stream, call) => {
   });
 
   peer.on("signal", (data) => {
-    socket.current.emit("answerCall", { signal: data, to: call.from });
+    socket.current.emit("answerCall", { signal: data, call });
   });
 
-  //   peer.on("stream", (currentStream) => {
-  //     if (userVideo && userVideo.current) {
-  //       userVideo.current.srcObject = currentStream;
-  //     }
-  //   });
+  peer.on("stream", (currentStream) => {
+      if (userVideo && userVideo.current) {
+        userVideo.current.srcObject = currentStream;
+      }
+    });
 
   peer.signal(call.signal);
 

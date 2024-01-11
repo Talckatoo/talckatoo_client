@@ -20,7 +20,6 @@ import {
 } from "../redux/features/messages/messageSlice";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import userSlice, { setRecipient } from "../redux/features/user/userSlice";
-import {setCall} from "../redux/features/call/callSlice";
 import {
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
@@ -125,23 +124,20 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           roomId: any;
           userToCall: any;
         }) => {
-          // console.log(signal, from, callerName, roomId);
-          console.log(`${username} is calling`);
-          alert(`${username} is calling`);
-       
+          dispatch(
+            setCall({
+              isReceivedCall: true,
+              from,
+              username,
+              signal,
+              roomId,
+              userToCall,
+            })
+          );
         }
       );
 
-      dispatch(
-        setCall({
-          isReceivedCall: true,
-          from,
-          username,
-          signal,
-          roomId,
-          userToCall,
-        })
-      );
+   
 
       // socket.current.on("leaveCall", () => {
       //   // Handle the call ending notification

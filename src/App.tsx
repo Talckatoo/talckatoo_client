@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { updateContactedUserById } from "./redux/features/user/userSlice";
 import { setAuth } from "./redux/features/user/authSlice";
 
+
 type MyEventMap = {
   connect: () => void;
   disconnect: () => void;
@@ -27,7 +28,6 @@ const App = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const socket = useRef<Socket<MyEventMap> | null>();
-  const { user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);

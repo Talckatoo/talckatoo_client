@@ -16,9 +16,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
   const { call } = useAppSelector((state) => state.call);
 
-  useEffect(() => {
-    console.log(call);
-  }, [call]);
 
   const { roomId, selectedId, userId, userName } = useParams();
   const [stream, setStream] = useState(null);
@@ -48,13 +45,30 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           myVideo.current.srcObject = currentStream;
         }
       });
-  }, []);
+      if (user._id == userId) {
+        CallUser(stream, roomId, selectedId, userId, userName, socket,connectionRef, userVideo, setCallAccepted );
+      } else {
+        AnswerCall(stream, setCallAccepted, call, socket, connectionRef, userVideo);
+      }
+      return () => {
+        // Clean up event listeners on component unmount
+        socket.current.off('callAccepted');
+      };
+  }, [socket.current,roomId]);
 
-  if (user._id == userId) {
-    CallUser(stream, roomId, selectedId, userId, userName, socket);
-  } else {
-    // AnswerCall(stream, setCallAccepted, call);
-  }
+  useEffect(() => {
+ 
+    socket?.current?.on('roomCreated', (data) => {
+      console.log(data.message);
+    });
+
+    return () => {
+      // Clean up event listeners on component unmount
+      socket.current.off('roomCreated');
+    };
+  }, [socket.current, roomId]);
+
+
 
   return (
     <>
