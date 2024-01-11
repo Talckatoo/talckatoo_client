@@ -26,6 +26,8 @@ const Navbar = () => {
   const profilePictureRef = useRef();
   const { user } = useAppSelector((state) => state.auth);
   console.log(user);
+  const {recipient} = useAppSelector((state) => state.user);
+  console.log(recipient);
   const { isDarkMode, setIsDarkMode } = useContext(UserContext);
 
   useEffect(() => {
@@ -87,7 +89,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="relative z-10 max-md:px-2 py-4 md:px-10 flex justify-between items-center drop-shadow-md bg-[#fff]">
+    <nav className="relative z-10 max-md:px-2  py-4 md:px-10 flex justify-between items-center drop-shadow-md bg-[#fff]">
       <div className="flex w-[80%] gap-2 md:gap-8">
         <div className="flex items-center ml-2 gap-2 md:gap-4 ">
           {user && (
@@ -139,7 +141,7 @@ const Navbar = () => {
               <div className="flex flex-col  hover:text-gray-300   mr-2 focus:outline-none sm:block">
                 {user && user.userName ? (
                   <p className="max-md:text-[16px] md: text-[18px] text-bold text-[#25282C]">
-                   Ameniasia
+                   {recipient}
                   </p>
                 ) : (
                   ""
@@ -193,10 +195,11 @@ const Navbar = () => {
           placeholder="search text"
           id="chatsearch"
           label=""
+          className="max-md:hidden max-md:"
         />
       </div>
 
-      <div className="flex gap-4 items-center ">
+      <div className="flex gap-4 items-center max-md:gap-2  ">
         <img
           src="./assets/img/video.png"
           alt="search"

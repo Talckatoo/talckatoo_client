@@ -132,10 +132,10 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   return (
     <>
       <div
-        className="flex flex-1 h-[100vh] w-full overflow-hidden flex-grow bg-white"
+        className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white"
       >
         <div
-          className={`md:w-80  max-h-screen p-2 relative z-[5] ${
+          className={`md:w-80  max-h-screen p-2 relative z-[5] max-md:hidden ${
             isDarkMode ? "bg-gray-800" : "bg-slate-200"
           }`}
         >

@@ -382,7 +382,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [selectedId]);
 
   return (
-    <div className="flex flex-col shadow h-full  bg-white   ">
+    <div className="flex flex-col shadow h-full ">
       <img
         src="/assets/img/Shapes.png"
         alt="shape"
@@ -422,7 +422,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                           
                           <div
                             className={
-                              "md:w-[40%] max-md:w-[50%] b inline-block  rounded-t-[20px] rounded-br-[20px] m-2 p-6 " +
+                              "md:w-[40%] max-md:w-[70%] b inline-block  rounded-t-[20px] rounded-br-[20px] m-2 p-6 " +
                               (msg.sender === user?._id
                                 ? " bg-[#E9E9EF] text-right rounded-bl-[20px]"
                                 : "") +
@@ -451,7 +451,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                         index !== lines.length - 1 &&
                                         line !== lines[index + 1] && (
                                           <>
-                                            <br />
+                                            <br className="w-[50%] mx-auto"/>
                                             <div className="h-1 border-b border-gray-500"></div>
 
                                             {/* <img
@@ -469,15 +469,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                               <>{msg.message}</>
                             )}
 
-                            <div className="flex flex-row gap-4">
-                              <div className="w-1/2  text-white items-end text-x-small-regular">
+                            <div className="flex gap-4 relative top-12">
+                              <div className="w-full text-black items-end text-x-small-regular">
                                 {getTime(msg.createdAt)}
                               </div>
 
                               <TextToSpeech convertedText={msg.message} />
                             </div>
                             {msg.voiceNote && (
-                              <audio className="w-60 h-15" controls>
+                              <audio className="w-full h-15" controls>
                                 <source
                                   src={msg.voiceNote?.url}
                                   type="audio/mpeg"
@@ -507,7 +507,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       isTyping ? (
         <JumpingDotsAnimation />
       ) : null}
-      <div className="w-full h-30 py-2 bg-white">
+      <div className="w-full py-2 bg-white">
         {selectedId ? (
           <>
             <ChatInput

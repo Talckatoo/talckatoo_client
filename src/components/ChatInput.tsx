@@ -93,7 +93,7 @@ const ChatInput = ({
   return (
     <>
       <div className="w-full py-2">
-        <div className=" flex flex-col max-md:w-[500px] md:w-[700px] max-w-[995px] mx-auto h-[132px] pt-2">
+        <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  pt-2">
           <form onSubmit={handleSendMessage}>
             <Input
               label=""
@@ -103,7 +103,7 @@ const ChatInput = ({
               id=""
               onChange={handleTyping}
               placeholder="Type your message or type @birdie to call AI Assistant"
-              className="mb-0 rounded-[20px] py-8 border border-[#0E131D]"
+              className="mb-0 rounded-[20px] max-md:py-6 py-8 border border-[#0E131D]"
             />
 
             <div className="flex justify-between items-center relative bottom-10 bg-[#25282C] py-3 rounded-b-[20px] px-5">

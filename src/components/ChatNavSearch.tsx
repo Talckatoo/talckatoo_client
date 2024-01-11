@@ -22,8 +22,8 @@ const ChatNavSearch: FC<InputProps> = ({
   className,
 }) => {
   return (
-    <div className="flex items-center w-[50%]">
-       <img src="./assets/img/search.png" className="relative left-[2rem]" />
+    <div className="flex items-center w-[50%] max-md:hidden">
+       <img src="./assets/img/search.png" className="relative left-[2rem] max-md:left-0" />
        <form className="w-[70%]">
       <label htmlFor={name}>{label}</label>
       <input

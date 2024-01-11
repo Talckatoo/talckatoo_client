@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { getTime } from "../util/getTime";
 interface TextToSpeechProps {
   convertedText: string;
 }
@@ -87,7 +87,7 @@ const TextToSpeech: React.FC<TextToSpeechProps> = ({ convertedText }) => {
   return (
     <>
       {show ? (
-        <>
+        <div className="flex justify-between">
           <div className="w-1/2 flex flex-row gap-2 relative top-[3.5rem] ">
             <div className="text-x-small-regular text-gray-600 ml-2">
               <button onClick={handlePlay}>
@@ -99,7 +99,7 @@ const TextToSpeech: React.FC<TextToSpeechProps> = ({ convertedText }) => {
               <button onClick={handleStop}><img src="./assets/img/stop.png" alt="stop" /></button>
             </div>
           </div>
-        </>
+        </div>
       ) : null}
     </>
   );
