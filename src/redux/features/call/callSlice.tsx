@@ -22,7 +22,7 @@ const callSlice = createSlice({
   name: "call",
   initialState,
   reducers: {
-    setCall: (state, action: PayloadAction<Call>) => {
+    setCall: (state, action: PayloadAction<Call | null>) => {
       state.call = action.payload;
     },
   },
