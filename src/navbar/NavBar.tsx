@@ -28,6 +28,13 @@ const Navbar = () => {
   console.log(user);
   const {recipient} = useAppSelector((state) => state.user);
   console.log(recipient);
+  const conversationState = useAppSelector((state) => state.conversation);
+  const language = conversationState?.conversation?.language;
+  console.log(language);
+  const fullLanguage = languagesArray.map((l) => {
+    if (l.code === language) return l.language;
+  });
+
   const { isDarkMode, setIsDarkMode } = useContext(UserContext);
 
   useEffect(() => {
@@ -180,9 +187,7 @@ const Navbar = () => {
               )}
               <div className="bg-[#25282C] py-1 h-[41px] flex items-center text-white px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ">
                 <span className="max-md:text-[12px] md: text-[14px] ">
-                  {languagesArray.map((l) =>
-                    l.code === user.language ? l.language : null
-                  )}
+                  {fullLanguage}
                 </span>
               </div>
             </>

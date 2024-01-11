@@ -507,7 +507,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       isTyping ? (
         <JumpingDotsAnimation />
       ) : null}
-      <div className="w-full py-2 bg-white">
+      <div className="w-full py-2 bg-white relative z-5">
         {selectedId ? (
           <>
             <ChatInput

@@ -92,8 +92,8 @@ const ChatInput = ({
 
   return (
     <>
-      <div className="w-full py-2">
-        <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  pt-2">
+      <div className="w-full py-2 relative z-10">
+        <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  pt-2 ">
           <form onSubmit={handleSendMessage}>
             <Input
               label=""
