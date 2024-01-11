@@ -82,6 +82,12 @@ const SignIn = () => {
     }
   };
 
+  const redirectTogoogle = async (): Promise<void> => {
+    window.open("http://localhost:8000/api/v1/account/loginWithGoogle", "_self");
+  }
+
+
+
   return (
     <section className="relative bg-white h-full w-full font-inter">
       <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
@@ -112,8 +118,7 @@ const SignIn = () => {
             <Button
               type="button"
               className="bg-[#fafafa] text-black w-full h-full flex justify-center items-center border-[0.5px] border-[#33363A] rounded-lg shadow-sm-2xl "
-              disabled
-              onClick={() => {}}
+              onClick={() => redirectTogoogle()}
             >
               <img
                 src="/assets/icons/google-g-2015.svg"
