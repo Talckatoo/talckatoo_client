@@ -8,7 +8,7 @@ import FetchLatestMessages from "../util/FetchLatestMessages";
 import { PiBirdFill } from "react-icons/pi";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
-import { User, setRecipient, setUsers } from "../redux/features/user/userSlice";
+import { User, setRecipient, setUsers, updateContactedUserById, setRecipientId } from "../redux/features/user/userSlice";
 import { setOnlineFriends } from "../redux/features/socket/socketSlice";
 import { useFetchAllFriendsQuery } from "../redux/services/UserApi";
 
@@ -115,6 +115,13 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
     );
 
     dispatch(setRecipient(u.userName as any));
+    // dispatch(updateContactedUserById({
+    //   from: u._id,
+    //   userName: u.userName,
+    //   image: "url",
+    //   language: u.language,
+    // }))
+    dispatch(setRecipientId(u.profileImage.url));
   };
 
   useEffect(() => {
