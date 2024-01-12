@@ -26,14 +26,35 @@ const Navbar = () => {
   const profilePictureRef = useRef();
   const { user } = useAppSelector((state) => state.auth);
   console.log(user);
+  
   const {recipient} = useAppSelector((state) => state.user);
   console.log(recipient);
+  
   const conversationState = useAppSelector((state) => state.conversation);
+  console.log(conversationState);
+  
+  // const recipientId = conversationState?.conversation?.selectedId;
+  // console.log(recipientId);
+  const {recipientPi} = useAppSelector((state) => state.user);
+  console.log(recipientPi);
   const language = conversationState?.conversation?.language;
   console.log(language);
+  
   const fullLanguage = languagesArray.map((l) => {
-    if (l.code === language) return l.language;
+    if (l.code === language.toLowerCase()) return l.language;
   });
+ 
+  
+  // const getContactedUsers = useAppSelector((state) => state.user.users.contactedUsers);
+  // console.log(getContactedUsers);
+  
+  // const currentUserImage = getContactedUsers.map((u: any) => {
+  //   u._id === recipientId ? u.profileImage.url : null;
+  // })
+  // console.log(currentUserImage);
+  
+
+  // const reciData = useAppSelector((state) => state.user);
 
   const { isDarkMode, setIsDarkMode } = useContext(UserContext);
 
@@ -101,20 +122,20 @@ const Navbar = () => {
         <div className="flex items-center ml-2 gap-2 md:gap-4 ">
           {user && (
             <>
-              {user?.profileImage?.url ? (
+              { recipientPi?  (
                 <div
                   ref={profilePictureRef}
                   onClick={handleDropdownClick}
                   className="w-[52px] h-[52px] max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
                   style={{
                     backgroundImage: `url(${
-                      user?.profileImage?.url || COCKATOO
+                      recipientPi || COCKATOO
                     })`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}
                 >
-                  {!user?.profileImage?.url && (
+                  { !recipientPi && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
