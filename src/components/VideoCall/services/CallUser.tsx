@@ -2,7 +2,7 @@ import Peer from "simple-peer";
 import { setCall } from "../../../redux/features/call/callSlice";
 
 const CallUser = (
-  currentStream,
+  thisStream,
   roomId,
   selectedId,
   userId,
@@ -18,7 +18,7 @@ const CallUser = (
   const peer = new Peer({
     initiator: true,
     trickle: false,
-    currentStream,
+    thisStream,
   });
 
   peer.on("connect", () => {
@@ -52,12 +52,12 @@ const CallUser = (
     });
   });
 
-  peer.on("stream", (currentStream1) => {
+  peer.on("stream", (currentStream) => {
     console.log("stream")
 
     try {
       if (userVideo && userVideo.current) {
-        userVideo.current.srcObject = currentStream1;
+        userVideo.current.srcObject = currentStream;
       }
     } catch (error) {
       console.error("Error setting stream to video element:", error);
@@ -71,11 +71,11 @@ const CallUser = (
     dispatch(
       setCall({
         isReceivedCall: true,
-        from: "",
-        username: "",
+        from: data.call.from,
+        username: data.call.username,
         signal: data.signal,
-        roomId: "",
-        userToCall: "",
+        roomId: data.call.roomId,
+        userToCall: data.call.userToCall,
       })
     );
 

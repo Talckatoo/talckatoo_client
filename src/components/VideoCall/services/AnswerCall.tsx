@@ -1,7 +1,7 @@
 import Peer from "simple-peer";
 
 const AnswerCall = (
-  currentStream,
+  thisStream,
   setCallAccepted,
   call,
   socket,
@@ -14,7 +14,7 @@ const AnswerCall = (
   const peer = new Peer({
     initiator: false,
     trickle: false,
-    currentStream,
+    thisStream,
   });
 
   peer.on("connect", () => {
@@ -42,11 +42,11 @@ const AnswerCall = (
     socket.current.emit("answerCall", { signal: data, call });
   });
 
-  peer.on("stream", (currentStream1) => {
+  peer.on("stream", (currentStream) => {
     console.log("stream")
     try {
       if (userVideo && userVideo.current) {
-        userVideo.current.srcObject = currentStream1;
+        userVideo.current.srcObject = currentStream;
       }
     } catch (error) {
       console.error("Error setting stream to video element:", error);

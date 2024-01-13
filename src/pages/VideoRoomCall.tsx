@@ -39,15 +39,15 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
         video: true,
         audio: true,
       })
-      .then((currentStream) => {
-        console.log(currentStream)
+      .then((thisStream) => {
+        console.log(thisStream)
         // setStreamMedia(currentStream)
         if (myVideo.current) {
-          myVideo.current.srcObject = currentStream;
+          myVideo.current.srcObject = thisStream;
         }
         if (user._id == userId) {
           CallUser(
-            currentStream,
+            thisStream,
             roomId,
             selectedId,
             userId,
@@ -60,7 +60,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           );
         } else {
           AnswerCall(
-            currentStream,
+            thisStream,
             setCallAccepted,
             call,
             socket,

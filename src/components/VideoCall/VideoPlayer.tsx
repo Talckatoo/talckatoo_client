@@ -17,7 +17,8 @@ export default function VideoPlayer({
   call: any;
 }) {
   const { user } = useAppSelector((state) => state.auth);
-  console.log(call)
+  
+  
 
 
   // useEffect(() => {
@@ -40,13 +41,13 @@ export default function VideoPlayer({
       </div>
       <div>
         {/* Other User Video */}
-        {callAccepted && !callEnded && (
+        {/* {callAccepted && !callEnded && (
           <>
             <span>{call?.username || "Your"}'s video</span>
 
             <video playsInline ref={userVideo} autoPlay></video>
           </>
-        )}
+        )} */}
       </div>
     </div>
   );
