@@ -11,6 +11,7 @@ import { User, setRecipient, setUsers } from "../redux/features/user/userSlice";
 import { setOnlineFriends } from "../redux/features/socket/socketSlice";
 import { useFetchAllFriendsQuery } from "../redux/services/UserApi";
 import { setCall } from "../redux/features/call/callSlice";
+import SideBar from "../components/shared/SideBar"
 
 interface Socket {
   current: any;
@@ -129,7 +130,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
           isDarkMode ? "bg-dark" : "bg-light"
         }`}
       >
-        <div
+        {/*        <div
           className={`md:w-80  max-h-screen p-2 ${
             isDarkMode ? "bg-gray-800" : "bg-slate-200"
           }`}
@@ -232,9 +233,11 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
                 : null}
             </div>
           )}
-        </div>
-        <div className="flex w-full h-full">
-          <ChatContainer socket={socket} />
+        </div>*/}
+
+        <SideBar/>
+        <div className="flex w-full h-full bg-white">
+          {/*<ChatContainer socket={socket} />*/}
         </div>
       </div>
     </>
