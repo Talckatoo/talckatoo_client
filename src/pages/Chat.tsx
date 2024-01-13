@@ -32,9 +32,9 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   // RTK Query
   const { data: friends, refetch } = useFetchAllFriendsQuery(null) as any;
 
-  // useEffect(() => {
-  //   dispatch(setCall(null));
-  // }, []);
+  useEffect(() => {
+    dispatch(setCall(null));
+  }, []);
 
   useEffect(() => {
     if (friends) {

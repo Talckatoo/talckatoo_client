@@ -446,12 +446,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const videoCallUrl = `/call/${Math.random()
       .toString(36)
       .slice(2)}/${selectedId}/${user._id}/${user.userName}`;
-    navigate(videoCallUrl);
+    window.open(videoCallUrl, "_blank");
   };
 
   const handleAnswerCall = () => {
     const videoCallUrl = `/call/${call.roomId}/${call.userToCall}/${call.from}/${call.username}`;
-    navigate(videoCallUrl);
+    window.open(videoCallUrl, "_blank");
   };
 
   return (

@@ -42,7 +42,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
         audio: true,
       })
       .then((currentStream) => {
-        setStream(currentStream);
         if (myVideo.current) {
           myVideo.current.srcObject = currentStream;
         }

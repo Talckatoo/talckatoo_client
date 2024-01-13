@@ -41,6 +41,7 @@ const App = () => {
 
   useEffect(() => {
     if (socket.current) {
+      console.log("socket.current", socket.current);
       socket.current.on("getUpdateProfile", (data: any) => {
         dispatch(updateContactedUserById(data));
       });
