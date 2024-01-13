@@ -1,14 +1,16 @@
-import Notifications from "../components/VideoCall/Notifications";
-import VideoPlayer from "../components/VideoCall/VideoPlayer";
-import Options from "../components/VideoCall/Options";
-import { useEffect, useState, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import Peer from "simple-peer";
-import { useNavigate } from "react-router-dom";
 
+const AnswerCall = (
+  stream,
+  setCallAccepted,
+  call,
+  socket,
+  connectionRef,
+  userVideo
+) => {
+  console.log("answer");
 
-const AnswerCall = (stream, setCallAccepted, call, socket, connectionRef, userVideo)=> {
-  console.log('answer')
+  console.log("stream", stream);
 
   setCallAccepted(true);
   const peer = new Peer({
@@ -41,14 +43,16 @@ const AnswerCall = (stream, setCallAccepted, call, socket, connectionRef, userVi
   });
 
   peer.on("signal", (data) => {
+    console.log("signal");
+    console.log("data", data);
     socket.current.emit("answerCall", { signal: data, call });
   });
 
   peer.on("stream", (currentStream) => {
-      if (userVideo && userVideo.current) {
-        userVideo.current.srcObject = currentStream;
-      }
-    });
+    if (userVideo && userVideo.current) {
+      userVideo.current.srcObject = currentStream;
+    }
+  });
 
   peer.signal(call.signal);
 

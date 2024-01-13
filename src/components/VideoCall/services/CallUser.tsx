@@ -5,9 +5,23 @@ import { useEffect, useState, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import Peer from "simple-peer";
 import { useNavigate } from "react-router-dom";
+import { setCall } from "../../../redux/features/call/callSlice";
 
-const CallUser = (stream, roomId, selectedId, userId, userName, socket, connectionRef, userVideo, setCallAccepted) => {
+const CallUser = (
+  stream,
+  roomId,
+  selectedId,
+  userId,
+  userName,
+  socket,
+  connectionRef,
+  userVideo,
+  setCallAccepted,
+  dispatch
+) => {
   // CALL USER //
+
+
   console.log("call other");
   const peer = new Peer({
     initiator: true,
@@ -52,19 +66,30 @@ const CallUser = (stream, roomId, selectedId, userId, userName, socket, connecti
 
   // Listen to the signal from the other user
 
-    socket?.current?.on("callAccepted", (signal) => {
-      console.log({ "signal from CallAccept": signal });
+  socket?.current?.on("callAccepted", (signal) => {
+    console.log({ "signal from CallAccept": signal });
 
-      console.log("accept call");
-      setCallAccepted(true);
-      if (peer.destroyed) {
-        console.warn("Peer instance is destroyed.");
-        return;
-      }
-      peer.signal(signal);
-    });
+    console.log("accept call");
+    dispatch(
+      setCall({
+        isReceivedCall: true,
+        from: "",
+        username: "",
+        signal,
+        roomId: "",
+        userToCall: "",
+      })
+    );
 
-    connectionRef.current = peer;
+    setCallAccepted(true);
+    if (peer.destroyed) {
+      console.warn("Peer instance is destroyed.");
+      return;
+    }
+    peer.signal(signal);
+  });
+
+  connectionRef.current = peer;
 };
 
 export default CallUser;

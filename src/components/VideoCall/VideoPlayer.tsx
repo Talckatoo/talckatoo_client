@@ -2,12 +2,19 @@ import { useEffect, useState, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 export default function VideoPlayer({
-  //   callAccepted,
+  callAccepted,
   myVideo,
-  //   userVideo,
-  //   callEnded,
+  userVideo,
+  callEnded,
   stream,
-  //   call,
+  call,
+}: {
+  callAccepted: boolean;
+  myVideo: any;
+  userVideo: any;
+  callEnded: boolean;
+  stream: any;
+  call: any;
 }) {
   const { user } = useAppSelector((state) => state.auth);
   const conversationState = useAppSelector((state) => state.conversation);
@@ -32,14 +39,14 @@ export default function VideoPlayer({
         )}
       </div>
       <div>
-        {/* Other User Video
+        {/* Other User Video */}
         {callAccepted && !callEnded && (
           <>
             <span>{call.username || "Your"}'s video</span>
 
             <video playsInline ref={userVideo} autoPlay></video>
           </>
-        )} */}
+        )}
       </div>
     </div>
   );

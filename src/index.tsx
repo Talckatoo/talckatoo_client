@@ -10,20 +10,13 @@ import App from "./App";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import "animate.css";
-import  {clearCall}  from "./redux/features/call/callSlice";
 
 // CALL IT ONCE IN YOUR APP
 injectStyle();
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 // Dispatch clearCall action when the application is loaded
-store.dispatch(clearCall());
 
-// Dispatch clearCall action when the user refreshes the browser
-window.addEventListener("beforeunload", () => {
-  store.dispatch(clearCall());
-  console.log("Clear call action dispatched on beforeunload.");
-});
 root.render(
   <>
     <UserContextProvider>

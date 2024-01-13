@@ -14,7 +14,7 @@ import { io, Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { updateContactedUserById } from "./redux/features/user/userSlice";
 import { setAuth } from "./redux/features/user/authSlice";
-
+import { setCall } from "./redux/features/call/callSlice";
 
 type MyEventMap = {
   connect: () => void;
@@ -31,6 +31,7 @@ const App = () => {
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
+
     return () => {
       if (socket.current) {
         socket.current.disconnect();

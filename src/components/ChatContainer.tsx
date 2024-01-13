@@ -50,6 +50,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const language = conversationState?.conversation?.language;
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log("call", call);
+  }, [call]);
   // *******************CALL******************
 
   // RTK Query
@@ -136,8 +139,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           );
         }
       );
-
-   
 
       // socket.current.on("leaveCall", () => {
       //   // Handle the call ending notification
@@ -434,6 +435,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       toast.error("Error updating messages, please try again");
     }
   };
+
   useEffect(() => {
     updateConversation();
   }, [selectedId]);
@@ -444,12 +446,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const videoCallUrl = `/call/${Math.random()
       .toString(36)
       .slice(2)}/${selectedId}/${user._id}/${user.userName}`;
-    window.open(videoCallUrl, "_blank");
+    navigate(videoCallUrl);
   };
 
   const handleAnswerCall = () => {
     const videoCallUrl = `/call/${call.roomId}/${call.userToCall}/${call.from}/${call.username}`;
-    window.open(videoCallUrl, "_blank");
+    navigate(videoCallUrl);
   };
 
   return (

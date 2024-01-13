@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import CallUser from "../components/VideoCall/services/callUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
+
 interface Socket {
   current: any;
 }
@@ -16,10 +17,11 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
   const { call } = useAppSelector((state) => state.call);
 
-
   const { roomId, selectedId, userId, userName } = useParams();
   const [stream, setStream] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   const [callEnded, setCallEnded] = useState(false);
   const [calleeEnded, setCalleeEnded] = useState(false);
@@ -44,43 +46,59 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
         if (myVideo.current) {
           myVideo.current.srcObject = currentStream;
         }
+        if (user._id == userId) {
+          CallUser(
+            currentStream,
+            roomId,
+            selectedId,
+            userId,
+            userName,
+            socket,
+            connectionRef,
+            userVideo,
+            setCallAccepted,
+            dispatch
+          );
+        } else {
+          AnswerCall(
+            currentStream,
+            setCallAccepted,
+            call,
+            socket,
+            connectionRef,
+            userVideo
+          );
+        }
       });
-      if (user._id == userId) {
-        CallUser(stream, roomId, selectedId, userId, userName, socket,connectionRef, userVideo, setCallAccepted );
-      } else {
-        AnswerCall(stream, setCallAccepted, call, socket, connectionRef, userVideo);
-      }
-      return () => {
-        // Clean up event listeners on component unmount
-        socket.current.off('callAccepted');
-      };
-  }, [socket.current,roomId]);
+
+    return () => {
+      // Clean up event listeners on component unmount
+      socket.current.off("callAccepted");
+    };
+  }, [socket.current, roomId]);
 
   useEffect(() => {
- 
-    socket?.current?.on('roomCreated', (data) => {
+    socket?.current?.on("roomCreated", (data: { message: any }) => {
       console.log(data.message);
     });
 
     return () => {
       // Clean up event listeners on component unmount
-      socket.current.off('roomCreated');
+      socket.current.off("roomCreated");
     };
   }, [socket.current, roomId]);
-
-
 
   return (
     <>
       <div>
         <span>Video Call</span>
         <VideoPlayer
-          //   callAccepted={callAccepted}
+          callAccepted={callAccepted}
           myVideo={myVideo}
-          //   userVideo={userVideo}
-          //   callEnded={callEnded}
+          userVideo={userVideo}
+          callEnded={callEnded}
           stream={stream}
-          //   call={call}
+          call={call}
         />
         {/* <Options
           callAccepted={callAccepted}
