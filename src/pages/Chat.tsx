@@ -10,6 +10,7 @@ import { setConversation } from "../redux/features/conversation/conversationSlic
 import { User, setRecipient, setUsers } from "../redux/features/user/userSlice";
 import { setOnlineFriends } from "../redux/features/socket/socketSlice";
 import { useFetchAllFriendsQuery } from "../redux/services/UserApi";
+import { setCall } from "../redux/features/call/callSlice";
 
 interface Socket {
   current: any;
@@ -30,6 +31,10 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // RTK Query
   const { data: friends, refetch } = useFetchAllFriendsQuery(null) as any;
+
+  // useEffect(() => {
+  //   dispatch(setCall(null));
+  // }, []);
 
   useEffect(() => {
     if (friends) {
