@@ -482,8 +482,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             )}
                           </div>
                           <img
-                            src={ msg.sender === user?._id ? `${user?.profileImage.url}` : `${recipientPi}`}
-                            alt="profile"
+                            src={ (msg.sender === user?._id ? `${user?.profileImage.url}` :(msg.sender === import.meta.env.VITE_AI_ASSISTANT_ID) ? "" : `${recipientPi}`) }
                             className=" w-[36px] h-[36px] rounded-full border border-[#E9E9EF]"
                           />
                           <div ref={scrollRefBottom}></div>
