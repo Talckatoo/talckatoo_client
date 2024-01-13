@@ -67,7 +67,7 @@ const App = () => {
         <Route path="/profile" element={<Profile socket={socket} />} />
         {/* <Route path="/videoCall" element={<VideoCall socket={socket} />} /> */}
         <Route
-          path="/call/:roomId/:selectedId/:userId/:userName"
+          path="/call/:roomId/:decodedCallData"
           element={<VideoRoomCall socket={socket} />}
         />
       </Routes>

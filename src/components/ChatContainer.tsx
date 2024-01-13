@@ -24,10 +24,7 @@ import {
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
 } from "../redux/services/MessagesApi";
-import CallUser from "./VideoCall/services/callUser";
-import GetMedia from "./VideoCall/services/GetMedia";
-import AnswerCall from "./VideoCall/services/AnswerCall";
-import { setCall } from "../redux/features/call/callSlice";
+import { Base64 } from "js-base64";
 interface Socket {
   current: any;
 }
@@ -101,6 +98,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   )?.voiceCode;
 
   const token = localStorage.getItem("token");
+  const [decodedCallData, setDecodedCallData] = useState("");
 
   useEffect(() => {
     if (socket.current) {
@@ -109,8 +107,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         setIsTyping(true);
       });
       socket.current.on("stopTyping", () => setIsTyping(false));
-
-      // **************** call *********************
 
       socket.current.on(
         "callUser",
@@ -127,16 +123,24 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           roomId: any;
           userToCall: any;
         }) => {
-          dispatch(
-            setCall({
-              isReceivedCall: true,
-              from,
-              username,
-              signal,
-              roomId,
-              userToCall,
-            })
+          console.log("callUser", signal, from, username, roomId, userToCall);
+          // Encode the call data and set it into the URL
+          const encodedCallData = Base64.fromUint8Array(
+            new TextEncoder().encode(
+              JSON.stringify({
+                isReceivedCall: true,
+                from,
+                username,
+                signal,
+                roomId,
+                userToCall,
+              })
+            )
           );
+
+          console.log("callUser", encodedCallData);
+
+          setDecodedCallData(encodedCallData);
         }
       );
 
@@ -443,15 +447,41 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   // *************************** VIDEO CALL *****************************
 
   const handleCall = () => {
+    // decode the call data
+    const encodedCallData = Base64.fromUint8Array(
+      new TextEncoder().encode(
+        JSON.stringify({
+          selectedId,
+          userId: user._id,
+          userName: user.userName,
+        })
+      )
+    );
+
     const videoCallUrl = `/call/${Math.random()
       .toString(36)
-      .slice(2)}/${selectedId}/${user._id}/${user.userName}`;
-    navigate(videoCallUrl);
+      .slice(2)}/${encodedCallData}`;
+    window.open(videoCallUrl, "_blank");
   };
 
   const handleAnswerCall = () => {
-    const videoCallUrl = `/call/${call.roomId}/${call.userToCall}/${call.from}/${call.username}`;
-    navigate(videoCallUrl);
+    // indecoded decodedCallData
+    const decodedUint8Array = decodedCallData
+      ? Base64.toUint8Array(decodedCallData)
+      : null;
+
+    // Convert the Uint8Array to a string
+    const decodedString = new TextDecoder().decode(
+      decodedUint8Array as AllowSharedBufferSource
+    );
+
+    // Parse the JSON string to get the original data
+    const data = JSON.parse(decodedString);
+
+    // Now you can use the decoded data as needed
+    console.log("callData from inside", data);
+    const videoCallUrl = `/call/${data.roomId}/${decodedCallData}`;
+    window.open(videoCallUrl, "_blank");
   };
 
   return (

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import CallUser from "../components/VideoCall/services/callUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
+import { Base64 } from "js-base64";
 
 interface Socket {
   current: any;
@@ -17,7 +18,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
   const { call } = useAppSelector((state) => state.call);
 
-  const { roomId, selectedId, userId, userName } = useParams();
+  const { roomId, decodedCallData } = useParams();
   const [stream, setStream] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
 
@@ -42,17 +43,40 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
         audio: true,
       })
       .then((currentStream) => {
-        setStream(currentStream);
         if (myVideo.current) {
           myVideo.current.srcObject = currentStream;
         }
-        if (user._id == userId) {
+        // indecoded decodedCallData
+        const decodedUint8Array = decodedCallData
+          ? Base64.toUint8Array(decodedCallData)
+          : null;
+
+        // Convert the Uint8Array to a string
+        const decodedString = new TextDecoder().decode(
+          decodedUint8Array as AllowSharedBufferSource
+        );
+
+        // Parse the JSON string to get the original data
+        const data = JSON.parse(decodedString);
+
+        // Now you can use the decoded data as needed
+        console.log("callData from inside", data);
+
+        const callData = {
+          roomId: roomId,
+          signal: data.signal,
+          selectedId: data.selectedId,
+          userId: data.userId,
+          userName: data.userName,
+        };
+
+        if (user._id == data.userId) {
           CallUser(
             currentStream,
             roomId,
-            selectedId,
-            userId,
-            userName,
+            data.selectedId,
+            data.userId,
+            data.userName,
             socket,
             connectionRef,
             userVideo,
@@ -63,7 +87,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           AnswerCall(
             currentStream,
             setCallAccepted,
-            call,
+            callData,
             socket,
             connectionRef,
             userVideo
@@ -97,7 +121,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           myVideo={myVideo}
           userVideo={userVideo}
           callEnded={callEnded}
-          stream={stream}
           call={call}
         />
         {/* <Options
