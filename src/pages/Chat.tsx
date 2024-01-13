@@ -16,7 +16,7 @@ interface Socket {
   current: any;
 }
 
-const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
+const Chat = ({ socket, callInfo }: { socket: Socket, callInfo:any }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
 
   const { user } = useAppSelector((state) => state.auth);
@@ -234,7 +234,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
           )}
         </div>
         <div className="flex w-full h-full">
-          <ChatContainer socket={socket} />
+          <ChatContainer socket={socket} callInfo={callInfo}/>
         </div>
       </div>
     </>

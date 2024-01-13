@@ -7,14 +7,14 @@ export default function VideoPlayer({
   userVideo,
   callEnded,
   stream,
-  call,
+  callInfo,
 }: {
   callAccepted: boolean;
   myVideo: any;
   userVideo: any;
   callEnded: boolean;
   stream: any;
-  call: any;
+  callInfo: any;
 }) {
   const { user } = useAppSelector((state) => state.auth);
   const conversationState = useAppSelector((state) => state.conversation);
@@ -42,7 +42,7 @@ export default function VideoPlayer({
         {/* Other User Video */}
         {callAccepted && !callEnded && (
           <>
-            <span>{call.username || "Your"}'s video</span>
+            <span>{callInfo.username || "Your"}'s video</span>
 
             <video playsInline ref={userVideo} autoPlay></video>
           </>

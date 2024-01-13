@@ -32,7 +32,7 @@ interface Socket {
   current: any;
 }
 
-const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
+const ChatContainer = ({ socket, callInfo }: { socket: Socket, callInfo: any }): JSX.Element => {
   const [stream, setStream] = useState(null);
   const myVideo = useRef(null); // Initialize the ref
 
@@ -50,9 +50,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const language = conversationState?.conversation?.language;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("call", call);
-  }, [call]);
+
   // *******************CALL******************
 
   // RTK Query
@@ -112,33 +110,33 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
       // **************** call *********************
 
-      socket.current.on(
-        "callUser",
-        ({
-          signal,
-          from,
-          username,
-          roomId,
-          userToCall,
-        }: {
-          signal: any;
-          from: any;
-          username: any;
-          roomId: any;
-          userToCall: any;
-        }) => {
-          dispatch(
-            setCall({
-              isReceivedCall: true,
-              from,
-              username,
-              signal,
-              roomId,
-              userToCall,
-            })
-          );
-        }
-      );
+      // socket.current.on(
+      //   "callUser",
+      //   ({
+      //     signal,
+      //     from,
+      //     username,
+      //     roomId,
+      //     userToCall,
+      //   }: {
+      //     signal: any;
+      //     from: any;
+      //     username: any;
+      //     roomId: any;
+      //     userToCall: any;
+      //   }) => {
+      //     dispatch(
+      //       setCall({
+      //         isReceivedCall: true,
+      //         from,
+      //         username,
+      //         signal,
+      //         roomId,
+      //         userToCall,
+      //       })
+      //     );
+      //   }
+      // );
 
       // socket.current.on("leaveCall", () => {
       //   // Handle the call ending notification
@@ -497,9 +495,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       <button className="text-white" onClick={handleCall}>
         Call
       </button>
-      {call?.isReceivedCall && (
+      {callInfo?.isReceivedCall && (
         <div>
-          <h2 className="text-black">{call?.username} is calling</h2>
+          <h2 className="text-black">{callInfo?.username} is calling</h2>
           <button
             className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
             onClick={() => handleAnswerCall()}

@@ -3,7 +3,7 @@ import Peer from "simple-peer";
 const AnswerCall = (
   stream,
   setCallAccepted,
-  call,
+  callInfo,
   socket,
   connectionRef,
   userVideo
@@ -45,7 +45,7 @@ const AnswerCall = (
   peer.on("signal", (data) => {
     console.log("signal");
     console.log("data", data);
-    socket.current.emit("answerCall", { signal: data, call });
+    socket.current.emit("answerCall", { signal: data, callInfo });
   });
 
   peer.on("stream", (currentStream) => {
@@ -54,7 +54,7 @@ const AnswerCall = (
     }
   });
 
-  peer.signal(call.signal);
+  peer.signal(callInfo.signal);
 
   connectionRef.current = peer;
 };

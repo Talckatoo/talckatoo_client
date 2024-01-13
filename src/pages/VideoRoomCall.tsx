@@ -13,7 +13,7 @@ interface Socket {
   current: any;
 }
 
-const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
+const VideoRoomCall = ({ socket, callInfo }: { socket: Socket, callInfo:any }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
   const { call } = useAppSelector((state) => state.call);
 
@@ -63,7 +63,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           AnswerCall(
             currentStream,
             setCallAccepted,
-            call,
+            callInfo,
             socket,
             connectionRef,
             userVideo
@@ -98,7 +98,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           userVideo={userVideo}
           callEnded={callEnded}
           stream={stream}
-          call={call}
+          callInfo={callInfo}
         />
         {/* <Options
           callAccepted={callAccepted}

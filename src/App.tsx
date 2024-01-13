@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Chat from "./pages/Chat";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./navbar/NavBar";
@@ -22,12 +22,14 @@ type MyEventMap = {
   addUser: (userID: string) => void;
   getUsers: (users: string[]) => void;
   getUpdateProfile: (data: any) => void;
+  callUser: ()=>void;
 };
 
 const App = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const socket = useRef<Socket<MyEventMap> | null>();
+  const [callInfo, setCallInfo] = useState(null)
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
@@ -44,6 +46,33 @@ const App = () => {
       socket.current.on("getUpdateProfile", (data: any) => {
         dispatch(updateContactedUserById(data));
       });
+      socket.current.on(
+        "callUser",
+        ({
+          signal,
+          from,
+          username,
+          roomId,
+          userToCall,
+        }: {
+          signal: any;
+          from: any;
+          username: any;
+          roomId: any;
+          userToCall: any;
+        }) => {
+          dispatch(
+            setCallInfo({
+              isReceivedCall: true,
+              from,
+              username,
+              signal,
+              roomId,
+              userToCall,
+            })
+          );
+        }
+      );
     }
   }, [socket.current]);
 
@@ -63,12 +92,12 @@ const App = () => {
         />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/" element={<Home />} />
-        <Route path="/chat" element={<Chat socket={socket} />} />
+        <Route path="/chat" element={<Chat socket={socket}  callInfo={callInfo}/>} />
         <Route path="/profile" element={<Profile socket={socket} />} />
         {/* <Route path="/videoCall" element={<VideoCall socket={socket} />} /> */}
         <Route
           path="/call/:roomId/:selectedId/:userId/:userName"
-          element={<VideoRoomCall socket={socket} />}
+          element={<VideoRoomCall socket={socket} callInfo={callInfo}/>}
         />
       </Routes>
     </div>
