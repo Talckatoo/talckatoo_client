@@ -18,7 +18,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const { call } = useAppSelector((state) => state.call);
 
   const { roomId, selectedId, userId, userName } = useParams();
-  const [stream, setStream] = useState(null);
+  const [streamMedia, setStreamMedia] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -31,9 +31,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const userVideo = useRef();
   const connectionRef = useRef();
 
-  const navigateChat = () => {
-    navigate("/chat");
-  };
+
 
   useEffect(() => {
     navigator.mediaDevices
@@ -42,6 +40,8 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
         audio: true,
       })
       .then((currentStream) => {
+        console.log(currentStream)
+        // setStreamMedia(currentStream)
         if (myVideo.current) {
           myVideo.current.srcObject = currentStream;
         }
@@ -87,6 +87,8 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
     };
   }, [socket.current, roomId]);
 
+
+
   return (
     <>
       <div>
@@ -96,7 +98,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           myVideo={myVideo}
           userVideo={userVideo}
           callEnded={callEnded}
-          stream={stream}
+          streamMedia={streamMedia}
           call={call}
         />
         {/* <Options
@@ -107,12 +109,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           leaveCall={leaveCall}
           callUser={callUser}
         >
-          <Notifications
-            answerCall={answerCall}
-            call={call}
-            callAccepted={callAccepted}
-            calleeEnded={calleeEnded}
-          />
         </Options> */}
       </div>
     </>

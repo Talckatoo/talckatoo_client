@@ -6,43 +6,43 @@ export default function VideoPlayer({
   myVideo,
   userVideo,
   callEnded,
-  stream,
+  streamMedia,
   call,
 }: {
   callAccepted: boolean;
   myVideo: any;
   userVideo: any;
   callEnded: boolean;
-  stream: any;
+  streamMedia: any;
   call: any;
 }) {
   const { user } = useAppSelector((state) => state.auth);
-  const conversationState = useAppSelector((state) => state.conversation);
-  const selectedId = conversationState?.conversation?.selectedId;
-  const { recipient } = useAppSelector((state) => state.user);
+  console.log(call)
 
-  useEffect(() => {
-    if (myVideo.current) {
-      myVideo.current.srcObject = stream;
-    }
-  }, [stream, myVideo]);
+
+  // useEffect(() => {
+  //   // if (myVideo.current) {
+  //   //   myVideo.current.srcObject = streamMedia;
+  //   // }
+  //   console.log(myVideo)
+  // }, [myVideo]);
 
   return (
     <div>
       <div>
         {/* My Video  */}
-        {stream && (
-          <>
+
+        
             <span>{user.userName}</span>
             <video playsInline muted ref={myVideo} autoPlay></video>
-          </>
-        )}
+          
+        
       </div>
       <div>
         {/* Other User Video */}
         {callAccepted && !callEnded && (
           <>
-            <span>{call.username || "Your"}'s video</span>
+            <span>{call?.username || "Your"}'s video</span>
 
             <video playsInline ref={userVideo} autoPlay></video>
           </>

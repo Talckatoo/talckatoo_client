@@ -2,7 +2,7 @@ import Peer from "simple-peer";
 import { setCall } from "../../../redux/features/call/callSlice";
 
 const CallUser = (
-  stream,
+  currentStream,
   roomId,
   selectedId,
   userId,
@@ -14,10 +14,11 @@ const CallUser = (
   dispatch
 ) => {
 
+
   const peer = new Peer({
     initiator: true,
     trickle: false,
-    stream,
+    currentStream,
   });
 
   peer.on("connect", () => {
@@ -25,9 +26,6 @@ const CallUser = (
     peer.send("whatever" + Math.random());
   });
 
-  peer.on("error", (err) => {
-    console.error("Peer error during call:", err);
-  });
 
   peer.on("close", () => {
     console.log("Peer connection closed.");
@@ -42,7 +40,8 @@ const CallUser = (
       console.log("ICE candidate:", event.candidate);
     }
   });
-
+//Byron data
+// call: Byron
   peer.on("signal", (data) => {
     socket.current.emit("callUser", {
       userToCall: selectedId,
@@ -53,14 +52,20 @@ const CallUser = (
     });
   });
 
-  peer.on("stream", (currentStream) => {
-    if (userVideo && userVideo.current) {
-      userVideo.current.srcObject = currentStream;
+  peer.on("stream", (currentStream1) => {
+    console.log("stream")
+
+    try {
+      if (userVideo && userVideo.current) {
+        userVideo.current.srcObject = currentStream1;
+      }
+    } catch (error) {
+      console.error("Error setting stream to video element:", error);
     }
   });
 
-  socket?.current?.on("callAccepted", (signal) => {
-    console.log({ "signal from CallAccept": signal });
+  socket?.current?.on("callAccepted", (data) => {
+    console.log({ data});
 
     console.log("accept call");
     dispatch(
@@ -68,19 +73,18 @@ const CallUser = (
         isReceivedCall: true,
         from: "",
         username: "",
-        signal,
+        signal: data.signal,
         roomId: "",
         userToCall: "",
       })
     );
 
     setCallAccepted(true);
-    if (peer.destroyed) {
-      console.warn("Peer instance is destroyed.");
-      return;
-    }
+    peer.signal(data.signal);
 
-    peer.signal(signal);
+    peer.on("error", (err) => {
+      console.error("Peer error during call:", err);
+    });
   });
 
   connectionRef.current = peer;

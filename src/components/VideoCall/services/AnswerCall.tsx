@@ -1,22 +1,20 @@
 import Peer from "simple-peer";
 
 const AnswerCall = (
-  stream,
+  currentStream,
   setCallAccepted,
   call,
   socket,
   connectionRef,
   userVideo
 ) => {
-  console.log("answer");
 
-  console.log("stream", stream);
 
   setCallAccepted(true);
   const peer = new Peer({
     initiator: false,
     trickle: false,
-    stream,
+    currentStream,
   });
 
   peer.on("connect", () => {
@@ -24,9 +22,7 @@ const AnswerCall = (
     peer.send("whatever" + Math.random());
   });
 
-  peer.on("error", (err) => {
-    console.error("Peer error during call:", err);
-  });
+
 
   peer.on("close", () => {
     console.log("Peer connection closed.");
@@ -43,18 +39,24 @@ const AnswerCall = (
   });
 
   peer.on("signal", (data) => {
-    console.log("signal");
-    console.log("data", data);
     socket.current.emit("answerCall", { signal: data, call });
   });
 
-  peer.on("stream", (currentStream) => {
-    if (userVideo && userVideo.current) {
-      userVideo.current.srcObject = currentStream;
+  peer.on("stream", (currentStream1) => {
+    console.log("stream")
+    try {
+      if (userVideo && userVideo.current) {
+        userVideo.current.srcObject = currentStream1;
+      }
+    } catch (error) {
+      console.error("Error setting stream to video element:", error);
     }
   });
 
   peer.signal(call.signal);
+  peer.on("error", (err) => {
+    console.error("Peer error during call:", err);
+  });
 
   connectionRef.current = peer;
 };

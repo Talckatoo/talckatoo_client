@@ -127,6 +127,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           roomId: any;
           userToCall: any;
         }) => {
+          console.log("someone is calling")
           dispatch(
             setCall({
               isReceivedCall: true,
