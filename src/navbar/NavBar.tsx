@@ -41,7 +41,7 @@ const Navbar = () => {
   console.log(language);
   
   const fullLanguage = languagesArray.map((l) => {
-    if (l.code === language.toLowerCase()) return l.language;
+    if (l.code === language) return l.language;
   });
  
   
