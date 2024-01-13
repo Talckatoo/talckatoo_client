@@ -407,10 +407,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                       <div
                         className={
                           "" +
-                          (msg.sender === user?._id ? "text-right mb-6" : "") +
+                          (msg.sender === user?._id ? " mb-6" : "") +
                           (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
                             ? "text-center "
-                            : "")
+                            : "") 
+                            
                         }
                         key={msg._id}
                       >
@@ -423,14 +424,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                           
                           <div
                             className={
-                              "w-auto max-w-[fit-content] inline-block  rounded-t-[20px] rounded-br-[20px] m-2 p-6 " +
+                              "w-auto max-w-[50%] inline-block m-2 p-4 " +
                               (msg.sender === user?._id
-                                ? " bg-[#E9E9EF] text-right text-[black] rounded-bl-[20px]"
+                                ? " bg-[#E9E9EF] text-right text-[black] rounded-t-[20px] rounded-br-[20px]"
                                 : "") +
                               (msg.sender ==
                               import.meta.env.VITE_AI_ASSISTANT_ID
-                                ? "bg-[#FEF3C7] text-center"
-                                : "bg-[#25282C] text-white")
+                                ? "bg-[#FEF3C7] text-center mx-auto rounded-[20px]"
+                                : "") +
+                                ((msg.sender !== user?.id) &&(msg.sender !== import.meta.env.VITE_AI_ASSISTANT_ID)? "bg-[#25282C] text-left text-white rounded-t-[20px] rounded-bl-[20px]" : "")
                             }
                           >
                             {msg.sender !==
@@ -452,8 +454,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                         index !== lines.length - 1 &&
                                         line !== lines[index + 1] && (
                                           <>
-                                            <br className="w-[50%] mx-auto"/>
-                                            <div className="h-1 border-b border-gray-500"></div>
+                                            <br className=" mx-auto"/>
+                                            <div className="h-1 border-b border-gray-600 my-1"></div>
 
                                             {/* <img
                                             width="15"
@@ -470,8 +472,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                               <>{msg.message}</>
                             )}
 
-                            <div className="flex gap-4 relative top-12">
-                              <div className="w-full text-black items-end text-x-small-regular">
+                            <div className="flex justify-between items-center relative top-12">
+                              <div className=" text-black items-end text-x-small-regular">
                                 {getTime(msg.createdAt)}
                               </div>
 
