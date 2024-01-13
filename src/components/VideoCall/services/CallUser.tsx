@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { setCall } from "../../../redux/features/call/callSlice";
 
 const CallUser = (
-  stream,
+  currentStream,
   roomId,
   selectedId,
   userId,
@@ -22,11 +22,12 @@ const CallUser = (
   // CALL USER //
 
 
+
   console.log("call other");
   const peer = new Peer({
     initiator: true,
     trickle: false,
-    stream,
+    stream: currentStream,
   });
 
   peer.on("connect", () => {
@@ -59,28 +60,21 @@ const CallUser = (
   });
 
   peer.on("stream", (currentStream) => {
+    console.log("stream")
+    console.log({"currentStream": currentStream})
     if (userVideo && userVideo.current) {
       userVideo.current.srcObject = currentStream;
     }
+  console.log({"userVideo in callUser": userVideo})
+
   });
 
   // Listen to the signal from the other user
 
   socket?.current?.on("callAccepted", (signal) => {
     console.log({ "signal from CallAccept": signal });
-
     console.log("accept call");
-    dispatch(
-      setCall({
-        isReceivedCall: true,
-        from: "",
-        username: "",
-        signal,
-        roomId: "",
-        userToCall: "",
-      })
-    );
-
+ 
     setCallAccepted(true);
     if (peer.destroyed) {
       console.warn("Peer instance is destroyed.");

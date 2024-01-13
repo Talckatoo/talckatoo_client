@@ -37,30 +37,29 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-        audio: true,
-      })
-      .then((currentStream) => {
+    const initializeMediaStream = async () => {
+      try {
+        const currentStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+
+        // setStream(currentStream);
+
         if (myVideo.current) {
           myVideo.current.srcObject = currentStream;
         }
-        // indecoded decodedCallData
+
+        // Call CallUser or AnswerCall here
         const decodedUint8Array = decodedCallData
           ? Base64.toUint8Array(decodedCallData)
           : null;
 
-        // Convert the Uint8Array to a string
         const decodedString = new TextDecoder().decode(
           decodedUint8Array as AllowSharedBufferSource
         );
 
-        // Parse the JSON string to get the original data
         const data = JSON.parse(decodedString);
-
-        // Now you can use the decoded data as needed
-        console.log("callData from inside", data);
 
         const callData = {
           roomId: roomId,
@@ -70,9 +69,9 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           userName: data.userName,
         };
 
-        if (user._id == data.userId) {
+        if (user._id === data.userId) {
           CallUser(
-            currentStream,
+            currentStream, // Pass the current stream here
             roomId,
             data.selectedId,
             data.userId,
@@ -85,7 +84,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           );
         } else {
           AnswerCall(
-            currentStream,
+            currentStream, // Pass the current stream here
             setCallAccepted,
             callData,
             socket,
@@ -93,13 +92,19 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
             userVideo
           );
         }
-      });
+      } catch (error) {
+        console.error("Error accessing media stream:", error);
+      }
+    };
+
+    initializeMediaStream();
 
     return () => {
-      // Clean up event listeners on component unmount
       socket.current.off("callAccepted");
     };
-  }, [socket.current, roomId]);
+  }, [socket.current, roomId, decodedCallData]);
+
+
 
   useEffect(() => {
     socket?.current?.on("roomCreated", (data: { message: any }) => {
@@ -121,7 +126,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           myVideo={myVideo}
           userVideo={userVideo}
           callEnded={callEnded}
-          call={call}
+          // call={call}
         />
         {/* <Options
           callAccepted={callAccepted}
