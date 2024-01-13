@@ -38,6 +38,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const messages = useAppSelector((state) => state.messages.messages);
   const { recipient } = useAppSelector((state) => state.user);
   const selectedId = conversationState?.conversation?.selectedId;
+  console.log(selectedId);
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
 
@@ -408,7 +409,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                           "" +
                           (msg.sender === user?._id ? "text-right mb-6" : "") +
                           (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
-                            ? "text-center"
+                            ? "text-center "
                             : "")
                         }
                         key={msg._id}
@@ -422,14 +423,14 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                           
                           <div
                             className={
-                              "md:w-[40%] max-md:w-[70%] b inline-block  rounded-t-[20px] rounded-br-[20px] m-2 p-6 " +
+                              "w-auto max-w-[fit-content] inline-block  rounded-t-[20px] rounded-br-[20px] m-2 p-6 " +
                               (msg.sender === user?._id
-                                ? " bg-[#E9E9EF] text-right rounded-bl-[20px]"
+                                ? " bg-[#E9E9EF] text-right text-[black] rounded-bl-[20px]"
                                 : "") +
                               (msg.sender ==
                               import.meta.env.VITE_AI_ASSISTANT_ID
-                                ? "bg-[#fff] text-center"
-                                : "bg-[#25282C]")
+                                ? "bg-[#FEF3C7] text-center"
+                                : "bg-[#25282C] text-white")
                             }
                           >
                             {msg.sender !==
