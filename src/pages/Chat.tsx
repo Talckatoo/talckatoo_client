@@ -115,12 +115,6 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
     );
 
     dispatch(setRecipient(u.userName as any));
-    // dispatch(updateContactedUserById({
-    //   from: u._id,
-    //   userName: u.userName,
-    //   image: "url",
-    //   language: u.language,
-    // }))
     dispatch(setRecipientId(u.profileImage.url));
   };
 
