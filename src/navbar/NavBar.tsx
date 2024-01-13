@@ -25,37 +25,17 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const profilePictureRef = useRef();
   const { user } = useAppSelector((state) => state.auth);
-  console.log(user);
-  
   const {recipient} = useAppSelector((state) => state.user);
-  console.log(recipient);
-  
   const conversationState = useAppSelector((state) => state.conversation);
-  console.log(conversationState);
-  
-  // const recipientId = conversationState?.conversation?.selectedId;
-  // console.log(recipientId);
   const {recipientPi} = useAppSelector((state) => state.user);
   console.log(recipientPi);
   const language = conversationState?.conversation?.language;
   console.log(language);
   
   const fullLanguage = languagesArray.map((l) => {
-    if (l.code === language) return l.language;
+    if (l.code === language?.toLowerCase()) return l.language;
   });
  
-  
-  // const getContactedUsers = useAppSelector((state) => state.user.users.contactedUsers);
-  // console.log(getContactedUsers);
-  
-  // const currentUserImage = getContactedUsers.map((u: any) => {
-  //   u._id === recipientId ? u.profileImage.url : null;
-  // })
-  // console.log(currentUserImage);
-  
-
-  // const reciData = useAppSelector((state) => state.user);
-
   const { isDarkMode, setIsDarkMode } = useContext(UserContext);
 
   useEffect(() => {

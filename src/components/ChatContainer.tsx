@@ -35,11 +35,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [limit, setLimit] = useState(10);
   const conversationState = useAppSelector((state) => state.conversation);
   const user = useAppSelector((state) => state.auth.user);
-  console.log(user);
   const messages = useAppSelector((state) => state.messages.messages);
   const { recipient } = useAppSelector((state) => state.user);
   const selectedId = conversationState?.conversation?.selectedId;
-  console.log(selectedId);
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
   const {recipientPi} = useAppSelector((state) => state.user);
@@ -458,13 +456,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                           <>
                                             <br className=" mx-auto"/>
                                             <div className="h-1 border-b border-gray-600 my-1"></div>
-
-                                            {/* <img
-                                            width="15"
-                                            height="15"
-                                            src="https://img.icons8.com/ios-glyphs/30/right3.png"
-                                            alt="right3"
-                                          /> */}
                                           </>
                                         )}
                                     </React.Fragment>
