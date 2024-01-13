@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import Peer from "simple-peer";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import CallUser from "../components/VideoCall/services/callUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
 import { Base64 } from "js-base64";
+import CallUser from "../components/VideoCall/services/CallUser";
 
 interface Socket {
   current: any;
@@ -61,17 +61,19 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
 
         const data = JSON.parse(decodedString);
 
+        console.log(data);
+
         const callData = {
           roomId: roomId,
           signal: data.signal,
-          selectedId: data.selectedId,
-          userId: data.userId,
+          selectedId: data.userToCall,
+          userId: data.from,
           userName: data.userName,
         };
 
         if (user._id === data.userId) {
           CallUser(
-            currentStream, // Pass the current stream here
+            currentStream,
             roomId,
             data.selectedId,
             data.userId,
@@ -100,11 +102,15 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
     initializeMediaStream();
 
     return () => {
+      // Clean up event listeners on component unmount
+      socket.current.off("callUser");
+      socket.current.off("answerCall");
+      socket.current.off("callEnded");
+      socket.current.off("calleeEnded");
       socket.current.off("callAccepted");
+      socket.current.off("callRejected");
     };
   }, [socket.current, roomId, decodedCallData]);
-
-
 
   useEffect(() => {
     socket?.current?.on("roomCreated", (data: { message: any }) => {

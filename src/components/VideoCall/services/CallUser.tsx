@@ -1,11 +1,6 @@
-import Notifications from "../components/VideoCall/Notifications";
-import VideoPlayer from "../components/VideoCall/VideoPlayer";
-import Options from "../components/VideoCall/Options";
-import { useEffect, useState, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
+
 import Peer from "simple-peer";
-import { useNavigate } from "react-router-dom";
-import { setCall } from "../../../redux/features/call/callSlice";
+
 
 const CallUser = (
   currentStream,
@@ -20,8 +15,6 @@ const CallUser = (
   dispatch
 ) => {
   // CALL USER //
-
-
 
   console.log("call other");
   const peer = new Peer({
@@ -60,21 +53,20 @@ const CallUser = (
   });
 
   peer.on("stream", (currentStream) => {
-    console.log("stream")
-    console.log({"currentStream": currentStream})
+    console.log("stream");
+    console.log({ currentStream: currentStream });
     if (userVideo && userVideo.current) {
       userVideo.current.srcObject = currentStream;
     }
-  console.log({"userVideo in callUser": userVideo})
-
+    console.log({ "userVideo in callUser": userVideo });
   });
 
   // Listen to the signal from the other user
 
-  socket?.current?.on("callAccepted", (signal) => {
+  socket?.current?.on("callAccepted", (signal: string | Peer.SignalData) => {
     console.log({ "signal from CallAccept": signal });
     console.log("accept call");
- 
+
     setCallAccepted(true);
     if (peer.destroyed) {
       console.warn("Peer instance is destroyed.");
