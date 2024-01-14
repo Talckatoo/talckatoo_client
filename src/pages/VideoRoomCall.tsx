@@ -37,6 +37,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   
 
   useEffect(() => {
+    
     const initializeMediaStream = async () => {
       try {
         const currentStream = await navigator.mediaDevices.getUserMedia({
@@ -44,7 +45,9 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           audio: true,
         });
 
-        // setStream(currentStream);
+        setStream(currentStream);
+
+        if (!stream) return
 
         if (myVideo.current) {
           myVideo.current.srcObject = currentStream;
@@ -102,7 +105,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
     return () => {
       socket.current.off("callAccepted");
     };
-  }, [socket.current, roomId, decodedCallData, myVideo.current]);
+  }, [socket.current, roomId, decodedCallData]);
 
 
 
