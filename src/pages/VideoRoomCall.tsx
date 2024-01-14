@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import Peer from "simple-peer";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import CallUser from "../components/VideoCall/services/callUser";
+import CallUser from "../components/VideoCall/services/CallUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
 import { Base64 } from "js-base64";
 
@@ -16,7 +16,6 @@ interface Socket {
 
 const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
-  const { call } = useAppSelector((state) => state.call);
 
   const { roomId, decodedCallData } = useParams();
   const [stream, setStream] = useState(null);

@@ -47,7 +47,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const language = conversationState?.conversation?.language;
   const navigate = useNavigate();
 
-  const [isReceivedCall, setIsReceivedCall] = useState(false)
+  const [receivedCall, setReceivedCall] = useState({})
 
 
   // *******************CALL******************
@@ -138,7 +138,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             )
           );
           setDecodedCallData(encodedCallData);
-          setIsReceivedCall(true)
+          setReceivedCall({
+            isReceivedCall: true,
+            caller: username
+          })
         }
       );
 
@@ -527,9 +530,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       <button className="text-white" onClick={handleCall}>
         Call
       </button>
-      {isReceivedCall && (
+      {receivedCall?.isReceivedCall && (
         <div>
-          <h2 className="text-black">Someone is calling</h2>
+          <h2 className="text-black">{receivedCall?.caller} is calling</h2>
           <button
             className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
             onClick={() => handleAnswerCall()}

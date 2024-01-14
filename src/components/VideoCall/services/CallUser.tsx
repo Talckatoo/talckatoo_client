@@ -1,11 +1,5 @@
-import Notifications from "../components/VideoCall/Notifications";
-import VideoPlayer from "../components/VideoCall/VideoPlayer";
-import Options from "../components/VideoCall/Options";
-import { useEffect, useState, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import Peer from "simple-peer";
-import { useNavigate } from "react-router-dom";
-import { setCall } from "../../../redux/features/call/callSlice";
+
 
 const CallUser = (
   currentStream,
@@ -17,7 +11,7 @@ const CallUser = (
   connectionRef,
   userVideo,
   setCallAccepted,
-  dispatch
+
 ) => {
   // CALL USER //
 
@@ -67,13 +61,12 @@ const CallUser = (
 
   });
 
-  // Listen to the signal from the other user
 
-  socket?.current?.on("callAccepted", (signal) => {
+  socket?.current?.on("callAccepted", (data) => {
  
     setCallAccepted(true);
 
-    peer.signal(signal);
+    peer.signal(data.signal);
   });
 
   connectionRef.current = peer;
