@@ -64,9 +64,9 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
         const callData = {
           roomId: roomId,
           signal: data.signal,
-          selectedId: data.selectedId,
-          userId: data.userId,
-          userName: data.userName,
+          selectedId: data.userToCall,
+          from: data.from,
+          userName: data.username,
         };
 
         if (user._id === data.userId) {
@@ -102,7 +102,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
     return () => {
       socket.current.off("callAccepted");
     };
-  }, [socket.current, roomId, decodedCallData]);
+  }, [socket.current, roomId, decodedCallData, myVideo.current]);
 
 
 

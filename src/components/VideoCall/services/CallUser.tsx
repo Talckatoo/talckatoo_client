@@ -63,7 +63,7 @@ const CallUser = (
 
 
   socket?.current?.on("callAccepted", (data) => {
- 
+ console.log(data)
     setCallAccepted(true);
 
     peer.signal(data.signal);
