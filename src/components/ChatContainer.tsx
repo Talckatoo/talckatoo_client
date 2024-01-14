@@ -47,9 +47,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const language = conversationState?.conversation?.language;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("call", call);
-  }, [call]);
+  const [isReceivedCall, setIsReceivedCall] = useState(false)
+
+
   // *******************CALL******************
 
   // RTK Query
@@ -123,7 +123,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           roomId: any;
           userToCall: any;
         }) => {
-          console.log("callUser", signal, from, username, roomId, userToCall);
+
           // Encode the call data and set it into the URL
           const encodedCallData = Base64.fromUint8Array(
             new TextEncoder().encode(
@@ -137,10 +137,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
               })
             )
           );
-
-          console.log("callUser", encodedCallData);
-
           setDecodedCallData(encodedCallData);
+          setIsReceivedCall(true)
         }
       );
 
@@ -479,10 +477,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const data = JSON.parse(decodedString);
 
     // Now you can use the decoded data as needed
-    console.log("callData from inside", data);
+
     const videoCallUrl = `/call/${data.roomId}/${decodedCallData}`;
     window.open(videoCallUrl, "_blank");
   };
+
+
 
   return (
     <div
@@ -527,9 +527,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       <button className="text-white" onClick={handleCall}>
         Call
       </button>
-      {call?.isReceivedCall && (
+      {isReceivedCall && (
         <div>
-          <h2 className="text-black">{call?.username} is calling</h2>
+          <h2 className="text-black">Someone is calling</h2>
           <button
             className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
             onClick={() => handleAnswerCall()}

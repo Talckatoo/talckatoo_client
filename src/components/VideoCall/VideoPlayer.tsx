@@ -6,23 +6,26 @@ export default function VideoPlayer({
   myVideo,
   userVideo,
   callEnded,
-  // call,
+  // calleeData
 }: {
   callAccepted: boolean;
   myVideo: any;
   userVideo: any;
   callEnded: boolean;
-  // call: any;
+  // calleeData: any;
 }) {
   const { user } = useAppSelector((state) => state.auth);
 
 
-  useEffect(()=>{
-    if (userVideo){
+  // useEffect(()=>{
+  //   if (calleeData){
 
-      console.log(userVideo)
-    }
-  }, [ userVideo])
+  //     console.log(calleeData)
+      
+  //   }
+  // }, [ calleeData])
+
+
   
 
 
@@ -38,13 +41,13 @@ export default function VideoPlayer({
       </div>
       <div>
         {/* Other User Video */}
-        {callAccepted && (
+
           <>
-            {/* <span>{call.username || "Your"}'s video</span> */}
+            {/* <span>{calleeData|| "Your"}'s video</span> */}
 
             <video playsInline ref={userVideo} autoPlay></video>
           </>
-        )}
+  
       </div>
     </div>
   );

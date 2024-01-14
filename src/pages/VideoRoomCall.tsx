@@ -35,6 +35,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const navigateChat = () => {
     navigate("/chat");
   };
+  
 
   useEffect(() => {
     const initializeMediaStream = async () => {
@@ -108,7 +109,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
 
   useEffect(() => {
     socket?.current?.on("roomCreated", (data: { message: any }) => {
-      console.log(data.message);
     });
 
     return () => {
@@ -150,12 +150,3 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
 
 export default VideoRoomCall;
 
-// https://www.instagram.com/call/
-// ?has_video=true
-// &ig_thread_id=340282366841710301244259118731407541646
-// &server_info_data=GANmcmMYFVJPT006NzA2NjUwMjI3Njc5Nzc0NRgQVUpOamR1V1ByS2F4SWRjRwA%3D
-
-// https://www.facebook.com/
-// groupcall/
-// ROOM:7260592670670331/
-// ?call_id=536313397&has_video=false&initialize_video=false&is_e2ee_mandated=false&nonce=hz6ddct43j0g&referrer_context=zenon_precall&thread_type=1&users_to_ring[0]=100004132960478&use_joining_context=true&peer_id=100004132960478&av=100023790437452&server_info_data=GANmcmMYFVJPT006NzI2MDU5MjY3MDY3MDMzMRgQUHdWVnRZZlNCendGbEZidwA%3D

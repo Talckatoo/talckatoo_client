@@ -1,4 +1,4 @@
-import { ReadStream } from "fs";
+
 import Peer from "simple-peer";
 
 const AnswerCall = (
@@ -9,9 +9,6 @@ const AnswerCall = (
   connectionRef,
   userVideo
 ) => {
-  console.log("answer");
-
-
   setCallAccepted(true);
   const peer = new Peer({
     initiator: false,
@@ -19,7 +16,7 @@ const AnswerCall = (
     stream: currentStream,
 
   });
-  console.log(peer)
+
 
   peer.on("connect", () => {
     console.log("CONNECT");
@@ -45,16 +42,18 @@ const AnswerCall = (
   });
 
   peer.on("signal", (data) => {
-    console.log("data", data);
     socket.current.emit("answerCall", { signal: data, call });
   });
 
   peer.on("stream", (currentStream) => {
     console.log("stream")
-    console.log({"currentStream": currentStream})
-    if (userVideo && userVideo.current) {
+    // console.log({"currentStream": currentStream})
+    setTimeout(()=>{
+    if (userVideo && userVideo.current ) {
       userVideo.current.srcObject = currentStream;
     }
+    }, 1000)
+
   });
 
   peer.signal(call.signal);
