@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -83,9 +83,18 @@ const SignIn = () => {
   };
 
   const redirectTogoogle = async (): Promise<void> => {
-    window.open("http://localhost:8000/api/v1/account/loginWithGoogle", "_self");
+    window.open(`${import.meta.env.VITE_GOOGLE_URL}`, "_self");
   }
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+
+    if (token) {
+      localStorage.setItem("token", token);
+      navigate("/chat");
+    }
+  }, [dispatch, navigate]);
 
 
   return (
