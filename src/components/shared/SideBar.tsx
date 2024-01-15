@@ -131,7 +131,7 @@ const SideBar = () => {
             type="text"
             value={filterValue}
             onChange={(e) => setFilterValue(e.target.value)}
-            className={`${isDarkMode ? "bg-input-bg-dark" : "bg-secondary-500"} pl-12 text-white rounded-xl focus:outline-none border-5 placeholder-white::placeholder`}
+            className={`${isDarkMode ? "bg-input-bg-dark" : "bg-secondary-500"} pl-12 text-white rounded-xl focus:outline-none border-0 placeholder-white::placeholder`}
             placeholder="Search"
           />
           <IoSearch className={`absolute left-3 top-3 ${isDarkMode ? "text-sidebar-dark-500" : "text-white"}`} size={24} />
