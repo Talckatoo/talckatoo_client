@@ -92,8 +92,8 @@ const ChatInput = ({
 
   return (
     <>
-      <div className="w-full py-2 relative z-10">
-        <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  pt-2 ">
+      <div className="w-full relative z-10 pt-2">
+        <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  ">
           <form onSubmit={handleSendMessage}>
             <Input
               label=""
@@ -103,10 +103,13 @@ const ChatInput = ({
               id=""
               onChange={handleTyping}
               placeholder="Type your message or type @birdie to call AI Assistant"
-              className="mb-0 rounded-[20px] max-md:py-6 py-8 border border-[#0E131D]"
+              className="mb-0 rounded-[20px] max-md:py-4 py-4 border border-[#0E131D]"
             />
-
-            <div className="flex justify-between items-center relative bottom-10 bg-[#25282C] py-3 rounded-b-[20px] px-5">
+             <button className="position relative left-[22rem]">
+                <img src="./assets/img/send.png" className="bg-black" />
+             </button>
+           </form>
+            <div className="flex justify-between items-center relative bottom-[4rem] bg-[#25282C] py-3 rounded-b-[20px] px-5">
               <div className="flex gap-4">
                 <VoiceMessage
                   socket={socket}
@@ -116,11 +119,9 @@ const ChatInput = ({
                 <img src="./assets/img/emoji.png" className="i" />
                 <img src="./assets/img/file.png" className="i" />
               </div>
-              <button>
-                <img src="./assets/img/send.png" className="i" />
-              </button>
+              
             </div>
-          </form>
+          
         </div>
       </div>
     </>
