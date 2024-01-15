@@ -47,6 +47,7 @@ const SideBar = () => {
     // Add other friends with id, selected, newMsg, img, title, and text properties
   ]);
 
+  const [filterValue, setFilterValue] = useState("");
   const [isDarkMode, setDarkMode] = useState(true);
 
   const handleToggleDarkMode = () => {
@@ -62,8 +63,14 @@ const SideBar = () => {
     );
   };
 
+  const filteredFriends = friends.filter(
+    (friend) =>
+      friend.title.toLowerCase().includes(filterValue.toLowerCase()) ||
+      friend.text.toLowerCase().includes(filterValue.toLowerCase())
+  );
+
   return (
-     <div className={`w-2/6 h-full flex ${isDarkMode ? "bg-sidebar-dark-500" : "bg-white"}`}>
+    <div className={`w-2/6 h-full flex ${isDarkMode ? "bg-sidebar-dark-500" : "bg-white"}`}>
       <div className="w-[89px] border-r pt-5 border-primary-500 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
         <div className="flex flex-col  gap-3 w-full">
           <div className={`${isDarkMode? "bg-primary-500":"bg-secondary-500" } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}>
@@ -109,24 +116,26 @@ const SideBar = () => {
 
       {/*Second column */}
       <div className="w-4/5 border-r border-gray-979797">
-        <div className={`my-4 ml-4 font-extrabold text-[20px] ${isDarkMode ? 'text-white' : 'text-black'}`}>Chats</div>
-
+        <div className={`my-4 ml-4 font-extrabold text-[20px] ${isDarkMode ? 'text-white' : 'text-black'}`}>
+          Chats
+        </div>
 
         <div className="relative flex mx-4">
           <input
             type="text"
-            className="bg-secondary-500 pl-12 text-white rounded-xl focus:outline-none placeholder-white::placeholder"
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}
+            className={`${isDarkMode ? "bg-input-bg-dark" : "bg-secondary-500"} pl-12 text-white rounded-xl focus:outline-none border-5 placeholder-white::placeholder`}
             placeholder="Search"
           />
-
-          <IoSearch className="absolute left-3 top-3 text-gray-200" size={24} />
+          <IoSearch className={`absolute left-3 top-3 ${isDarkMode ? "text-sidebar-dark-500" : "text-white"}`} size={24} />
         </div>
 
         <div>
-          {friends.map((friend) => (
+          {filteredFriends.map((friend) => (
             <Friend
               key={friend.id}
-              isDarkMode= {isDarkMode}
+              isDarkMode={isDarkMode}
               selected={friend.selected}
               newMsg={friend.newMsg}
               img={friend.img}
