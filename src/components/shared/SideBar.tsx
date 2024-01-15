@@ -6,6 +6,7 @@ const SideBar = () => {
   const [friends, setFriends] = useState([
     {
       id: 1,
+      lastMsg: "5s",
       selected: false,
       newMsg: true,
       img: "Ellipse 1.svg",
@@ -14,6 +15,7 @@ const SideBar = () => {
     },
     {
       id: 2,
+      lastMsg: "20s",
       selected: true,
       newMsg: false,
       img: "Ellipse 1 (1).svg",
@@ -22,6 +24,7 @@ const SideBar = () => {
     },
     {
       id: 3,
+      lastMsg: "5s",
       selected: false,
       newMsg: true,
       img: "Ellipse 1 (2).svg",
@@ -30,6 +33,7 @@ const SideBar = () => {
     },
     {
       id: 4,
+      lastMsg: "5s",
       selected: false,
       newMsg: false,
       img: "Ellipse 1 (3).svg",
@@ -38,6 +42,7 @@ const SideBar = () => {
     },
     {
       id: 5,
+      lastMsg: "5s",
       selected: false,
       newMsg: true,
       img: "Ellipse 1 (4).svg",
@@ -48,7 +53,7 @@ const SideBar = () => {
   ]);
 
   const [filterValue, setFilterValue] = useState("");
-  const [isDarkMode, setDarkMode] = useState(true);
+  const [isDarkMode, setDarkMode] = useState(false);
 
   const handleToggleDarkMode = () => {
     setDarkMode(!isDarkMode);
@@ -59,6 +64,7 @@ const SideBar = () => {
       prevFriends.map((friend) => ({
         ...friend,
         selected: friend.id === id,
+        newMsg: friend.id === id ? false : friend.newMsg,
       }))
     );
   };
@@ -71,6 +77,7 @@ const SideBar = () => {
 
   return (
     <div className={`w-2/6 h-full flex ${isDarkMode ? "bg-sidebar-dark-500" : "bg-white"}`}>
+      {/*First column */}
       <div className="w-[89px] border-r pt-5 border-primary-500 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
         <div className="flex flex-col  gap-3 w-full">
           <div className={`${isDarkMode? "bg-primary-500":"bg-secondary-500" } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}>
@@ -112,10 +119,9 @@ const SideBar = () => {
         </div>
       </div>
 
-      {/*<div className="w-4/5 divide-x">two</div>*/}
 
       {/*Second column */}
-      <div className="w-4/5 border-r border-gray-979797">
+      <div className="w-4/5 ">
         <div className={`my-4 ml-4 font-extrabold text-[20px] ${isDarkMode ? 'text-white' : 'text-black'}`}>
           Chats
         </div>
@@ -135,6 +141,7 @@ const SideBar = () => {
           {filteredFriends.map((friend) => (
             <Friend
               key={friend.id}
+              lastMsg={friend.lastMsg}
               isDarkMode={isDarkMode}
               selected={friend.selected}
               newMsg={friend.newMsg}
