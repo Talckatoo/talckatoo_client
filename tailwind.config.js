@@ -176,6 +176,9 @@ export default {
     },
     extend: {
       colors: {
+        "sidebar-dark-500":"#0E131D",
+        "selected-friend-dark":"#141A27",
+        "selected-friend-light": "#F5F5F5",
         "primary-500": "#5D5DFF",
         "secondary-500": "#25282C",
         "title-500": "#D9E3EA",
