@@ -63,12 +63,7 @@ const Friend = ({
           </div>
           {newMsg && (
             <div
-              className="w-4 h-4 bg-red-badge-500 rounded-full text-white flex items-center justify-center"
-              style={{
-                fontSize: "0.55rem",
-                fontWeight: "bold",
-              }}
-            >
+              className="text-xs font-bold w-5 h-5 bg-red-badge-500 rounded-full text-white flex items-center justify-center">
               1
             </div>
           )}

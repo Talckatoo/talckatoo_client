@@ -53,7 +53,7 @@ const SideBar = () => {
   ]);
 
   const [filterValue, setFilterValue] = useState("");
-  const [isDarkMode, setDarkMode] = useState(false);
+  const [isDarkMode, setDarkMode] = useState(true);
 
   const handleToggleDarkMode = () => {
     setDarkMode(!isDarkMode);
