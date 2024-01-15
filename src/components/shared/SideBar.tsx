@@ -1,8 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import Friend from "./Friend";
 
 const SideBar = () => {
+  const [friends, setFriends] = useState([
+    {
+      id: 1,
+      selected: false,
+      newMsg: true,
+      img: "Ellipse 1.svg",
+      title: "Cameron Williamson",
+      text: "Not too bad, just trying to catch up on some work. How about you?",
+    },{
+      id: 2,
+      selected: true,
+      newMsg: false,
+      img: "Ellipse 1 (1).svg",
+      title: "Robert Fox",
+      text: "Not too bad, just trying to catch up on some work. How about you?",
+    },{
+      id: 3,
+      selected: false,
+      newMsg: true,
+      img: "Ellipse 1 (2).svg",
+      title: "Mohamed Aachour",
+      text: "Not too bad, just trying to catch up on some work. How about you?",
+    },{
+      id: 4,
+      selected: false,
+      newMsg: false,
+      img: "Ellipse 1 (3).svg",
+      title: "Bessie Cooper",
+      text: "Not too bad, just trying to catch up on some work. How about you?",
+    },{
+      id: 5,
+      selected: false,
+      newMsg: true,
+      img: "Ellipse 1 (4).svg",
+      title: "Eleanor Pena",
+      text: "Loe the game music",
+    },
+    // Add other friends with id, selected, newMsg, img, title, and text properties
+  ]);
+
+  const handleFriendClick = (id: number) => {
+    setFriends((prevFriends) =>
+      prevFriends.map((friend) => ({
+        ...friend,
+        selected: friend.id === id,
+      }))
+    );
+  };
+
   return (
     <div className="w-2/6 h-full flex">
       <div className="w-[89px] border-r pt-5 border-gray-979797 grid grid-cols-1 gap-1 content-between bg-white h-full p-1 mb-[2rem]">
@@ -49,25 +98,31 @@ const SideBar = () => {
       {/*<div className="w-4/5 divide-x">two</div>*/}
 
       {/*Second column */}
-      <div className="w-4/5 border-r border-gray-979797 ">
+      <div className="w-4/5 border-r border-gray-979797">
         <div className="my-4 ml-4  font-extrabold text-[20px]">Chats</div>
         
         <div className="relative flex mx-4">
           <input
-  type="text"
-  className="bg-secondary-500 pl-12 text-white rounded-xl focus:outline-none placeholder-white::placeholder"
-  placeholder="Search"
-/>
+            type="text"
+            className="bg-secondary-500 pl-12 text-white rounded-xl focus:outline-none placeholder-white::placeholder"
+            placeholder="Search"
+          />
 
           <IoSearch className="absolute left-3 top-3 text-gray-200" size={24} />
         </div>
 
         <div>
-          <Friend selected={false} newMsg={true} img="Ellipse 1.svg" title="Cameron Williamson" text="Not too bad, just trying to catch up on some work. How about you?" />
-          <Friend selected={true} newMsg={false} img="Ellipse 1 (1).svg" title="Robert Fox" text="Not too bad, just trying to catch up on some work. How about you?" />
-          <Friend selected={false} newMsg={true} img="Ellipse 1 (2).svg" title="Mohamed Aachour" text="Not too bad, just trying to catch up on some work. How about you?" />
-          <Friend selected={false} newMsg={false} img="Ellipse 1 (3).svg" title="Bessie Cooper" text="Not too bad, just trying to catch up on some work. How about you?" />
-          <Friend selected={false} newMsg={true} img="Ellipse 1 (4).svg" title="Eleanor Pena" text="Loe the game music" />
+          {friends.map((friend) => (
+            <Friend
+              key={friend.id}
+              selected={friend.selected}
+              newMsg={friend.newMsg}
+              img={friend.img}
+              title={friend.title}
+              text={friend.text}
+              onClick={() => handleFriendClick(friend.id)}
+            />
+          ))}
         </div>
       </div>
     </div>

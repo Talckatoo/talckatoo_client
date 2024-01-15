@@ -1,5 +1,5 @@
 // Friend.tsx
-import React from "react";
+import React, { useState } from "react";
 
 interface FriendProps {
   selected: boolean;
@@ -7,11 +7,12 @@ interface FriendProps {
   title: string;
   text: string;
   img: string;
+  onClick: () => void; // Add onClick prop
 }
 
-const Friend = ({ selected, newMsg, img, title, text }: FriendProps) => {
+const Friend = ({ selected, newMsg, img, title, text, onClick }: FriendProps) => {
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden" onClick={onClick}>
    
 
       {selected && (
