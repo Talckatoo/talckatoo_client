@@ -4,6 +4,7 @@ import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
 import { useLoginAuthMutation } from "../redux/services/AuthApi";
+import { useFetchUserByIdQuery } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
@@ -92,6 +93,11 @@ const SignIn = () => {
 
     if (token) {
       localStorage.setItem("token", token);
+      // get coded data user from url
+      const userdata = urlParams.get("user");
+      // decode the data
+      const decodedData = atob(userdata as string);
+      dispatch(setAuth(JSON.parse(decodedData)));
       navigate("/chat");
     }
   }, [dispatch, navigate]);
@@ -214,3 +220,7 @@ const SignIn = () => {
 };
 
 export default SignIn;
+function jwt_decode(token: string): { id: string; } {
+  throw new Error("Function not implemented.");
+}
+
