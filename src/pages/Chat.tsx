@@ -11,7 +11,7 @@ import { User, setRecipient, setUsers } from "../redux/features/user/userSlice";
 import { setOnlineFriends } from "../redux/features/socket/socketSlice";
 import { useFetchAllFriendsQuery } from "../redux/services/UserApi";
 import { setCall } from "../redux/features/call/callSlice";
-import SideBar from "../components/shared/SideBar"
+import SideBar from "../components/shared/SideBar";
 
 interface Socket {
   current: any;
@@ -21,14 +21,11 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
 
   const { user } = useAppSelector((state) => state.auth);
-  const { onlineFriends } = useAppSelector((state) => state.socket);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
-  const [view, setView] = useState<"friends" | "people">("friends");
   const dispatch = useAppDispatch();
   const conversationState = useAppSelector((state) => state.conversation);
   const messages = useAppSelector((state) => state.messages.messages);
   const { users } = useAppSelector((state) => state.user);
-  const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   // RTK Query
   const { data: friends, refetch } = useFetchAllFriendsQuery(null) as any;
@@ -58,7 +55,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     if (socket.current) {
       socket.current.on("getUpdateProfile", (data: any) => {
-        if (selectedUser?._id === data.from) {
+        if (selectedId === data.from) {
           dispatch(
             setConversation({
               conversationId: conversationId,
@@ -70,7 +67,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
         }
       });
     }
-  }, [socket.current, selectedUser]);
+  }, [socket.current, selectedId]);
 
   useEffect(() => {
     if (socket.current && user) {
@@ -97,31 +94,6 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
       dispatch(setOnlineFriends([...onlContact, ...onlUnContact]));
     }
   }, [onlineUsers, users?.contactedUsers, users?.uncontactedUsers]);
-
-  const handleSelectContact = (u: any) => {
-    setSelectedUser(u);
-    dispatch(
-      setConversation({
-        conversationId: u.conversation._id,
-        selectedId: u._id,
-        language: u.language,
-      })
-    );
-
-    dispatch(setRecipient(u.userName as any));
-  };
-
-  useEffect(() => {
-    dispatch(
-      setConversation({
-        conversationId: selectedUser?.conversation?._id,
-        selectedId: selectedUser?._id,
-        language: selectedUser?.language,
-      })
-    );
-
-    dispatch(setRecipient(selectedUser?.userName as any));
-  }, [selectedUser]);
 
   return (
     <>
@@ -235,9 +207,9 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
           )}
         </div>*/}
 
-        <SideBar/>
+        <SideBar />
         <div className="flex w-full h-full bg-white">
-          {/*<ChatContainer socket={socket} />*/}
+          <ChatContainer socket={socket} />
         </div>
       </div>
     </>

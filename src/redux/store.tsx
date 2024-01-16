@@ -36,6 +36,7 @@ export interface RootState extends PersistPartial {
   auth: any;
   conversation: any;
   call: any;
+  socket: any;
   [UserApi.reducerPath]: any;
   [AuthApi.reducerPath]: any;
   [MessagesApi.reducerPath]: any;

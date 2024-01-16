@@ -1,29 +1,34 @@
-// Friend.tsx
-import React, { useState } from "react";
+import FetchLatestMessages from "../../util/FetchLatestMessages";
+import { getContactName } from "../../util/getContactName";
+import { useAppSelector } from "../../redux/hooks";
+import { PiBirdFill } from "react-icons/pi";
 
 interface FriendProps {
-  lastMsg: string;
+  user: any;
+  key: string;
   isDarkMode: boolean;
-  selected: boolean;
-  newMsg: boolean;
-  title: string;
-  text: string;
+  lastMsg: string;
   img: string;
-  onClick: () => void; // Add onClick prop
+  title: string;
+  selected: boolean;
 }
 
 const Friend = ({
+  user,
+  key,
   isDarkMode,
-  lastMsg,
-  selected,
-  newMsg,
   img,
   title,
-  text,
-  onClick,
+  selected,
 }: FriendProps) => {
+  const { onlineFriends } = useAppSelector((state) => state.socket);
+  const conversationState = useAppSelector((state) => state.conversation);
+  const { user: userData } = useAppSelector((state) => state.auth);
+
+  const selectedId = conversationState?.conversation?.selectedId;
+  const conversationId = conversationState?.conversation?.conversationId;
   return (
-    <div className="relative overflow-hidden bg" onClick={onClick}>
+    <div className="relative overflow-hidden bg" key={key}>
       {selected && (
         <div
           className={`absolute top-0 left-0 h-full w-2 ${
@@ -33,17 +38,41 @@ const Friend = ({
       )}
 
       <div
-        className={`h-full flex items-center py-4 ${
-          selected && isDarkMode ? "bg-selected-friend-dark pl-8 z-10" : ""
-        } ${selected && !isDarkMode ? "bg-selected-friend-light pl-8 z-10" : ""}
-    ${!selected ? "px-4" : ""}`}
+        className={`h-full flex items-center py-4 px-4
+      ${selected ? "bg-[#F5F5F5] pl-8" : "bg-transparent"}
+      `}
       >
-        <div className="flex-none">
-          <img src={`./src/assests/${img}`} className="w-16 h-16" alt="User" />
+        <div className="relative">
+          <div
+            className="w-14 h-14 rounded-full shadow-xl flex items-center justify-center"
+            style={{
+              backgroundImage: `url(${img})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            {!user.profileImage && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-6 h-6 text-gray-300"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
+              </svg>
+            )}
+          </div>
+          {getContactName(user.userName, onlineFriends)}
         </div>
         {/* Column 2: Title and Text */}
-        <div className="flex-grow px-3">
-          <div className="flex items-center">
+        <div className="flex-grow px-3 w-full ">
+          <div className="flex items-center ">
             <p
               className={`mr-2 font-bold text-base ${
                 isDarkMode ? "text-white" : "text-black"
@@ -52,21 +81,24 @@ const Friend = ({
               {title}
             </p>
           </div>
-          <p className="text-sm text-gray-700 font-normal line-clamp-2">
-            {text}
-          </p>
+          <div className="relative">
+            {user.conversation.unread.includes(userData?._id) &&
+              user._id !== selectedId && (
+                <div className="min-w-5 absolute right-1 top-[-0.5rem] w-5 min-h-5 h-5 rounded-full bg-red-500 flex justify-center items-center text-white text-xs animate-pulse" />
+              )}
+          </div>
+
+          <div className={`w-full`}>
+            <FetchLatestMessages u={user?.latestMessage} />
+          </div>
         </div>
         {/* Column 3: Red Circle */}
         <div className="flex-none relative pr-4 space-y-4">
-          <div className={`text-md font-medium ${isDarkMode? "text-white": "text-black"} `}>
-          {lastMsg}
-          </div>
-          {newMsg && (
-            <div
-              className="text-xs font-bold w-5 h-5 bg-red-badge-500 rounded-full text-white flex items-center justify-center">
-              1
-            </div>
-          )}
+          <div
+            className={`text-md font-medium ${
+              isDarkMode ? "text-white" : "text-black"
+            } `}
+          ></div>
         </div>
       </div>
       {/* Line Divider */}
@@ -74,7 +106,7 @@ const Friend = ({
         className={`absolute bottom-0 left-4 border-t ${
           isDarkMode
             ? "border-primary-500 border-opacity-20"
-            : "border-black border-opacity-80"
+            : "border-black opacity-50"
         } w-[90%]`}
       ></div>
     </div>
