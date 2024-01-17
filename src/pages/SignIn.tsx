@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -8,6 +8,7 @@ import { useFetchUserByIdQuery } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface FormData {
   email: string;
@@ -21,14 +22,16 @@ interface FormErrors {
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const [id, setId] = useState<string>("");
   const [formData, setFormData] = React.useState<FormData>({
     email: "",
     password: "",
   });
   const dispatch = useAppDispatch();
   const [loginAuth] = useLoginAuthMutation();
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({});
 
+  const { data } = useFetchUserByIdQuery(id ? { id } : skipToken) as any;
+  const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const validateForm = (): boolean => {
@@ -87,20 +90,22 @@ const SignIn = () => {
     window.open(`${import.meta.env.VITE_GOOGLE_URL}`, "_self");
   }
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  const userId = urlParams.get("userId");
+
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
 
     if (token) {
       localStorage.setItem("token", token);
       // get coded data user from url
-      const userdata = urlParams.get("user");
-      // decode the data
-      const decodedData = atob(userdata as string);
-      dispatch(setAuth(JSON.parse(decodedData)));
+      setId(userId as string);
+      // extract id from user data#
+
+      dispatch(setAuth(data as any));
       navigate("/chat");
     }
-  }, [dispatch, navigate]);
+  }, [token, userId, data]);
 
 
   return (
