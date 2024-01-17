@@ -426,7 +426,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             className={
                               "w-auto max-w-[50%] inline-block m-2 p-4 " +
                               (msg.sender === user?._id
-                                ? " bg-[#E9E9EF] text-right text-[#000] rounded-t-[20px] rounded-br-[20px]"
+                                ? " bg-[#E9E9EF] text-right text-[black] rounded-t-[20px] rounded-br-[20px]"
                                 : "") +
                               (msg.sender ==
                               import.meta.env.VITE_AI_ASSISTANT_ID
