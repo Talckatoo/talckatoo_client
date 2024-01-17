@@ -51,12 +51,12 @@ const SideBar = () => {
 
   return (
     <div
-      className={`w-2/6 h-full flex shadow-sm ${
+      className={`w-2/6 min-w-[350px] h-full flex shadow-sm ${
         isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
       {/*First column */}
-      <div className="w-[89px] border-r pt-5 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
+      <div className="w-[89px] min-w-[89px] border-r pt-5 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
         <div className="flex flex-col  gap-3 w-full">
           <div
             className={`${
@@ -98,17 +98,18 @@ const SideBar = () => {
               className=" top-1 right-4 z-4 object-contain py-2"
             />
           </div>
-          <div className="mx-2 rounded-[12px]  flex items-center justify-center flex-col">
+          <div className="mx-2 pb-2 flex items-center justify-center flex-col rounded-full overflow-hidden">
             <img
-              src="./src/assests/Ellipse 1190.svg"
-              className=" top-1 right-4 z-4 mb-3 object-contain py-2"
+              src={`${user?.profileImage.url}`}
+              className="h-16 w-16 object-cover rounded-full"
+              alt="Profile-picture"
             />
           </div>
         </div>
       </div>
 
       {/*Second column */}
-      <div className="w-4/5 ">
+      <div className="w-4/5">
         <div
           className={`my-4 ml-4 font-extrabold text-[20px] ${
             isDarkMode ? "text-white" : "text-black"
