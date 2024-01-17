@@ -14,7 +14,7 @@ const SideBar = () => {
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
-  
+  const user = useAppSelector((state) => state.auth.user);
 
   const dispatch = useAppDispatch();
 
@@ -55,7 +55,7 @@ const SideBar = () => {
       }`}
     >
       {/*First column */}
-      <div className="w-[89px] border-r pt-5 border-primary-500 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
+      <div className="w-[89px] border-r pt-5 border-primary-500 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] overflow-hidden">
         <div className="flex flex-col  gap-3 w-full">
           <div
             className={`${
@@ -97,10 +97,11 @@ const SideBar = () => {
               className=" top-1 right-4 z-4 object-contain py-2"
             />
           </div>
-          <div className="mx-2 rounded-[12px]  flex items-center justify-center flex-col">
+          <div className="mx-2 flex items-center justify-center flex-col rounded-full overflow-hidden">
             <img
-              src="./src/assests/Ellipse 1190.svg"
-              className=" top-1 right-4 z-4 mb-3 object-contain py-2"
+              src={`${user?.profileImage.url}`}
+              className="h-16 w-16 object-cover rounded-full"
+              alt="Profile-picture"
             />
           </div>
         </div>
