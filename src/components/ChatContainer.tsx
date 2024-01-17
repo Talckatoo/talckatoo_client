@@ -649,7 +649,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             >
                               <div
                                 className={
-                                  "w-auto max-w-[50%] inline-block m-2 p-4 " +
+                                  "w-auto max-w-[50%] inline-block m-2 p-2 " +
                                   (msg.sender === user?._id &&
                                   msg.sender !==
                                     import.meta.env.VITE_AI_ASSISTANT_ID

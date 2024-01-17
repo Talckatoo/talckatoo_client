@@ -16,7 +16,8 @@ import { setMessages } from "../redux/features/messages/messageSlice";
 import { setRequest } from "../redux/features/user/requestSlice";
 import ChatNavSearch from "../components/ChatNavSearch";
 import languagesArray from "../util/languages";
-
+import { PiVideoCameraThin } from "react-icons/pi";
+import { PiPhoneCallLight } from "react-icons/pi";
 const Navbar = () => {
   //Reference for dropdown menu
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -204,17 +205,9 @@ const Navbar = () => {
         />
       </div>
 
-      <div className="flex gap-4 items-center max-md:gap-2  ">
-        <img
-          src="./assets/img/video.png"
-          alt="search"
-          className="w-[38px] h-[41px]"
-        />
-        <img
-          src="./assets/img/call.png"
-          alt="search"
-          className="w-[18px] h-[18px]"
-        />
+      <div className="flex gap-6 items-center max-md:gap-2  ">
+      <PiVideoCameraThin size={34}/>
+      <PiPhoneCallLight size={26}/>
       </div>
     </nav>
   );
