@@ -44,7 +44,7 @@ const Friend = ({
       >
         <div className="relative">
           <div
-            className="w-14 h-14 rounded-full shadow-xl flex items-center justify-center"
+            className="w-10 h-10 rounded-full shadow-xl flex items-center justify-center"
             style={{
               backgroundImage: `url(${img})`,
               backgroundSize: "cover",

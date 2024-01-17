@@ -56,7 +56,7 @@ const SideBar = () => {
       }`}
     >
       {/*First column */}
-      <div className="w-[89px] min-w-[89px] border-r pt-5 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
+      <div className="w-[80px] min-w-[80px] border-r pt-5 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
         <div className="flex flex-col  gap-3 w-full">
           <div
             className={`${
@@ -98,10 +98,10 @@ const SideBar = () => {
               className=" top-1 right-4 z-4 object-contain py-2"
             />
           </div>
-          <div className="mx-2 pb-2 flex items-center justify-center flex-col rounded-full overflow-hidden">
+          <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
             <img
               src={`${user?.profileImage.url}`}
-              className="h-16 w-16 object-cover rounded-full"
+              className="h-10 w-10 object-cover rounded-full"
               alt="Profile-picture"
             />
           </div>

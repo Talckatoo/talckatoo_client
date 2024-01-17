@@ -97,16 +97,16 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="relative z-10 max-md:px-2  py-4 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm">
+    <nav className="relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm ">
       <div className="flex w-[80%] gap-2 md:gap-8">
         <div className="flex items-center ml-2 gap-2 md:gap-4 ">
           {user && (
             <>
-              { recipientPi?  (
+              {recipientPi?  (
                 <div
                   ref={profilePictureRef}
                   onClick={handleDropdownClick}
-                  className="w-[52px] h-[52px] max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
+                  className="w-10 h-10 max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
                   style={{
                     backgroundImage: `url(${
                       recipientPi || COCKATOO
@@ -148,7 +148,7 @@ const Navbar = () => {
               )}
               <div className="flex flex-col  hover:text-gray-300   mr-2 focus:outline-none sm:block">
                 {user && user.userName ? (
-                  <p className="max-md:text-[16px] md: text-[18px] text-bold text-[#25282C]">
+                  <p className="max-md:text-[16px] md: text-[16px] text-bold text-[#25282C]">
                    {recipient}
                   </p>
                 ) : (
@@ -162,7 +162,7 @@ const Navbar = () => {
                 </div>
               </div>
 
-              {isDropdownOpen && (
+              {/* {isDropdownOpen && (
                 <div className="relative z-20" ref={dropdownRef}>
                   <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl">
                     <a
@@ -185,9 +185,9 @@ const Navbar = () => {
                     </a>
                   </div>
                 </div>
-              )}
-              <div className="bg-[#25282C] py-1 h-[41px] flex items-center text-white px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ">
-                <span className="max-md:text-[12px] md: text-[14px] ">
+              )} */}
+              <div className="bg-[#25282C] py-2 flex items-center text-white px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ">
+                <span className="max-md:text-[12px] md:text-[14px] ">
                   {fullLanguage}
                 </span>
               </div>

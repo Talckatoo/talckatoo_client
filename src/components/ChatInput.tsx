@@ -121,7 +121,7 @@ const ChatInput = ({
 
   return (
     <>
-      <div className="w-full relative z-10 pt-2">
+      <div className="w-full  relative z-10 pt-2">
         <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  ">
           <form onSubmit={handleSendMessage} className="">
             <Input
@@ -134,11 +134,8 @@ const ChatInput = ({
               placeholder="Type your message or type @birdie to call AI Assistant"
               className="mb-0 rounded-t-[20px] max-md:py-4 py-4 border border-[#0E131D] outline-none focus:outline-none "
             />
-            <button className=" ">
-              <img src="./assets/img/send.png" className="" />
-            </button>
           </form>
-          <div className="flex justify-between items-center relative bottom-[4rem] bg-[#25282C] py-3 rounded-b-[20px] px-5">
+          <div className="flex justify-between items-center relative bottom-[1.8rem] bg-[#25282C] py-3 rounded-b-[20px] px-5">
             <form onSubmit={handleSendMessage} className="absolute right-2 ">
               <button>
                 <img src="/assets/img/send.png" className="" />
