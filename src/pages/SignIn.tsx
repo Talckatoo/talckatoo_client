@@ -29,8 +29,13 @@ const SignIn = () => {
   });
   const dispatch = useAppDispatch();
   const [loginAuth] = useLoginAuthMutation();
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  const userId = urlParams.get("userId");
 
-  const { data } = useFetchUserByIdQuery(id ? { id } : skipToken) as any;
+  const { data } = useFetchUserByIdQuery(
+    userId ? { id: userId } : skipToken
+  ) as any;
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -88,14 +93,9 @@ const SignIn = () => {
 
   const redirectTogoogle = async (): Promise<void> => {
     window.open(`${import.meta.env.VITE_GOOGLE_URL}`, "_self");
-  }
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get("token");
-  const userId = urlParams.get("userId");
+  };
 
   useEffect(() => {
-
     if (token) {
       localStorage.setItem("token", token);
       // get coded data user from url
@@ -106,7 +106,6 @@ const SignIn = () => {
       navigate("/chat");
     }
   }, [token, userId, data]);
-
 
   return (
     <section className="relative bg-white h-full w-full font-inter">
@@ -225,7 +224,6 @@ const SignIn = () => {
 };
 
 export default SignIn;
-function jwt_decode(token: string): { id: string; } {
+function jwt_decode(token: string): { id: string } {
   throw new Error("Function not implemented.");
 }
-
