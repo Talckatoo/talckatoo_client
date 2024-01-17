@@ -141,7 +141,7 @@ const ChatInput = ({
           <div className="flex justify-between items-center relative bottom-[4rem] bg-[#25282C] py-3 rounded-b-[20px] px-5">
             <form onSubmit={handleSendMessage} className="absolute right-2 ">
               <button>
-                <img src="./assets/img/send.png" className="" />
+                <img src="/assets/img/send.png" className="" />
               </button>
             </form>
             <div className="w-[100px] flex items-center">
@@ -156,7 +156,7 @@ const ChatInput = ({
                 <img src="./assets/img/line.png" className="i" />
                 <img src="./assets/img/emoji.png" className="i" />
                 <label className="cursor-pointer">
-                  <img src="./assets/img/file.png" className="i" />
+                  <img src="./assets/img/file.png" />
                   <input
                     type="file"
                     className="hidden"

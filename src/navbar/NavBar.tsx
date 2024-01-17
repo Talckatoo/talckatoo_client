@@ -97,7 +97,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="relative z-10 max-md:px-2  py-4 md:px-10 flex justify-between items-center drop-shadow-md bg-[#fff]">
+    <nav className="relative z-10 max-md:px-2  py-4 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm">
       <div className="flex w-[80%] gap-2 md:gap-8">
         <div className="flex items-center ml-2 gap-2 md:gap-4 ">
           {user && (

@@ -588,7 +588,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   return (
     <div
       className={`w-full h-full flex flex-col ${
-        !isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
+        isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
       {/* <button className="text-white" onClick={handleCall}>
@@ -607,7 +607,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       )} */}
 
       <div className="relative h-full">
-        <div className="flex flex-col shadow h-full ">
+        <div className="flex flex-col shadow-sm border-l border-opacity-20 h-full ">
           <img
             src="/assets/img/Shapes.png"
             alt="shape"
@@ -622,7 +622,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             <div className="relative h-full z-[5] ">
               <div
                 ref={scrollRef}
-                className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0 md:px-[8rem]"
+                className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0 max-w-[1300px] m-auto"
               >
                 {!!selectedId && !!conversationId ? (
                   <div className="m-2 p-2 ">
@@ -641,7 +641,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                           >
                             <div
                               className={
-                                "flex items-end mb-6" +
+                                "flex items-end" +
                                 (msg.sender === user?._id
                                   ? " flex text-right w-full justify-end items-end"
                                   : "")
@@ -649,14 +649,14 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             >
                               <div
                                 className={
-                                  "w-auto max-w-[50%] inline-block m-2 p-2 " +
+                                  "w-auto max-w-[50%] inline-block m-2 p-4 " +
                                   (msg.sender === user?._id &&
                                   msg.sender !==
                                     import.meta.env.VITE_AI_ASSISTANT_ID
-                                    ? " bg-[#E9E9EF] text-right text-[#000] rounded-t-[20px] rounded-br-[20px]"
+                                    ? " bg-[#E9E9EF] h-full text-right text-[#000] rounded-t-[20px] rounded-bl-[20px]"
                                     : msg.sender !==
                                       import.meta.env.VITE_AI_ASSISTANT_ID
-                                    ? "bg-[#25282C] text-left text-white rounded-t-[20px] rounded-bl-[20px]"
+                                    ? "bg-[#25282C] text-left text-white  rounded-t-[20px] rounded-br-[20px]"
                                     : "bg-[#FEF3C7] text-center mx-auto rounded-[20px]")
                                 }
                               >
@@ -690,13 +690,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                   <>{msg.message}</>
                                 )}
 
-                                <div className="flex justify-between items-center relative top-12">
-                                  <div className=" text-black items-end text-x-small-regular">
-                                    {getTime(msg.createdAt)}
-                                  </div>
-
-                                  <TextToSpeech convertedText={msg.message} />
-                                </div>
                                 {msg.voiceNote && (
                                   <audio className="w-[150px] h-15" b- controls>
                                     <source
@@ -705,7 +698,86 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                     />
                                   </audio>
                                 )}
+                                {msg.media &&
+                                  (msg.media.type === "image" ? (
+                                    <div className="relative">
+                                      <img
+                                        src={msg.media.url}
+                                        alt="media"
+                                        className="w-60 h-60 object-contain"
+                                      />
+                                      <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                        <Link to={msg.media.url} download>
+                                          <MdDownload className="text-[24px]" />
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  ) : msg.media.type === "video" ? (
+                                    <div className="relative">
+                                      <video
+                                        src={msg.media.url}
+                                        className="w-60 h-60"
+                                        controls
+                                      />
+                                      <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                        <Link to={msg.media.url} download>
+                                          <MdDownload className="text-[24px]" />
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  ) : msg.media.type === "audio" ? (
+                                    <audio className="w-60 h-15 " controls>
+                                      <source
+                                        src={msg.media.url}
+                                        type="audio/mpeg"
+                                      />
+                                    </audio>
+                                  ) : (
+                                    <div className=" flex items-center w-[240px]">
+                                      <Link
+                                        to={msg.media.url}
+                                        download
+                                        className="flex w-full items-center justify-between"
+                                      >
+                                        <div className="flex items-center gap-3 minw-w-[25px]">
+                                          <FaFile className="text-[25px]" />
+                                          <p className="text-xs">
+                                            {msg.media.altText}
+                                          </p>
+                                        </div>
+
+                                        <MdDownload className="text-[35px] min-w-[35px] bg-white p-2 rounded-full shadow-md" />
+                                      </Link>
+                                    </div>
+                                  ))}
+                                <div className="flex justify-between items-center relative pt-4">
+                                  <div
+                                    className={
+                                      "  items-end" +
+                                      (msg.sender === user?._id &&
+                                      msg.sender !==
+                                        import.meta.env.VITE_AI_ASSISTANT_ID
+                                        ? "text-black text-[10px]"
+                                        : msg.sender !==
+                                          import.meta.env.VITE_AI_ASSISTANT_ID
+                                        ? "text-white text-[10px]"
+                                        : "text-black text-[10px]")
+                                    }
+                                  >
+                                    {getTime(msg.createdAt)}
+                                  </div>
+
+                                  <TextToSpeech
+                                    convertedText={msg.message}
+                                    me={msg.sender === user?._id}
+                                    ai={
+                                      msg.sender ===
+                                      import.meta.env.VITE_AI_ASSISTANT_ID
+                                    }
+                                  />
+                                </div>
                               </div>
+
                               {/* {msg.voiceNote && (
                                 <audio className="w-60 h-15" controls>
                                   <source
@@ -714,69 +786,18 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                   />
                                 </audio>
                               )} */}
-                              {msg.media &&
-                                (msg.media.type === "image" ? (
-                                  <div className="relative">
-                                    <img
-                                      src={msg.media.url}
-                                      alt="media"
-                                      className="w-60 h-60 object-contain"
-                                    />
-                                    <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
-                                      <Link to={msg.media.url} download>
-                                        <MdDownload className="text-[24px]" />
-                                      </Link>
-                                    </div>
-                                  </div>
-                                ) : msg.media.type === "video" ? (
-                                  <div className="relative">
-                                    <video
-                                      src={msg.media.url}
-                                      className="w-60 h-60"
-                                      controls
-                                    />
-                                    <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
-                                      <Link to={msg.media.url} download>
-                                        <MdDownload className="text-[24px]" />
-                                      </Link>
-                                    </div>
-                                  </div>
-                                ) : msg.media.type === "audio" ? (
-                                  <audio className="w-60 h-15" controls>
-                                    <source
-                                      src={msg.media.url}
-                                      type="audio/mpeg"
-                                    />
-                                  </audio>
-                                ) : (
-                                  <div className=" flex items-center w-[240px]">
-                                    <Link
-                                      to={msg.media.url}
-                                      download
-                                      className="flex w-full items-center justify-between"
-                                    >
-                                      <div className="flex items-center gap-3">
-                                        <FaFile className="text-[25px]" />
-                                        <p className="text-xs">
-                                          {msg.media.altText}
-                                        </p>
-                                      </div>
 
-                                      <MdDownload className="text-[35px] bg-white p-2 rounded-full shadow-md" />
-                                    </Link>
-                                  </div>
-                                ))}
-                              <img
-                                src={
-                                  msg.sender === user?._id
-                                    ? `${user?.profileImage.url}`
-                                    : msg.sender ===
-                                      import.meta.env.VITE_AI_ASSISTANT_ID
-                                    ? ""
-                                    : `${recipientPi}`
-                                }
-                                className=" w-[36px] h-[36px] rounded-full border border-[#E9E9EF]"
-                              />
+                              {/* {msg.sender !==
+                                import.meta.env.VITE_AI_ASSISTANT_ID && (
+                                <img
+                                  src={
+                                    msg.sender === user?._id
+                                      ? `${user?.profileImage.url}`
+                                      : `${recipientPi}`
+                                  }
+                                  className=" w-[36px] h-[36px] rounded-full border border-[#E9E9EF]"
+                                />
+                              )} */}
                               <div ref={scrollRefBottom}></div>
                             </div>
                           </div>

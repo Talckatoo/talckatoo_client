@@ -1,30 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import Friend from "./Friend";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setConversation } from "../../redux/features/conversation/conversationSlice";
-import { setRecipient } from "../../redux/features/user/userSlice";
+import {
+  setRecipient,
+  setRecipientProfileImage,
+} from "../../redux/features/user/userSlice";
+import { UserContext } from "../../context/user-context";
 
 const SideBar = () => {
   const [filterValue, setFilterValue] = useState("");
-  const [isDarkMode, setDarkMode] = useState(false);
+  const { isDarkMode } = useContext(UserContext);
   const { users } = useAppSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.auth);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
-  
 
   const dispatch = useAppDispatch();
-
-  const handleToggleDarkMode = () => {
-    setDarkMode(!isDarkMode);
-  };
 
   const handleSelectContact = (u: any) => {
     console.log(u);
     setSelectedUser(u);
+    dispatch(setRecipientProfileImage(u.profileImage?.url as any));
     dispatch(
       setConversation({
         conversationId: u.conversation._id,
@@ -50,12 +51,12 @@ const SideBar = () => {
 
   return (
     <div
-      className={`w-2/6 h-full flex ${
+      className={`w-2/6 h-full flex shadow-sm ${
         isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
       {/*First column */}
-      <div className="w-[89px] border-r pt-5 border-primary-500 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
+      <div className="w-[89px] border-r pt-5 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
         <div className="flex flex-col  gap-3 w-full">
           <div
             className={`${

@@ -69,10 +69,22 @@ export const userSlice = createSlice({
     setRecipientId: (state, action: PayloadAction<UserState | null>) => {
       state.recipientPi = action.payload;
     },
+    setRecipientProfileImage: (
+      state,
+      action: PayloadAction<UserState | null>
+    ) => {
+      state.recipientPi = action.payload;
+    },
     // Add other reducers as needed
   },
 });
 
-export const { setUser, setUsers, setRecipient, updateContactedUserById, setRecipientId } =
-  userSlice.actions;
+export const {
+  setUser,
+  setUsers,
+  setRecipient,
+  updateContactedUserById,
+  setRecipientId,
+  setRecipientProfileImage,
+} = userSlice.actions;
 export default userSlice.reducer;
