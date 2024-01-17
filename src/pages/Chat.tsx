@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import ChatContainer from "../components/ChatContainer";
+import Navbar from "../navbar/NavBar";
 import { UserContext } from "../context/user-context";
 import { getContactName } from "../util/getContactName";
 import COCKATOO from "./.././assests/cockatoo.png";
@@ -7,7 +8,13 @@ import FetchLatestMessages from "../util/FetchLatestMessages";
 import { PiBirdFill } from "react-icons/pi";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
-import { User, setRecipient, setUsers } from "../redux/features/user/userSlice";
+import {
+  User,
+  setRecipient,
+  setUsers,
+  updateContactedUserById,
+  setRecipientId,
+} from "../redux/features/user/userSlice";
 import { setOnlineFriends } from "../redux/features/socket/socketSlice";
 import { useFetchAllFriendsQuery } from "../redux/services/UserApi";
 import { setCall } from "../redux/features/call/callSlice";
@@ -26,6 +33,8 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationState = useAppSelector((state) => state.conversation);
   const messages = useAppSelector((state) => state.messages.messages);
   const { users } = useAppSelector((state) => state.user);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  // const {recipient} = useAppSelector((state) => state.recipient);
 
   // RTK Query
   const { data: friends, refetch } = useFetchAllFriendsQuery(null) as any;
@@ -95,13 +104,13 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, [onlineUsers, users?.contactedUsers, users?.uncontactedUsers]);
 
+  // useEffect(() => {
+  //   refetchFriends();
+  // }, [refetchFriends, messages]);
+
   return (
     <>
-      <div
-        className={`flex flex-1 h-[100vh] w-full overflow-hidden flex-grow ${
-          isDarkMode ? "bg-dark" : "bg-light"
-        }`}
-      >
+      <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
         {/*        <div
           className={`md:w-80  max-h-screen p-2 ${
             isDarkMode ? "bg-gray-800" : "bg-slate-200"
@@ -208,7 +217,9 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
         </div>*/}
 
         <SideBar />
-        <div className="flex w-full h-full bg-white">
+
+        <div className=" w-full h-full flex flex-col bg-white">
+          <Navbar />
           <ChatContainer socket={socket} />
         </div>
       </div>

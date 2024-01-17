@@ -46,12 +46,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log("call", call);
-  }, [call]);
-  // *******************CALL******************
+  const { recipientPi } = useAppSelector((state) => state.user);
 
   // RTK Query
   // fetch all messages by conversation id
@@ -138,7 +133,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
               })
             )
           );
-          
 
           console.log("callUser", encodedCallData);
 
@@ -593,45 +587,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   return (
     <div
-      className={`flex flex-grow flex-col shadow h-full ${
-        isDarkMode ? "bg-slate-800" : "bg-slate-200"
+      className={`w-full h-full flex flex-col ${
+        !isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
-      {language ? (
-        <div
-          className={`flex flex-row items-center w-full h-14 text-black cursor-pointer rounded-tl-lg shadow text-center font-medium border-b-2 ${
-            isDarkMode
-              ? "bg-gray-800 text-white border-slate-700"
-              : "bg-slate-200 border-slate-300"
-          }`}
-        >
-          <div className="flex flex-row mx-2 px-2 gap-2 items-center justify-between w-full">
-            <div className="flex flex-row items-center gap-2">
-              <p>{recipient}</p>
-              <MdTranslate />
-              <span>
-                {" "}
-                {language} / {fullLanguage}{" "}
-              </span>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <HiArrowsRightLeft />
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <p>{user?.userName}</p>
-              <MdTranslate />
-              <span>
-                {" "}
-                {user?.language} /{" "}
-                {languagesArray.map((l) =>
-                  l.code === user?.language ? l.language : null
-                )}{" "}
-              </span>
-            </div>
-          </div>
-        </div>
-      ) : null}
-      <button className="text-white" onClick={handleCall}>
+      {/* <button className="text-white" onClick={handleCall}>
         Call
       </button>
       {call?.isReceivedCall && (
@@ -644,190 +604,214 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             Answer
           </button>
         </div>
-      )}
-      {/* {calleeEnded ? (
-        <div>
-          <span>Call has been ended</span>
-        </div>
-      ) : null} */}
-      <div
-        className={`w-full flex flex-col h-full ${
-          isDarkMode ? "bg-gray-800" : "bg-slate-200"
-        }`}
-      >
-        <div className="relative h-full">
-          <div
-            ref={scrollRef}
-            className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0"
-          >
-            {!!selectedId && !!conversationId ? (
-              <div className="m-2 p-2 ">
-                {messages
-                  ? messages.map((msg) => (
-                      <div
-                        className={
-                          "text-left " +
-                          (msg.sender === user?._id ? "text-right " : "") +
-                          (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
-                            ? "text-center"
-                            : "")
-                        }
-                        key={msg._id}
-                      >
-                        <div
-                          className={
-                            "max-w-md inline-block  rounded-lg m-2 p-2 " +
-                            (msg.sender === user?._id
-                              ? "bg-[#f8fafc] text-left "
-                              : "") +
-                            (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
-                              ? "bg-amber-100 text-center"
-                              : "bg-[#94a3b8]")
-                          }
-                        >
-                          {msg.sender !==
-                            import.meta.env.VITE_AI_ASSISTANT_ID &&
-                          msg.message &&
-                          msg.message.includes("\n") ? (
-                            msg.message
-                              .split("\n")
-                              .map((line, index, lines) => {
-                                const prevLine =
-                                  index > 0 ? lines[index - 1] : null;
-                                const isFirstLine =
-                                  index === 0 || line !== prevLine;
+      )} */}
 
-                                return (
-                                  <React.Fragment key={index}>
-                                    {isFirstLine && line}
-                                    {isFirstLine &&
-                                      index !== lines.length - 1 &&
-                                      line !== lines[index + 1] && (
-                                        <>
-                                          <br />
-                                          <div className="h-1 border-b border-gray-500"></div>
+      <div className="relative h-full">
+        <div className="flex flex-col shadow h-full ">
+          <img
+            src="/assets/img/Shapes.png"
+            alt="shape"
+            className="fixed left-[-5rem]  bottom-[5px] w-[40%] z-[1] "
+          />
+          <div className="w-full flex flex-col h-full">
+            <img
+              src="/assets/img/Shape.png"
+              alt="shape"
+              className="fixed right-[1rem]  top-[1px] w-[30%] z-[1] "
+            />
+            <div className="relative h-full z-[5] ">
+              <div
+                ref={scrollRef}
+                className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0 md:px-[8rem]"
+              >
+                {!!selectedId && !!conversationId ? (
+                  <div className="m-2 p-2 ">
+                    {messages
+                      ? messages.map((msg) => (
+                          <div
+                            className={
+                              "" +
+                              (msg.sender === user?._id ? " mb-6" : "") +
+                              (msg.sender ==
+                              import.meta.env.VITE_AI_ASSISTANT_ID
+                                ? "text-center "
+                                : "")
+                            }
+                            key={msg._id}
+                          >
+                            <div
+                              className={
+                                "flex items-end mb-6" +
+                                (msg.sender === user?._id
+                                  ? " flex text-right w-full justify-end items-end"
+                                  : "")
+                              }
+                            >
+                              <div
+                                className={
+                                  "w-auto max-w-[50%] inline-block m-2 p-4 " +
+                                  (msg.sender === user?._id &&
+                                  msg.sender !==
+                                    import.meta.env.VITE_AI_ASSISTANT_ID
+                                    ? " bg-[#E9E9EF] text-right text-[#000] rounded-t-[20px] rounded-br-[20px]"
+                                    : msg.sender !==
+                                      import.meta.env.VITE_AI_ASSISTANT_ID
+                                    ? "bg-[#25282C] text-left text-white rounded-t-[20px] rounded-bl-[20px]"
+                                    : "bg-[#FEF3C7] text-center mx-auto rounded-[20px]")
+                                }
+                              >
+                                {msg.sender !==
+                                  import.meta.env.VITE_AI_ASSISTANT_ID &&
+                                msg.message &&
+                                msg.message.includes("\n") ? (
+                                  msg.message
+                                    .split("\n")
+                                    .map((line, index, lines) => {
+                                      const prevLine =
+                                        index > 0 ? lines[index - 1] : null;
+                                      const isFirstLine =
+                                        index === 0 || line !== prevLine;
 
-                                          {/* <img
-                                            width="15"
-                                            height="15"
-                                            src="https://img.icons8.com/ios-glyphs/30/right3.png"
-                                            alt="right3"
-                                          /> */}
-                                        </>
-                                      )}
-                                  </React.Fragment>
-                                );
-                              })
-                          ) : (
-                            <>{msg.message}</>
-                          )}
+                                      return (
+                                        <React.Fragment key={index}>
+                                          {isFirstLine && line}
+                                          {isFirstLine &&
+                                            index !== lines.length - 1 &&
+                                            line !== lines[index + 1] && (
+                                              <>
+                                                <br className=" mx-auto" />
+                                                <div className="h-1 border-b border-gray-600 my-1"></div>
+                                              </>
+                                            )}
+                                        </React.Fragment>
+                                      );
+                                    })
+                                ) : (
+                                  <>{msg.message}</>
+                                )}
 
-                          <div className="flex flex-row gap-4">
-                            <div className="w-1/2 text-gray-500 items-end text-x-small-regular">
-                              {getTime(msg.createdAt)}
-                            </div>
-
-                            <TextToSpeech convertedText={msg.message} />
-                          </div>
-                          {msg.voiceNote && (
-                            <audio className="w-60 h-15" controls>
-                              <source
-                                src={msg.voiceNote?.url}
-                                type="audio/mpeg"
-                              />
-                            </audio>
-                          )}
-                          {msg.media &&
-                            (msg.media.type === "image" ? (
-                              <div className="relative">
-                                <img
-                                  src={msg.media.url}
-                                  alt="media"
-                                  className="w-60 h-60 object-contain"
-                                />
-                                <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
-                                  <Link to={msg.media.url} download>
-                                    <MdDownload className="text-[24px]" />
-                                  </Link>
-                                </div>
-                              </div>
-                            ) : msg.media.type === "video" ? (
-                              <div className="relative">
-                                <video
-                                  src={msg.media.url}
-                                  className="w-60 h-60"
-                                  controls
-                                />
-                                <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
-                                  <Link to={msg.media.url} download>
-                                    <MdDownload className="text-[24px]" />
-                                  </Link>
-                                </div>
-                              </div>
-                            ) : msg.media.type === "audio" ? (
-                              <audio className="w-60 h-15" controls>
-                                <source src={msg.media.url} type="audio/mpeg" />
-                              </audio>
-                            ) : (
-                              <div className=" flex items-center w-[240px]">
-                                <Link
-                                  to={msg.media.url}
-                                  download
-                                  className="flex w-full items-center justify-between"
-                                >
-                                  <div className="flex items-center gap-3">
-                                    <FaFile className="text-[25px]" />
-                                    <p className="text-xs">
-                                      {msg.media.altText}
-                                    </p>
+                                <div className="flex justify-between items-center relative top-12">
+                                  <div className=" text-black items-end text-x-small-regular">
+                                    {getTime(msg.createdAt)}
                                   </div>
 
-                                  <MdDownload className="text-[35px] bg-white p-2 rounded-full shadow-md" />
-                                </Link>
+                                  <TextToSpeech convertedText={msg.message} />
+                                </div>
+                                {msg.voiceNote && (
+                                  <audio className="w-[150px] h-15" b- controls>
+                                    <source
+                                      src={msg.voiceNote?.url}
+                                      type="audio/mpeg"
+                                    />
+                                  </audio>
+                                )}
                               </div>
-                            ))}
-                        </div>
-                        <div ref={scrollRefBottom}></div>
-                      </div>
-                    ))
-                  : null}
+                              {/* {msg.voiceNote && (
+                                <audio className="w-60 h-15" controls>
+                                  <source
+                                    src={msg.voiceNote?.url}
+                                    type="audio/mpeg"
+                                  />
+                                </audio>
+                              )} */}
+                              {msg.media &&
+                                (msg.media.type === "image" ? (
+                                  <div className="relative">
+                                    <img
+                                      src={msg.media.url}
+                                      alt="media"
+                                      className="w-60 h-60 object-contain"
+                                    />
+                                    <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                      <Link to={msg.media.url} download>
+                                        <MdDownload className="text-[24px]" />
+                                      </Link>
+                                    </div>
+                                  </div>
+                                ) : msg.media.type === "video" ? (
+                                  <div className="relative">
+                                    <video
+                                      src={msg.media.url}
+                                      className="w-60 h-60"
+                                      controls
+                                    />
+                                    <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                      <Link to={msg.media.url} download>
+                                        <MdDownload className="text-[24px]" />
+                                      </Link>
+                                    </div>
+                                  </div>
+                                ) : msg.media.type === "audio" ? (
+                                  <audio className="w-60 h-15" controls>
+                                    <source
+                                      src={msg.media.url}
+                                      type="audio/mpeg"
+                                    />
+                                  </audio>
+                                ) : (
+                                  <div className=" flex items-center w-[240px]">
+                                    <Link
+                                      to={msg.media.url}
+                                      download
+                                      className="flex w-full items-center justify-between"
+                                    >
+                                      <div className="flex items-center gap-3">
+                                        <FaFile className="text-[25px]" />
+                                        <p className="text-xs">
+                                          {msg.media.altText}
+                                        </p>
+                                      </div>
+
+                                      <MdDownload className="text-[35px] bg-white p-2 rounded-full shadow-md" />
+                                    </Link>
+                                  </div>
+                                ))}
+                              <img
+                                src={
+                                  msg.sender === user?._id
+                                    ? `${user?.profileImage.url}`
+                                    : msg.sender ===
+                                      import.meta.env.VITE_AI_ASSISTANT_ID
+                                    ? ""
+                                    : `${recipientPi}`
+                                }
+                                className=" w-[36px] h-[36px] rounded-full border border-[#E9E9EF]"
+                              />
+                              <div ref={scrollRefBottom}></div>
+                            </div>
+                          </div>
+                        ))
+                      : null}
+                  </div>
+                ) : (
+                  <ChatWelcome />
+                )}
               </div>
-            ) : (
-              <ChatWelcome />
-            )}
+            </div>
+          </div>
+          {selectedTyping?.to === user?._id &&
+          selectedTyping?.from === selectedId &&
+          isTyping ? (
+            <JumpingDotsAnimation />
+          ) : null}
+          <div className="w-full py-2 bg-white relative z-5">
+            {selectedId ? (
+              <>
+                <ChatInput
+                  onHandleSendMessage={handleSendMessage}
+                  onHandleSendAIMessage={sendAIMessage}
+                  socket={socket}
+                  typing={typing}
+                  setTyping={setTyping}
+                  isTyping={isTyping}
+                  setIsTyping={setIsTyping}
+                  onHandleTranslateText={onHandleTranslateText}
+                  onHandleSendFile={onHandleSendFile}
+                />
+              </>
+            ) : null}
           </div>
         </div>
-      </div>
-      <hr
-        className={`mb-3 ${
-          isDarkMode ? "border-slate-700" : "border-slate-300"
-        }`}
-      />
-      {selectedTyping?.to === user?._id &&
-      selectedTyping?.from === selectedId &&
-      isTyping ? (
-        <JumpingDotsAnimation />
-      ) : null}
-      <div
-        className={`w-full h-30 py-2 ${
-          isDarkMode ? "bg-gray-800" : "bg-slate-200"
-        }`}
-      >
-        {selectedId ? (
-          <>
-            <ChatInput
-              onHandleSendMessage={handleSendMessage}
-              onHandleSendAIMessage={sendAIMessage}
-              socket={socket}
-              typing={typing}
-              setTyping={setTyping}
-              isTyping={isTyping}
-              setIsTyping={setIsTyping}
-              onHandleTranslateText={onHandleTranslateText}
-              onHandleSendFile={onHandleSendFile}
-            />
-          </>
-        ) : null}
       </div>
     </div>
   );

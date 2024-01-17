@@ -38,7 +38,6 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   const [recorder, setRecorder] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
 
-  const token = localStorage.getItem("token");
   const startRecording = () => {
     setIsRecording(true);
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -171,40 +170,40 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   return (
     <>
       <div className="">
-        <div className="flex flex-row gap-10">
+        <div className="flex flex-row gap-4">
           <button
             title="Voice message"
             onClick={startRecording}
-            className="bg-slate-300 hover:bg-slate-400  rounded-full px-2.5 h-9 w-9 items-center justify-center"
+            className=" hover:text-slate-400   px-2.5  items-center justify-center"
           >
-            <FaMicrophone />
+            <img src="./assets/img/mic.png"  /> 
           </button>
           {recordedAudio ? (
             <>
               <button
                 onClick={playAudio}
-                className="bg-slate-300 hover:bg-slate-400 rounded-full h-9 px-2.5"
+                className="bg-slate-300 hover:bg-slate-400 rounded-full  px-2.5"
                 disabled={!isReadyToSend}
               >
                 <FaPlay />
               </button>
               <button
                 onClick={removeAudio}
-                className="bg-slate-300 hover:bg-red-300 rounded-full h-9 px-2.5"
+                className="bg-slate-300 hover:bg-red-300 rounded-full px-2.5"
                 disabled={!isReadyToSend}
               >
                 <MdDelete />
               </button>
               <button
                 onClick={handleSendAudio}
-                className="bg-slate-300 hover:bg-green-300 rounded-full h-9 px-2.5"
+                className="bg-slate-300 hover:bg-green-300 rounded-full  px-2.5"
                 disabled={!isReadyToSend}
               >
                 <FaPaperPlane />
               </button>
               <button
                 onClick={handleTranslateAudio}
-                className="bg-slate-300 hover:bg-green-300 rounded-full h-9 px-2.5"
+                className="bg-slate-300 hover:bg-green-300 rounded-full  px-2.5"
                 disabled={!isReadyToSend}
               >
                 Translate

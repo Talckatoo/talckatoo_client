@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { useAppSelector } from "../redux/hooks";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import Input from "../UI/Input";
 
 interface ChatInputProps {
   socket: any;
@@ -120,98 +121,50 @@ const ChatInput = ({
 
   return (
     <>
-      <div className="flex flex-col">
-        <div className="w-full h-1/2">
-          <form onSubmit={handleSendMessage} className="flex flex-row">
-            <div className="m-auto pl-6 relative" onClick={handleShowEmoji}>
-              {showEmoji && (
-                <div className="absolute top-0 transform -translate-y-full bg-white rounded shadow-lg p-2">
-                  <span
-                    className="flex items-center justify-end cursor-pointer"
-                    onClick={handleShowEmoji}
-                  >
-                    <MdOutlineClose />
-                  </span>
-                  <div className="h-full w-full">
-                    <EmojiPicker onEmojiClick={handleEmojiClick} />
-                  </div>
-                </div>
-              )}
-
-              <span className="cursor-pointer">
-                <BsEmojiSmile
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    color: isDarkMode ? "white" : "black",
-                  }}
-                />
-              </span>
-            </div>
-
-            <input
+      <div className="w-full relative z-10 pt-2">
+        <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  ">
+          <form onSubmit={handleSendMessage} className="">
+            <Input
+              label=""
+              name="name"
               type="text"
-              placeholder="Type your message or type @birdie to call AI Assistant"
-              className={`mx-8 mb-2 p-2 flex-grow rounded-xl hover:border-white focus:outline-none shadow-lg 
-            ${
-              isDarkMode
-                ? "bg-[#161c24]  text-slate-100"
-                : "bg-slate-200  text-black"
-            } ${messageText.startsWith(AIcall) ? "text-yellow-200" : ""}`}
               value={messageText}
+              id=""
               onChange={handleTyping}
+              placeholder="Type your message or type @birdie to call AI Assistant"
+              className="mb-0 rounded-t-[20px] max-md:py-4 py-4 border border-[#0E131D] outline-none focus:outline-none "
             />
-
-            <button
-              type="submit"
-              className={`mr-6 my-2 w-10 h-10 rounded-lg flex items-center justify-center ease-in-out duration-300
-            ${
-              isDarkMode
-                ? "bg-slate-800  text-slate-100"
-                : "bg-slate-200  text-black"
-            }
-            `}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="items-center justify-center w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                />
-              </svg>
+            <button className=" ">
+              <img src="./assets/img/send.png" className="" />
             </button>
           </form>
-        </div>
-        <div className="w-full h-1/2">
-          <div className="flex flex-row items-center justify-center gap-10">
-            <SpeechToText setMessageText={setMessageText} />
-            <VoiceMessage
-              socket={socket}
-              onHandleTranslateText={onHandleTranslateText}
-            />
-            {/* upload image or video */}
-            <div className="flex items-center justify-center">
-              <label className="flex flex-col items-center p-2 rounded-full bg-white  cursor-pointer hover:bg-gray-200 hover:text-white">
-                <FaCloudUploadAlt
-                  style={{
-                    width: "25px",
-                    height: "25px",
-                    color:"black",
-                  }}
+          <div className="flex justify-between items-center relative bottom-[4rem] bg-[#25282C] py-3 rounded-b-[20px] px-5">
+            <form onSubmit={handleSendMessage} className="absolute right-2 ">
+              <button>
+                <img src="./assets/img/send.png" className="" />
+              </button>
+            </form>
+            <div className="w-[100px] flex items-center">
+              <div className="flex">
+                <VoiceMessage
+                  socket={socket}
+                  onHandleTranslateText={onHandleTranslateText}
                 />
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => handleUpload(e)}
-                />
-              </label>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <img src="./assets/img/line.png" className="i" />
+                <img src="./assets/img/emoji.png" className="i" />
+                <label className="cursor-pointer">
+                  <img src="./assets/img/file.png" className="i" />
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => handleUpload(e)}
+                  />
+                </label>
+              </div>
+              {/* </div> */}
             </div>
           </div>
         </div>
