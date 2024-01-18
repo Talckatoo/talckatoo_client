@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
 import { useLoginAuthMutation } from "../redux/services/AuthApi";
+import { useFetchUserByIdQuery } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface FormData {
   email: string;
@@ -20,14 +22,21 @@ interface FormErrors {
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const [id, setId] = useState<string>("");
   const [formData, setFormData] = React.useState<FormData>({
     email: "",
     password: "",
   });
   const dispatch = useAppDispatch();
   const [loginAuth] = useLoginAuthMutation();
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({});
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  const userId = urlParams.get("userId");
 
+  const { data } = useFetchUserByIdQuery(
+    userId ? { id: userId } : skipToken
+  ) as any;
+  const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const validateForm = (): boolean => {
@@ -83,6 +92,22 @@ const SignIn = () => {
     }
   };
 
+  const redirectTogoogle = async (): Promise<void> => {
+    window.open(`${import.meta.env.VITE_GOOGLE_URL}`, "_self");
+  };
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+      // get coded data user from url
+      setId(userId as string);
+      // extract id from user data#
+
+      dispatch(setAuth(data as any));
+      navigate("/chat");
+    }
+  }, [token, userId, data]);
+
   return (
     <section className="relative bg-white h-full w-full font-inter">
       <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
@@ -113,8 +138,7 @@ const SignIn = () => {
             <Button
               type="button"
               className="bg-[#fafafa] text-black w-full h-full flex justify-center items-center border-[0.5px] border-[#33363A] rounded-lg shadow-sm-2xl "
-              disabled
-              onClick={() => {}}
+              onClick={() => redirectTogoogle()}
             >
               <img
                 src="/assets/icons/google-g-2015.svg"
@@ -201,3 +225,6 @@ const SignIn = () => {
 };
 
 export default SignIn;
+function jwt_decode(token: string): { id: string } {
+  throw new Error("Function not implemented.");
+}

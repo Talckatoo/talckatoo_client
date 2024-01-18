@@ -28,9 +28,8 @@ const Navbar = () => {
   const {recipient} = useAppSelector((state) => state.user);
   const conversationState = useAppSelector((state) => state.conversation);
   const {recipientPi} = useAppSelector((state) => state.user);
-  console.log(recipientPi);
   const language = conversationState?.conversation?.language;
-  console.log(language);
+
   
   const fullLanguage = languagesArray.map((l) => {
     if (l.code === language?.toLowerCase()) return l.language;
