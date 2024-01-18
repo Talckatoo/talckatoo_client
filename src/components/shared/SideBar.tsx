@@ -8,21 +8,43 @@ import {
   setRecipientProfileImage,
 } from "../../redux/features/user/userSlice";
 import { UserContext } from "../../context/user-context";
+import { useSearchuserMutation } from "../../redux/services/UserApi";
 
 const SideBar = () => {
-  const [filterValue, setFilterValue] = useState("");
+  const [search, setSearch] = useState("");
   const { isDarkMode } = useContext(UserContext);
   const { users } = useAppSelector((state) => state.user);
   const { user } = useAppSelector((state) => state.auth);
+  const [searchData, setSearchData] = useState<any[]>([]);
+  const [usersData, setUsersData] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
 
+  const [searchuser, { loading: isLoading }] = useSearchuserMutation();
+
   const dispatch = useAppDispatch();
 
+  const SearchForUser = async () => {
+    try {
+      const response = await searchuser({ identifier: search }).unwrap();
+      console.log(response);
+      if ("seachedUser" in response) setSearchData([response.seachedUser]);
+      else alert("User not found");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (search === "") return;
+    SearchForUser();
+  }, [search]);
+
   const handleSelectContact = (u: any) => {
+    if (searchData) return;
     console.log(u);
     setSelectedUser(u);
     dispatch(setRecipientProfileImage(u?.profileImage?.url as any));
@@ -49,6 +71,10 @@ const SideBar = () => {
     dispatch(setRecipient(selectedUser?.userName as any));
   }, [selectedUser]);
 
+  useEffect(() => {
+    setUsersData(searchData.length > 0 ? searchData : users?.contactedUsers);
+  }, [searchData, users]);
+
   return (
     <div
       className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${
@@ -65,7 +91,7 @@ const SideBar = () => {
           >
             <img
               src="./src/assests/comment_duotone.svg"
-              className=" top-1 right-4 z-4 object-contain py-2"
+              className=" top-1 right-4 z-4 object-contain py-1 w-[29px]"
             />
           </div>
           <div className="relative border-[1px] border-secondary-500 mx-2 rounded-[12px] flex items-center justify-center flex-col">
@@ -73,9 +99,9 @@ const SideBar = () => {
               src={`./src/assests/${
                 isDarkMode ? "User_alt_fill_dark.svg" : "User_alt_fill.svg"
               }`}
-              className="z-4 object-contain py-2"
+              className="z-4 object-contain py-1 w-[29px]"
             />
-            <div
+            {/* <div
               className="absolute top-[75%] left-[80%] w-4 h-4 bg-red-badge-500 rounded-full text-white flex items-center justify-center"
               style={{
                 boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
@@ -84,7 +110,7 @@ const SideBar = () => {
               }}
             >
               15
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex flex-col  gap-3 w-full">
@@ -95,7 +121,7 @@ const SideBar = () => {
           >
             <img
               src="./src/assests/Setting_line.svg"
-              className=" top-1 right-4 z-4 object-contain py-2"
+              className=" top-1 right-4 z-4 object-contain py-[6px] w-[25px]"
             />
           </div>
           <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
@@ -121,8 +147,8 @@ const SideBar = () => {
         <div className="relative flex mx-4">
           <input
             type="text"
-            value={filterValue}
-            onChange={(e) => setFilterValue(e.target.value)}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className={`${
               isDarkMode ? "bg-input-bg-dark" : "bg-secondary-500"
             } pl-12 text-white rounded-xl focus:outline-none focus:border-0 focus:ring-[3px] focus:ring-blue border-0 placeholder-white::placeholder`}
@@ -137,17 +163,14 @@ const SideBar = () => {
         </div>
 
         <div>
-          {users
-            ? users?.contactedUsers?.map((user: any) => (
+          {usersData
+            ? usersData?.map((user: any) => (
                 <div key={user._id} onClick={() => handleSelectContact(user)}>
                   <Friend
                     key={user.id}
                     user={user}
-                    lastMsg={user?.latestMessage}
                     isDarkMode={isDarkMode}
                     selected={selectedId === user._id}
-                    img={user.profileImage?.url}
-                    title={user.userName}
                   />
                 </div>
               ))

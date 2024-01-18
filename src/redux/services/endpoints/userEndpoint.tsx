@@ -60,4 +60,11 @@ export const userEndpoints = (
       body,
     }),
   }),
+  searchuser: builder.mutation<UserState[], { identifier: string }>({
+    query: (body: unknown) => ({
+      url: "/users/search",
+      method: "POST",
+      body,
+    }),
+  }),
 });

@@ -2,25 +2,17 @@ import FetchLatestMessages from "../../util/FetchLatestMessages";
 import { getContactName } from "../../util/getContactName";
 import { useAppSelector } from "../../redux/hooks";
 import { PiBirdFill } from "react-icons/pi";
+import { FaCheckCircle, FaPlusCircle } from "react-icons/fa";
+import { IoMdCloseCircle } from "react-icons/io";
 
 interface FriendProps {
   user: any;
   key: string;
   isDarkMode: boolean;
-  lastMsg: string;
-  img: string;
-  title: string;
   selected: boolean;
 }
 
-const Friend = ({
-  user,
-  key,
-  isDarkMode,
-  img,
-  title,
-  selected,
-}: FriendProps) => {
+const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
   const { onlineFriends } = useAppSelector((state) => state.socket);
   const conversationState = useAppSelector((state) => state.conversation);
   const { user: userData } = useAppSelector((state) => state.auth);
@@ -46,7 +38,7 @@ const Friend = ({
           <div
             className="w-10 h-10 rounded-full shadow-xl flex items-center justify-center"
             style={{
-              backgroundImage: `url(${img})`,
+              backgroundImage: `url(${user?.profileImage?.url})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -78,12 +70,12 @@ const Friend = ({
                 isDarkMode ? "text-white" : "text-black"
               } line-clamp-1`}
             >
-              {title}
+              {user.userName}
             </p>
           </div>
           <div className="relative">
-            {user.conversation.unread.includes(userData?._id) &&
-              user._id !== selectedId && (
+            {user?.conversation?.unread?.includes(userData?._id) &&
+              user?._id !== selectedId && (
                 <div className="min-w-5 absolute right-1 top-[-0.5rem] w-5 min-h-5 h-5 rounded-full bg-red-500 flex justify-center items-center text-white text-xs animate-pulse" />
               )}
           </div>
@@ -100,7 +92,25 @@ const Friend = ({
             } `}
           ></div>
         </div>
+        {!userData?.friendsRequest?.includes(user?._id) && (
+          // send friend request
+
+          <FaPlusCircle className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark " />
+        )}
       </div>
+      {/* {!userData?.friendsRequest?.includes(user?._id) && (
+        <div className="flex items-center justify-around mb-4">
+          <div className="flex items-center  gap-2 font-semibold">
+            <FaCheckCircle className="text-green-500 text-[22px]" />
+            Accept
+          </div>
+          <div className="flex items-center  gap-2 font-semibold">
+            <IoMdCloseCircle className="text-red-500 text-[22px]" />
+            Decline
+          </div>
+        </div>
+      )} */}
+
       {/* Line Divider */}
       <div
         className={`absolute bottom-0 left-4 border-t ${

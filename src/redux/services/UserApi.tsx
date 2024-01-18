@@ -25,4 +25,5 @@ export const {
   useDeleteUserMutation,
   usePasswordResetMutation,
   usePasswordResetConfirmMutation,
+  useSearchuserMutation,
 } = UserApi;
