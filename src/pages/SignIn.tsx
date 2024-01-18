@@ -22,7 +22,6 @@ interface FormErrors {
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [id, setId] = useState<string>("");
   const [formData, setFormData] = React.useState<FormData>({
     email: "",
     password: "",
@@ -33,9 +32,6 @@ const SignIn = () => {
   const token = urlParams.get("token");
   const userId = urlParams.get("userId");
 
-  const { data } = useFetchUserByIdQuery(
-    userId ? { id: userId } : skipToken
-  ) as any;
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -57,7 +53,7 @@ const SignIn = () => {
 
     return isValid;
   };
-  
+
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -97,16 +93,11 @@ const SignIn = () => {
   };
 
   useEffect(() => {
-    if (token) {
-      localStorage.setItem("token", token);
-      // get coded data user from url
-      setId(userId as string);
-      // extract id from user data#
+    localStorage.setItem("token", token as string);
+    localStorage.setItem("userId", userId as string);
 
-      dispatch(setAuth(data as any));
-      navigate("/chat");
-    }
-  }, [token, userId, data]);
+    if (token) navigate("/chat");
+  }, [token, userId]);
 
   return (
     <section className="relative bg-white h-full w-full font-inter">

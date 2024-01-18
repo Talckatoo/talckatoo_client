@@ -25,7 +25,7 @@ const SideBar = () => {
   const handleSelectContact = (u: any) => {
     console.log(u);
     setSelectedUser(u);
-    dispatch(setRecipientProfileImage(u.profileImage?.url as any));
+    dispatch(setRecipientProfileImage(u?.profileImage?.url as any));
     dispatch(
       setConversation({
         conversationId: u.conversation._id,
@@ -100,7 +100,7 @@ const SideBar = () => {
           </div>
           <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
             <img
-              src={`${user?.profileImage.url}`}
+              src={`${user?.profileImage?.url}`}
               className="h-10 w-10 object-cover rounded-full"
               alt="Profile-picture"
             />

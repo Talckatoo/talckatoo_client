@@ -146,7 +146,7 @@ const Navbar = () => {
                 </button>
               )}
               <div className="flex flex-col  hover:text-gray-300   mr-2 focus:outline-none sm:block">
-                {user && user.userName ? (
+                {user && user?.userName ? (
                   <p className="max-md:text-[16px] md: text-[16px] text-bold text-[#25282C]">
                    {recipient}
                   </p>

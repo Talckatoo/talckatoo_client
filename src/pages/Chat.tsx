@@ -6,9 +6,14 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import { setRecipient, setUsers } from "../redux/features/user/userSlice";
 import { setOnlineFriends } from "../redux/features/socket/socketSlice";
-import { useFetchAllFriendsQuery } from "../redux/services/UserApi";
+import {
+  useFetchAllFriendsQuery,
+  useFetchUserByIdQuery,
+} from "../redux/services/UserApi";
 import { setCall } from "../redux/features/call/callSlice";
 import SideBar from "../components/shared/SideBar";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { setAuth } from "../redux/features/user/authSlice";
 
 interface Socket {
   current: any;
@@ -28,9 +33,17 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   // RTK Query
   const { data: friends, refetch } = useFetchAllFriendsQuery(null) as any;
 
-  // useEffect(() => {
-  //   dispatch(setCall(null));
-  // }, []);
+  const userID = localStorage.getItem("userId");
+
+  const { data } = useFetchUserByIdQuery(userID ? { id: userID } : skipToken, {
+    refetchOnMountOrArgChange: true,
+  }) as any;
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setAuth(data.user));
+    }
+  }, [data]);
 
   useEffect(() => {
     if (friends) {
