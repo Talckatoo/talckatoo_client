@@ -32,7 +32,7 @@ const ChatNavSearch: FC<InputProps> = ({
         placeholder={placeholder}
         value={value}
         id={id}
-        className={`rounded-[10px] h-[41px] mb-0 bg-[#E9E9EF] pl-[2.5rem] ${
+        className={`rounded-[10px] h-[41px] mb-0 bg-[#F5F5F5] pl-[2.5rem] ${
           error ? "border border-red-500" : ""
         } ${className}`}
       />

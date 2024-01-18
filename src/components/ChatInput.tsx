@@ -16,6 +16,7 @@ import { useAppSelector } from "../redux/hooks";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import Input from "../UI/Input";
+import TextArea from "../UI/TextArea";
 
 interface ChatInputProps {
   socket: any;
@@ -102,40 +103,43 @@ const ChatInput = ({
   };
 
   const handleSendMessage = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (messageText.trim() === "") {
-      return;
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (messageText.trim() === "") {
+        return;
+      }
+
+      if (messageText.substring(0, 7) === AIcall) {
+        onHandleSendAIMessage(messageText);
+        toast.loading("Please wait", {
+          position: toast.POSITION.TOP_CENTER,
+          progressClassName: "success-progress-bar",
+          toastId: 2,
+        });
+      } else {
+        onHandleSendMessage(messageText);
+      }
+      setMessageText("");
     }
-    if (messageText.substring(0, 7) === AIcall) {
-      onHandleSendAIMessage(messageText);
-      toast.loading("Please wait", {
-        position: toast.POSITION.TOP_CENTER,
-        progressClassName: "success-progress-bar",
-        toastId: 2,
-      });
-    } else {
-      onHandleSendMessage(messageText);
-    }
-    setMessageText("");
   };
 
   return (
     <>
       <div className="w-full  relative z-10 pt-2">
         <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  ">
-          <form onSubmit={handleSendMessage} className="">
-            <Input
-              label=""
-              name="name"
-              type="text"
-              value={messageText}
-              id=""
-              onChange={handleTyping}
-              placeholder="Type your message or type @birdie to call AI Assistant"
-              className="mb-0 rounded-t-[20px] max-md:py-4 py-4 border border-[#0E131D] outline-none focus:outline-none "
-            />
-          </form>
-          <div className="flex justify-between items-center relative bottom-[1.8rem] bg-[#25282C] py-3 rounded-b-[20px] px-5">
+          <TextArea
+            label=""
+            name="name"
+            type="text"
+            value={messageText}
+            onChange={handleTyping as any}
+            onKeyDown={handleSendMessage as any}
+            id=""
+            placeholder="Type your message or type @birdie to call AI Assistant"
+            className="mb-0 rounded-t-[20px]   border border-[#0E131D] "
+          />
+
+          <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-5">
             <form onSubmit={handleSendMessage} className="absolute right-2 ">
               <button>
                 <img src="/assets/img/send.png" className="" />

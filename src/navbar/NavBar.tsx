@@ -154,12 +154,12 @@ const Navbar = () => {
                 ) : (
                   ""
                 )}
-                <div className="flex gap-2 items-center">
+                {/* <div className="flex gap-2 items-center">
                   <img src="/assets/img/online.png" alt="oline point" />
                   <span className="text-[#879795] max-md:[12px] md:text-[14px] ">
                     Active now
                   </span>
-                </div>
+                </div> */}
               </div>
 
               {/* {isDropdownOpen && (

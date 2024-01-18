@@ -2,19 +2,9 @@ import { useState, useContext, useEffect } from "react";
 import ChatContainer from "../components/ChatContainer";
 import Navbar from "../navbar/NavBar";
 import { UserContext } from "../context/user-context";
-import { getContactName } from "../util/getContactName";
-import COCKATOO from "./.././assests/cockatoo.png";
-import FetchLatestMessages from "../util/FetchLatestMessages";
-import { PiBirdFill } from "react-icons/pi";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
-import {
-  User,
-  setRecipient,
-  setUsers,
-  updateContactedUserById,
-  setRecipientId,
-} from "../redux/features/user/userSlice";
+import { setRecipient, setUsers } from "../redux/features/user/userSlice";
 import { setOnlineFriends } from "../redux/features/socket/socketSlice";
 import { useFetchAllFriendsQuery } from "../redux/services/UserApi";
 import { setCall } from "../redux/features/call/callSlice";
@@ -33,7 +23,6 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationState = useAppSelector((state) => state.conversation);
   const messages = useAppSelector((state) => state.messages.messages);
   const { users } = useAppSelector((state) => state.user);
-  const [selectedUser, setSelectedUser] = useState<any | null>(null);
   // const {recipient} = useAppSelector((state) => state.recipient);
 
   // RTK Query

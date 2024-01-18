@@ -51,7 +51,7 @@ const SideBar = () => {
 
   return (
     <div
-      className={`w-2/6 min-w-[350px] h-full flex shadow-sm ${
+      className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${
         isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
@@ -68,7 +68,7 @@ const SideBar = () => {
               className=" top-1 right-4 z-4 object-contain py-2"
             />
           </div>
-          <div className="relative border-[1px] border-secondary-500 mx-2 rounded-[12px] flex items-center justify-center flex-col relative">
+          <div className="relative border-[1px] border-secondary-500 mx-2 rounded-[12px] flex items-center justify-center flex-col">
             <img
               src={`./src/assests/${
                 isDarkMode ? "User_alt_fill_dark.svg" : "User_alt_fill.svg"
