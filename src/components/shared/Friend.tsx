@@ -4,6 +4,7 @@ import { useAppSelector } from "../../redux/hooks";
 import { PiBirdFill } from "react-icons/pi";
 import { FaCheckCircle, FaPlusCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
+import { useAddFriendMutation } from "../../redux/services/UserApi";
 
 interface FriendProps {
   user: any;
@@ -16,9 +17,20 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
   const { onlineFriends } = useAppSelector((state) => state.socket);
   const conversationState = useAppSelector((state) => state.conversation);
   const { user: userData } = useAppSelector((state) => state.auth);
+  const [addFriend, { isLoading }] = useAddFriendMutation();
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
+
+  const HandleSendFriendRequest = async (friendId: string) => {
+    try {
+      const result = await addFriend({ identifier: friendId }).unwrap();
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="relative overflow-hidden bg" key={key}>
       {selected && (
@@ -97,7 +109,10 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
           .includes(user?._id) && (
           // send friend request
 
-          <FaPlusCircle className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark " />
+          <FaPlusCircle
+            className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark "
+            onClick={() => HandleSendFriendRequest(user?._id)}
+          />
         )}
       </div>
       {/* {!userData?.friendsRequest?.includes(user?._id) && (

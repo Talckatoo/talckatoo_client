@@ -26,4 +26,5 @@ export const {
   usePasswordResetMutation,
   usePasswordResetConfirmMutation,
   useSearchuserMutation,
+  useAddFriendMutation,
 } = UserApi;
