@@ -1,10 +1,13 @@
 import FetchLatestMessages from "../../util/FetchLatestMessages";
 import { getContactName } from "../../util/getContactName";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { PiBirdFill } from "react-icons/pi";
 import { FaCheckCircle, FaPlusCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useAddFriendMutation } from "../../redux/services/UserApi";
+import { setAuth } from "../../redux/features/user/authSlice";
+import { MdPending } from "react-icons/md";
+import { useEffect } from "react";
 
 interface FriendProps {
   user: any;
@@ -19,13 +22,29 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
   const { user: userData } = useAppSelector((state) => state.auth);
   const [addFriend, { isLoading }] = useAddFriendMutation();
 
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    console.log(userData);
+  }, [userData]);
+
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
 
   const HandleSendFriendRequest = async (friendId: string) => {
     try {
-      const result = await addFriend({ identifier: friendId }).unwrap();
-      console.log(result);
+      const response = await addFriend({ identifier: friendId }).unwrap();
+      console.log(response);
+      if ("message" in response) {
+        if (response.message === "Friend request sent successfully") {
+          dispatch(
+            setAuth({
+              ...userData,
+              friendRequests: [...userData.friendRequests, friendId],
+            })
+          );
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -106,14 +125,17 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
         </div>
         {!userData?.friends
           ?.map((friend: any) => friend._id)
-          .includes(user?._id) && (
+          .includes(user?._id) &&
           // send friend request
-
-          <FaPlusCircle
-            className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark "
-            onClick={() => HandleSendFriendRequest(user?._id)}
-          />
-        )}
+          (!userData?.friendRequests?.includes(user?._id) ? (
+            <FaPlusCircle
+              className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark "
+              onClick={() => HandleSendFriendRequest(user?._id)}
+            />
+          ) : (
+            // pending friend request
+            <MdPending className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark " />
+          ))}
       </div>
       {/* {!userData?.friendsRequest?.includes(user?._id) && (
         <div className="flex items-center justify-around mb-4">

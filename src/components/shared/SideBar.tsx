@@ -44,7 +44,11 @@ const SideBar = () => {
   }, [search]);
 
   const handleSelectContact = (u: any) => {
-    if (searchData.length > 0) return;
+    if (
+      searchData.length > 0 &&
+      !user.friends?.map((f: any) => f._id).includes(u._id)
+    )
+      return;
     console.log(u);
     setSelectedUser(u);
     dispatch(setRecipientProfileImage(u?.profileImage?.url as any));

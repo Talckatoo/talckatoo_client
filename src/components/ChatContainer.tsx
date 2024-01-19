@@ -622,7 +622,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             <div className="relative h-full z-[5] ">
               <div
                 ref={scrollRef}
-                className="overflow-y-auto w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
+                className="overflow-y-auto overflow-x-hidden w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
               >
                 {!!selectedId && !!conversationId ? (
                   <div className="m-2 p-2 ">
@@ -649,7 +649,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             >
                               <div
                                 className={
-                                  "w-auto max-w-[50%] inline-block m-2 p-4 overflow-hidden" +
+                                  "w-auto max-w-[50%] inline-block m-2 p-4 " +
                                   (msg.sender === user?._id &&
                                   msg.sender !==
                                     import.meta.env.VITE_AI_ASSISTANT_ID
