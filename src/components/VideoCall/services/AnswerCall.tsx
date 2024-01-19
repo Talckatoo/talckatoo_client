@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 import Peer from "simple-peer";
 
 const AnswerCall = (
@@ -12,24 +8,15 @@ const AnswerCall = (
   connectionRef,
   userVideo
 ) => {
-<<<<<<< HEAD
-  console.log("answer");
-
-=======
   setCallAccepted(true);
->>>>>>> main
   const peer = new Peer({
     initiator: false,
     trickle: false,
     stream: currentStream,
   });
-<<<<<<< HEAD
-  setCallAccepted(true);
-=======
 
   console.log(callData)
 
->>>>>>> main
 
   peer.on("connect", () => {
     console.log("Peer connection established.");
@@ -55,17 +42,6 @@ const AnswerCall = (
   });
 
   peer.on("signal", (data) => {
-<<<<<<< HEAD
-    console.log("Signal data generated:", data);
-    socket.current.emit("answerCall", { signal: data, call });
-  });
-
-  peer.on("stream", (remoteStream) => {
-    console.log("Remote stream received in AnswerCall:", remoteStream);
-
-    if (userVideo && userVideo.current) {
-      userVideo.current.srcObject = remoteStream;
-=======
     socket.current.emit("answerCall", { signal: data, callData });
   });
 
@@ -75,7 +51,6 @@ const AnswerCall = (
     setTimeout(()=>{
     if (userVideo && userVideo.current ) {
       userVideo.current.srcObject = currentStream;
->>>>>>> main
     }
     }, 1000)
 
