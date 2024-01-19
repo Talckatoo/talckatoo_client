@@ -92,7 +92,9 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
             } `}
           ></div>
         </div>
-        {!userData?.friendsRequest?.includes(user?._id) && (
+        {!userData?.friends
+          ?.map((friend: any) => friend._id)
+          .includes(user?._id) && (
           // send friend request
 
           <FaPlusCircle className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark " />

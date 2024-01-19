@@ -44,7 +44,7 @@ const SideBar = () => {
   }, [search]);
 
   const handleSelectContact = (u: any) => {
-    if (searchData) return;
+    if (searchData.length > 0) return;
     console.log(u);
     setSelectedUser(u);
     dispatch(setRecipientProfileImage(u?.profileImage?.url as any));
