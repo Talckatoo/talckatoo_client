@@ -68,16 +68,13 @@ const FriendRequest = ({ user, key, isDarkMode, selected }: FriendProps) => {
       console.log(response);
       if ("message" in response) {
         if (response.message === "Friend request accepted successfully") {
-          if (requests) {
-            const newRequests = requests.filter(
-              (request: any) => request._id !== user?._id
-            );
+          const newRequests = requests.filter(
+            (request: any) => request._id !== user?._id
+          );
 
-            dispatch(setRequests(newRequests));
-          }
-        } else {
-          console.error("Requests state is not an array:", requests);
+          dispatch(setRequests(newRequests));
         }
+
         if (action === "accept") {
           dispatch(
             setAuth({
