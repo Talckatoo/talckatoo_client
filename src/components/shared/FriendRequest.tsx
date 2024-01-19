@@ -72,12 +72,7 @@ const FriendRequest = ({ user, key, isDarkMode, selected }: FriendProps) => {
             const newRequests = requests.filter(
               (request: any) => request._id !== user?._id
             );
-            if (action === "accept" || action === "reject") {
-              newRequests.push({
-                ...user,
-                status: action === "accept" ? "accepted" : "rejected",
-              });
-            }
+
             dispatch(setRequests(newRequests));
           }
         } else {
