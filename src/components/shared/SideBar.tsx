@@ -35,11 +35,11 @@ const SideBar = () => {
       else alert("User not found");
     } catch (error) {
       console.log(error);
+      setSearchData([]);
     }
   };
 
   useEffect(() => {
-    if (search === "") return;
     SearchForUser();
   }, [search]);
 
