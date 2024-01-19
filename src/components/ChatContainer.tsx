@@ -7,19 +7,18 @@ import ChatWelcome from "../components/ChatWelcome";
 import { getTime } from "../util/getTime";
 import { v4 as uuidv4 } from "uuid";
 import JumpingDotsAnimation from "../UI/animation";
-import { HiArrowsRightLeft } from "react-icons/hi2";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
-import { MdDownload, MdTranslate } from "react-icons/md";
+import { MdDownload,  } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import {
   addMessage,
   setMessages,
 } from "../redux/features/messages/messageSlice";
-import { setConversation } from "../redux/features/conversation/conversationSlice";
-import userSlice, { setRecipient } from "../redux/features/user/userSlice";
+
+import { setRecipient } from "../redux/features/user/userSlice";
 import {
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
@@ -31,22 +30,18 @@ interface Socket {
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
-  const [stream, setStream] = useState(null);
-  const myVideo = useRef(null); // Initialize the ref
 
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const conversationState = useAppSelector((state) => state.conversation);
+  const selectedId = conversationState?.conversation?.selectedId;
   const user = useAppSelector((state) => state.auth.user);
-  const call = useAppSelector((state) => state.call.call);
   const messages = useAppSelector((state) => state.messages.messages);
   const { recipient } = useAppSelector((state) => state.user);
-  const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
-  const { recipientPi } = useAppSelector((state) => state.user);
 
   // RTK Query
   // fetch all messages by conversation id
@@ -61,10 +56,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-  // navigate
-  const navigateVideoCall = () => {
-    navigate("/videoCall");
-  };
 
   useEffect(() => {
     if (selectedId || conversationId) {
@@ -547,23 +538,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // *************************** VIDEO CALL *****************************
 
-  const handleCall = () => {
-    // decode the call data
-    const encodedCallData = Base64.fromUint8Array(
-      new TextEncoder().encode(
-        JSON.stringify({
-          selectedId,
-          userId: user._id,
-          userName: user.userName,
-        })
-      )
-    );
 
-    const videoCallUrl = `/call/${Math.random()
-      .toString(36)
-      .slice(2)}/${encodedCallData}`;
-    window.open(videoCallUrl, "_blank");
-  };
 
   const handleAnswerCall = () => {
     // indecoded decodedCallData
@@ -591,10 +566,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
-      {/* <button className="text-white" onClick={handleCall}>
-        Call
-      </button>
-      {call?.isReceivedCall && (
+
+      {/* {call?.isReceivedCall && (
         <div>
           <h2 className="text-black">{call?.username} is calling</h2>
           <button

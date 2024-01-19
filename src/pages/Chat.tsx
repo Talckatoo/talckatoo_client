@@ -14,6 +14,7 @@ import { setCall } from "../redux/features/call/callSlice";
 import SideBar from "../components/shared/SideBar";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { setAuth } from "../redux/features/user/authSlice";
+import HandleCall from "../components/VideoCall/services/HandleCall";
 
 interface Socket {
   current: any;
@@ -110,13 +111,19 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   //   refetchFriends();
   // }, [refetchFriends, messages]);
 
+  const handleCall = () => {
+
+    HandleCall()
+
+  };
+
   return (
     <>
       <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
         <SideBar />
 
         <div className=" w-full h-full flex flex-col bg-white">
-          {selectedId && <Navbar />}
+          {selectedId && <Navbar onHandleCall={handleCall} />}
           <ChatContainer socket={socket} />
         </div>
       </div>

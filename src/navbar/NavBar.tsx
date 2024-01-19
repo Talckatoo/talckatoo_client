@@ -18,7 +18,11 @@ import ChatNavSearch from "../components/ChatNavSearch";
 import languagesArray from "../util/languages";
 import { PiVideoCameraThin } from "react-icons/pi";
 import { PiPhoneCallLight } from "react-icons/pi";
-const Navbar = () => {
+
+interface NavBarProps {
+  onHandleCall: () => void
+}
+const Navbar = ({onHandleCall}:NavBarProps ) => {
   //Reference for dropdown menu
   const dropdownRef = useRef<HTMLDivElement>(null);
   //States
@@ -86,14 +90,14 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const handleProfileClick = () => {
-    navigate("/profile");
-    setIsDropdownOpen(!isDropdownOpen);
-  };
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
+
+  const handleVideoCall = ()=>{
+    onHandleCall()
+  }
 
   return (
     <nav className="relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm ">
@@ -205,8 +209,19 @@ const Navbar = () => {
       </div>
 
       <div className="flex gap-6 items-center max-md:gap-2  ">
+
+      <button className="text-white" onClick={handleVideoCall}>
       <PiVideoCameraThin size={34}/>
+        
+      </button>
+{/* 
+      <button className="text-white" onClick={handleCall}>
+
       <PiPhoneCallLight size={26}/>
+    
+      </button> */}
+
+    
       </div>
     </nav>
   );
