@@ -6,6 +6,7 @@ import { setConversation } from "../../redux/features/conversation/conversationS
 import {
   setRecipient,
   setRecipientProfileImage,
+  setRequests,
 } from "../../redux/features/user/userSlice";
 import { UserContext } from "../../context/user-context";
 import {
@@ -14,6 +15,7 @@ import {
 } from "../../redux/services/UserApi";
 import { PiChatTextFill } from "react-icons/pi";
 import FriendRequest from "./FriendRequest";
+import { setRequest } from "../../redux/features/user/requestSlice";
 
 const SideBar = () => {
   const [search, setSearch] = useState("");
@@ -25,17 +27,28 @@ const SideBar = () => {
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
   const [showRequest, setShowRequest] = useState(false);
+  const { requests } = useAppSelector((state) => state.user);
+  const [allUser, setAllUser] = useState<any[]>([]);
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
 
-  const [searchuser, { loading: isLoading }] = useSearchuserMutation();
+  const [searchuser] = useSearchuserMutation();
   // get all requests
-  const { data: requests } = useFetchAllRequestsQuery(null) as any;
+  const { data: requestsData } = useFetchAllRequestsQuery(null) as any;
 
   useEffect(() => {
-    console.log(requests);
-  }, [requests]);
+    if (requestsData) {
+      dispatch(setRequests(requestsData?.friendRequests));
+    }
+  }, [requestsData]);
+
+  useEffect(() => {
+    if (users) {
+      setAllUser(users?.contactedUsers.concat(users?.uncontactedUsers));
+      console.log(allUser);
+    }
+  }, [users]);
 
   const dispatch = useAppDispatch();
 
@@ -199,7 +212,10 @@ const SideBar = () => {
           </div>
         ) : (
           <div>
-            {requests?.friendRequests
+            <div className="flex items-center justify-center text-2xl font-bold text-gray-600">
+              Friend Requests
+            </div>
+            {requests
               ?.filter(
                 (r: any) => r.status === "pending" && r.to._id === user._id
               )
@@ -213,6 +229,22 @@ const SideBar = () => {
                   />
                 </div>
               ))}
+
+            <div className="flex items-center justify-center text-2xl font-bold text-gray-600 mt-8">
+              Friends
+            </div>
+            {allUser
+              ? allUser?.map((user: any) => (
+                  <div key={user._id} onClick={() => handleSelectContact(user)}>
+                    <Friend
+                      key={user.id}
+                      user={user}
+                      isDarkMode={isDarkMode}
+                      selected={selectedId === user._id}
+                    />
+                  </div>
+                ))
+              : null}
           </div>
         )}
       </div>

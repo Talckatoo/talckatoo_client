@@ -77,4 +77,14 @@ export const userEndpoints = (
       body,
     }),
   }),
+  actionFriend: builder.mutation<
+    UserState[],
+    { userId: string; friendRequestId: string; action: string }
+  >({
+    query: (body: unknown) => ({
+      url: "/users/action",
+      method: "POST",
+      body,
+    }),
+  }),
 });
