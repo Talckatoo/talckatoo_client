@@ -68,7 +68,7 @@ const FriendRequest = ({ user, key, isDarkMode, selected }: FriendProps) => {
       console.log(response);
       if ("message" in response) {
         if (response.message === "Friend request accepted successfully") {
-          if (Array.isArray(requests)) {
+          if (requests) {
             const newRequests = requests.filter(
               (request: any) => request._id !== user?._id
             );
