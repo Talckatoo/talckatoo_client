@@ -468,7 +468,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const handleScroll = (e) => {
       const { scrollTop } = e.target;
       // almost the top
-      const isScrolledToTop = scrollTop < 400;
+      const isScrolledToTop = scrollTop < 600;
       if (isScrolledToTop && messages) {
         fetchNextPage();
       }
