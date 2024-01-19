@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { IoSearch } from "react-icons/io5";
+import { IoPersonSharp, IoSearch } from "react-icons/io5";
 import Friend from "./Friend";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setConversation } from "../../redux/features/conversation/conversationSlice";
@@ -8,7 +8,12 @@ import {
   setRecipientProfileImage,
 } from "../../redux/features/user/userSlice";
 import { UserContext } from "../../context/user-context";
-import { useSearchuserMutation } from "../../redux/services/UserApi";
+import {
+  useFetchAllRequestsQuery,
+  useSearchuserMutation,
+} from "../../redux/services/UserApi";
+import { PiChatTextFill } from "react-icons/pi";
+import FriendRequest from "./FriendRequest";
 
 const SideBar = () => {
   const [search, setSearch] = useState("");
@@ -19,11 +24,18 @@ const SideBar = () => {
   const [usersData, setUsersData] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
+  const [showRequest, setShowRequest] = useState(false);
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
 
   const [searchuser, { loading: isLoading }] = useSearchuserMutation();
+  // get all requests
+  const { data: requests } = useFetchAllRequestsQuery(null) as any;
+
+  useEffect(() => {
+    console.log(requests);
+  }, [requests]);
 
   const dispatch = useAppDispatch();
 
@@ -89,32 +101,36 @@ const SideBar = () => {
       <div className="w-[80px] min-w-[80px] border-r pt-5 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
         <div className="flex flex-col  gap-3 w-full">
           <div
-            className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
+            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
+              showRequest
+                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
+                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
+              transition duration-300 ease-in-out 
+            `}
+            onClick={() => setShowRequest(!showRequest)}
           >
-            <img
-              src="./src/assests/comment_duotone.svg"
-              className=" top-1 right-4 z-4 object-contain py-1 w-[29px]"
+            <PiChatTextFill
+              className={`${
+                showRequest ? "text-secondary-500" : "text-white"
+              } z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
           </div>
-          <div className="relative border-[1px] border-secondary-500 mx-2 rounded-[12px] flex items-center justify-center flex-col">
-            <img
-              src={`./src/assests/${
-                isDarkMode ? "User_alt_fill_dark.svg" : "User_alt_fill.svg"
-              }`}
-              className="z-4 object-contain py-1 w-[29px]"
+          <div
+            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
+              !showRequest
+                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
+                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
+              transition duration-300 ease-in-out 
+            `}
+            onClick={() => setShowRequest(!showRequest)}
+          >
+            <IoPersonSharp
+              className={`${
+                !showRequest ? "text-secondary-500" : "text-white"
+              } z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
-            {/* <div
-              className="absolute top-[75%] left-[80%] w-4 h-4 bg-red-badge-500 rounded-full text-white flex items-center justify-center"
-              style={{
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-                fontSize: "0.6rem",
-                fontWeight: "bold",
-              }}
-            >
-              15
-            </div> */}
           </div>
         </div>
         <div className="flex flex-col  gap-3 w-full">
@@ -166,20 +182,39 @@ const SideBar = () => {
           />
         </div>
 
-        <div>
-          {usersData
-            ? usersData?.map((user: any) => (
-                <div key={user._id} onClick={() => handleSelectContact(user)}>
-                  <Friend
-                    key={user.id}
-                    user={user}
+        {!showRequest ? (
+          <div>
+            {usersData
+              ? usersData?.map((user: any) => (
+                  <div key={user._id} onClick={() => handleSelectContact(user)}>
+                    <Friend
+                      key={user.id}
+                      user={user}
+                      isDarkMode={isDarkMode}
+                      selected={selectedId === user._id}
+                    />
+                  </div>
+                ))
+              : null}
+          </div>
+        ) : (
+          <div>
+            {requests?.friendRequests
+              ?.filter(
+                (r: any) => r.status === "pending" && r.to._id === user._id
+              )
+              .map((request: any) => (
+                <div key={request._id}>
+                  <FriendRequest
+                    key={request.id}
+                    user={request}
                     isDarkMode={isDarkMode}
-                    selected={selectedId === user._id}
+                    selected={selectedId === request._id}
                   />
                 </div>
-              ))
-            : null}
-        </div>
+              ))}
+          </div>
+        )}
       </div>
     </div>
   );

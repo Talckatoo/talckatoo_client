@@ -43,6 +43,9 @@ export const userEndpoints = (
   fetchAllFriends: builder.query<UserState[], null>({
     query: () => "/users/friends",
   }),
+  fetchAllRequests: builder.query<UserState[], null>({
+    query: () => "/users/requests",
+  }),
   fetchUserById: builder.query<UserState, { id: string }>({
     query: ({ id }: { id: string }) => `users/${id}`,
   }),
