@@ -25,8 +25,14 @@ import {
 } from "../redux/services/MessagesApi";
 import { FaFile } from "react-icons/fa";
 import { Base64 } from "js-base64";
+
 interface Socket {
   current: any;
+}
+
+interface ReceivedCallState {
+  isReceivedCall: boolean;
+  caller: string; // or whatever the type of the caller should be
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
@@ -42,6 +48,14 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const { recipient } = useAppSelector((state) => state.user);
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
+
+  const [receivedCall, setReceivedCall] = useState<ReceivedCallState>({
+    isReceivedCall: false,
+    caller: "",
+  })
+
+
+  // *******************CALL******************
 
   // RTK Query
   // fetch all messages by conversation id
@@ -110,7 +124,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           roomId: any;
           userToCall: any;
         }) => {
-          console.log("callUser", signal, from, username, roomId, userToCall);
+
           // Encode the call data and set it into the URL
           const encodedCallData = Base64.fromUint8Array(
             new TextEncoder().encode(
@@ -124,10 +138,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
               })
             )
           );
-
-          console.log("callUser", encodedCallData);
-
           setDecodedCallData(encodedCallData);
+          setReceivedCall({
+            isReceivedCall: true,
+            caller: username
+          })
         }
       );
 
@@ -555,10 +570,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const data = JSON.parse(decodedString);
 
     // Now you can use the decoded data as needed
-    console.log("callData from inside", data);
+
     const videoCallUrl = `/call/${data.roomId}/${decodedCallData}`;
     window.open(videoCallUrl, "_blank");
   };
+
+
 
   return (
     <div
@@ -567,9 +584,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       }`}
     >
 
-      {/* {call?.isReceivedCall && (
+      {receivedCall?.isReceivedCall && (
         <div>
-          <h2 className="text-black">{call?.username} is calling</h2>
+          <h2 className="text-black">{receivedCall?.caller} is calling</h2>
           <button
             className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
             onClick={() => handleAnswerCall()}
@@ -577,7 +594,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             Answer
           </button>
         </div>
-      )} */}
+      )}
 
       <div className="relative h-full">
         <div className="flex flex-col shadow-sm border-l border-opacity-20 h-full ">

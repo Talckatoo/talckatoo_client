@@ -6,9 +6,10 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import Peer from "simple-peer";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import CallUser from "../components/VideoCall/services/CallUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
 import { Base64 } from "js-base64";
-import CallUser from "../components/VideoCall/services/CallUser";
+
 
 interface Socket {
   current: any;
@@ -16,7 +17,6 @@ interface Socket {
 
 const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
-  const { call } = useAppSelector((state) => state.call);
 
   const { roomId, decodedCallData } = useParams();
   const [stream, setStream] = useState(null);
@@ -35,8 +35,10 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const navigateChat = () => {
     navigate("/chat");
   };
+  
 
   useEffect(() => {
+    
     const initializeMediaStream = async () => {
       try {
         const currentStream = await navigator.mediaDevices.getUserMedia({
@@ -44,7 +46,9 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           audio: true,
         });
 
-        // setStream(currentStream);
+        setStream(currentStream);
+
+        if (!stream) return
 
         if (myVideo.current) {
           myVideo.current.srcObject = currentStream;
@@ -67,8 +71,8 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           roomId: roomId,
           signal: data.signal,
           selectedId: data.userToCall,
-          userId: data.from,
-          userName: data.userName,
+          from: data.from,
+          userName: data.username,
         };
 
         if (user._id === data.userId) {
@@ -114,7 +118,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
 
   useEffect(() => {
     socket?.current?.on("roomCreated", (data: { message: any }) => {
-      console.log(data.message);
     });
 
     return () => {
@@ -156,12 +159,3 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
 
 export default VideoRoomCall;
 
-// https://www.instagram.com/call/
-// ?has_video=true
-// &ig_thread_id=340282366841710301244259118731407541646
-// &server_info_data=GANmcmMYFVJPT006NzA2NjUwMjI3Njc5Nzc0NRgQVUpOamR1V1ByS2F4SWRjRwA%3D
-
-// https://www.facebook.com/
-// groupcall/
-// ROOM:7260592670670331/
-// ?call_id=536313397&has_video=false&initialize_video=false&is_e2ee_mandated=false&nonce=hz6ddct43j0g&referrer_context=zenon_precall&thread_type=1&users_to_ring[0]=100004132960478&use_joining_context=true&peer_id=100004132960478&av=100023790437452&server_info_data=GANmcmMYFVJPT006NzI2MDU5MjY3MDY3MDMzMRgQUHdWVnRZZlNCendGbEZidwA%3D
