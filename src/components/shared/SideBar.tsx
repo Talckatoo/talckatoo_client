@@ -79,13 +79,13 @@ const SideBar = () => {
     dispatch(setRecipientProfileImage(u?.profileImage?.url as any));
     dispatch(
       setConversation({
-        conversationId: u.conversation._id,
-        selectedId: u._id,
-        language: u.language,
+        conversationId: u?.conversation?._id,
+        selectedId: u?._id,
+        language: u?.language,
       })
     );
 
-    dispatch(setRecipient(u.userName as any));
+    dispatch(setRecipient(u?.userName as any));
   };
 
   useEffect(() => {
@@ -212,9 +212,14 @@ const SideBar = () => {
           </div>
         ) : (
           <div>
-            <div className="flex items-center justify-center text-2xl font-bold text-gray-600">
-              Friend Requests
-            </div>
+            {requests?.filter(
+              (r: any) => r.status === "pending" && r.to._id === user._id
+            ).length > 0 && (
+              <div className="flex items-center justify-center text-2xl font-bold text-gray-600">
+                Friend Requests
+              </div>
+            )}
+
             {requests
               ?.filter(
                 (r: any) => r.status === "pending" && r.to._id === user._id

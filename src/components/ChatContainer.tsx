@@ -67,7 +67,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   useEffect(() => {
-    if (selectedId || conversationId) {
+    if (selectedId && conversationId) {
       setPage(1);
       setLimit(30);
       setHasMoreMessages(true);

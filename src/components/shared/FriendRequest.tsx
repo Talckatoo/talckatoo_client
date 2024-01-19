@@ -12,7 +12,7 @@ import { setAuth } from "../../redux/features/user/authSlice";
 import { MdPending } from "react-icons/md";
 import { useEffect } from "react";
 import { setRequest } from "../../redux/features/user/requestSlice";
-import { setUsers } from "../../redux/features/user/userSlice";
+import { setRequests, setUsers } from "../../redux/features/user/userSlice";
 
 interface FriendProps {
   user: any;
@@ -66,22 +66,30 @@ const FriendRequest = ({ user, key, isDarkMode, selected }: FriendProps) => {
         action: action,
       }).unwrap();
       console.log(response);
-      if ("data" in response) {
-        if (Array.isArray(requests)) {
-          const newRequests = requests.filter(
-            (request: any) => request._id !== user?._id
-          );
-          if (action === "accept" || action === "reject") {
-            newRequests.push({
-              ...user,
-              status: action === "accept" ? "accepted" : "rejected",
-            });
+      if ("message" in response) {
+        if (response.message === "Friend request accepted successfully") {
+          if (Array.isArray(requests)) {
+            const newRequests = requests.filter(
+              (request: any) => request._id !== user?._id
+            );
+            if (action === "accept" || action === "reject") {
+              newRequests.push({
+                ...user,
+                status: action === "accept" ? "accepted" : "rejected",
+              });
+            }
+            dispatch(setRequests(newRequests));
           }
-          dispatch(setRequest(newRequests));
         } else {
           console.error("Requests state is not an array:", requests);
         }
         if (action === "accept") {
+          dispatch(
+            setAuth({
+              ...userData,
+              friends: [...userData.friends, user?._id],
+            })
+          );
           dispatch(
             setUsers({
               ...users,
