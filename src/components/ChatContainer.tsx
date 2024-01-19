@@ -708,7 +708,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                       />
                                       <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
                                         <Link to={msg.media.url} download>
-                                          <MdDownload className="text-[24px]" />
+                                          <MdDownload className="text-[24px] text-black" />
                                         </Link>
                                       </div>
                                     </div>
@@ -721,7 +721,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                       />
                                       <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
                                         <Link to={msg.media.url} download>
-                                          <MdDownload className="text-[24px]" />
+                                          <MdDownload className="text-[24px] text-black" />
                                         </Link>
                                       </div>
                                     </div>
@@ -746,7 +746,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                           </p>
                                         </div>
 
-                                        <MdDownload className="text-[35px] min-w-[35px] bg-white p-2 rounded-full shadow-md" />
+                                        <MdDownload className="text-[35px] min-w-[35px] text-black bg-white p-2 rounded-full shadow-md" />
                                       </Link>
                                     </div>
                                   ))}
