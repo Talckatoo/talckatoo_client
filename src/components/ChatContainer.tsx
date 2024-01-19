@@ -37,7 +37,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(30);
   const conversationState = useAppSelector((state) => state.conversation);
   const user = useAppSelector((state) => state.auth.user);
   const call = useAppSelector((state) => state.call.call);
@@ -69,7 +69,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     if (selectedId || conversationId) {
       setPage(1);
-      setLimit(10);
+      setLimit(30);
       setHasMoreMessages(true);
       setIsFetchingMore(false);
       refetchMessages();
@@ -453,7 +453,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       if (newMessages && newMessages.length > 0) {
         // add the new messages on top of the old ones
         setIsFetchingMore(true);
-        setLimit(limit + 10);
+        setLimit(limit + 20);
       } else {
         // No more messages to fetch
         setHasMoreMessages(false);
@@ -622,7 +622,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             <div className="relative h-full z-[5] ">
               <div
                 ref={scrollRef}
-                className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0  m-auto"
+                className="overflow-y-auto w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
               >
                 {!!selectedId && !!conversationId ? (
                   <div className="m-2 p-2 ">
@@ -649,7 +649,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                             >
                               <div
                                 className={
-                                  "w-auto max-w-[50%] inline-block m-2 p-4 " +
+                                  "w-auto max-w-[50%] inline-block m-2 p-4 overflow-hidden" +
                                   (msg.sender === user?._id &&
                                   msg.sender !==
                                     import.meta.env.VITE_AI_ASSISTANT_ID
