@@ -617,7 +617,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             <img
               src="/assets/img/Shape.png"
               alt="shape"
-              className="fixed right-[1rem]  -top-16 w-[30%] z-[1] "
+              className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
             />
             <div className="relative h-full z-[5] ">
               <div

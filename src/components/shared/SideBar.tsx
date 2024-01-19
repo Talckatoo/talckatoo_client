@@ -127,7 +127,7 @@ const SideBar = () => {
           <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
             <img
               src={`${user?.profileImage?.url}`}
-              className="h-10 w-10 object-cover rounded-full"
+              className="h-14 w-14 object-cover rounded-full"
               alt="Profile-picture"
             />
           </div>
