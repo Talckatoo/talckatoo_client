@@ -176,7 +176,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
             onClick={startRecording}
             className=" hover:text-slate-400   px-2.5  items-center justify-center"
           >
-            <img src="./assets/img/mic.png"  /> 
+            <FaMicrophone className="text-white text-[20px]" />
           </button>
           {recordedAudio ? (
             <>

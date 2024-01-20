@@ -43,6 +43,9 @@ export const userEndpoints = (
   fetchAllFriends: builder.query<UserState[], null>({
     query: () => "/users/friends",
   }),
+  fetchAllRequests: builder.query<UserState[], null>({
+    query: () => "/users/requests",
+  }),
   fetchUserById: builder.query<UserState, { id: string }>({
     query: ({ id }: { id: string }) => `users/${id}`,
   }),
@@ -63,6 +66,23 @@ export const userEndpoints = (
   searchuser: builder.mutation<UserState[], { identifier: string }>({
     query: (body: unknown) => ({
       url: "/users/search",
+      method: "POST",
+      body,
+    }),
+  }),
+  addFriend: builder.mutation<UserState[], { identifier: string }>({
+    query: (body: unknown) => ({
+      url: "/users/send",
+      method: "POST",
+      body,
+    }),
+  }),
+  actionFriend: builder.mutation<
+    UserState[],
+    { userId: string; friendRequestId: string; action: string }
+  >({
+    query: (body: unknown) => ({
+      url: "/users/action",
       method: "POST",
       body,
     }),

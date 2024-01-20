@@ -40,7 +40,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(30);
   const conversationState = useAppSelector((state) => state.conversation);
   const selectedId = conversationState?.conversation?.selectedId;
   const user = useAppSelector((state) => state.auth.user);
@@ -72,9 +72,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
 
   useEffect(() => {
-    if (selectedId || conversationId) {
+    if (selectedId && conversationId) {
       setPage(1);
-      setLimit(10);
+      setLimit(30);
       setHasMoreMessages(true);
       setIsFetchingMore(false);
       refetchMessages();
@@ -459,7 +459,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       if (newMessages && newMessages.length > 0) {
         // add the new messages on top of the old ones
         setIsFetchingMore(true);
-        setLimit(limit + 10);
+        setLimit(limit + 20);
       } else {
         // No more messages to fetch
         setHasMoreMessages(false);
@@ -474,7 +474,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const handleScroll = (e) => {
       const { scrollTop } = e.target;
       // almost the top
-      const isScrolledToTop = scrollTop < 400;
+      const isScrolledToTop = scrollTop < 600;
       if (isScrolledToTop && messages) {
         fetchNextPage();
       }
@@ -612,7 +612,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             <div className="relative h-full z-[5] ">
               <div
                 ref={scrollRef}
-                className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0  m-auto"
+                className="overflow-y-auto overflow-x-hidden w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
               >
                 {!!selectedId && !!conversationId ? (
                   <div className="m-2 p-2 ">
@@ -698,7 +698,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                       />
                                       <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
                                         <Link to={msg.media.url} download>
-                                          <MdDownload className="text-[24px]" />
+                                          <MdDownload className="text-[24px] text-black" />
                                         </Link>
                                       </div>
                                     </div>
@@ -711,7 +711,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                       />
                                       <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
                                         <Link to={msg.media.url} download>
-                                          <MdDownload className="text-[24px]" />
+                                          <MdDownload className="text-[24px] text-black" />
                                         </Link>
                                       </div>
                                     </div>
@@ -736,7 +736,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                           </p>
                                         </div>
 
-                                        <MdDownload className="text-[35px] min-w-[35px] bg-white p-2 rounded-full shadow-md" />
+                                        <MdDownload className="text-[35px] min-w-[35px] text-black bg-white p-2 rounded-full shadow-md" />
                                       </Link>
                                     </div>
                                   ))}

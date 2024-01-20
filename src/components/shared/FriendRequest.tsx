@@ -4,10 +4,15 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { PiBirdFill } from "react-icons/pi";
 import { FaCheckCircle, FaPlusCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
-import { useAddFriendMutation } from "../../redux/services/UserApi";
+import {
+  useActionFriendMutation,
+  useAddFriendMutation,
+} from "../../redux/services/UserApi";
 import { setAuth } from "../../redux/features/user/authSlice";
 import { MdPending } from "react-icons/md";
 import { useEffect } from "react";
+import { setRequest } from "../../redux/features/user/requestSlice";
+import { setRequests, setUsers } from "../../redux/features/user/userSlice";
 
 interface FriendProps {
   user: any;
@@ -16,11 +21,14 @@ interface FriendProps {
   selected: boolean;
 }
 
-const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
+const FriendRequest = ({ user, key, isDarkMode, selected }: FriendProps) => {
   const { onlineFriends } = useAppSelector((state) => state.socket);
   const conversationState = useAppSelector((state) => state.conversation);
   const { user: userData } = useAppSelector((state) => state.auth);
+  const { users } = useAppSelector((state) => state.user);
   const [addFriend, { isLoading }] = useAddFriendMutation();
+  const { requests } = useAppSelector((state) => state.user);
+  const [actionFriend] = useActionFriendMutation();
 
   const dispatch = useAppDispatch();
 
@@ -50,6 +58,54 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
     }
   };
 
+  const HandleActionFriend = async (action: string) => {
+    try {
+      const response = await actionFriend({
+        userId: user?._id,
+        friendRequestId: user?._id,
+        action: action,
+      }).unwrap();
+      console.log(response);
+      if ("message" in response) {
+        if (
+          response.message === "Friend request accepted successfully" ||
+          response.message === "Friend request rejected successfully"
+        ) {
+          const newRequests = requests.filter(
+            (request: any) => request._id !== user?._id
+          );
+
+          dispatch(setRequests(newRequests));
+        }
+
+        if (action === "accept") {
+          dispatch(
+            setAuth({
+              ...userData,
+              friends: [...userData.friends, user?._id],
+            })
+          );
+          dispatch(
+            setUsers({
+              ...users,
+              uncontactedUsers: [
+                ...users.uncontactedUsers,
+                {
+                  _id: user?.from._id,
+                  userName: user?.from.userName,
+                  profileImage: user?.from.profileImage,
+                  status: "accepted",
+                },
+              ],
+            })
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="relative overflow-hidden bg" key={key}>
       {selected && (
@@ -69,7 +125,7 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
           <div
             className="w-10 h-10 rounded-full shadow-xl flex items-center justify-center"
             style={{
-              backgroundImage: `url(${user?.profileImage?.url})`,
+              backgroundImage: `url("https://ik.imagekit.io/demo/medium_cafe_B1iTdD0C.jpg")`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -91,7 +147,6 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
               </svg>
             )}
           </div>
-          {getContactName(user.userName, onlineFriends)}
         </div>
         {/* Column 2: Title and Text */}
         <div className="flex-grow px-3 w-full ">
@@ -101,7 +156,7 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
                 isDarkMode ? "text-white" : "text-black"
               } line-clamp-1`}
             >
-              {user.userName}
+              {user.from.userName}
             </p>
           </div>
           <div className="relative">
@@ -123,7 +178,7 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
             } `}
           ></div>
         </div>
-        {!userData?.friends
+        {/* {!userData?.friends
           ?.map((friend: any) => friend._id)
           .includes(user?._id) &&
           // send friend request
@@ -135,20 +190,26 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
           ) : (
             // pending friend request
             <MdPending className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark " />
-          ))}
+          ))} */}
       </div>
-      {/* {!userData?.friendsRequest?.includes(user?._id) && (
+      {!userData?.friendsRequest?.includes(user?._id) && (
         <div className="flex items-center justify-around mb-4">
-          <div className="flex items-center  gap-2 font-semibold">
+          <div
+            className="flex items-center  gap-2 font-semibold"
+            onClick={() => HandleActionFriend("accept")}
+          >
             <FaCheckCircle className="text-green-500 text-[22px]" />
             Accept
           </div>
-          <div className="flex items-center  gap-2 font-semibold">
+          <div
+            className="flex items-center  gap-2 font-semibold"
+            onClick={() => HandleActionFriend("reject")}
+          >
             <IoMdCloseCircle className="text-red-500 text-[22px]" />
             Decline
           </div>
         </div>
-      )} */}
+      )}
 
       {/* Line Divider */}
       <div
@@ -162,4 +223,4 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
   );
 };
 
-export default Friend;
+export default FriendRequest;
