@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoPersonSharp, IoSearch } from "react-icons/io5";
+import { Link, useNavigate } from "react-router-dom";
 import Friend from "./Friend";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setConversation } from "../../redux/features/conversation/conversationSlice";
@@ -45,7 +46,7 @@ const SideBar = () => {
 
   useEffect(() => {
     if (users) {
-      setAllUser(users?.contactedUsers.concat(users?.uncontactedUsers));
+      setAllUser(users?.contactedUsers?.concat(users?.uncontactedUsers));
       console.log(allUser);
     }
   }, [users]);
@@ -63,23 +64,23 @@ const SideBar = () => {
       setSearchData([]);
     }
   };
+  const navigate = useNavigate();
 
   useEffect(() => {
     SearchForUser();
   }, [search]);
 
+  const handleSettingClick = () => {
+    navigate("/profile");
+  };
   const handleSelectContact = (u: any) => {
-    if (
-      searchData.length > 0 &&
-      !user.friends?.map((f: any) => f._id).includes(u._id)
-    )
-      return;
-    console.log(u);
+    if (searchData.length > 0) return;
+    console.log(u, "selected user");
     setSelectedUser(u);
     dispatch(setRecipientProfileImage(u?.profileImage?.url as any));
     dispatch(
       setConversation({
-        conversationId: u?.conversation?._id,
+        conversationId: u?.conversation?._id ?? null,
         selectedId: u?._id,
         language: u?.language,
       })
@@ -91,7 +92,7 @@ const SideBar = () => {
   useEffect(() => {
     dispatch(
       setConversation({
-        conversationId: selectedUser?.conversation?._id,
+        conversationId: selectedUser?.conversation?._id ?? "",
         selectedId: selectedUser?._id,
         language: selectedUser?.language,
       })
@@ -151,6 +152,7 @@ const SideBar = () => {
             className={`${
               isDarkMode ? "bg-primary-500" : "bg-secondary-500"
             } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
+            onClick={handleSettingClick}
           >
             <img
               src="./src/assests/Setting_line.svg"
@@ -168,7 +170,7 @@ const SideBar = () => {
       </div>
 
       {/*Second column */}
-      <div className="w-4/5">
+      <div className="w-4/5 overflow-y-auto ">
         <div
           className={`my-4 ml-4 font-extrabold text-[20px] ${
             isDarkMode ? "text-white" : "text-black"
