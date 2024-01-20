@@ -27,7 +27,7 @@ type MyEventMap = {
 const App = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const socket = useRef<Socket<MyEventMap> | null>();
 
   useEffect(() => {
@@ -48,14 +48,14 @@ const App = () => {
     }
   }, [socket.current]);
 
-  useEffect(()=>{
-    if (!localStorage.getItem("token")){
-      navigate("/")
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
     }
-  }, [])
+  }, []);
 
   return (
-    <div className="flex flex-col h-full w-full ">
+    <div className="w-full h-full">
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/reset-password" element={<ResetPassword />} />

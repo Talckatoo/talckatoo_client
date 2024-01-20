@@ -3,13 +3,11 @@ import VideoPlayer from "../components/VideoCall/VideoPlayer";
 import Options from "../components/VideoCall/Options";
 import { useEffect, useState, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import Peer from "simple-peer";
-import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import CallUser from "../components/VideoCall/services/CallUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
 import { Base64 } from "js-base64";
-
+import { Link, useNavigate } from "react-router-dom";
 
 interface Socket {
   current: any;
@@ -20,6 +18,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const { roomId, decodedCallData } = useParams();
   const [stream, setStream] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -35,10 +34,8 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const navigateChat = () => {
     navigate("/chat");
   };
-  
 
   useEffect(() => {
-    
     const initializeMediaStream = async () => {
       try {
         const currentStream = await navigator.mediaDevices.getUserMedia({
@@ -48,7 +45,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
 
         setStream(currentStream);
 
-        if (!stream) return
+        if (!stream) return;
 
         if (myVideo.current) {
           myVideo.current.srcObject = currentStream;
@@ -65,8 +62,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
 
         const data = JSON.parse(decodedString);
 
-        console.log(data);
-
         const callData = {
           roomId: roomId,
           signal: data.signal,
@@ -74,6 +69,8 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           from: data.from,
           userName: data.username,
         };
+
+        setUserData(data.username);
 
         if (user._id === data.userId) {
           CallUser(
@@ -117,8 +114,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current, roomId, decodedCallData]);
 
   useEffect(() => {
-    socket?.current?.on("roomCreated", (data: { message: any }) => {
-    });
+    socket?.current?.on("roomCreated", (data: { message: any }) => {});
 
     return () => {
       // Clean up event listeners on component unmount
@@ -128,34 +124,43 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
 
   return (
     <>
-      <div>
-        <span>Video Call</span>
-        <VideoPlayer
-          callAccepted={callAccepted}
-          myVideo={myVideo}
-          userVideo={userVideo}
-          callEnded={callEnded}
-          // call={call}
-        />
-        {/* <Options
-          callAccepted={callAccepted}
-          callEnded={callEnded}
-          myVideo={myVideo}
-          userVideo={userVideo}
-          leaveCall={leaveCall}
-          callUser={callUser}
-        >
-          <Notifications
-            answerCall={answerCall}
-            call={call}
+      <div className="flex flex-col w-full h-full">
+        {/* <img
+          src="/assets/img/wave.svg"
+          alt="shape"
+          className="fixed top-[-5rem] right-0 max-lg:w-[350px]"
+        /> */}
+        <div className="flex h-1/6">
+          <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
+            <Link to="/" className="font-jakarta text-[20px] font-bold">
+              <span>TALCKATOO</span>
+            </Link>
+          </div>
+        </div>
+        <div className="flex w-full h-full">
+          <VideoPlayer
             callAccepted={callAccepted}
-            calleeEnded={calleeEnded}
+            myVideo={myVideo}
+            userVideo={userVideo}
+            callEnded={callEnded}
+            userData={userData}
           />
-        </Options> */}
+        </div>
+        <div className="flex h-1/6 bg-[#25282C]">
+          <Options
+            callAccepted={callAccepted}
+            callEnded={callEnded}
+            myVideo={myVideo}
+            userVideo={userVideo}
+            // leaveCall={leaveCall}
+            // callUser={callUser}
+          >
+            <Notifications calleeEnded={calleeEnded} />
+          </Options>
+        </div>
       </div>
     </>
   );
 };
 
 export default VideoRoomCall;
-

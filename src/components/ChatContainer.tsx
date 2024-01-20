@@ -25,6 +25,12 @@ import {
 } from "../redux/services/MessagesApi";
 import { FaFile } from "react-icons/fa";
 import { Base64 } from "js-base64";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 interface Socket {
   current: any;
@@ -56,6 +62,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
 
   // *******************CALL******************
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // RTK Query
   // fetch all messages by conversation id
@@ -575,6 +590,13 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     window.open(videoCallUrl, "_blank");
   };
 
+  useEffect(()=>{
+    if ( receivedCall.isReceivedCall){
+      handleClickOpen()
+    }
+   
+  }, [receivedCall])
+
 
 
   return (
@@ -584,7 +606,33 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       }`}
     >
 
-      {receivedCall?.isReceivedCall && (
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          {receivedCall?.caller} is calling
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+          <Button 
+            onClick={() => handleAnswerCall()}
+          autoFocus>
+            Answer
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+
+      {/* {receivedCall?.isReceivedCall && (
         <div>
           <h2 className="text-black">{receivedCall?.caller} is calling</h2>
           <button
@@ -594,7 +642,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             Answer
           </button>
         </div>
-      )}
+      )} */}
 
       <div className="relative h-full">
         <div className="flex flex-col shadow-sm border-l border-opacity-20 h-full ">

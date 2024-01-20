@@ -6,48 +6,38 @@ export default function VideoPlayer({
   myVideo,
   userVideo,
   callEnded,
-  // calleeData
+  userData,
 }: {
   callAccepted: boolean;
   myVideo: any;
   userVideo: any;
   callEnded: boolean;
-  // calleeData: any;
+  userData: any;
 }) {
   const { user } = useAppSelector((state) => state.auth);
 
-
-  // useEffect(()=>{
-  //   if (calleeData){
-
-  //     console.log(calleeData)
-      
-  //   }
-  // }, [ calleeData])
-
-
-  
-
-
   return (
-    <div>
-      <div>
+    <div className="flex flex-row w-full h-full">
+      <div className="flex w-1/2 items-center justify-center m-4">
         {/* My Video  */}
-
-        <>
-          <span>{user.userName}</span>
-          <video playsInline muted ref={myVideo} autoPlay></video>
-        </>
+        {/* <span className=" items-center justify-center">{user.userName}</span> */}
+        <video
+          className="mx-auto rounded"
+          playsInline
+          muted
+          ref={myVideo}
+          autoPlay
+        ></video>
       </div>
-      <div>
+      <div className="flex w-1/2 items-center justify-center m-4">
         {/* Other User Video */}
-
-          <>
-            {/* <span>{calleeData|| "Your"}'s video</span> */}
-
-            <video playsInline ref={userVideo} autoPlay></video>
-          </>
-  
+        {/* <span>{userData || "Your"}'s video</span> */}
+        <video
+          className="mx-auto rounded"
+          playsInline
+          ref={userVideo}
+          autoPlay
+        ></video>
       </div>
     </div>
   );
