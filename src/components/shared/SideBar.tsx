@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoPersonSharp, IoSearch } from "react-icons/io5";
+import { Link, useNavigate } from "react-router-dom";
 import Friend from "./Friend";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setConversation } from "../../redux/features/conversation/conversationSlice";
@@ -45,7 +46,7 @@ const SideBar = () => {
 
   useEffect(() => {
     if (users) {
-      setAllUser(users?.contactedUsers.concat(users?.uncontactedUsers));
+      setAllUser(users?.contactedUsers?.concat(users?.uncontactedUsers));
       console.log(allUser);
     }
   }, [users]);
@@ -63,11 +64,15 @@ const SideBar = () => {
       setSearchData([]);
     }
   };
+  const navigate = useNavigate();
 
   useEffect(() => {
     SearchForUser();
   }, [search]);
 
+  const handleSettingClick = () => {
+    navigate("/profile");
+  };
   const handleSelectContact = (u: any) => {
     if (searchData.length > 0) return;
     console.log(u, "selected user");
@@ -147,6 +152,7 @@ const SideBar = () => {
             className={`${
               isDarkMode ? "bg-primary-500" : "bg-secondary-500"
             } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
+            onClick={handleSettingClick}
           >
             <img
               src="./src/assests/Setting_line.svg"

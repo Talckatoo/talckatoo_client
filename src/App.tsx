@@ -48,7 +48,7 @@ const App = () => {
   }, [socket.current]);
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/reset-password" element={<ResetPassword />} />
