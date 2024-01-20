@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 import Friend from "./Friend";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setConversation } from "../../redux/features/conversation/conversationSlice";
@@ -21,7 +22,11 @@ const SideBar = () => {
   const handleToggleDarkMode = () => {
     setDarkMode(!isDarkMode);
   };
+  const navigate = useNavigate();
 
+  const handleSettingClick = () => { 
+    navigate("/profile");
+  };
   const handleSelectContact = (u: any) => {
     console.log(u);
     setSelectedUser(u);
@@ -50,7 +55,7 @@ const SideBar = () => {
 
   return (
     <div
-      className={`w-2/6 h-full flex ${
+      className={`w-2/6 h-full flex reative z-[5] ${
         isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
@@ -87,16 +92,21 @@ const SideBar = () => {
           </div>
         </div>
         <div className="flex flex-col  gap-3 w-full">
+        <a href=""  onClick={handleSettingClick}>
           <div
             className={`${
               isDarkMode ? "bg-primary-500" : "bg-secondary-500"
             } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
+
+           
           >
             <img
               src="./src/assests/Setting_line.svg"
               className=" top-1 right-4 z-4 object-contain py-2"
             />
           </div>
+          </a>
+
           <div className="mx-2 rounded-[12px]  flex items-center justify-center flex-col">
             <img
               src="./src/assests/Ellipse 1190.svg"
