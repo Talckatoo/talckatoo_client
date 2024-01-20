@@ -208,14 +208,14 @@ const Navbar = ({onHandleCall}:NavBarProps ) => {
         />
       </div>
 
-      <div className="flex gap-6 items-center max-md:gap-2  ">
+      <div className="flex gap-6 items-center max-md:gap-2 ">
 
-      <button className="text-white" onClick={handleVideoCall}>
+      <button className="text-black" onClick={handleVideoCall}>
       <PiVideoCameraThin size={34}/>
         
       </button>
 {/* 
-      <button className="text-white" onClick={handleCall}>
+      <button className="text-black" onClick={handleCall}>
 
       <PiPhoneCallLight size={26}/>
     

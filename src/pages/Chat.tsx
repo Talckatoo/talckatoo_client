@@ -113,7 +113,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const handleCall = () => {
 
-    HandleCall()
+    HandleCall(user, selectedId)
 
   };
 
