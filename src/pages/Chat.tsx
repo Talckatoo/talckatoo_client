@@ -28,16 +28,19 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationState = useAppSelector((state) => state.conversation);
   const messages = useAppSelector((state) => state.messages.messages);
   const { users } = useAppSelector((state) => state.user);
+  const { requests } = useAppSelector((state) => state.user);
   // const {recipient} = useAppSelector((state) => state.recipient);
 
   // RTK Query
-  const { data: friends, refetch } = useFetchAllFriendsQuery(null) as any;
+  const { data: friends, refetch } = useFetchAllFriendsQuery(null, {
+    refetchOnMountOrArgChange: true,
+  }) as any;
 
   const userID = localStorage.getItem("userId");
 
-  const { data } = useFetchUserByIdQuery(userID ? { id: userID } : skipToken, {
-    refetchOnMountOrArgChange: true,
-  }) as any;
+  const { data } = useFetchUserByIdQuery(
+    userID !== null ? { id: userID } : skipToken
+  ) as any;
 
   useEffect(() => {
     if (data) {
@@ -61,7 +64,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
         refetch();
       });
     }
-  }, [socket.current, messages]);
+  }, [socket.current, messages, ]);
 
   useEffect(() => {
     if (socket.current) {

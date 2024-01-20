@@ -76,29 +76,37 @@ const FriendRequest = ({ user, key, isDarkMode, selected }: FriendProps) => {
           );
 
           dispatch(setRequests(newRequests));
-        }
 
-        if (action === "accept") {
-          dispatch(
-            setAuth({
-              ...userData,
-              friends: [...userData.friends, user?._id],
-            })
-          );
-          dispatch(
-            setUsers({
-              ...users,
-              uncontactedUsers: [
-                ...users.uncontactedUsers,
-                {
-                  _id: user?.from._id,
-                  userName: user?.from.userName,
-                  profileImage: user?.from.profileImage,
-                  status: "accepted",
-                },
-              ],
-            })
-          );
+          if (action === "accept") {
+            dispatch(
+              setAuth({
+                ...userData,
+                friends: [
+                  ...userData.friends,
+                  {
+                    _id: user?.from?._id,
+                    userName: user?.userName,
+                    profileImage: user?.profileImage,
+                    status: "accepted",
+                  },
+                ],
+              })
+            );
+            dispatch(
+              setUsers({
+                ...users,
+                uncontactedUsers: [
+                  ...users.uncontactedUsers,
+                  {
+                    _id: user?.from._id,
+                    userName: user?.from.userName,
+                    profileImage: user?.from.profileImage,
+                    status: "accepted",
+                  },
+                ],
+              })
+            );
+          }
         }
       }
     } catch (error) {

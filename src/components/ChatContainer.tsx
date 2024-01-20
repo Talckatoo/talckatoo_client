@@ -53,7 +53,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const { data: messagesData, refetch: refetchMessages } =
     useFetchMessagesByConversationIdQuery(
       { userId: user?._id, conversationId: conversationId, page, limit },
-      { skip: !conversationId }
+      { skip: conversationId === "" }
     ) as any;
 
   // Post Message
@@ -73,6 +73,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       setHasMoreMessages(true);
       setIsFetchingMore(false);
       refetchMessages();
+    }
+    if (selectedId && conversationId === "") {
+      dispatch(setMessages([]));
     }
   }, [selectedId, conversationId]);
 
@@ -196,8 +199,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const handleSendMessage = async (messageText: any) => {
+    console.log("handleSendMessage", messageText);
     socket.current.emit("stopTyping", selectedId);
-    if (selectedId && conversationId) {
+    if (selectedId && conversationId !== "") {
+      console.log("am in handleSendMessage");
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -236,9 +241,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
-    } else if (selectedId && conversationId === null) {
+    } else if (selectedId && conversationId === "") {
+      console.log("am in handleSendMessage2");
       // setMessages([]);
-      dispatch(setMessages([]));
+      // dispatch(setMessages([]));
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -261,6 +267,18 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         });
+
+        // modify the latest message   in the users redux
+
+        dispatch(
+          addMessage({
+            createdAt: message?.createdAt,
+            message: message?.message,
+            sender: user?._id,
+            _id: message?._id,
+            unread: selectedId,
+          })
+        );
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
@@ -316,9 +334,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
-    } else if (selectedId && conversationId === null) {
-      // setMessages([]);
-      dispatch(setMessages([]));
+    } else if (selectedId && conversationId === "") {
+      // // setMessages([]);
+      // dispatch(setMessages([]));
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -624,7 +642,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 ref={scrollRef}
                 className="overflow-y-auto overflow-x-hidden w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
               >
-                {!!selectedId && !!conversationId ? (
+                {!!selectedId ? (
                   <div className="m-2 p-2 ">
                     {messages
                       ? messages.map((msg) => (

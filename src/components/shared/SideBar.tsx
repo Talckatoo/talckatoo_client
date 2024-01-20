@@ -69,17 +69,13 @@ const SideBar = () => {
   }, [search]);
 
   const handleSelectContact = (u: any) => {
-    if (
-      searchData.length > 0 &&
-      !user.friends?.map((f: any) => f._id).includes(u._id)
-    )
-      return;
-    console.log(u);
+    if (searchData.length > 0) return;
+    console.log(u, "selected user");
     setSelectedUser(u);
     dispatch(setRecipientProfileImage(u?.profileImage?.url as any));
     dispatch(
       setConversation({
-        conversationId: u?.conversation?._id,
+        conversationId: u?.conversation?._id ?? null,
         selectedId: u?._id,
         language: u?.language,
       })
@@ -91,7 +87,7 @@ const SideBar = () => {
   useEffect(() => {
     dispatch(
       setConversation({
-        conversationId: selectedUser?.conversation?._id,
+        conversationId: selectedUser?.conversation?._id ?? "",
         selectedId: selectedUser?._id,
         language: selectedUser?.language,
       })
@@ -168,7 +164,7 @@ const SideBar = () => {
       </div>
 
       {/*Second column */}
-      <div className="w-4/5">
+      <div className="w-4/5 overflow-y-auto ">
         <div
           className={`my-4 ml-4 font-extrabold text-[20px] ${
             isDarkMode ? "text-white" : "text-black"
