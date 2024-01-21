@@ -15,15 +15,11 @@ export default function VideoPlayer({
   userData: any;
 }) {
   const { user } = useAppSelector((state) => state.auth);
-  // console.log(user?._id);
-  // console.log(userData?.userId);
-  // console.log(userData?.selectedId);
 
   return (
     <div className="flex flex-row w-full h-full">
-      <div className="flex w-1/2 items-center justify-center m-4">
-        {/* My Video  */}
-        {/* <span className=" items-center justify-center">{user.userName}</span> */}
+      <div className="flex flex-col w-1/2 items-center justify-center m-4">
+        <span>{userData?.username}</span>
         <video
           className="mx-auto rounded"
           playsInline
@@ -32,13 +28,11 @@ export default function VideoPlayer({
           autoPlay
         ></video>
       </div>
-      <div className="flex w-1/2 items-center justify-center m-4">
+      <div className="flex flex-col w-1/2 items-center justify-center m-4">
         {/* Other User Video */}
-        {/* {user?._id === userData?.userId ? (
-          <span>{userData.selectedId}</span>
-        ) : (
-          <span>{userData?.username}'s video</span>
-        )} */}
+        {user?._id === userData?.userId ? (
+          <span>{userData.recipient}</span>
+        ) : null}
         <video
           className="mx-auto rounded"
           playsInline

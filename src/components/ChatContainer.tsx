@@ -25,12 +25,21 @@ import {
 } from "../redux/services/MessagesApi";
 import { FaFile } from "react-icons/fa";
 import { Base64 } from "js-base64";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+// import Button from "@mui/material/Button";
+// import Dialog from "@mui/material/Dialog";
+// import DialogActions from "@mui/material/DialogActions";
+// import DialogContent from "@mui/material/DialogContent";
+// import DialogContentText from "@mui/material/DialogContentText";
+// import DialogTitle from "@mui/material/DialogTitle";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+} from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
 
 interface Socket {
@@ -44,6 +53,14 @@ interface ReceivedCallState {
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
+  const ColoredDialog = withStyles({
+    root: {
+      "& .MuiDialog-paper": {
+        border: "2px solid black", // Set your desired border color
+      },
+    },
+  })(Dialog);
+
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
@@ -142,12 +159,14 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           username,
           roomId,
           userToCall,
+          recipient,
         }: {
           signal: any;
           from: any;
           username: any;
           roomId: any;
           userToCall: any;
+          recipient: any;
         }) => {
           // Encode the call data and set it into the URL
           const encodedCallData = Base64.fromUint8Array(
@@ -159,6 +178,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 signal,
                 roomId,
                 userToCall,
+                recipient,
               })
             )
           );
@@ -172,7 +192,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       );
 
       socket?.current?.on("leaveCall", () => {
-        console.log("Call ended");
         setReceivedCall({ isReceivedCall: false, caller: "", roomId: "" });
       });
 
@@ -219,10 +238,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const handleSendMessage = async (messageText: any) => {
-    console.log("handleSendMessage", messageText);
     socket.current.emit("stopTyping", selectedId);
     if (selectedId && conversationId !== "") {
-      console.log("am in handleSendMessage");
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -262,7 +279,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         toast.error("Error sending messages, please try again");
       }
     } else if (selectedId && conversationId === "") {
-      console.log("am in handleSendMessage2");
       // setMessages([]);
       // dispatch(setMessages([]));
       try {
@@ -601,7 +617,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
-      <Dialog
+      <ColoredDialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -617,7 +633,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           <Button onClick={handleClose}>Close</Button>
           <Button onClick={() => handleAnswerCall()}>Answer</Button>
         </DialogActions>
-      </Dialog>
+      </ColoredDialog>
 
       <div className="relative h-full">
         <div className="flex flex-col shadow-sm border-l border-opacity-20 h-full ">

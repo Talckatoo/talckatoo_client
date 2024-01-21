@@ -30,7 +30,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const messages = useAppSelector((state) => state.messages.messages);
   const { users } = useAppSelector((state) => state.user);
   const { requests } = useAppSelector((state) => state.user);
-  // const {recipient} = useAppSelector((state) => state.recipient);
+  const { recipient } = useAppSelector((state) => state.user);
 
   // RTK Query
   const { data: friends, refetch } = useFetchAllFriendsQuery(null, {
@@ -115,10 +115,8 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   // }, [refetchFriends, messages]);
 
   const handleCall = () => {
-    HandleCall(user, selectedId);
+    HandleCall(user, selectedId, recipient);
   };
-
-  console.log(user._id);
 
   return (
     <>

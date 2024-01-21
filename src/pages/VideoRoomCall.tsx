@@ -62,6 +62,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           selectedId: data.userToCall,
           from: data.from,
           userName: data.username,
+          recipient: data.recipient,
         };
 
         setUserData(data);
@@ -96,8 +97,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
     initializeMediaStream();
 
     socket?.current?.on("leaveCall", () => {
-      // Handle the call ending notification
-      console.log("Call ended");
       setCallEnded(true);
       setCallAccepted(false);
 
@@ -129,10 +128,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const leaveCall = () => {
     LeaveCall(socket, roomId, connectionRef, setCallEnded);
   };
-
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
 
   return (
     <>
