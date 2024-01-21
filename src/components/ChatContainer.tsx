@@ -25,20 +25,20 @@ import {
 } from "../redux/services/MessagesApi";
 import { FaFile } from "react-icons/fa";
 import { Base64 } from "js-base64";
-// import Button from "@mui/material/Button";
-// import Dialog from "@mui/material/Dialog";
-// import DialogActions from "@mui/material/DialogActions";
-// import DialogContent from "@mui/material/DialogContent";
-// import DialogContentText from "@mui/material/DialogContentText";
-// import DialogTitle from "@mui/material/DialogTitle";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button,
-} from "@material-ui/core";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+// import {
+//   Dialog,
+//   DialogTitle,
+//   DialogContent,
+//   DialogContentText,
+//   DialogActions,
+//   Button,
+// } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
 
@@ -53,13 +53,13 @@ interface ReceivedCallState {
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
-  const ColoredDialog = withStyles({
-    root: {
-      "& .MuiDialog-paper": {
-        border: "2px solid black", // Set your desired border color
-      },
-    },
-  })(Dialog);
+  // const ColoredDialog = withStyles({
+  //   root: {
+  //     "& .MuiDialog-paper": {
+  //       border: "2px solid black", // Set your desired border color
+  //     },
+  //   },
+  // })(Dialog);
 
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
@@ -617,7 +617,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
-      <ColoredDialog
+      <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -633,7 +633,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           <Button onClick={handleClose}>Close</Button>
           <Button onClick={() => handleAnswerCall()}>Answer</Button>
         </DialogActions>
-      </ColoredDialog>
+      </Dialog>
 
       <div className="relative h-full">
         <div className="flex flex-col shadow-sm border-l border-opacity-20 h-full ">
