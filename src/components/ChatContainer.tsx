@@ -7,57 +7,101 @@ import ChatWelcome from "../components/ChatWelcome";
 import { getTime } from "../util/getTime";
 import { v4 as uuidv4 } from "uuid";
 import JumpingDotsAnimation from "../UI/animation";
-import { HiArrowsRightLeft } from "react-icons/hi2";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
-import { MdTranslate } from "react-icons/md";
+import { MdDownload } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import {
   addMessage,
   setMessages,
 } from "../redux/features/messages/messageSlice";
-import { setConversation } from "../redux/features/conversation/conversationSlice";
-import userSlice, { setRecipient } from "../redux/features/user/userSlice";
+
+import { setRecipient } from "../redux/features/user/userSlice";
 import {
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
 } from "../redux/services/MessagesApi";
+import { FaFile } from "react-icons/fa";
 import { Base64 } from "js-base64";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+// import {
+//   Dialog,
+//   DialogTitle,
+//   DialogContent,
+//   DialogContentText,
+//   DialogActions,
+//   Button,
+// } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
+
 interface Socket {
   current: any;
 }
 
+interface ReceivedCallState {
+  isReceivedCall: boolean;
+  caller?: string;
+  roomId?: string;
+}
+
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
-  const [stream, setStream] = useState(null);
-  const myVideo = useRef(null); // Initialize the ref
+  // const ColoredDialog = withStyles({
+  //   root: {
+  //     "& .MuiDialog-paper": {
+  //       border: "2px solid black", // Set your desired border color
+  //     },
+  //   },
+  // })(Dialog);
 
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(30);
   const conversationState = useAppSelector((state) => state.conversation);
+  const selectedId = conversationState?.conversation?.selectedId;
   const user = useAppSelector((state) => state.auth.user);
-  const call = useAppSelector((state) => state.call.call);
   const messages = useAppSelector((state) => state.messages.messages);
   const { recipient } = useAppSelector((state) => state.user);
-  const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
-  const navigate = useNavigate();
 
-  const [receivedCall, setReceivedCall] = useState({})
-
+  const [receivedCall, setReceivedCall] = useState<ReceivedCallState>({
+    isReceivedCall: false,
+    caller: "",
+    roomId: "",
+  });
 
   // *******************CALL******************
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    if (socket.current && receivedCall && receivedCall.roomId) {
+      let roomId = receivedCall.roomId;
+      socket.current.emit("leaveCall", {
+        roomId,
+      });
+    }
+  };
 
   // RTK Query
   // fetch all messages by conversation id
   const { data: messagesData, refetch: refetchMessages } =
     useFetchMessagesByConversationIdQuery(
       { userId: user?._id, conversationId: conversationId, page, limit },
-      { skip: !conversationId }
+      { skip: conversationId === "" }
     ) as any;
 
   // Post Message
@@ -65,18 +109,16 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-  // navigate
-  const navigateVideoCall = () => {
-    navigate("/videoCall");
-  };
-
   useEffect(() => {
-    if (selectedId || conversationId) {
+    if (selectedId && conversationId) {
       setPage(1);
-      setLimit(10);
+      setLimit(30);
       setHasMoreMessages(true);
       setIsFetchingMore(false);
       refetchMessages();
+    }
+    if (selectedId && conversationId === "") {
+      dispatch(setMessages([]));
     }
   }, [selectedId, conversationId]);
 
@@ -85,6 +127,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [selectedTyping, setSelectedTyping] = useState();
+  const [decodedCallData, setDecodedCallData] = useState("");
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const idArray = usersArray?.map((obj) => obj._id);
@@ -98,7 +142,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   )?.voiceCode;
 
   const token = localStorage.getItem("token");
-  const [decodedCallData, setDecodedCallData] = useState("");
 
   useEffect(() => {
     if (socket.current) {
@@ -116,14 +159,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           username,
           roomId,
           userToCall,
+          recipient,
         }: {
           signal: any;
           from: any;
           username: any;
           roomId: any;
           userToCall: any;
+          recipient: any;
         }) => {
-
           // Encode the call data and set it into the URL
           const encodedCallData = Base64.fromUint8Array(
             new TextEncoder().encode(
@@ -134,29 +178,22 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 signal,
                 roomId,
                 userToCall,
+                recipient,
               })
             )
           );
           setDecodedCallData(encodedCallData);
           setReceivedCall({
             isReceivedCall: true,
-            caller: username
-          })
+            caller: username,
+            roomId,
+          });
         }
       );
 
-      // socket.current.on("leaveCall", () => {
-      //   // Handle the call ending notification
-      //   console.log("Call ended by the caller");
-      //   setCallEnded(true);
-      //   setCallAccepted(false);
-      //   setCall({ isReceivedCall: false });
-      //   setCalleeEnded(true);
-      //   if (connectionRef.current) {
-      //     connectionRef.current.destroy();
-      //   }
-      //   // You can update the UI or show a notification to inform the callee
-      // });
+      socket?.current?.on("leaveCall", () => {
+        setReceivedCall({ isReceivedCall: false, caller: "", roomId: "" });
+      });
 
       // **************** call *********************
     }
@@ -202,7 +239,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const handleSendMessage = async (messageText: any) => {
     socket.current.emit("stopTyping", selectedId);
-    if (selectedId && conversationId) {
+    if (selectedId && conversationId !== "") {
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -212,6 +249,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         }).unwrap();
+
         const { message } = response;
 
         setIsFetchingMore(false);
@@ -240,9 +278,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
-    } else if (selectedId && conversationId === null) {
+    } else if (selectedId && conversationId === "") {
       // setMessages([]);
-      dispatch(setMessages([]));
+      // dispatch(setMessages([]));
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -255,14 +293,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         setIsFetchingMore(false);
         const { message } = response;
-        if (response?.conversation._id) {
-          dispatch(
-            setConversation({
-              conversationId: response?.conversation._id,
-              selectedId: selectedId,
-            })
-          );
-        }
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
@@ -273,6 +303,119 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         });
+
+        // modify the latest message   in the users redux
+
+        dispatch(
+          addMessage({
+            createdAt: message?.createdAt,
+            message: message?.message,
+            sender: user?._id,
+            _id: message?._id,
+            unread: selectedId,
+          })
+        );
+      } catch (err) {
+        toast.error("Error sending messages, please try again");
+      }
+    }
+  };
+
+  const onHandleSendFile = async (fileId: string, media: any) => {
+    socket.current.emit("stopTyping", selectedId);
+    if (selectedId && conversationId) {
+      try {
+        const response = await sendMessage({
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          media: fileId,
+          status: false,
+          unread: selectedId,
+        }).unwrap();
+
+        const { message } = response;
+
+        setIsFetchingMore(false);
+
+        socket.current.emit("sendMessage", {
+          createdAt: message?.createdAt,
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          media: {
+            url: media.url,
+            type: media.type,
+            altText: media.altText,
+          },
+          status: false,
+          unread: selectedId,
+        });
+
+        // modify the latest message   in the users redux
+
+        dispatch(
+          addMessage({
+            createdAt: message?.createdAt,
+            media: {
+              url: media.url,
+              type: media.type,
+              altText: media.altText,
+            },
+            sender: user?._id,
+            _id: message?._id,
+            unread: selectedId,
+          })
+        );
+      } catch (err) {
+        toast.error("Error sending messages, please try again");
+      }
+    } else if (selectedId && conversationId === "") {
+      // // setMessages([]);
+      // dispatch(setMessages([]));
+      try {
+        const response = await sendMessage({
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          media: fileId,
+          status: false,
+          unread: selectedId,
+        }).unwrap();
+
+        setIsFetchingMore(false);
+
+        const { message } = response;
+
+        socket.current.emit("sendMessage", {
+          createdAt: message?.createdAt,
+          from: user?._id,
+          to: selectedId,
+          targetLanguage: language,
+          media: {
+            url: media.url,
+            type: media.type,
+            altText: media.altText,
+          },
+          status: false,
+          unread: selectedId,
+        });
+
+        // modify the latest message   in the users redux
+
+        dispatch(
+          addMessage({
+            createdAt: message?.createdAt,
+            media: {
+              url: media.url,
+              type: media.type,
+              altText: media.altText,
+            },
+            sender: user?._id,
+            _id: message?._id,
+            unread: selectedId,
+          })
+        );
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
@@ -296,6 +439,17 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             createdAt: data.createdAt,
             voiceNote: {
               url: data.voiceNote.url,
+            },
+            sender: data.from,
+            _id: uuidv4(),
+          });
+        } else if (data.media) {
+          setArrivalMessages({
+            createdAt: data.createdAt,
+            media: {
+              type: data.media.type,
+              url: data.media.url,
+              altText: data.media.altText,
             },
             sender: data.from,
             _id: uuidv4(),
@@ -353,7 +507,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       if (newMessages && newMessages.length > 0) {
         // add the new messages on top of the old ones
         setIsFetchingMore(true);
-        setLimit(limit + 10);
+        setLimit(limit + 20);
       } else {
         // No more messages to fetch
         setHasMoreMessages(false);
@@ -368,7 +522,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const handleScroll = (e) => {
       const { scrollTop } = e.target;
       // almost the top
-      const isScrolledToTop = scrollTop < 400;
+      const isScrolledToTop = scrollTop < 600;
       if (isScrolledToTop && messages) {
         fetchNextPage();
       }
@@ -447,233 +601,267 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // *************************** VIDEO CALL *****************************
 
-  const handleCall = () => {
-    // decode the call data
-    const encodedCallData = Base64.fromUint8Array(
-      new TextEncoder().encode(
-        JSON.stringify({
-          selectedId,
-          userId: user._id,
-          userName: user.userName,
-        })
-      )
-    );
-
-    const videoCallUrl = `/call/${Math.random()
-      .toString(36)
-      .slice(2)}/${encodedCallData}`;
-    window.open(videoCallUrl, "_blank");
-  };
-
   const handleAnswerCall = () => {
-    // indecoded decodedCallData
-    const decodedUint8Array = decodedCallData
-      ? Base64.toUint8Array(decodedCallData)
-      : null;
-
-    // Convert the Uint8Array to a string
-    const decodedString = new TextDecoder().decode(
-      decodedUint8Array as AllowSharedBufferSource
-    );
-
-    // Parse the JSON string to get the original data
-    const data = JSON.parse(decodedString);
-
-    // Now you can use the decoded data as needed
-
-    const videoCallUrl = `/call/${data.roomId}/${decodedCallData}`;
-    window.open(videoCallUrl, "_blank");
+    HandleAnswerCall(setOpen, setReceivedCall, decodedCallData);
   };
 
-
+  useEffect(() => {
+    if (receivedCall.isReceivedCall) {
+      handleClickOpen();
+    }
+  }, [receivedCall]);
 
   return (
     <div
-      className={`flex flex-grow flex-col shadow h-full ${
-        isDarkMode ? "bg-slate-800" : "bg-slate-200"
+      className={`w-full h-full flex flex-col ${
+        isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
-      {language ? (
-        <div
-          className={`flex flex-row items-center w-full h-14 text-black cursor-pointer rounded-tl-lg shadow text-center font-medium border-b-2 ${
-            isDarkMode
-              ? "bg-gray-800 text-white border-slate-700"
-              : "bg-slate-200 border-slate-300"
-          }`}
-        >
-          <div className="flex flex-row mx-2 px-2 gap-2 items-center justify-between w-full">
-            <div className="flex flex-row items-center gap-2">
-              <p>{recipient}</p>
-              <MdTranslate />
-              <span>
-                {" "}
-                {language} / {fullLanguage}{" "}
-              </span>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <HiArrowsRightLeft />
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <p>{user?.userName}</p>
-              <MdTranslate />
-              <span>
-                {" "}
-                {user?.language} /{" "}
-                {languagesArray.map((l) =>
-                  l.code === user?.language ? l.language : null
-                )}{" "}
-              </span>
-            </div>
-          </div>
-        </div>
-      ) : null}
-      <button className="text-white" onClick={handleCall}>
-        Call
-      </button>
-      {receivedCall?.isReceivedCall && (
-        <div>
-          <h2 className="text-black">{receivedCall?.caller} is calling</h2>
-          <button
-            className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
-            onClick={() => handleAnswerCall()}
-          >
-            Answer
-          </button>
-        </div>
-      )}
-      {/* {calleeEnded ? (
-        <div>
-          <span>Call has been ended</span>
-        </div>
-      ) : null} */}
-      <div
-        className={`w-full flex flex-col h-full ${
-          isDarkMode ? "bg-gray-800" : "bg-slate-200"
-        }`}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        <div className="relative h-full">
-          <div
-            ref={scrollRef}
-            className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0"
-          >
-            {!!selectedId && !!conversationId ? (
-              <div className="m-2 p-2 ">
-                {messages
-                  ? messages.map((msg) => (
-                      <div
-                        className={
-                          "text-left " +
-                          (msg.sender === user?._id ? "text-right " : "") +
-                          (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
-                            ? "text-center"
-                            : "")
-                        }
-                        key={msg._id}
-                      >
-                        <div
-                          className={
-                            "max-w-md inline-block  rounded-lg m-2 p-2 " +
-                            (msg.sender === user?._id
-                              ? "bg-[#f8fafc] text-left "
-                              : "") +
-                            (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
-                              ? "bg-amber-100 text-center"
-                              : "bg-[#94a3b8]")
-                          }
-                        >
-                          {msg.sender !==
-                            import.meta.env.VITE_AI_ASSISTANT_ID &&
-                          msg.message &&
-                          msg.message.includes("\n") ? (
-                            msg.message
-                              .split("\n")
-                              .map((line, index, lines) => {
-                                const prevLine =
-                                  index > 0 ? lines[index - 1] : null;
-                                const isFirstLine =
-                                  index === 0 || line !== prevLine;
+        <DialogTitle id="alert-dialog-title"></DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {receivedCall?.caller} is calling
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={() => handleAnswerCall()}>Answer</Button>
+        </DialogActions>
+      </Dialog>
 
-                                return (
-                                  <React.Fragment key={index}>
-                                    {isFirstLine && line}
-                                    {isFirstLine &&
-                                      index !== lines.length - 1 &&
-                                      line !== lines[index + 1] && (
-                                        <>
-                                          <br />
-                                          <div className="h-1 border-b border-gray-500"></div>
-
-                                          {/* <img
-                                            width="15"
-                                            height="15"
-                                            src="https://img.icons8.com/ios-glyphs/30/right3.png"
-                                            alt="right3"
-                                          /> */}
-                                        </>
-                                      )}
-                                  </React.Fragment>
-                                );
-                              })
-                          ) : (
-                            <>{msg.message}</>
-                          )}
-
-                          <div className="flex flex-row gap-4">
-                            <div className="w-1/2 text-gray-500 items-end text-x-small-regular">
-                              {getTime(msg.createdAt)}
-                            </div>
-
-                            <TextToSpeech convertedText={msg.message} />
-                          </div>
-                          {msg.voiceNote && (
-                            <audio className="w-60 h-15" controls>
-                              <source
-                                src={msg.voiceNote?.url}
-                                type="audio/mpeg"
-                              />
-                            </audio>
-                          )}
-                        </div>
-                        <div ref={scrollRefBottom}></div>
-                      </div>
-                    ))
-                  : null}
-              </div>
-            ) : (
-              <ChatWelcome />
-            )}
-          </div>
-        </div>
-      </div>
-      <hr
-        className={`mb-3 ${
-          isDarkMode ? "border-slate-700" : "border-slate-300"
-        }`}
-      />
-      {selectedTyping?.to === user?._id &&
-      selectedTyping?.from === selectedId &&
-      isTyping ? (
-        <JumpingDotsAnimation />
-      ) : null}
-      <div
-        className={`w-full h-30 py-2 ${
-          isDarkMode ? "bg-gray-800" : "bg-slate-200"
-        }`}
-      >
-        {selectedId ? (
-          <>
-            <ChatInput
-              onHandleSendMessage={handleSendMessage}
-              onHandleSendAIMessage={sendAIMessage}
-              socket={socket}
-              typing={typing}
-              setTyping={setTyping}
-              isTyping={isTyping}
-              setIsTyping={setIsTyping}
-              onHandleTranslateText={onHandleTranslateText}
+      <div className="relative h-full">
+        <div className="flex flex-col shadow-sm border-l border-opacity-20 h-full ">
+          <div className="w-full flex flex-col h-full">
+            <img
+              src="/assets/img/Shapes.png"
+              alt="shape"
+              className="fixed left-24  -bottom-14 w-[40%] z-[1] "
             />
-          </>
-        ) : null}
+            <img
+              src="/assets/img/Shape.png"
+              alt="shape"
+              className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
+            />
+            <div className="relative h-full z-[5] ">
+              <div
+                ref={scrollRef}
+                className="overflow-y-auto overflow-x-hidden w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
+              >
+                {!!selectedId ? (
+                  <div className="m-2 p-2 ">
+                    {messages
+                      ? messages.map((msg) => (
+                          <div
+                            className={
+                              "" +
+                              (msg.sender === user?._id ? " mb-6" : "") +
+                              (msg.sender ==
+                              import.meta.env.VITE_AI_ASSISTANT_ID
+                                ? "text-center "
+                                : "")
+                            }
+                            key={msg._id}
+                          >
+                            <div
+                              className={
+                                "flex items-end" +
+                                (msg.sender === user?._id
+                                  ? " flex text-right w-full justify-end items-end"
+                                  : "")
+                              }
+                            >
+                              <div
+                                className={
+                                  "w-auto max-w-[50%] inline-block m-2 p-4 " +
+                                  (msg.sender === user?._id &&
+                                  msg.sender !==
+                                    import.meta.env.VITE_AI_ASSISTANT_ID
+                                    ? " bg-[#F5F5F5] h-full text-right text-[#000] rounded-t-[20px] rounded-bl-[20px]"
+                                    : msg.sender !==
+                                      import.meta.env.VITE_AI_ASSISTANT_ID
+                                    ? "bg-[#25282C] text-left text-white  rounded-t-[20px] rounded-br-[20px]"
+                                    : "bg-[#FEF3C7] text-center mx-auto rounded-[20px]")
+                                }
+                              >
+                                {msg.sender !==
+                                  import.meta.env.VITE_AI_ASSISTANT_ID &&
+                                msg.message &&
+                                msg.message.includes("\n") ? (
+                                  msg.message
+                                    .split("\n")
+                                    .map((line, index, lines) => {
+                                      const prevLine =
+                                        index > 0 ? lines[index - 1] : null;
+                                      const isFirstLine =
+                                        index === 0 || line !== prevLine;
+
+                                      return (
+                                        <React.Fragment key={index}>
+                                          {isFirstLine && line}
+                                          {isFirstLine &&
+                                            index !== lines.length - 1 &&
+                                            line !== lines[index + 1] && (
+                                              <>
+                                                <br className=" mx-auto" />
+                                                <div className="h-1 border-b border-gray-600 my-1"></div>
+                                              </>
+                                            )}
+                                        </React.Fragment>
+                                      );
+                                    })
+                                ) : (
+                                  <>{msg.message}</>
+                                )}
+
+                                {msg.voiceNote && (
+                                  <audio className="w-[150px] h-15" b- controls>
+                                    <source
+                                      src={msg.voiceNote?.url}
+                                      type="audio/mpeg"
+                                    />
+                                  </audio>
+                                )}
+                                {msg.media &&
+                                  (msg.media.type === "image" ? (
+                                    <div className="relative">
+                                      <img
+                                        src={msg.media.url}
+                                        alt="media"
+                                        className="w-60 h-60 object-contain"
+                                      />
+                                      <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                        <Link to={msg.media.url} download>
+                                          <MdDownload className="text-[24px] text-black" />
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  ) : msg.media.type === "video" ? (
+                                    <div className="relative">
+                                      <video
+                                        src={msg.media.url}
+                                        className="w-60 h-60"
+                                        controls
+                                      />
+                                      <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                        <Link to={msg.media.url} download>
+                                          <MdDownload className="text-[24px] text-black" />
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  ) : msg.media.type === "audio" ? (
+                                    <audio className="w-60 h-15 " controls>
+                                      <source
+                                        src={msg.media.url}
+                                        type="audio/mpeg"
+                                      />
+                                    </audio>
+                                  ) : (
+                                    <div className=" flex items-center w-[240px]">
+                                      <Link
+                                        to={msg.media.url}
+                                        download
+                                        className="flex w-full items-center justify-between"
+                                      >
+                                        <div className="flex items-center gap-3 minw-w-[25px]">
+                                          <FaFile className="text-[25px]" />
+                                          <p className="text-xs">
+                                            {msg.media.altText}
+                                          </p>
+                                        </div>
+
+                                        <MdDownload className="text-[35px] min-w-[35px] text-black bg-white p-2 rounded-full shadow-md" />
+                                      </Link>
+                                    </div>
+                                  ))}
+                                <div className="flex justify-between items-center relative pt-4">
+                                  <div
+                                    className={
+                                      "  items-end" +
+                                      (msg.sender === user?._id &&
+                                      msg.sender !==
+                                        import.meta.env.VITE_AI_ASSISTANT_ID
+                                        ? "text-black text-[10px]"
+                                        : msg.sender !==
+                                          import.meta.env.VITE_AI_ASSISTANT_ID
+                                        ? "text-white text-[10px]"
+                                        : "text-black text-[10px]")
+                                    }
+                                  >
+                                    {getTime(msg.createdAt)}
+                                  </div>
+
+                                  <TextToSpeech
+                                    convertedText={msg.message}
+                                    me={msg.sender === user?._id}
+                                    ai={
+                                      msg.sender ===
+                                      import.meta.env.VITE_AI_ASSISTANT_ID
+                                    }
+                                  />
+                                </div>
+                              </div>
+
+                              {/* {msg.voiceNote && (
+                                <audio className="w-60 h-15" controls>
+                                  <source
+                                    src={msg.voiceNote?.url}
+                                    type="audio/mpeg"
+                                  />
+                                </audio>
+                              )} */}
+
+                              {/* {msg.sender !==
+                                import.meta.env.VITE_AI_ASSISTANT_ID && (
+                                <img
+                                  src={
+                                    msg.sender === user?._id
+                                      ? `${user?.profileImage.url}`
+                                      : `${recipientPi}`
+                                  }
+                                  className=" w-[36px] h-[36px] rounded-full border border-[#E9E9EF]"
+                                />
+                              )} */}
+                              <div ref={scrollRefBottom}></div>
+                            </div>
+                          </div>
+                        ))
+                      : null}
+                  </div>
+                ) : (
+                  <ChatWelcome />
+                )}
+              </div>
+            </div>
+          </div>
+          {selectedTyping?.to === user?._id &&
+          selectedTyping?.from === selectedId &&
+          isTyping ? (
+            <JumpingDotsAnimation />
+          ) : null}
+          <div className="w-full py-2 bg-white relative z-5">
+            {selectedId ? (
+              <>
+                <ChatInput
+                  onHandleSendMessage={handleSendMessage}
+                  onHandleSendAIMessage={sendAIMessage}
+                  socket={socket}
+                  typing={typing}
+                  setTyping={setTyping}
+                  isTyping={isTyping}
+                  setIsTyping={setIsTyping}
+                  onHandleTranslateText={onHandleTranslateText}
+                  onHandleSendFile={onHandleSendFile}
+                />
+              </>
+            ) : null}
+          </div>
+        </div>
       </div>
     </div>
   );

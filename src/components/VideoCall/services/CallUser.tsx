@@ -1,6 +1,5 @@
 import Peer from "simple-peer";
 
-
 const CallUser = (
   currentStream,
   roomId,
@@ -10,8 +9,7 @@ const CallUser = (
   socket,
   connectionRef,
   userVideo,
-  setCallAccepted,
-
+  setCallAccepted
 ) => {
   // CALL USER //
 
@@ -51,19 +49,13 @@ const CallUser = (
   });
 
   peer.on("stream", (currentStream) => {
-    // console.log("stream")
-    // console.log({"currentStream": currentStream})
-
-      if (userVideo && userVideo.current) {
-        userVideo.current.srcObject = currentStream;
-      }
-   
-
+    if (userVideo && userVideo.current) {
+      userVideo.current.srcObject = currentStream;
+    }
   });
 
-
   socket?.current?.on("callAccepted", (data) => {
- console.log(data)
+    console.log(data);
     setCallAccepted(true);
 
     peer.signal(data.signal);

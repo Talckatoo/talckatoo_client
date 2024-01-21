@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
 import { useLoginAuthMutation } from "../redux/services/AuthApi";
+import { useFetchUserByIdQuery } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface FormData {
   email: string;
@@ -26,8 +28,11 @@ const SignIn = () => {
   });
   const dispatch = useAppDispatch();
   const [loginAuth] = useLoginAuthMutation();
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({});
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  const userId = urlParams.get("userId");
 
+  const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const validateForm = (): boolean => {
@@ -48,6 +53,7 @@ const SignIn = () => {
 
     return isValid;
   };
+
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -82,6 +88,17 @@ const SignIn = () => {
     }
   };
 
+  const redirectTogoogle = async (): Promise<void> => {
+    window.open(`${import.meta.env.VITE_GOOGLE_URL}`, "_self");
+  };
+
+  useEffect(() => {
+    localStorage.setItem("token", token as string);
+    localStorage.setItem("userId", userId as string);
+
+    if (token) navigate("/chat");
+  }, [token, userId]);
+
   return (
     <section className="relative bg-white h-full w-full font-inter">
       <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
@@ -112,8 +129,7 @@ const SignIn = () => {
             <Button
               type="button"
               className="bg-[#fafafa] text-black w-full h-full flex justify-center items-center border-[0.5px] border-[#33363A] rounded-lg shadow-sm-2xl "
-              disabled
-              onClick={() => {}}
+              onClick={() => redirectTogoogle()}
             >
               <img
                 src="/assets/icons/google-g-2015.svg"
@@ -200,3 +216,6 @@ const SignIn = () => {
 };
 
 export default SignIn;
+function jwt_decode(token: string): { id: string } {
+  throw new Error("Function not implemented.");
+}

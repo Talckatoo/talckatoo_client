@@ -176,11 +176,16 @@ export default {
     },
     extend: {
       colors: {
+        "sidebar-dark-500":"#0E131D",
+        "selected-friend-dark":"#141A27",
+        "selected-friend-light": "#F5F5F5",
+        "input-bg-dark": "#1D2638",
         "primary-500": "#5D5DFF",
         "secondary-500": "#25282C",
         "title-500": "#D9E3EA",
         "border-500": "#979797",
         "background-500": "#151719",
+        "red-badge-500": "#DD0000",
         blue: "#0095F6",
         "logout-btn": "#FF5A5A",
         "navbar-menu": "rgba(16, 16, 18, 0.6)",

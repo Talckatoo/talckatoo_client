@@ -14,7 +14,7 @@ const FetchLatestMessages: React.FC<{
     }
   }
 
-  return <div className="text-sm">{truncateText}</div>;
+  return <div className="text-[14px]">{truncateText}</div>;
 };
 
 export default FetchLatestMessages;

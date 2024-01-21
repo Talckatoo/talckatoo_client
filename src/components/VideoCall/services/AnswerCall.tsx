@@ -1,4 +1,3 @@
-
 import Peer from "simple-peer";
 
 const AnswerCall = (
@@ -14,14 +13,10 @@ const AnswerCall = (
     initiator: false,
     trickle: false,
     stream: currentStream,
-
   });
 
-  console.log(callData)
-
-
   peer.on("connect", () => {
-    console.log("CONNECT");
+    console.log("Peer connection established.");
     peer.send("whatever" + Math.random());
   });
 
@@ -48,14 +43,11 @@ const AnswerCall = (
   });
 
   peer.on("stream", (currentStream) => {
-    console.log("stream")
-    // console.log({"currentStream": currentStream})
-    setTimeout(()=>{
-    if (userVideo && userVideo.current ) {
-      userVideo.current.srcObject = currentStream;
-    }
-    }, 1000)
-
+    setTimeout(() => {
+      if (userVideo && userVideo.current) {
+        userVideo.current.srcObject = currentStream;
+      }
+    }, 1000);
   });
 
   peer.signal(callData.signal);

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
 import { HiOutlineUserCircle } from "react-icons/hi";
-import { BsFillSunFill, BsFillMoonFill } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import COCKATOO from "./.././assests/cockatoo.png";
 import { setAuth } from "../redux/features/user/authSlice";
@@ -15,14 +14,30 @@ import {
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import { setMessages } from "../redux/features/messages/messageSlice";
 import { setRequest } from "../redux/features/user/requestSlice";
+import ChatNavSearch from "../components/ChatNavSearch";
+import languagesArray from "../util/languages";
+import { PiVideoCameraThin } from "react-icons/pi";
+import { PiPhoneCallLight } from "react-icons/pi";
 
-const Navbar = () => {
+interface NavBarProps {
+  onHandleCall: () => void;
+}
+const Navbar = ({ onHandleCall }: NavBarProps) => {
   //Reference for dropdown menu
   const dropdownRef = useRef<HTMLDivElement>(null);
   //States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const profilePictureRef = useRef();
   const { user } = useAppSelector((state) => state.auth);
+  const { recipient } = useAppSelector((state) => state.user);
+  const conversationState = useAppSelector((state) => state.conversation);
+  const { recipientPi } = useAppSelector((state) => state.user);
+  const language = conversationState?.conversation?.language;
+
+  const fullLanguage = languagesArray.map((l) => {
+    if (l.code === language?.toLowerCase()) return l.language;
+  });
+
   const { isDarkMode, setIsDarkMode } = useContext(UserContext);
 
   useEffect(() => {
@@ -74,132 +89,131 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const handleProfileClick = () => {
-    navigate("/profile");
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
+  const handleVideoCall = () => {
+    onHandleCall();
+  };
+
   return (
-    <nav
-      className={`relative z-10 py-2 px-3 flex justify-between items-center drop-shadow-md ${
-        isDarkMode ? "bg-[#161c24]" : "bg-slate-100"
-      }`}
-    >
-      <div
-        className={`flex flex-row text-${
-          isDarkMode ? "white" : "black"
-        } text-2xl items-center justify-center`}
-      >
-        <img
-          className="w-10 h-10"
-          src="https://img1.picmix.com/output/stamp/normal/6/4/6/7/1647646_1b76b.gif"
-          alt="logo"
-        />
-        TALCKATOO
-      </div>
-      <div className="flex items-center mr-2">
-        {user && (
-          <>
-            <h5
-              className={`text-${
-                isDarkMode ? "white" : "black"
-              } hover:text-gray-300  mr-2 focus:outline-none sm:block`}
-            >
-              {user && user.userName ? (
-                <p>
-                  {user.welcome ? user.welcome : "Welcome"}, {user.userName}
-                </p>
+    <nav className="relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm ">
+      <div className="flex w-[80%] gap-2 md:gap-8">
+        <div className="flex items-center ml-2 gap-2 md:gap-4 ">
+          {user && (
+            <>
+              {recipientPi ? (
+                <div
+                  ref={profilePictureRef}
+                  onClick={handleDropdownClick}
+                  className="w-10 h-10 max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
+                  style={{
+                    backgroundImage: `url(${recipientPi || COCKATOO})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                >
+                  {!recipientPi && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="w-6 h-6 text-gray-300"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                      />
+                    </svg>
+                  )}
+                </div>
               ) : (
-                ""
-              )}
-            </h5>
-            {user?.profileImage?.url ? (
-              <div
-                ref={profilePictureRef}
-                onClick={handleDropdownClick}
-                className="w-8 h-8 rounded-full shadow-xl flex items-center justify-center cursor-pointer"
-                style={{
-                  backgroundImage: `url(${
-                    user?.profileImage?.url || COCKATOO
-                  })`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              >
-                {!user?.profileImage?.url && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-6 h-6 text-gray-300"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                )}
-              </div>
-            ) : (
-              <button
-                className={`text-${
-                  isDarkMode ? "white" : "black"
-                } hover:text-gray-300 focus:outline-none`}
-                onClick={handleDropdownClick}
-              >
-                <HiOutlineUserCircle
+                <button
                   className={`text-${
                     isDarkMode ? "white" : "black"
-                  } text-2xl ml-4`}
-                />
-              </button>
-            )}
-            {isDropdownOpen && (
-              <div className="relative z-20" ref={dropdownRef}>
-                <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl">
-                  <a
-                    href="#"
-                    className={`block px-4 py-2 rounded-lg text-${
-                      isDarkMode ? "gray-800" : "gray-700"
-                    } hover:bg-gray-300`}
-                    onClick={handleProfileClick}
-                  >
-                    Profile
-                  </a>
-                  <a
-                    href=""
-                    className={`block px-4 py-2 rounded-lg text-${
-                      isDarkMode ? "gray-800" : "gray-700"
-                    } hover:bg-gray-300`}
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </a>
-                </div>
+                  } hover:text-gray-300 focus:outline-none`}
+                  onClick={handleDropdownClick}
+                >
+                  <HiOutlineUserCircle
+                    className={`text-${
+                      isDarkMode ? "white" : "black"
+                    } text-2xl ml-4`}
+                  />
+                </button>
+              )}
+              <div className="flex flex-col  hover:text-gray-300   mr-2 focus:outline-none sm:block">
+                {user && user?.userName ? (
+                  <p className="max-md:text-[16px] md: text-[16px] text-bold text-[#25282C]">
+                    {recipient}
+                  </p>
+                ) : (
+                  ""
+                )}
+                {/* <div className="flex gap-2 items-center">
+                  <img src="/assets/img/online.png" alt="oline point" />
+                  <span className="text-[#879795] max-md:[12px] md:text-[14px] ">
+                    Active now
+                  </span>
+                </div> */}
               </div>
-            )}
-          </>
-        )}
-        <div className="ml-4">
-          {isDarkMode ? (
-            <BsFillSunFill
-              className="text-yellow-500 cursor-pointer"
-              onClick={toggleTheme}
-            />
-          ) : (
-            <BsFillMoonFill
-              className="text-gray-500 cursor-pointer"
-              onClick={toggleTheme}
-            />
+
+              {/* {isDropdownOpen && (
+                <div className="relative z-20" ref={dropdownRef}>
+                  <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl">
+                    <a
+                      href="#"
+                      className={`block px-4 py-2 rounded-lg text-${
+                        isDarkMode ? "gray-800" : "gray-700"
+                      } hover:bg-gray-300`}
+                      onClick={handleProfileClick}
+                    >
+                      Profile
+                    </a>
+                    <a
+                      href=""
+                      className={`block px-4 py-2 rounded-lg text-${
+                        isDarkMode ? "gray-800" : "gray-700"
+                      } hover:bg-gray-300`}
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </a>
+                  </div>
+                </div>
+              )} */}
+              <div className="bg-[#25282C] py-2 flex items-center text-white px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ">
+                <span className="max-md:text-[12px] md:text-[14px] ">
+                  {fullLanguage}
+                </span>
+              </div>
+            </>
           )}
         </div>
+        <ChatNavSearch
+          type="text"
+          name="chat"
+          value=""
+          placeholder=""
+          id="chatsearch"
+          label=""
+          className="max-md:hidden max-md:"
+        />
+      </div>
+
+      <div className="flex gap-6 items-center max-md:gap-2 ">
+        <button className="text-black" onClick={handleVideoCall}>
+          <PiVideoCameraThin size={34} />
+        </button>
+        {/* 
+      <button className="text-black" onClick={handleCall}>
+
+      <PiPhoneCallLight size={26}/>
+    
+      </button> */}
       </div>
     </nav>
   );

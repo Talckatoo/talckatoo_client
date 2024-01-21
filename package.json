@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@ffmpeg/core": "^0.11.0",
     "@ffmpeg/ffmpeg": "^0.11.6",
     "@heroicons/react": "^2.0.18",
+    "@mui/material": "^5.15.5",
     "@reduxjs/toolkit": "^2.0.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -22,6 +25,7 @@
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.9.0",
     "react-player": "^2.12.0",
@@ -37,7 +41,6 @@
     "styled-components": "^5.3.8",
     "tsconfig.json": "^1.0.11",
     "uuid": "^9.0.0",
-    "vite-plugin-svgr": "^3.2.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -76,11 +79,12 @@
     "eslint-plugin-react-refresh": "^0.3.4",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
-    "postcss": "^8.4.23",
+    "postcss": "^8.4.33",
     "prettier": "^2.8.8",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.0.2",
-    "vite": "^5.0.10"
+    "vite": "^5.0.11",
+    "vite-plugin-svgr": "^4.2.0"
   },
   "overrides": {
     "typescript": "^5.0.2"

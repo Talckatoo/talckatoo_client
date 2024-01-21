@@ -21,6 +21,8 @@ export interface UserState {
   users?: any;
   recipient?: any;
   data: any;
+  recipientPi?: any;
+  requests: any[];
 }
 
 const initialState: UserState = {
@@ -33,6 +35,8 @@ const initialState: UserState = {
   },
   recipient: null,
   data: null,
+  recipientPi: null,
+  requests: [],
 };
 
 export const userSlice = createSlice({
@@ -64,10 +68,29 @@ export const userSlice = createSlice({
     setRecipient: (state, action: PayloadAction<UserState | null>) => {
       state.recipient = action.payload;
     },
+    setRecipientId: (state, action: PayloadAction<UserState | null>) => {
+      state.recipientPi = action.payload;
+    },
+    setRecipientProfileImage: (
+      state,
+      action: PayloadAction<UserState | null>
+    ) => {
+      state.recipientPi = action.payload;
+    },
+    setRequests: (state, action: PayloadAction<any[]>) => {
+      state.requests = action.payload;
+    },
     // Add other reducers as needed
   },
 });
 
-export const { setUser, setUsers, setRecipient, updateContactedUserById } =
-  userSlice.actions;
+export const {
+  setUser,
+  setUsers,
+  setRecipient,
+  updateContactedUserById,
+  setRecipientId,
+  setRecipientProfileImage,
+  setRequests,
+} = userSlice.actions;
 export default userSlice.reducer;

@@ -26,7 +26,7 @@ const Input: FC<InputProps> = ({
     <div className="mb-4 xl:mb-6 w-full">
       <label
         htmlFor={name}
-        className="block text-[14px] font-medium text-title-500"
+        className="block text-[14px] font-medium text-title-500 mb-4 text-[#757575]"
       >
         {label}
       </label>
@@ -36,7 +36,7 @@ const Input: FC<InputProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`  p-3 w-full border text-black relative text-[16px] focus:outline-none ${
+        className={`  p-3 w-full border text-black relative text-[16px] focus:outline-none outline-none ${
           error ? "border-red-500" : ""
         } ${className}`}
       />
