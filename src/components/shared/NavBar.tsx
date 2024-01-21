@@ -52,7 +52,7 @@ const NavBar: FC<NavBarProps> = ({ }) => {
         <Link to="/" className="font-jakarta text-[20px] font-bold flex items-center justify-left">
           <img 
             className="w-[75px] w-min-[75px] h-auto transition ease-in-out duration-300 scale-100 hover:scale-105"
-            src="cockatoo.png"
+            src="cockatoo-bw.png"
           />
           <span>TALCKATOO</span>
         </Link>

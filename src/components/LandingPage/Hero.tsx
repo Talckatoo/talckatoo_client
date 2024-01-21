@@ -1,3 +1,4 @@
+
 const Hero = () => {
   return (
     <section className="container py-[2rem] mt-[5rem] max-[430px]:mt-[7rem]  ">
