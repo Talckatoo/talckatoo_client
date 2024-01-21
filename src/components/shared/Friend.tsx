@@ -24,10 +24,6 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
-
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
 

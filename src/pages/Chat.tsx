@@ -14,6 +14,7 @@ import { setCall } from "../redux/features/call/callSlice";
 import SideBar from "../components/shared/SideBar";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { setAuth } from "../redux/features/user/authSlice";
+import HandleCall from "../components/VideoCall/services/HandleCall";
 
 interface Socket {
   current: any;
@@ -29,7 +30,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const messages = useAppSelector((state) => state.messages.messages);
   const { users } = useAppSelector((state) => state.user);
   const { requests } = useAppSelector((state) => state.user);
-  // const {recipient} = useAppSelector((state) => state.recipient);
+  const { recipient } = useAppSelector((state) => state.user);
 
   // RTK Query
   const { data: friends, refetch } = useFetchAllFriendsQuery(null, {
@@ -64,7 +65,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
         refetch();
       });
     }
-  }, [socket.current, messages, ]);
+  }, [socket.current, messages]);
 
   useEffect(() => {
     if (socket.current) {
@@ -113,13 +114,17 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   //   refetchFriends();
   // }, [refetchFriends, messages]);
 
+  const handleCall = () => {
+    HandleCall(user, selectedId, recipient);
+  };
+
   return (
     <>
       <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
         <SideBar />
 
         <div className=" w-full h-full flex flex-col bg-white">
-          {selectedId && <Navbar />}
+          {selectedId && <Navbar onHandleCall={handleCall} />}
           <ChatContainer socket={socket} />
         </div>
       </div>

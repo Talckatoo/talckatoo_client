@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import Chat from "./pages/Chat";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./navbar/NavBar";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
@@ -27,6 +27,7 @@ type MyEventMap = {
 const App = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const socket = useRef<Socket<MyEventMap> | null>();
 
   useEffect(() => {
@@ -46,6 +47,12 @@ const App = () => {
       });
     }
   }, [socket.current]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="w-full h-full">

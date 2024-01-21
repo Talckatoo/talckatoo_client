@@ -89,12 +89,10 @@ const ChatInput = ({
     formData.append("type", e.target.files[0].type.split("/")[0]);
     formData.append("altText", e.target.files[0].name);
 
-    console.log("file", e.target.files[0]);
     response = await uploadFile(formData);
 
     if ("data" in response) {
       if (response.data && !response.data.error) {
-        console.log("response", response.data.media._id);
         onHandleSendFile(response.data.media._id, response.data.media);
       } else {
         console.log("error", response.data.error);
