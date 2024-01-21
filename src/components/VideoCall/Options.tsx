@@ -8,9 +8,8 @@ export default function Options({
   callEnded,
   myVideo,
   userVideo,
-  // leaveCall,
-  // callUser,
-  children,
+  leaveCall,
+  userData,
 }) {
   const { user } = useAppSelector((state) => state.auth);
 
@@ -35,14 +34,12 @@ export default function Options({
       {callAccepted && !callEnded ? (
         <button
           className="ml-2 flex flex-col rounded-md px-6 py-[2px] bg-red-600 text-white items-center justify-center"
-          // onClick={leaveCall}
+          onClick={leaveCall}
         >
           <PiPhoneDisconnectLight size={20} />
           Leave
         </button>
       ) : null}
-
-      {children}
     </div>
   );
 }

@@ -10,7 +10,7 @@ import JumpingDotsAnimation from "../UI/animation";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
-import { MdDownload,  } from "react-icons/md";
+import { MdDownload } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -25,12 +25,13 @@ import {
 } from "../redux/services/MessagesApi";
 import { FaFile } from "react-icons/fa";
 import { Base64 } from "js-base64";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
 
 interface Socket {
   current: any;
@@ -38,11 +39,11 @@ interface Socket {
 
 interface ReceivedCallState {
   isReceivedCall: boolean;
-  caller: string; // or whatever the type of the caller should be
+  caller?: string;
+  roomId?: string;
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
-
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
@@ -58,8 +59,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [receivedCall, setReceivedCall] = useState<ReceivedCallState>({
     isReceivedCall: false,
     caller: "",
-  })
-
+    roomId: "",
+  });
 
   // *******************CALL******************
   const [open, setOpen] = useState(false);
@@ -70,6 +71,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const handleClose = () => {
     setOpen(false);
+    if (socket.current && receivedCall && receivedCall.roomId) {
+      let roomId = receivedCall.roomId;
+      socket.current.emit("leaveCall", {
+        roomId,
+      });
+    }
   };
 
   // RTK Query
@@ -84,7 +91,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [sendMessage, { isLoading }] = useSendMessageMutation();
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
-
 
   useEffect(() => {
     if (selectedId && conversationId) {
@@ -104,6 +110,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [selectedTyping, setSelectedTyping] = useState();
+  const [decodedCallData, setDecodedCallData] = useState("");
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const idArray = usersArray?.map((obj) => obj._id);
@@ -117,7 +125,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   )?.voiceCode;
 
   const token = localStorage.getItem("token");
-  const [decodedCallData, setDecodedCallData] = useState("");
 
   useEffect(() => {
     if (socket.current) {
@@ -142,7 +149,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           roomId: any;
           userToCall: any;
         }) => {
-
           // Encode the call data and set it into the URL
           const encodedCallData = Base64.fromUint8Array(
             new TextEncoder().encode(
@@ -159,23 +165,16 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           setDecodedCallData(encodedCallData);
           setReceivedCall({
             isReceivedCall: true,
-            caller: username
-          })
+            caller: username,
+            roomId,
+          });
         }
       );
 
-      // socket.current.on("leaveCall", () => {
-      //   // Handle the call ending notification
-      //   console.log("Call ended by the caller");
-      //   setCallEnded(true);
-      //   setCallAccepted(false);
-      //   setCall({ isReceivedCall: false });
-      //   setCalleeEnded(true);
-      //   if (connectionRef.current) {
-      //     connectionRef.current.destroy();
-      //   }
-      //   // You can update the UI or show a notification to inform the callee
-      // });
+      socket?.current?.on("leaveCall", () => {
+        console.log("Call ended");
+        setReceivedCall({ isReceivedCall: false, caller: "", roomId: "" });
+      });
 
       // **************** call *********************
     }
@@ -586,36 +585,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // *************************** VIDEO CALL *****************************
 
-
-
   const handleAnswerCall = () => {
-    // indecoded decodedCallData
-    const decodedUint8Array = decodedCallData
-      ? Base64.toUint8Array(decodedCallData)
-      : null;
-
-    // Convert the Uint8Array to a string
-    const decodedString = new TextDecoder().decode(
-      decodedUint8Array as AllowSharedBufferSource
-    );
-
-    // Parse the JSON string to get the original data
-    const data = JSON.parse(decodedString);
-
-    // Now you can use the decoded data as needed
-
-    const videoCallUrl = `/call/${data.roomId}/${decodedCallData}`;
-    window.open(videoCallUrl, "_blank");
+    HandleAnswerCall(setOpen, setReceivedCall, decodedCallData);
   };
 
-  useEffect(()=>{
-    if ( receivedCall.isReceivedCall){
-      handleClickOpen()
+  useEffect(() => {
+    if (receivedCall.isReceivedCall) {
+      handleClickOpen();
     }
-   
-  }, [receivedCall])
-
-
+  }, [receivedCall]);
 
   return (
     <div
@@ -623,44 +601,23 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
-
-
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title"></DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-          {receivedCall?.caller} is calling
+            {receivedCall?.caller} is calling
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
-          <Button 
-            onClick={() => handleAnswerCall()}
-          autoFocus>
-            Answer
-          </Button>
+          <Button onClick={() => handleAnswerCall()}>Answer</Button>
         </DialogActions>
       </Dialog>
-
-
-
-      {/* {receivedCall?.isReceivedCall && (
-        <div>
-          <h2 className="text-black">{receivedCall?.caller} is calling</h2>
-          <button
-            className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
-            onClick={() => handleAnswerCall()}
-          >
-            Answer
-          </button>
-        </div>
-      )} */}
 
       <div className="relative h-full">
         <div className="flex flex-col shadow-sm border-l border-opacity-20 h-full ">

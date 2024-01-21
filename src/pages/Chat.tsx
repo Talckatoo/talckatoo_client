@@ -65,7 +65,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
         refetch();
       });
     }
-  }, [socket.current, messages, ]);
+  }, [socket.current, messages]);
 
   useEffect(() => {
     if (socket.current) {
@@ -115,10 +115,10 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   // }, [refetchFriends, messages]);
 
   const handleCall = () => {
-
-    HandleCall(user, selectedId)
-
+    HandleCall(user, selectedId);
   };
+
+  console.log(user._id);
 
   return (
     <>
