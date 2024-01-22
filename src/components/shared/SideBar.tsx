@@ -18,7 +18,7 @@ import { PiChatTextFill } from "react-icons/pi";
 import FriendRequest from "./FriendRequest";
 import { setRequest } from "../../redux/features/user/requestSlice";
 
-const SideBar = () => {
+const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
   const [search, setSearch] = useState("");
   const { isDarkMode } = useContext(UserContext);
   const { users } = useAppSelector((state) => state.user);
@@ -36,7 +36,19 @@ const SideBar = () => {
 
   const [searchuser] = useSearchuserMutation();
   // get all requests
-  const { data: requestsData } = useFetchAllRequestsQuery(null) as any;
+  const { data: requestsData, refetch: refetchFriendsRequest } =
+    useFetchAllRequestsQuery(null) as any;
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("getFriendRequest", () => {
+        refetchFriendsRequest();
+      });
+      socket.current.on("getAcceptFriendRequest", () => {
+        refetch();
+      });
+    }
+  }, [socket.current]);
 
   useEffect(() => {
     if (requestsData) {
@@ -64,6 +76,7 @@ const SideBar = () => {
       setSearchData([]);
     }
   };
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -207,6 +220,7 @@ const SideBar = () => {
                       user={user}
                       isDarkMode={isDarkMode}
                       selected={selectedId === user._id}
+                      socket={socket}
                     />
                   </div>
                 ))
@@ -233,6 +247,8 @@ const SideBar = () => {
                     user={request}
                     isDarkMode={isDarkMode}
                     selected={selectedId === request._id}
+                    socket={socket}
+                    refetchFriendsRequest={refetchFriendsRequest}
                   />
                 </div>
               ))}
@@ -248,6 +264,7 @@ const SideBar = () => {
                       user={user}
                       isDarkMode={isDarkMode}
                       selected={selectedId === user._id}
+                      socket={socket}
                     />
                   </div>
                 ))

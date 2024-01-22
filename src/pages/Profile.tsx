@@ -89,7 +89,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
         formData.append(
           "fileUrl",
-          response?.data?.media?.url || user.profileImage.url
+          response?.data?.media?.url || user?.profileImage?.url
         );
 
         formData.append("language", updateLanguage || user.language);
@@ -104,7 +104,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
         userName: name || user.userName,
         image: response?.data?.media?.url
           ? response?.data?.media?.url
-          : user.profileImage.url,
+          : user?.profileImage?.url,
         language: updateLanguage || user.language,
         from: user?._id,
         to: selectedId,
@@ -143,7 +143,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     e.preventDefault();
     if (!image) {
       updateProfile({
-        response: { data: { media: { url: user.profileImage.url } } },
+        response: { data: { media: { url: user?.profileImage?.url } } },
       });
       return;
     }
@@ -241,7 +241,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
                 className=" object-cover h-[85px] w-[85px] rounded-full"
               />
             ) : (
-             <img src={user.profileImage.url} className="h-[85px] w-[85px] rounded-full"/>
+             <img src={user?.profileImage?.url} className="h-[85px] w-[85px] rounded-full"/>
             )}
             <input
               type="file"
@@ -290,8 +290,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           <img src="./assets/img/signout.png" alt="logout-icon" />
           </a>
           <span className="text-[#DD0000]">Log  Out</span>
-      
-         
         </div>
       </div>
     </div>

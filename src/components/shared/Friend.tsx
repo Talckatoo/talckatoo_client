@@ -1,22 +1,20 @@
 import FetchLatestMessages from "../../util/FetchLatestMessages";
 import { getContactName } from "../../util/getContactName";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { PiBirdFill } from "react-icons/pi";
-import { FaCheckCircle, FaPlusCircle } from "react-icons/fa";
-import { IoMdCloseCircle } from "react-icons/io";
+import { FaPlusCircle } from "react-icons/fa";
 import { useAddFriendMutation } from "../../redux/services/UserApi";
 import { setAuth } from "../../redux/features/user/authSlice";
 import { MdPending } from "react-icons/md";
-import { useEffect } from "react";
 
 interface FriendProps {
   user: any;
   key: string;
   isDarkMode: boolean;
   selected: boolean;
+  socket: any;
 }
 
-const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
+const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
   const { onlineFriends } = useAppSelector((state) => state.socket);
   const conversationState = useAppSelector((state) => state.conversation);
   const { user: userData } = useAppSelector((state) => state.auth);
@@ -33,6 +31,10 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
       console.log(response);
       if ("message" in response) {
         if (response.message === "Friend request sent successfully") {
+          socket.current.emit("sendFriendRequest", {
+            from: userData?._id,
+            to: friendId,
+          });
           dispatch(
             setAuth({
               ...userData,
@@ -70,7 +72,7 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
               backgroundPosition: "center",
             }}
           >
-            {!user.profileImage && (
+            {!user?.profileImage && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -122,7 +124,6 @@ const Friend = ({ user, key, isDarkMode, selected }: FriendProps) => {
         {!userData?.friends
           ?.map((friend: any) => friend._id)
           .includes(user?._id) &&
-          // send friend request
           (!userData?.friendRequests?.includes(user?._id) ? (
             <FaPlusCircle
               className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark "

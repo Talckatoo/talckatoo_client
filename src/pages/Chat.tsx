@@ -52,6 +52,21 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     if (friends) {
       dispatch(setUsers(friends.users));
+      dispatch(
+        setAuth({
+          ...user,
+          friends: (
+            friends?.users?.contactedUsers.concat(
+              friends?.users?.uncontactedUsers
+            ) as any[]
+          )?.map((u: any) => ({
+            _id: u._id,
+            userName: u.userName,
+            language: u.language,
+            profileImage: u.profileImage,
+          })),
+        })
+      );
     }
   }, [friends]);
 
@@ -121,7 +136,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   return (
     <>
       <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
-        <SideBar />
+        <SideBar socket={socket} refetch={refetch} />
 
         <div className=" w-full h-full flex flex-col bg-white">
           {selectedId && <Navbar onHandleCall={handleCall} />}
