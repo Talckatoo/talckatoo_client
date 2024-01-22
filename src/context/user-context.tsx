@@ -1,24 +1,5 @@
 import React, { createContext, useState, ReactNode } from "react";
-import  useUserRedirect  from "./../hooks/useUserRedirect";
-
-// interface Messages {
-//   createdAt?: string | null;
-//   message: string;
-//   audioURL: string;
-//   sender: string | null;
-//   _id: string;
-// }
-
-// interface User {
-//   email: string;
-//   userId: string;
-//   userName: string;
-//   profileImage?: {
-//     url: string;
-//   };
-//   language: string;
-//   welcome: string;
-// }
+import useUserRedirect from "./../hooks/useUserRedirect";
 
 interface UserContextProviderProps {
   isDarkMode: boolean;

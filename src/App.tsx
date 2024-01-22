@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import Chat from "./pages/Chat";
-import { Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
-// import VideoCall from "./pages/VideoCall"; 
+// import VideoCall from "./pages/VideoCall";
 import VideoRoomCall from "./pages/VideoRoomCall";
 import { SignUp } from "./pages/SignUp";
 import ResetPaaswordUpdate from "./pages/ResetPasswordUpdate";
@@ -43,12 +43,6 @@ const App = () => {
     }
   }, [socket.current]);
 
-  useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/");
-    }
-  }, []);
-
   return (
     <div className="w-full h-full">
       <Routes>
@@ -62,7 +56,6 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat socket={socket} />} />
         <Route path="/profile" element={<Profile socket={socket} />} />
-        {/* <Route path="/videoCall" element={<VideoCall socket={socket} />} /> */}
         <Route
           path="/call/:roomId/:decodedCallData"
           element={<VideoRoomCall socket={socket} />}
