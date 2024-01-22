@@ -1,6 +1,4 @@
-
 import Peer from "simple-peer";
-
 
 const CallUser = (
   currentStream,
@@ -11,12 +9,10 @@ const CallUser = (
   socket,
   connectionRef,
   userVideo,
-  setCallAccepted,
-  dispatch
+  setCallAccepted
 ) => {
   // CALL USER //
 
-  console.log("call other");
   const peer = new Peer({
     initiator: true,
     trickle: false,
@@ -53,26 +49,16 @@ const CallUser = (
   });
 
   peer.on("stream", (currentStream) => {
-    console.log("stream");
-    console.log({ currentStream: currentStream });
     if (userVideo && userVideo.current) {
       userVideo.current.srcObject = currentStream;
     }
-    console.log({ "userVideo in callUser": userVideo });
   });
 
-  // Listen to the signal from the other user
-
-  socket?.current?.on("callAccepted", (signal: string | Peer.SignalData) => {
-    console.log({ "signal from CallAccept": signal });
-    console.log("accept call");
-
+  socket?.current?.on("callAccepted", (data) => {
+    console.log(data);
     setCallAccepted(true);
-    if (peer.destroyed) {
-      console.warn("Peer instance is destroyed.");
-      return;
-    }
-    peer.signal(signal);
+
+    peer.signal(data.signal);
   });
 
   connectionRef.current = peer;

@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { FaPlayCircle } from "react-icons/fa";
+import { FaPause } from "react-icons/fa6";
 
 interface TextToSpeechProps {
   convertedText: string;
+  me: boolean;
+  ai: boolean;
 }
 
-const TextToSpeech: React.FC<TextToSpeechProps> = ({ convertedText }) => {
+const TextToSpeech: React.FC<TextToSpeechProps> = ({
+  convertedText,
+  me,
+  ai,
+}) => {
   const [show, setShow] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(
@@ -87,19 +95,39 @@ const TextToSpeech: React.FC<TextToSpeechProps> = ({ convertedText }) => {
   return (
     <>
       {show ? (
-        <>
-          <div className="w-1/2 flex flex-row gap-2 ">
-            <div className="text-x-small-regular text-gray-600 ml-2">
-              <button onClick={handlePlay}>
-                {isPaused ? "Resume" : "Play"}
-              </button>
-            </div>
+        <div className="flex justify-between items-center mx-2">
+          <div className="w-[100%] flex flex-row items-center  gap-2">
+            <button onClick={handlePlay}>
+              {isPaused ? (
+                <FaPause
+                  className={
+                    !me && !ai
+                      ? "text-white text-[20px]"
+                      : "text-black text-[20px]"
+                  }
+                />
+              ) : (
+                <FaPlayCircle
+                  className={
+                    !me && !ai
+                      ? "text-white text-[18px]"
+                      : "text-black text-[18px]"
+                  }
+                />
+              )}
+            </button>
 
-            <div className="text-x-small-regular text-gray-600 ml-2 pr-2">
-              <button onClick={handleStop}>Stop</button>
-            </div>
+            <button onClick={handleStop}>
+              <FaPause
+                className={
+                  !me && !ai
+                    ? "text-white text-[18px]"
+                    : "text-black text-[18px]"
+                }
+              />
+            </button>
           </div>
-        </>
+        </div>
       ) : null}
     </>
   );

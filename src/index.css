@@ -129,11 +129,11 @@ textarea {
   transition: 0.3s;
 }
 
-input:focus,
+/* input:focus,
 textarea:focus {
   border: 1px solid #5d5dff;
   box-shadow: inset 1px 1px 0 #5d5dff, inset -1px -1px 0 #4285f4;
-}
+} */
 #root {
   /* Display */
   display: flex;

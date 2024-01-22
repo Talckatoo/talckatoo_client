@@ -7,7 +7,7 @@ import {
 } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { BsEmojiSmile } from "react-icons/bs";
-import { MdOutlineClose } from "react-icons/md";
+import { MdOutlineAttachFile, MdOutlineClose } from "react-icons/md";
 import VoiceMessage from "./VoiceMessage";
 import SpeechToText from "./SpeechToText";
 import { UserContext } from "../context/user-context";
@@ -15,6 +15,10 @@ import { toast } from "react-toastify";
 import { useAppSelector } from "../redux/hooks";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import Input from "../UI/Input";
+import TextArea from "../UI/TextArea";
+import { IoSend } from "react-icons/io5";
+import { FaFaceSmile } from "react-icons/fa6";
 
 interface ChatInputProps {
   socket: any;
@@ -85,12 +89,10 @@ const ChatInput = ({
     formData.append("type", e.target.files[0].type.split("/")[0]);
     formData.append("altText", e.target.files[0].name);
 
-    console.log("file", e.target.files[0]);
     response = await uploadFile(formData);
 
     if ("data" in response) {
       if (response.data && !response.data.error) {
-        console.log("response", response.data.media._id);
         onHandleSendFile(response.data.media._id, response.data.media);
       } else {
         console.log("error", response.data.error);
@@ -101,117 +103,70 @@ const ChatInput = ({
   };
 
   const handleSendMessage = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (messageText.trim() === "") {
-      return;
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (messageText.trim() === "") {
+        return;
+      }
+
+      if (messageText.substring(0, 7) === AIcall) {
+        onHandleSendAIMessage(messageText);
+        toast.loading("Please wait", {
+          position: toast.POSITION.TOP_CENTER,
+          progressClassName: "success-progress-bar",
+          toastId: 2,
+        });
+      } else {
+        onHandleSendMessage(messageText);
+      }
+      setMessageText("");
     }
-    if (messageText.substring(0, 7) === AIcall) {
-      onHandleSendAIMessage(messageText);
-      toast.loading("Please wait", {
-        position: toast.POSITION.TOP_CENTER,
-        progressClassName: "success-progress-bar",
-        toastId: 2,
-      });
-    } else {
-      onHandleSendMessage(messageText);
-    }
-    setMessageText("");
   };
 
   return (
     <>
-      <div className="flex flex-col">
-        <div className="w-full h-1/2">
-          <form onSubmit={handleSendMessage} className="flex flex-row">
-            <div className="m-auto pl-6 relative" onClick={handleShowEmoji}>
-              {showEmoji && (
-                <div className="absolute top-0 transform -translate-y-full bg-white rounded shadow-lg p-2">
-                  <span
-                    className="flex items-center justify-end cursor-pointer"
-                    onClick={handleShowEmoji}
-                  >
-                    <MdOutlineClose />
-                  </span>
-                  <div className="h-full w-full">
-                    <EmojiPicker onEmojiClick={handleEmojiClick} />
-                  </div>
-                </div>
-              )}
+      <div className="w-full  relative z-10 pt-2">
+        <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  ">
+          <TextArea
+            label=""
+            name="name"
+            type="text"
+            value={messageText}
+            onChange={handleTyping as any}
+            onKeyDown={handleSendMessage as any}
+            id=""
+            placeholder="Type your message or type @birdie to call AI Assistant"
+            className="mb-0 rounded-t-[20px]   border border-[#0E131D] "
+          />
 
-              <span className="cursor-pointer">
-                <BsEmojiSmile
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    color: isDarkMode ? "white" : "black",
-                  }}
+          <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2">
+            <form onSubmit={handleSendMessage} className="absolute right-4 ">
+              <button>
+                <IoSend className="text-white text-[20px]" />
+              </button>
+            </form>
+            <div className="w-[200px] flex items-center">
+              <div className="flex">
+                <VoiceMessage
+                  socket={socket}
+                  onHandleTranslateText={onHandleTranslateText}
                 />
-              </span>
-            </div>
+              </div>
 
-            <input
-              type="text"
-              placeholder="Type your message or type @birdie to call AI Assistant"
-              className={`mx-8 mb-2 p-2 flex-grow rounded-xl hover:border-white focus:outline-none shadow-lg 
-            ${
-              isDarkMode
-                ? "bg-[#161c24]  text-slate-100"
-                : "bg-slate-200  text-black"
-            } ${messageText.startsWith(AIcall) ? "text-yellow-200" : ""}`}
-              value={messageText}
-              onChange={handleTyping}
-            />
+              <div className="flex items-center gap-2">
+                <img src="./assets/img/line.png" className="i" />
+                <FaFaceSmile className="text-white text-[20px]" />
 
-            <button
-              type="submit"
-              className={`mr-6 my-2 w-10 h-10 rounded-lg flex items-center justify-center ease-in-out duration-300
-            ${
-              isDarkMode
-                ? "bg-slate-800  text-slate-100"
-                : "bg-slate-200  text-black"
-            }
-            `}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="items-center justify-center w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                />
-              </svg>
-            </button>
-          </form>
-        </div>
-        <div className="w-full h-1/2">
-          <div className="flex flex-row items-center justify-center gap-10">
-            <SpeechToText setMessageText={setMessageText} />
-            <VoiceMessage
-              socket={socket}
-              onHandleTranslateText={onHandleTranslateText}
-            />
-            {/* upload image or video */}
-            <div className="flex items-center justify-center">
-              <label className="flex flex-col items-center p-2 rounded-full bg-white  cursor-pointer hover:bg-gray-200 hover:text-white">
-                <FaCloudUploadAlt
-                  style={{
-                    width: "25px",
-                    height: "25px",
-                    color:"black",
-                  }}
-                />
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => handleUpload(e)}
-                />
-              </label>
+                <label className="cursor-pointer">
+                  <MdOutlineAttachFile className="text-white text-[20px]" />
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => handleUpload(e)}
+                  />
+                </label>
+              </div>
+              {/* </div> */}
             </div>
           </div>
         </div>

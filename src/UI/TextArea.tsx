@@ -7,12 +7,15 @@ interface InputProps {
   id: string;
   placeholder: string;
   value: string;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   error?: string;
   className?: string;
 }
 
-const Input: FC<InputProps> = ({
+const TextArea: FC<InputProps> = ({
   label,
   type,
   name,
@@ -20,22 +23,24 @@ const Input: FC<InputProps> = ({
   value,
   error,
   className,
+  onKeyDown,
   onChange,
 }) => {
   return (
     <div className="mb-4 xl:mb-6 w-full">
       <label
         htmlFor={name}
-        className="block text-[14px] font-medium text-title-500 mb-4 text-[#757575]"
+        className="block text-[14px] font-medium text-title-500"
       >
         {label}
       </label>
-      <input
-        type={type}
+      <textarea
         name={name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onKeyDown={onKeyDown}
+        rows={2}
         className={`  p-3 w-full border text-black relative text-[16px] focus:outline-none outline-none ${
           error ? "border-red-500" : ""
         } ${className}`}
@@ -47,4 +52,4 @@ const Input: FC<InputProps> = ({
   );
 };
 
-export default Input;
+export default TextArea;
