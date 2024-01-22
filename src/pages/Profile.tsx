@@ -290,8 +290,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           <img src="./assets/img/signout.png" alt="logout-icon" />
           </a>
           <span className="text-[#DD0000]">Log  Out</span>
-      
-         
         </div>
       </div>
     </div>
