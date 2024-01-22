@@ -121,7 +121,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   return (
     <>
       <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
-        <SideBar />
+        <SideBar socket={socket} refetch={refetch} />
 
         <div className=" w-full h-full flex flex-col bg-white">
           {selectedId && <Navbar onHandleCall={handleCall} />}

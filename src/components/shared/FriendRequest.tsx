@@ -19,9 +19,18 @@ interface FriendProps {
   key: string;
   isDarkMode: boolean;
   selected: boolean;
+  socket: any;
+  refetchFriendsRequest: any;
 }
 
-const FriendRequest = ({ user, key, isDarkMode, selected }: FriendProps) => {
+const FriendRequest = ({
+  user,
+  key,
+  isDarkMode,
+  selected,
+  socket,
+  refetchFriendsRequest,
+}: FriendProps) => {
   const { onlineFriends } = useAppSelector((state) => state.socket);
   const conversationState = useAppSelector((state) => state.conversation);
   const { user: userData } = useAppSelector((state) => state.auth);
@@ -41,6 +50,10 @@ const FriendRequest = ({ user, key, isDarkMode, selected }: FriendProps) => {
       console.log(response);
       if ("message" in response) {
         if (response.message === "Friend request sent successfully") {
+          socket.current.emit("sendFriendRequest", {
+            from: userData?._id,
+            to: friendId,
+          });
           dispatch(
             setAuth({
               ...userData,
@@ -53,6 +66,7 @@ const FriendRequest = ({ user, key, isDarkMode, selected }: FriendProps) => {
       console.log(error);
     }
   };
+
 
   const HandleActionFriend = async (action: string) => {
     try {
@@ -74,6 +88,10 @@ const FriendRequest = ({ user, key, isDarkMode, selected }: FriendProps) => {
           dispatch(setRequests(newRequests));
 
           if (action === "accept") {
+            socket.current.emit("acceptFriendRequest", {
+              from: userData?._id,
+              to: user?._id,
+            });
             dispatch(
               setAuth({
                 ...userData,
