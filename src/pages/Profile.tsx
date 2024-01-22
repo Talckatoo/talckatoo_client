@@ -262,7 +262,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             id="name"
             value={formInput.name}
             onChange={handleInputChange}
-            className="bg-[#F5F5F5]  w-[410px]"
+            className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
           />
           <div className="mb-12 ">
             <label
