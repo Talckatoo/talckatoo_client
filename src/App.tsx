@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import Chat from "./pages/Chat";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import Navbar from "./navbar/NavBar";
+import { Route, Routes } from "react-router-dom";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
@@ -11,10 +10,8 @@ import { SignUp } from "./pages/SignUp";
 import ResetPaaswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
 import { io, Socket } from "socket.io-client";
-import { useAppDispatch, useAppSelector } from "./redux/hooks";
+import { useAppDispatch } from "./redux/hooks";
 import { updateContactedUserById } from "./redux/features/user/userSlice";
-import { setAuth } from "./redux/features/user/authSlice";
-import { setCall } from "./redux/features/call/callSlice";
 
 type MyEventMap = {
   connect: () => void;
@@ -26,8 +23,6 @@ type MyEventMap = {
 
 const App = () => {
   const dispatch = useAppDispatch();
-  const location = useLocation();
-  const navigate = useNavigate();
   const socket = useRef<Socket<MyEventMap> | null>();
 
   useEffect(() => {
@@ -48,12 +43,6 @@ const App = () => {
     }
   }, [socket.current]);
 
-  useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/");
-    }
-  }, []);
-
   return (
     <div className="w-full h-full">
       <Routes>
@@ -67,7 +56,6 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat socket={socket} />} />
         <Route path="/profile" element={<Profile socket={socket} />} />
-        {/* <Route path="/videoCall" element={<VideoCall socket={socket} />} /> */}
         <Route
           path="/call/:roomId/:decodedCallData"
           element={<VideoRoomCall socket={socket} />}

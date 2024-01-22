@@ -1,26 +1,5 @@
-import React, { createContext, useState, ReactNode, useEffect } from "react";
-import axios from "axios";
-import jwt_decode from "jwt-decode";
-import { toast } from "react-toastify";
-
-interface Messages {
-  createdAt?: string | null;
-  message: string;
-  audioURL: string;
-  sender: string | null;
-  _id: string;
-}
-
-interface User {
-  email: string;
-  userId: string;
-  userName: string;
-  profileImage?: {
-    url: string;
-  };
-  language: string;
-  welcome: string;
-}
+import React, { createContext, useState, ReactNode } from "react";
+import useUserRedirect from "./../hooks/useUserRedirect";
 
 interface UserContextProviderProps {
   isDarkMode: boolean;
@@ -44,6 +23,9 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
+
+  // use the userRedirect hook
+  useUserRedirect();
 
   return (
     <UserContext.Provider
