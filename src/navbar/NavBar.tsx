@@ -107,7 +107,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
                 <div
                   ref={profilePictureRef}
                   onClick={handleDropdownClick}
-                  className="w-10 h-10 max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
+                  className="w-10 h-10 min-h-10 min-w-10  max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
                   style={{
                     backgroundImage: `url(${recipientPi || COCKATOO})`,
                     backgroundSize: "cover",

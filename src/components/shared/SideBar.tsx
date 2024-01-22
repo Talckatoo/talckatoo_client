@@ -15,6 +15,7 @@ import {
   useSearchuserMutation,
 } from "../../redux/services/UserApi";
 import { PiChatTextFill } from "react-icons/pi";
+import { RiSettings5Fill } from "react-icons/ri";
 import FriendRequest from "./FriendRequest";
 import { setRequest } from "../../redux/features/user/requestSlice";
 
@@ -167,9 +168,8 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
             } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
             onClick={handleSettingClick}
           >
-            <img
-              src="./src/assests/Setting_line.svg"
-              className=" top-1 right-4 z-4 object-contain py-[6px] w-[25px]"
+            <RiSettings5Fill
+              className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
           </div>
           <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
