@@ -17,6 +17,9 @@ import {
 } from "../redux/features/user/userSlice";
 import { setMessages } from "../redux/features/messages/messageSlice";
 import { setRequest } from "../redux/features/user/requestSlice";
+import { IoPersonSharp } from "react-icons/io5";
+import { PiChatTextFill } from "react-icons/pi";
+import { RiSettings5Fill } from "react-icons/ri";
 
 // import UserProfile from "../components/UserProfile";
 
@@ -59,7 +62,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleLanguageChange = (e: any) => {
     setUpdateLanguage(e.target.value);
     console.log(updateLanguage);
-  }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -170,69 +173,65 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   return (
     <div
       className={`flex flex-1 justify-center items-center  w-full h-full ${
-        !isDarkMode ? "bg-slate-950" : ""
+        isDarkMode ? "bg-slate-950" : ""
       }`}
     >
-      
       {/*First column */}
-      <div className="w-[89px] border-r pt-5 border-primary-500 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
+      <div className="w-[80px] pt-[2rem] min-w-[80px] border-r  border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
         <div className="flex flex-col  gap-3 w-full">
           <div
             className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
+              isDarkMode ? "bg-primary-500" : "bg-secondary-500 "
+            }${"bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"} mx-2 rounded-[12px]  flex items-center justify-center flex-col
+              transition duration-300 ease-in-out 
+            `}
+            onClick={() => navigateChat()}
           >
-            <img
-              src="./src/assests/comment_duotone.svg"
-              className=" top-1 right-4 z-4 object-contain py-2"
+            <PiChatTextFill
+              className={`${"text-secondary-500"} z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
           </div>
-          <div className="relative border-[1px] border-secondary-500 mx-2 rounded-[12px] flex items-center justify-center flex-col relative">
-            <img
-              src={`./src/assests/${
-                isDarkMode ? "User_alt_fill_dark.svg" : "User_alt_fill.svg"
-              }`}
-              className="z-4 object-contain py-2"
+          <div
+            className={`${
+              isDarkMode ? "bg-primary-500" : "bg-secondary-500 "
+            }${"bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"} mx-2 rounded-[12px]  flex items-center justify-center flex-col
+              transition duration-300 ease-in-out 
+            `}
+            onClick={() => navigateChat()}
+          >
+            <IoPersonSharp
+              className={`${"text-secondary-500"} z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
-            <div
-              className="absolute top-[75%] left-[80%] w-4 h-4 bg-red-badge-500 rounded-full text-white flex items-center justify-center"
-              style={{
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-                fontSize: "0.6rem",
-                fontWeight: "bold",
-              }}
-            >
-              15
-            </div>
           </div>
         </div>
         <div className="flex flex-col  gap-3 w-full">
-        <a href="#"  >
           <div
             className={`${
               isDarkMode ? "bg-primary-500" : "bg-secondary-500"
             } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
-
-           
           >
-            <img
-              src="./src/assests/Setting_line.svg"
-              className=" top-1 right-4 z-4 object-contain py-2"
+            <RiSettings5Fill
+              className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
           </div>
-          </a>
-
-          <div className="mx-2 rounded-[12px]  flex items-center justify-center flex-col">
+          <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
             <img
-              src="./src/assests/Ellipse 1190.svg"
-              className=" top-1 right-4 z-4 mb-3 object-contain py-2"
+              src={`${user?.profileImage?.url}`}
+              className="h-14 w-14 object-cover rounded-full"
+              alt="Profile-picture"
             />
           </div>
         </div>
       </div>
 
-      <div className=" w-[580px]  mx-auto flex flex-col md:text-[14px] ">
-        <form className=" px-[5rem] py-[4rem] flex flex-col bg-[#fff] border border-[#A6A6A6]" onSubmit={handleSubmit}>
+      <div className="   mx-auto flex flex-col md:text-[14px]">
+        <form
+          className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px]"
+          onSubmit={handleSubmit}
+          style={{
+            boxShadow: "6px 6px 54px 0px rgba(0, 0, 0, 0.03)",
+          }}
+        >
           <div className="mb-8  flex items-center justify-center gap-4 cursor-pointer relative">
             {image ? (
               <img
@@ -241,7 +240,10 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
                 className=" object-cover h-[85px] w-[85px] rounded-full"
               />
             ) : (
-             <img src={user?.profileImage?.url} className="h-[85px] w-[85px] rounded-full"/>
+              <img
+                src={user?.profileImage?.url}
+                className="h-[85px] w-[85px] rounded-full"
+              />
             )}
             <input
               type="file"
@@ -249,22 +251,28 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               className="absolute inset-0 opacity-0 cursor-pointer"
               onChange={handleUpload}
             />
-            <span className=" text-[#757575]">Upload Photo</span>
+            <span className=" text-[#606060]">Upload Photo</span>
           </div>
 
           <Input
             name="name"
             type="text"
-            label="Name"
-            placeholder="Enter your full name"
+            label="Username"
+            placeholder="Enter your username"
             id="name"
             value={formInput.name}
             onChange={handleInputChange}
-            className="bg-[#D5D5D5] text-[#A6A6A6]"
+            className="bg-[#F5F5F5]  w-[410px]"
           />
           <div className="mb-12 ">
+            <label
+              htmlFor={name}
+              className="block text-[14px] font-medium  mb-4 text-[#606060]"
+            >
+              Language
+            </label>
             <select
-              className="p-4   w-full bg-[#D5D5D5] rounded-[10px]"
+              className="p-4    w-full bg-[#F5F5F5] rounded-[10px] text-[#606060] focus:outline-none outline-none"
               value={updateLanguage}
               onChange={handleLanguageChange}
             >
@@ -284,12 +292,16 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             </button>
           </div>
         </form>
-        <div className="flex justify-center mt-5 gap-4">
-          
-          <a href="" onClick={handleLogout}>
-          <img src="./assets/img/signout.png" alt="logout-icon" />
+        <div
+          className="flex justify-center mt-5 gap-4 cursor-pointer"
+          onClick={handleLogout}
+        >
+          <a href="">
+            <img src="./assets/img/signout.png" alt="logout-icon" />
           </a>
-          <span className="text-[#DD0000]">Log  Out</span>
+          <span className="text-[#DD0000] font-semibold text-[17px]">
+            Log Out
+          </span>
         </div>
       </div>
     </div>
