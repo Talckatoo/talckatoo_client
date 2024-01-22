@@ -39,6 +39,14 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const userID = localStorage.getItem("userId");
 
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("getAcceptFriendRequest", () => {
+        refetch();
+      });
+    }
+  }, [socket.current]);
+
   const { data } = useFetchUserByIdQuery(
     userID !== null ? { id: userID } : skipToken
   ) as any;
