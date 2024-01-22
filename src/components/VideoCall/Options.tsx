@@ -1,39 +1,45 @@
 import { useEffect, useState, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import Button from "../../UI/Button";
-
+import { PiMicrophoneLight } from "react-icons/pi";
+import { PiPhoneDisconnectLight } from "react-icons/pi";
+import { PiEyeLight } from "react-icons/pi";
 export default function Options({
   callAccepted,
   callEnded,
   myVideo,
   userVideo,
   leaveCall,
-  callUser,
-  children,
+  userData,
 }) {
   const { user } = useAppSelector((state) => state.auth);
-  const conversationState = useAppSelector((state) => state.conversation);
-  const selectedId = conversationState?.conversation?.selectedId;
-  const { recipient } = useAppSelector((state) => state.user);
 
   return (
-    <div>
+    <div className="flex items-center justify-center h-full w-full gap-2">
+      <button className="flex flex-col items-center rounded-md px-4 py-3 text-white">
+        <PiMicrophoneLight size={20} />
+        <span>Microphone</span>
+      </button>
+
+      {/* Button 3 */}
+      <button className="flex flex-col items-center rounded-md px-4 py-3 text-white">
+        <PiEyeLight size={22} />
+        <span>Camera</span>
+      </button>
+
+      {/* Button 4 */}
+      {/* <button className="flex rounded-md px-4 py-3 text-white items-center justify-center">
+        Share screen
+      </button> */}
+
       {callAccepted && !callEnded ? (
         <button
-          className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
+          className="ml-2 flex flex-col rounded-md px-6 py-[2px] bg-red-600 text-white items-center justify-center"
           onClick={leaveCall}
         >
-          Leave Call
+          <PiPhoneDisconnectLight size={20} />
+          Leave
         </button>
-      ) : (
-        <button
-          className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
-          onClick={() => callUser()}
-        >
-          Call {recipient}
-        </button>
-      )}
-      {children}
+      ) : null}
     </div>
   );
 }

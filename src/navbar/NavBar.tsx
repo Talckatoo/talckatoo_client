@@ -18,23 +18,26 @@ import ChatNavSearch from "../components/ChatNavSearch";
 import languagesArray from "../util/languages";
 import { PiVideoCameraThin } from "react-icons/pi";
 import { PiPhoneCallLight } from "react-icons/pi";
-const Navbar = () => {
+
+interface NavBarProps {
+  onHandleCall: () => void;
+}
+const Navbar = ({ onHandleCall }: NavBarProps) => {
   //Reference for dropdown menu
   const dropdownRef = useRef<HTMLDivElement>(null);
   //States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const profilePictureRef = useRef();
   const { user } = useAppSelector((state) => state.auth);
-  const {recipient} = useAppSelector((state) => state.user);
+  const { recipient } = useAppSelector((state) => state.user);
   const conversationState = useAppSelector((state) => state.conversation);
-  const {recipientPi} = useAppSelector((state) => state.user);
+  const { recipientPi } = useAppSelector((state) => state.user);
   const language = conversationState?.conversation?.language;
 
-  
   const fullLanguage = languagesArray.map((l) => {
     if (l.code === language?.toLowerCase()) return l.language;
   });
- 
+
   const { isDarkMode, setIsDarkMode } = useContext(UserContext);
 
   useEffect(() => {
@@ -86,13 +89,12 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const handleProfileClick = () => {
-    navigate("/profile");
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
+  };
+
+  const handleVideoCall = () => {
+    onHandleCall();
   };
 
   return (
@@ -101,20 +103,18 @@ const Navbar = () => {
         <div className="flex items-center ml-2 gap-2 md:gap-4 ">
           {user && (
             <>
-              {recipientPi?  (
+              {recipientPi ? (
                 <div
                   ref={profilePictureRef}
                   onClick={handleDropdownClick}
                   className="w-10 h-10 max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
                   style={{
-                    backgroundImage: `url(${
-                      recipientPi || COCKATOO
-                    })`,
+                    backgroundImage: `url(${recipientPi || COCKATOO})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}
                 >
-                  { !recipientPi && (
+                  {!recipientPi && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -148,7 +148,7 @@ const Navbar = () => {
               <div className="flex flex-col  hover:text-gray-300   mr-2 focus:outline-none sm:block">
                 {user && user?.userName ? (
                   <p className="max-md:text-[16px] md: text-[16px] text-bold text-[#25282C]">
-                   {recipient}
+                    {recipient}
                   </p>
                 ) : (
                   ""
@@ -197,16 +197,23 @@ const Navbar = () => {
           type="text"
           name="chat"
           value=""
-          placeholder="search text"
+          placeholder=""
           id="chatsearch"
           label=""
           className="max-md:hidden max-md:"
         />
       </div>
 
-      <div className="flex gap-6 items-center max-md:gap-2  ">
-      <PiVideoCameraThin size={34}/>
+      <div className="flex gap-6 items-center max-md:gap-2 ">
+        <button className="text-black" onClick={handleVideoCall}>
+          <PiVideoCameraThin size={34} />
+        </button>
+        {/* 
+      <button className="text-black" onClick={handleCall}>
+
       <PiPhoneCallLight size={26}/>
+    
+      </button> */}
       </div>
     </nav>
   );

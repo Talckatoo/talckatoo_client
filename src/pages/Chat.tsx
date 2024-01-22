@@ -14,6 +14,7 @@ import { setCall } from "../redux/features/call/callSlice";
 import SideBar from "../components/shared/SideBar";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { setAuth } from "../redux/features/user/authSlice";
+import HandleCall from "../components/VideoCall/services/HandleCall";
 
 interface Socket {
   current: any;
@@ -28,16 +29,19 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationState = useAppSelector((state) => state.conversation);
   const messages = useAppSelector((state) => state.messages.messages);
   const { users } = useAppSelector((state) => state.user);
-  // const {recipient} = useAppSelector((state) => state.recipient);
+  const { requests } = useAppSelector((state) => state.user);
+  const { recipient } = useAppSelector((state) => state.user);
 
   // RTK Query
-  const { data: friends, refetch } = useFetchAllFriendsQuery(null) as any;
+  const { data: friends, refetch } = useFetchAllFriendsQuery(null, {
+    refetchOnMountOrArgChange: true,
+  }) as any;
 
   const userID = localStorage.getItem("userId");
 
-  const { data } = useFetchUserByIdQuery(userID ? { id: userID } : skipToken, {
-    refetchOnMountOrArgChange: true,
-  }) as any;
+  const { data } = useFetchUserByIdQuery(
+    userID !== null ? { id: userID } : skipToken
+  ) as any;
 
   useEffect(() => {
     if (data) {
@@ -48,6 +52,21 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     if (friends) {
       dispatch(setUsers(friends.users));
+      dispatch(
+        setAuth({
+          ...user,
+          friends: (
+            friends?.users?.contactedUsers.concat(
+              friends?.users?.uncontactedUsers
+            ) as any[]
+          )?.map((u: any) => ({
+            _id: u._id,
+            userName: u.userName,
+            language: u.language,
+            profileImage: u.profileImage,
+          })),
+        })
+      );
     }
   }, [friends]);
 
@@ -110,13 +129,17 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   //   refetchFriends();
   // }, [refetchFriends, messages]);
 
+  const handleCall = () => {
+    HandleCall(user, selectedId, recipient);
+  };
+
   return (
     <>
       <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
-        <SideBar />
+        <SideBar socket={socket} refetch={refetch} />
 
         <div className=" w-full h-full flex flex-col bg-white">
-          {selectedId && <Navbar />}
+          {selectedId && <Navbar onHandleCall={handleCall} />}
           <ChatContainer socket={socket} />
         </div>
       </div>

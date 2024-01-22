@@ -43,8 +43,14 @@ const App = () => {
     }
   }, [socket.current]);
 
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []);
+
   return (
-    <div className="flex flex-col h-full w-full ">
+    <div className="w-full h-full">
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/reset-password" element={<ResetPassword />} />

@@ -7,53 +7,101 @@ import ChatWelcome from "../components/ChatWelcome";
 import { getTime } from "../util/getTime";
 import { v4 as uuidv4 } from "uuid";
 import JumpingDotsAnimation from "../UI/animation";
-import { HiArrowsRightLeft } from "react-icons/hi2";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
-import { MdDownload, MdTranslate } from "react-icons/md";
+import { MdDownload } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import {
   addMessage,
   setMessages,
 } from "../redux/features/messages/messageSlice";
-import { setConversation } from "../redux/features/conversation/conversationSlice";
-import userSlice, { setRecipient } from "../redux/features/user/userSlice";
+
+import { setRecipient } from "../redux/features/user/userSlice";
 import {
   useFetchMessagesByConversationIdQuery,
   useSendMessageMutation,
 } from "../redux/services/MessagesApi";
 import { FaFile } from "react-icons/fa";
 import { Base64 } from "js-base64";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+// import {
+//   Dialog,
+//   DialogTitle,
+//   DialogContent,
+//   DialogContentText,
+//   DialogActions,
+//   Button,
+// } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
+
 interface Socket {
   current: any;
 }
 
+interface ReceivedCallState {
+  isReceivedCall: boolean;
+  caller?: string;
+  roomId?: string;
+}
+
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
-  const [stream, setStream] = useState(null);
-  const myVideo = useRef(null); // Initialize the ref
+  // const ColoredDialog = withStyles({
+  //   root: {
+  //     "& .MuiDialog-paper": {
+  //       border: "2px solid black", // Set your desired border color
+  //     },
+  //   },
+  // })(Dialog);
 
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(30);
   const conversationState = useAppSelector((state) => state.conversation);
+  const selectedId = conversationState?.conversation?.selectedId;
   const user = useAppSelector((state) => state.auth.user);
-  const call = useAppSelector((state) => state.call.call);
   const messages = useAppSelector((state) => state.messages.messages);
   const { recipient } = useAppSelector((state) => state.user);
-  const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
-  const { recipientPi } = useAppSelector((state) => state.user);
+
+  const [receivedCall, setReceivedCall] = useState<ReceivedCallState>({
+    isReceivedCall: false,
+    caller: "",
+    roomId: "",
+  });
+
+  // *******************CALL******************
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    if (socket.current && receivedCall && receivedCall.roomId) {
+      let roomId = receivedCall.roomId;
+      socket.current.emit("leaveCall", {
+        roomId,
+      });
+    }
+  };
 
   // RTK Query
   // fetch all messages by conversation id
   const { data: messagesData, refetch: refetchMessages } =
     useFetchMessagesByConversationIdQuery(
       { userId: user?._id, conversationId: conversationId, page, limit },
-      { skip: !conversationId }
+      { skip: conversationId === "" }
     ) as any;
 
   // Post Message
@@ -61,18 +109,16 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-  // navigate
-  const navigateVideoCall = () => {
-    navigate("/videoCall");
-  };
-
   useEffect(() => {
-    if (selectedId || conversationId) {
+    if (selectedId && conversationId) {
       setPage(1);
-      setLimit(10);
+      setLimit(30);
       setHasMoreMessages(true);
       setIsFetchingMore(false);
       refetchMessages();
+    }
+    if (selectedId && conversationId === "") {
+      dispatch(setMessages([]));
     }
   }, [selectedId, conversationId]);
 
@@ -81,6 +127,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [selectedTyping, setSelectedTyping] = useState();
+  const [decodedCallData, setDecodedCallData] = useState("");
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const idArray = usersArray?.map((obj) => obj._id);
@@ -94,7 +142,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   )?.voiceCode;
 
   const token = localStorage.getItem("token");
-  const [decodedCallData, setDecodedCallData] = useState("");
 
   useEffect(() => {
     if (socket.current) {
@@ -112,14 +159,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           username,
           roomId,
           userToCall,
+          recipient,
         }: {
           signal: any;
           from: any;
           username: any;
           roomId: any;
           userToCall: any;
+          recipient: any;
         }) => {
-          console.log("callUser", signal, from, username, roomId, userToCall);
           // Encode the call data and set it into the URL
           const encodedCallData = Base64.fromUint8Array(
             new TextEncoder().encode(
@@ -130,28 +178,22 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 signal,
                 roomId,
                 userToCall,
+                recipient,
               })
             )
           );
-
-          console.log("callUser", encodedCallData);
-
           setDecodedCallData(encodedCallData);
+          setReceivedCall({
+            isReceivedCall: true,
+            caller: username,
+            roomId,
+          });
         }
       );
 
-      // socket.current.on("leaveCall", () => {
-      //   // Handle the call ending notification
-      //   console.log("Call ended by the caller");
-      //   setCallEnded(true);
-      //   setCallAccepted(false);
-      //   setCall({ isReceivedCall: false });
-      //   setCalleeEnded(true);
-      //   if (connectionRef.current) {
-      //     connectionRef.current.destroy();
-      //   }
-      //   // You can update the UI or show a notification to inform the callee
-      // });
+      socket?.current?.on("leaveCall", () => {
+        setReceivedCall({ isReceivedCall: false, caller: "", roomId: "" });
+      });
 
       // **************** call *********************
     }
@@ -197,7 +239,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const handleSendMessage = async (messageText: any) => {
     socket.current.emit("stopTyping", selectedId);
-    if (selectedId && conversationId) {
+    if (selectedId && conversationId !== "") {
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -236,9 +278,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
-    } else if (selectedId && conversationId === null) {
+    } else if (selectedId && conversationId === "") {
       // setMessages([]);
-      dispatch(setMessages([]));
+      // dispatch(setMessages([]));
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -261,6 +303,18 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         });
+
+        // modify the latest message   in the users redux
+
+        dispatch(
+          addMessage({
+            createdAt: message?.createdAt,
+            message: message?.message,
+            sender: user?._id,
+            _id: message?._id,
+            unread: selectedId,
+          })
+        );
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
@@ -316,9 +370,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
-    } else if (selectedId && conversationId === null) {
-      // setMessages([]);
-      dispatch(setMessages([]));
+    } else if (selectedId && conversationId === "") {
+      // // setMessages([]);
+      // dispatch(setMessages([]));
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -453,7 +507,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       if (newMessages && newMessages.length > 0) {
         // add the new messages on top of the old ones
         setIsFetchingMore(true);
-        setLimit(limit + 10);
+        setLimit(limit + 20);
       } else {
         // No more messages to fetch
         setHasMoreMessages(false);
@@ -468,7 +522,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const handleScroll = (e) => {
       const { scrollTop } = e.target;
       // almost the top
-      const isScrolledToTop = scrollTop < 400;
+      const isScrolledToTop = scrollTop < 600;
       if (isScrolledToTop && messages) {
         fetchNextPage();
       }
@@ -547,43 +601,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // *************************** VIDEO CALL *****************************
 
-  const handleCall = () => {
-    // decode the call data
-    const encodedCallData = Base64.fromUint8Array(
-      new TextEncoder().encode(
-        JSON.stringify({
-          selectedId,
-          userId: user._id,
-          userName: user.userName,
-        })
-      )
-    );
-
-    const videoCallUrl = `/call/${Math.random()
-      .toString(36)
-      .slice(2)}/${encodedCallData}`;
-    window.open(videoCallUrl, "_blank");
-  };
-
   const handleAnswerCall = () => {
-    // indecoded decodedCallData
-    const decodedUint8Array = decodedCallData
-      ? Base64.toUint8Array(decodedCallData)
-      : null;
-
-    // Convert the Uint8Array to a string
-    const decodedString = new TextDecoder().decode(
-      decodedUint8Array as AllowSharedBufferSource
-    );
-
-    // Parse the JSON string to get the original data
-    const data = JSON.parse(decodedString);
-
-    // Now you can use the decoded data as needed
-    console.log("callData from inside", data);
-    const videoCallUrl = `/call/${data.roomId}/${decodedCallData}`;
-    window.open(videoCallUrl, "_blank");
+    HandleAnswerCall(setOpen, setReceivedCall, decodedCallData);
   };
+
+  useEffect(() => {
+    if (receivedCall.isReceivedCall) {
+      handleClickOpen();
+    }
+  }, [receivedCall]);
 
   return (
     <div
@@ -591,20 +617,23 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
       }`}
     >
-      {/* <button className="text-white" onClick={handleCall}>
-        Call
-      </button>
-      {call?.isReceivedCall && (
-        <div>
-          <h2 className="text-black">{call?.username} is calling</h2>
-          <button
-            className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
-            onClick={() => handleAnswerCall()}
-          >
-            Answer
-          </button>
-        </div>
-      )} */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title"></DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {receivedCall?.caller} is calling
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={() => handleAnswerCall()}>Answer</Button>
+        </DialogActions>
+      </Dialog>
 
       <div className="relative h-full">
         <div className="flex flex-col shadow-sm border-l border-opacity-20 h-full ">
@@ -622,9 +651,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             <div className="relative h-full z-[5] ">
               <div
                 ref={scrollRef}
-                className="overflow-y-auto absolute top-0 left-0 right-0 bottom-0  m-auto"
+                className="overflow-y-auto overflow-x-hidden w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
               >
-                {!!selectedId && !!conversationId ? (
+                {!!selectedId ? (
                   <div className="m-2 p-2 ">
                     {messages
                       ? messages.map((msg) => (
@@ -708,7 +737,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                       />
                                       <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
                                         <Link to={msg.media.url} download>
-                                          <MdDownload className="text-[24px]" />
+                                          <MdDownload className="text-[24px] text-black" />
                                         </Link>
                                       </div>
                                     </div>
@@ -721,7 +750,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                       />
                                       <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
                                         <Link to={msg.media.url} download>
-                                          <MdDownload className="text-[24px]" />
+                                          <MdDownload className="text-[24px] text-black" />
                                         </Link>
                                       </div>
                                     </div>
@@ -746,7 +775,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                           </p>
                                         </div>
 
-                                        <MdDownload className="text-[35px] min-w-[35px] bg-white p-2 rounded-full shadow-md" />
+                                        <MdDownload className="text-[35px] min-w-[35px] text-black bg-white p-2 rounded-full shadow-md" />
                                       </Link>
                                     </div>
                                   ))}

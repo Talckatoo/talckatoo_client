@@ -7,7 +7,7 @@ import {
 } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { BsEmojiSmile } from "react-icons/bs";
-import { MdOutlineClose } from "react-icons/md";
+import { MdOutlineAttachFile, MdOutlineClose } from "react-icons/md";
 import VoiceMessage from "./VoiceMessage";
 import SpeechToText from "./SpeechToText";
 import { UserContext } from "../context/user-context";
@@ -17,6 +17,8 @@ import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import Input from "../UI/Input";
 import TextArea from "../UI/TextArea";
+import { IoSend } from "react-icons/io5";
+import { FaFaceSmile } from "react-icons/fa6";
 
 interface ChatInputProps {
   socket: any;
@@ -87,12 +89,10 @@ const ChatInput = ({
     formData.append("type", e.target.files[0].type.split("/")[0]);
     formData.append("altText", e.target.files[0].name);
 
-    console.log("file", e.target.files[0]);
     response = await uploadFile(formData);
 
     if ("data" in response) {
       if (response.data && !response.data.error) {
-        console.log("response", response.data.media._id);
         onHandleSendFile(response.data.media._id, response.data.media);
       } else {
         console.log("error", response.data.error);
@@ -139,13 +139,13 @@ const ChatInput = ({
             className="mb-0 rounded-t-[20px]   border border-[#0E131D] "
           />
 
-          <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-5">
-            <form onSubmit={handleSendMessage} className="absolute right-2 ">
+          <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2">
+            <form onSubmit={handleSendMessage} className="absolute right-4 ">
               <button>
-                <img src="/assets/img/send.png" className="" />
+                <IoSend className="text-white text-[20px]" />
               </button>
             </form>
-            <div className="w-[100px] flex items-center">
+            <div className="w-[200px] flex items-center">
               <div className="flex">
                 <VoiceMessage
                   socket={socket}
@@ -155,9 +155,10 @@ const ChatInput = ({
 
               <div className="flex items-center gap-2">
                 <img src="./assets/img/line.png" className="i" />
-                <img src="./assets/img/emoji.png" className="i" />
+                <FaFaceSmile className="text-white text-[20px]" />
+
                 <label className="cursor-pointer">
-                  <img src="./assets/img/file.png" />
+                  <MdOutlineAttachFile className="text-white text-[20px]" />
                   <input
                     type="file"
                     className="hidden"
