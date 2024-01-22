@@ -41,6 +41,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 // } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
+import { setConversation } from "../redux/features/conversation/conversationSlice";
 
 interface Socket {
   current: any;
@@ -250,7 +251,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           unread: selectedId,
         }).unwrap();
 
-        const { message } = response;
+        const { message, conversation } = response;
 
         setIsFetchingMore(false);
 
@@ -275,6 +276,14 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             unread: selectedId,
           })
         );
+
+        dispatch(
+          setConversation({
+            conversationId: conversation?._id,
+            selectedId: selectedId,
+            language: language,
+          })
+        );
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
@@ -292,7 +301,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }).unwrap();
 
         setIsFetchingMore(false);
-        const { message } = response;
+        const { message, conversation } = response;
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
@@ -313,6 +322,14 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             sender: user?._id,
             _id: message?._id,
             unread: selectedId,
+          })
+        );
+
+        dispatch(
+          setConversation({
+            conversationId: conversation?._id,
+            selectedId: selectedId,
+            language: language,
           })
         );
       } catch (err) {
@@ -334,7 +351,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           unread: selectedId,
         }).unwrap();
 
-        const { message } = response;
+        const { message, conversation } = response;
 
         setIsFetchingMore(false);
 
@@ -367,6 +384,13 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             unread: selectedId,
           })
         );
+        dispatch(
+          setConversation({
+            conversationId: conversation?._id,
+            selectedId: selectedId,
+            language: language,
+          })
+        );
       } catch (err) {
         toast.error("Error sending messages, please try again");
       }
@@ -385,7 +409,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         setIsFetchingMore(false);
 
-        const { message } = response;
+        const { message, conversation } = response;
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
@@ -414,6 +438,13 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             sender: user?._id,
             _id: message?._id,
             unread: selectedId,
+          })
+        );
+        dispatch(
+          setConversation({
+            conversationId: conversation?._id,
+            selectedId: selectedId,
+            language: language,
           })
         );
       } catch (err) {

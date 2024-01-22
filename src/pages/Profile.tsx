@@ -32,7 +32,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
   const { user } = useAppSelector((state) => state.auth);
-  const [updateLanguage, setUpdateLanguage] = useState("");
+  const [updateLanguage, setUpdateLanguage] = useState(user?.language);
   const conversationState = useAppSelector((state) => state.conversation);
   const selectedId = conversationState?.conversation?.selectedId;
   const dispatch = useAppDispatch();
@@ -51,14 +51,15 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   }
 
   const [formInput, setformInput] = useState<FormInput>({
-    name: "",
+    name: user?.userName,
   });
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
-    setformInput({ ...formInput, [name]: value });
-    console.log(formInput);
+    setformInput((prev) => ({ ...prev, [name]: value }));
+    console.log(formInput.name);
   };
+
   const handleLanguageChange = (e: any) => {
     setUpdateLanguage(e.target.value);
     console.log(updateLanguage);
@@ -88,23 +89,23 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     try {
       const formData = new FormData();
       if (user) {
-        formData.append("userName", name || user.userName);
+        formData.append("userName", formInput.name || user?.userName);
 
         formData.append(
           "fileUrl",
           response?.data?.media?.url || user?.profileImage?.url
         );
 
-        formData.append("language", updateLanguage || user.language);
+        formData.append("language", updateLanguage || user?.language);
       }
 
-      const result = await updateUser({
+      const result = (await updateUser({
         id: user?._id,
         data: formData,
-      });
+      })) as any;
 
       socket.current.emit("updateProfile", {
-        userName: name || user.userName,
+        userName: formInput.name || user.userName,
         image: response?.data?.media?.url
           ? response?.data?.media?.url
           : user?.profileImage?.url,
@@ -122,9 +123,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           setAuth({
             ...user,
             userName: updatedUser.userName,
-            profileImage: {
-              url: response?.data?.media?.url,
-            },
+            profileImage: result?.data?.user?.profileImage,
             language: updatedUser.language,
             welcome: result?.data?.user?.welcome,
           })
