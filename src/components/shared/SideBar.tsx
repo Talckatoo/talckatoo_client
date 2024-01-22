@@ -45,11 +45,6 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
       socket.current.on("getFriendRequest", () => {
         refetchFriendsRequest();
       });
-    }
-  }, [socket.current]);
-
-  useEffect(() => {
-    if (socket.current) {
       socket.current.on("getAcceptFriendRequest", () => {
         refetch();
       });
