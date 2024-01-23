@@ -250,6 +250,7 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
                     selected={selectedId === request._id}
                     socket={socket}
                     refetchFriendsRequest={refetchFriendsRequest}
+                    refetch={refetch}
                   />
                 </div>
               ))}

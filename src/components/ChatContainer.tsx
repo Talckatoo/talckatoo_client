@@ -42,6 +42,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { withStyles } from "@material-ui/core/styles";
 import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface Socket {
   current: any;
@@ -101,8 +102,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   // fetch all messages by conversation id
   const { data: messagesData, refetch: refetchMessages } =
     useFetchMessagesByConversationIdQuery(
-      { userId: user?._id, conversationId: conversationId, page, limit },
-      { skip: conversationId === "" }
+      conversationId
+        ? { userId: user?._id, conversationId: conversationId, page, limit }
+        : skipToken
     ) as any;
 
   // Post Message
@@ -118,6 +120,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       setIsFetchingMore(false);
       refetchMessages();
     }
+
     if (selectedId && conversationId === "") {
       dispatch(setMessages([]));
     }
@@ -250,6 +253,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         }).unwrap();
+        console.log(response);
 
         const { message, conversation } = response;
 
@@ -263,6 +267,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           message: message?.message,
           status: false,
           unread: selectedId,
+          conversationId: conversation?._id,
         });
 
         // modify the latest message   in the users redux
@@ -301,6 +306,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }).unwrap();
 
         setIsFetchingMore(false);
+        console.log({ "response in uncontacted": response });
         const { message, conversation } = response;
 
         socket.current.emit("sendMessage", {
@@ -311,6 +317,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           message: message?.message,
           status: false,
           unread: selectedId,
+          conversation: conversation._id,
         });
 
         // modify the latest message   in the users redux
@@ -367,6 +374,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           },
           status: false,
           unread: selectedId,
+          conversationId: conversation?._id,
         });
 
         // modify the latest message   in the users redux
@@ -409,7 +417,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         setIsFetchingMore(false);
 
-        const { message, conversation } = response;
+        const { message } = response;
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
@@ -458,6 +466,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       updateConversation();
       setIsFetchingMore(false);
       socket.current.on("getMessage", (data: any) => {
+        // console.log(data);
+        // if (messages?.length === 0) {
+        //   refetchMessages();
+        // }
         if (data.message) {
           setArrivalMessages({
             createdAt: data.createdAt,
@@ -684,7 +696,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 ref={scrollRef}
                 className="overflow-y-auto overflow-x-hidden w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
               >
-                {!!selectedId ? (
+                {selectedId ? (
                   <div className="m-2 p-2 ">
                     {messages
                       ? messages.map((msg) => (

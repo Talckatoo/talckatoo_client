@@ -17,6 +17,7 @@ import {
   useFetchAllRequestsQuery,
 } from "./redux/services/UserApi";
 
+
 type MyEventMap = {
   connect: () => void;
   disconnect: () => void;
@@ -65,6 +66,16 @@ const App = () => {
     }
   }, [socket.current]);
 
+  const { data: requestsData, refetch: refetchFriendsRequest } =
+    useFetchAllRequestsQuery(null) as any;
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("getFriendRequest", () => {
+        refetchFriendsRequest();
+      });
+    }
+  }, [socket.current]);
   return (
     <div className="w-full h-full">
       <Routes>
