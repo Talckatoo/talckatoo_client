@@ -253,6 +253,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         }).unwrap();
+        console.log(response);
 
         const { message, conversation } = response;
 
@@ -305,6 +306,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }).unwrap();
 
         setIsFetchingMore(false);
+        console.log(response);
         const { message, conversation } = response;
 
         socket.current.emit("sendMessage", {
@@ -465,6 +467,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       updateConversation();
       setIsFetchingMore(false);
       socket.current.on("getMessage", (data: any) => {
+        console.log(data);
         if (data.message) {
           setArrivalMessages({
             createdAt: data.createdAt,
