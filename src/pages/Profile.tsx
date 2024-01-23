@@ -190,20 +190,9 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               className={`${"text-secondary-500"} z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
           </div>
-          <div
-            className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500 "
-            }${"bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"} mx-2 rounded-[12px]  flex items-center justify-center flex-col
-              transition duration-300 ease-in-out 
-            `}
-            onClick={() => navigateChat()}
-          >
-            <IoPersonSharp
-              className={`${"text-secondary-500"} z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
         </div>
-        <div className="flex flex-col  gap-3 w-full">
+
+        <div className="flex flex-col  gap-4 w-full">
           <div
             className={`${
               isDarkMode ? "bg-primary-500" : "bg-secondary-500"
@@ -213,7 +202,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
           </div>
-          <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
+          <div className="mx-2 pt-1 flex items-center justify-center flex-col rounded-full overflow-hidden">
             <img
               src={`${user?.profileImage?.url}`}
               className="h-14 w-14 object-cover rounded-full"
