@@ -26,7 +26,7 @@ const Input: FC<InputProps> = ({
     <div className="mb-4 xl:mb-6 w-full">
       <label
         htmlFor={name}
-        className="block text-[14px] font-medium text-title-500 mb-4 text-[#757575]"
+        className="block text-[14px] font-medium  mb-4 text-[#606060]"
       >
         {label}
       </label>

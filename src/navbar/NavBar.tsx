@@ -103,48 +103,19 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
         <div className="flex items-center ml-2 gap-2 md:gap-4 ">
           {user && (
             <>
-              {recipientPi ? (
-                <div
-                  ref={profilePictureRef}
-                  onClick={handleDropdownClick}
-                  className="w-10 h-10 max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
-                  style={{
-                    backgroundImage: `url(${recipientPi || COCKATOO})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                >
-                  {!recipientPi && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      className="w-6 h-6 text-gray-300"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
-                  )}
-                </div>
-              ) : (
-                <button
-                  className={`text-${
-                    isDarkMode ? "white" : "black"
-                  } hover:text-gray-300 focus:outline-none`}
-                  onClick={handleDropdownClick}
-                >
-                  <HiOutlineUserCircle
-                    className={`text-${
-                      isDarkMode ? "white" : "black"
-                    } text-2xl ml-4`}
-                  />
-                </button>
-              )}
+              <div
+                ref={profilePictureRef}
+                onClick={handleDropdownClick}
+                className="w-10 h-10 min-h-10 min-w-10  max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
+                style={{
+                  backgroundImage: `url(${
+                    recipientPi || "/assets/icons/user.png"
+                  })`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              ></div>
+
               <div className="flex flex-col  hover:text-gray-300   mr-2 focus:outline-none sm:block">
                 {user && user?.userName ? (
                   <p className="max-md:text-[16px] md: text-[16px] text-bold text-[#25282C]">
@@ -160,7 +131,6 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
                   </span>
                 </div> */}
               </div>
-
               {/* {isDropdownOpen && (
                 <div className="relative z-20" ref={dropdownRef}>
                   <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl">

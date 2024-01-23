@@ -67,7 +67,6 @@ const FriendRequest = ({
     }
   };
 
-
   const HandleActionFriend = async (action: string) => {
     try {
       const response = await actionFriend({
@@ -106,6 +105,7 @@ const FriendRequest = ({
                 ],
               })
             );
+            refetchFriendsRequest();
             dispatch(
               setUsers({
                 ...users,

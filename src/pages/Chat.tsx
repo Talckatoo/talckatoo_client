@@ -4,7 +4,11 @@ import Navbar from "../navbar/NavBar";
 import { UserContext } from "../context/user-context";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
-import { setRecipient, setUsers } from "../redux/features/user/userSlice";
+import {
+  setRecipient,
+  setRecipientProfileImage,
+  setUsers,
+} from "../redux/features/user/userSlice";
 import { setOnlineFriends } from "../redux/features/socket/socketSlice";
 import {
   useFetchAllFriendsQuery,
@@ -33,11 +37,21 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const { recipient } = useAppSelector((state) => state.user);
 
   // RTK Query
-  const { data: friends, refetch } = useFetchAllFriendsQuery(null, {
-    refetchOnMountOrArgChange: true,
-  }) as any;
+  const {
+    data: friends,
+    refetch,
+    isUninitialized,
+  } = useFetchAllFriendsQuery(null) as any;
 
   const userID = localStorage.getItem("userId");
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("getAcceptFriendRequest", () => {
+        refetch();
+      });
+    }
+  }, [socket.current]);
 
   const { data } = useFetchUserByIdQuery(
     userID !== null ? { id: userID } : skipToken
@@ -93,6 +107,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
               language: data.language,
             })
           );
+          dispatch(setRecipientProfileImage(data.image));
           dispatch(setRecipient(data.userName));
         }
       });

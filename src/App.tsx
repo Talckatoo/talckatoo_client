@@ -12,6 +12,10 @@ import ResetPassword from "./pages/ResetPassword";
 import { io, Socket } from "socket.io-client";
 import { useAppDispatch } from "./redux/hooks";
 import { updateContactedUserById } from "./redux/features/user/userSlice";
+import {
+  useFetchAllFriendsQuery,
+  useFetchAllRequestsQuery,
+} from "./redux/services/UserApi";
 
 type MyEventMap = {
   connect: () => void;
@@ -24,6 +28,14 @@ type MyEventMap = {
 const App = () => {
   const dispatch = useAppDispatch();
   const socket = useRef<Socket<MyEventMap> | null>();
+  const { data: requestsData, refetch: refetchFriendsRequest } =
+    useFetchAllRequestsQuery(null) as any;
+
+  const {
+    data: friends,
+    refetch,
+    isUninitialized,
+  } = useFetchAllFriendsQuery(null) as any;
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
@@ -39,6 +51,16 @@ const App = () => {
     if (socket.current) {
       socket.current.on("getUpdateProfile", (data: any) => {
         dispatch(updateContactedUserById(data));
+      });
+    }
+
+    if (socket.current) {
+      socket.current.on("getFriendRequest", () => {
+        refetchFriendsRequest();
+      });
+      socket.current.on("getAcceptFriendRequest", () => {
+        console.log("get Accept Friend Request");
+        // refetch();
       });
     }
   }, [socket.current]);
