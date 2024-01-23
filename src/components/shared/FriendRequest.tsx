@@ -21,6 +21,7 @@ interface FriendProps {
   selected: boolean;
   socket: any;
   refetchFriendsRequest: any;
+  refetch: any;
 }
 
 const FriendRequest = ({
@@ -30,6 +31,7 @@ const FriendRequest = ({
   selected,
   socket,
   refetchFriendsRequest,
+  refetch,
 }: FriendProps) => {
   const { onlineFriends } = useAppSelector((state) => state.socket);
   const conversationState = useAppSelector((state) => state.conversation);
@@ -70,7 +72,7 @@ const FriendRequest = ({
   const HandleActionFriend = async (action: string) => {
     try {
       const response = await actionFriend({
-        userId: user?._id,
+        userId: userData?._id,
         friendRequestId: user?._id,
         action: action,
       }).unwrap();
@@ -89,8 +91,10 @@ const FriendRequest = ({
           if (action === "accept") {
             socket.current.emit("acceptFriendRequest", {
               from: userData?._id,
-              to: user?._id,
+              to: user?.from?._id,
             });
+            refetchFriendsRequest();
+            refetch();
             dispatch(
               setAuth({
                 ...userData,
@@ -105,7 +109,7 @@ const FriendRequest = ({
                 ],
               })
             );
-            refetchFriendsRequest();
+
             dispatch(
               setUsers({
                 ...users,

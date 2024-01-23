@@ -100,10 +100,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   // RTK Query
   // fetch all messages by conversation id
   const { data: messagesData, refetch: refetchMessages } =
-    useFetchMessagesByConversationIdQuery(
-      { userId: user?._id, conversationId: conversationId, page, limit },
-      { skip: conversationId === "" }
-    ) as any;
+    useFetchMessagesByConversationIdQuery({
+      userId: user?._id,
+      conversationId: conversationId || "",
+      page,
+      limit,
+    }) as any;
 
   // Post Message
   const [sendMessage, { isLoading }] = useSendMessageMutation();
@@ -118,6 +120,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       setIsFetchingMore(false);
       refetchMessages();
     }
+
     if (selectedId && conversationId === "") {
       dispatch(setMessages([]));
     }
@@ -263,6 +266,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           message: message?.message,
           status: false,
           unread: selectedId,
+          conversationId: conversation?._id,
         });
 
         // modify the latest message   in the users redux
@@ -311,6 +315,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           message: message?.message,
           status: false,
           unread: selectedId,
+          conversationId: conversation?._id,
         });
 
         // modify the latest message   in the users redux
@@ -367,6 +372,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           },
           status: false,
           unread: selectedId,
+          conversationId: conversation?._id,
         });
 
         // modify the latest message   in the users redux
@@ -423,6 +429,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           },
           status: false,
           unread: selectedId,
+          conversationId: conversation?._id,
         });
 
         // modify the latest message   in the users redux
