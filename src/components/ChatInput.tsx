@@ -49,14 +49,15 @@ const ChatInput = ({
   const selectedId = conversationState?.conversation?.selectedId;
 
   const [uploadFile] = useUploadFileMutation();
-
+ 
   const handleShowEmoji = () => {
     setShowEmoji(!showEmoji);
   };
 
-  const handleEmojiClick = (event: any) =>
+  const handleEmojiClick = (event: any) => 
+   
     setMessageText(`${messageText} ${event.emoji}`);
-
+  
   const handleTyping = (e: ChangeEvent<HTMLInputElement>) => {
     setMessageText(e.target.value);
     if (!typing) {
@@ -138,14 +139,17 @@ const ChatInput = ({
             placeholder="Type your message or type @birdie to call AI Assistant"
             className="mb-0 rounded-t-[20px]   border border-[#0E131D] "
           />
-
-          <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2">
+          {showEmoji ? ( 
+          <div className="w-full flex flex-col justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2">
+            <EmojiPicker width={800} onEmojiClick={handleEmojiClick} />
+            {/* <onEmojiClick={handleEmojiClick()} /> */}
+            <div className="w-full">
             <form onSubmit={handleSendMessage} className="absolute right-4 ">
               <button>
                 <IoSend className="text-white text-[20px]" />
               </button>
             </form>
-            <div className="w-[200px] flex items-center">
+            <div className=" ``w-[200px] flex items-center">
               <div className="flex">
                 <VoiceMessage
                   socket={socket}
@@ -155,7 +159,41 @@ const ChatInput = ({
 
               <div className="flex items-center gap-2">
                 <img src="./assets/img/line.png" className="i" />
-                <FaFaceSmile className="text-white text-[20px]" />
+                <FaFaceSmile className="text-white text-[20px]" onClick={handleShowEmoji} />
+               
+
+                <label className="cursor-pointer">
+                  <MdOutlineAttachFile className="text-white text-[20px]" />
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => handleUpload(e)}
+                  />
+                </label>
+              </div>
+              {/* </div> */}
+            </div>
+            </div>
+             
+          </div>) : (
+            <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2">
+            <form onSubmit={handleSendMessage} className="absolute right-4 ">
+              <button>
+                <IoSend className="text-white text-[20px]" />
+              </button>
+            </form>
+            <div className=" ``w-[200px] flex items-center">
+              <div className="flex">
+                <VoiceMessage
+                  socket={socket}
+                  onHandleTranslateText={onHandleTranslateText}
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <img src="./assets/img/line.png" className="i" />
+                <FaFaceSmile className="text-white text-[20px]" onClick={handleShowEmoji} />
+               
 
                 <label className="cursor-pointer">
                   <MdOutlineAttachFile className="text-white text-[20px]" />
@@ -169,6 +207,9 @@ const ChatInput = ({
               {/* </div> */}
             </div>
           </div>
+          )}
+
+          
         </div>
       </div>
     </>
