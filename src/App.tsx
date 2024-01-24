@@ -31,11 +31,11 @@ const App = () => {
   const { data: requestsData, refetch: refetchFriendsRequest } =
     useFetchAllRequestsQuery(null) as any;
 
-  const {
-    data: friends,
-    refetch,
-    isUninitialized,
-  } = useFetchAllFriendsQuery(null) as any;
+  // const {
+  //   data: friends,
+  //   refetch,
+  //   isUninitialized,
+  // } = useFetchAllFriendsQuery(null) as any;
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
@@ -65,16 +65,6 @@ const App = () => {
     }
   }, [socket.current]);
 
-  const { data: requestsData, refetch: refetchFriendsRequest } =
-    useFetchAllRequestsQuery(null) as any;
-
-  useEffect(() => {
-    if (socket.current) {
-      socket.current.on("getFriendRequest", () => {
-        refetchFriendsRequest();
-      });
-    }
-  }, [socket.current]);
   return (
     <div className="w-full h-full">
       <Routes>
