@@ -290,7 +290,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
       } catch (err) {
-        toast.error("Error sending messages, please try again");
+        console.log("error from error", err);
+        toast.error(
+          "Error sending messages, please try again form handleSendMessage1"
+        );
       }
     } else if (selectedId && conversationId === "") {
       // setMessages([]);
@@ -340,7 +343,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
       } catch (err) {
-        toast.error("Error sending messages, please try again");
+        toast.error(
+          "Error sending messages, please try again form handleSendMessage2"
+        );
       }
     }
   };
@@ -467,8 +472,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       updateConversation();
       setIsFetchingMore(false);
       socket.current.on("getMessage", (data: any) => {
-        console.log(data);
         if (data.message) {
+          console.log(data);
           setArrivalMessages({
             createdAt: data.createdAt,
             message: data.message,
@@ -515,11 +520,17 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, [socket.current, arrivalMessages]);
 
+  const [messageReply, setMessageReply] = useState<any>(null);
   useEffect(() => {
+    console.log("arrivalMessages", arrivalMessages);
     arrivalMessages &&
-      idArray?.includes(arrivalMessages.sender) &&
+      idArray?.includes(arrivalMessages?.sender) &&
       dispatch(setMessages([...messages, arrivalMessages]));
   }, [arrivalMessages]);
+
+  useEffect(() => {
+    console.log("messages", messages);
+  }, [messages]);
 
   const scrollRefBottom = useRef<HTMLDivElement | null>(null);
   const scrollToBottom = () => {

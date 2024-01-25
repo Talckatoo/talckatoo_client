@@ -45,10 +45,13 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const userID = localStorage.getItem("userId");
 
+  const refetchF = async () => {
+    await refetch();
+  };
   useEffect(() => {
     if (socket.current) {
       socket.current.on("getAcceptFriendRequest", () => {
-        refetch();
+        refetchF();
       });
     }
   }, [socket.current]);

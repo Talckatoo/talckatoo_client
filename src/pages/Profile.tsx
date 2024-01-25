@@ -12,6 +12,7 @@ import { useUploadFileMutation } from "../redux/services/MediaApi";
 import Input from "../UI/Input";
 import {
   setRecipient,
+  setRequests,
   setUser,
   setUsers,
 } from "../redux/features/user/userSlice";
@@ -68,14 +69,15 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     toast.success("User signed out");
-    // clear persisted state
+    // clear persit root from local storage
+    localStorage.removeItem("persist:root");
     dispatch(setAuth(null));
     dispatch(setUser(null));
     dispatch(setUsers([]));
-    dispatch(setConversation({}));
+    dispatch(setRecipient(null));
     dispatch(setMessages([]));
     dispatch(setRequest(null));
-    dispatch(setRecipient(null));
+    dispatch(setRequests([]));
 
     navigate("/");
   };

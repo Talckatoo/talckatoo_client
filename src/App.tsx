@@ -10,8 +10,12 @@ import { SignUp } from "./pages/SignUp";
 import ResetPaaswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
 import { io, Socket } from "socket.io-client";
-import { useAppDispatch } from "./redux/hooks";
-import { updateContactedUserById } from "./redux/features/user/userSlice";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
+import {
+  setRequests,
+  setUsers,
+  updateContactedUserById,
+} from "./redux/features/user/userSlice";
 import { useFetchAllRequestsQuery } from "./redux/services/UserApi";
 
 type MyEventMap = {
@@ -20,11 +24,15 @@ type MyEventMap = {
   addUser: (userID: string) => void;
   getUsers: (users: string[]) => void;
   getUpdateProfile: (data: any) => void;
+  getFriendRequest: (data: any) => void;
+  getAcceptFriendRequest: (data: any) => void;
 };
 
 const App = () => {
   const dispatch = useAppDispatch();
   const socket = useRef<Socket<MyEventMap> | null>();
+  const { requests } = useAppSelector((state) => state.user);
+  const { users } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
@@ -44,16 +52,32 @@ const App = () => {
     }
   }, [socket.current]);
 
-  const { data: requestsData, refetch: refetchFriendsRequest } =
-    useFetchAllRequestsQuery(null) as any;
-
   useEffect(() => {
     if (socket.current) {
-      socket.current.on("getFriendRequest", () => {
-        refetchFriendsRequest();
+      socket.current.on("getFriendRequest", (data: any) => {
+        console.log(data);
+        dispatch(setRequests([...requests, data.friendRequest]));
+      });
+
+      socket.current.on("getAcceptFriendRequest", (data: any) => {
+        dispatch(
+          setUsers({
+            ...users,
+            uncontactedUsers: [
+              ...users?.uncontactedUsers,
+              {
+                _id: data?.Userfrom?._id,
+                userName: data?.Userfrom?.userName,
+                profileImage: data?.Userfrom?.profileImage,
+                language: data?.Userfrom?.language,
+              },
+            ],
+          })
+        );
       });
     }
   }, [socket.current]);
+
   return (
     <div className="w-full h-full">
       <Routes>

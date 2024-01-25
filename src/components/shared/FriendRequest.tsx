@@ -46,29 +46,6 @@ const FriendRequest = ({
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
 
-  const HandleSendFriendRequest = async (friendId: string) => {
-    try {
-      const response = await addFriend({ identifier: friendId }).unwrap();
-      console.log(response);
-      if ("message" in response) {
-        if (response.message === "Friend request sent successfully") {
-          socket.current.emit("sendFriendRequest", {
-            from: userData?._id,
-            to: friendId,
-          });
-          dispatch(
-            setAuth({
-              ...userData,
-              friendRequests: [...userData.friendRequests, friendId],
-            })
-          );
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const HandleActionFriend = async (action: string) => {
     try {
       const response = await actionFriend({
@@ -92,9 +69,10 @@ const FriendRequest = ({
             socket.current.emit("acceptFriendRequest", {
               from: userData?._id,
               to: user?.from?._id,
+              Userfrom: response.from,
+              Userto: response.to,
             });
-            refetchFriendsRequest();
-            refetch();
+
             dispatch(
               setAuth({
                 ...userData,
@@ -116,10 +94,10 @@ const FriendRequest = ({
                 uncontactedUsers: [
                   ...users.uncontactedUsers,
                   {
-                    _id: user?.from._id,
-                    userName: user?.from.userName,
-                    profileImage: user?.from.profileImage,
-                    status: "accepted",
+                    _id: response?.from?._id,
+                    userName: response?.from?.userName,
+                    profileImage: response?.from?.profileImage,
+                    language: response?.from?.language,
                   },
                 ],
               })
