@@ -50,7 +50,6 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
   useEffect(() => {
     if (users) {
       setAllUser(users?.contactedUsers?.concat(users?.uncontactedUsers));
-      console.log(allUser);
     }
   }, [users]);
 

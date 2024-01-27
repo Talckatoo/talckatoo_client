@@ -111,41 +111,113 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [sendMessage, { isLoading }] = useSendMessageMutation();
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
-
-  useEffect(() => {
-    if (selectedId && conversationId) {
-      setPage(1);
-      setLimit(30);
-      setHasMoreMessages(true);
-      setIsFetchingMore(false);
-      refetchMessages();
-    }
-
-    if (selectedId && conversationId === "") {
-      dispatch(setMessages([]));
-    }
-  }, [selectedId, conversationId]);
-
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [selectedTyping, setSelectedTyping] = useState();
   const [decodedCallData, setDecodedCallData] = useState("");
-
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-
   const idArray = usersArray?.map((obj) => obj._id);
-
-  const fullLanguage = languagesArray.map((l) => {
-    if (l.code === language) return l.language;
-  });
-
   const voiceCode = textToVoiceLanguages.find(
     (la) => la.code === language?.toLowerCase()
   )?.voiceCode;
-
   const token = localStorage.getItem("token");
+
+  // TEST //  ------------------------------------------------
+  useEffect(() => {
+    console.log("messages", messages);
+    console.log("messagesData", messagesData);
+    console.log("arrivalMessages", arrivalMessages);
+  }, [messages]);
+
+  // TEST //  ------------------------------------------------
+
+  // ----------------------- SCROLLING --------------------------------
+
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const scrollRefBottom = useRef<HTMLDivElement | null>(null);
+  const scrollToBottom = () => {
+    if (scrollRefBottom.current) {
+      scrollRefBottom.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  };
+
+  const fetchNextPage = async () => {
+    if (!hasMoreMessages) {
+      return;
+    }
+
+    try {
+      const response = await refetchMessages();
+      const newMessages = response.data?.conversation?.messages;
+      if (newMessages && newMessages.length > 0) {
+        // add the new messages on top of the old ones
+        setIsFetchingMore(true);
+        setLimit(limit + 20);
+      } else {
+        // No more messages to fetch
+        setHasMoreMessages(false);
+        setIsFetchingMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching next page:", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("USEFFECT1");
+
+    if (selectedId || conversationId) {
+      console.log("USEFFECT1-1-1-1");
+      // setPage(1);
+      // setLimit(30);
+      // setHasMoreMessages(true);
+      // setIsFetchingMore(false);
+      refetchMessages();
+    }
+
+    if (selectedId && conversationId === "") {
+      dispatch(setMessages([]));
+    }
+  }, [conversationId, selectedId]);
+
+  useEffect(() => {
+    console.log("USEFFECT2");
+
+    !isFetchingMore && scrollToBottom();
+  }, [messages, isFetchingMore]);
+
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+  };
+
+  useEffect(() => {
+    console.log("USEFFECT3");
+
+    const handleScroll = debounce((e) => {
+      const { scrollTop } = e.target;
+      // Adjust the value based on your design
+      const isScrolledToTop = scrollTop < 600;
+      if (isScrolledToTop && !isFetchingMore) {
+        fetchNextPage();
+      }
+    }, 300);
+    const scrollContainer = scrollRef.current;
+    scrollContainer?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      scrollContainer?.removeEventListener("scroll", handleScroll);
+    };
+  }, [messages]);
+
+  // ----------------------- SCROLLING --------------------------------
 
   useEffect(() => {
     if (socket.current) {
@@ -204,6 +276,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current]);
 
   useEffect(() => {
+    dispatch(setMessages([]));
+
     const { messages } = messagesData?.conversation || {};
     const { users } = messagesData?.conversation || {};
     if (users) {
@@ -219,8 +293,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       };
       setUsersArray([...users, AIuser]);
     }
-    // setMessages(messages);
-    if (messagesData) dispatch(setMessages(messages));
+
+    if (messagesData) {
+      console.log("dispatch");
+      dispatch(setMessages(messages));
+    }
   }, [messagesData]);
 
   const sendAIMessage = (messageAI: any) => {
@@ -473,7 +550,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       setIsFetchingMore(false);
       socket.current.on("getMessage", (data: any) => {
         if (data.message) {
-          console.log(data);
           setArrivalMessages({
             createdAt: data.createdAt,
             message: data.message,
@@ -520,72 +596,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, [socket.current, arrivalMessages]);
 
-  const [messageReply, setMessageReply] = useState<any>(null);
   useEffect(() => {
-    console.log("arrivalMessages", arrivalMessages);
+    console.log("ARRIVAL MESS");
     arrivalMessages &&
       idArray?.includes(arrivalMessages?.sender) &&
       dispatch(setMessages([...messages, arrivalMessages]));
   }, [arrivalMessages]);
-
-  useEffect(() => {
-    console.log("messages", messages);
-  }, [messages]);
-
-  const scrollRefBottom = useRef<HTMLDivElement | null>(null);
-  const scrollToBottom = () => {
-    if (scrollRefBottom.current) {
-      scrollRefBottom.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-  };
-
-  useEffect(() => {
-    !isFetchingMore && scrollToBottom();
-  }, [messages, isFetchingMore]);
-
-  const fetchNextPage = async () => {
-    if (!hasMoreMessages) {
-      return;
-    }
-
-    try {
-      const response = await refetchMessages();
-
-      const newMessages = response.data?.conversation?.messages;
-
-      if (newMessages && newMessages.length > 0) {
-        // add the new messages on top of the old ones
-        setIsFetchingMore(true);
-        setLimit(limit + 20);
-      } else {
-        // No more messages to fetch
-        setHasMoreMessages(false);
-        setIsFetchingMore(false);
-      }
-    } catch (error) {
-      console.error("Error fetching next page:", error);
-    }
-  };
-
-  useEffect(() => {
-    const handleScroll = (e) => {
-      const { scrollTop } = e.target;
-      // almost the top
-      const isScrolledToTop = scrollTop < 600;
-      if (isScrolledToTop && messages) {
-        fetchNextPage();
-      }
-    };
-    const scrollContainer = scrollRef.current;
-    scrollContainer?.addEventListener("scroll", handleScroll);
-
-    return () => {
-      scrollContainer?.removeEventListener("scroll", handleScroll);
-    };
-  }, [fetchNextPage, messages]);
 
   const onHandleTranslateText = async (translateText: string) => {
     socket.current.emit("stopTyping", selectedId);
@@ -662,6 +678,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       handleClickOpen();
     }
   }, [receivedCall]);
+
+  // *************************** VIDEO CALL *****************************
 
   return (
     <div
