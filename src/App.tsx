@@ -75,6 +75,10 @@ const App = () => {
           })
         );
       });
+      socket.current.on("getAcceptFriendRequest", () => {
+        console.log("get Accept Friend Request");
+        // refetch();
+      });
     }
   }, [socket.current]);
 

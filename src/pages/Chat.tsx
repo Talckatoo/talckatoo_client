@@ -93,7 +93,15 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     refetch();
     if (socket.current) {
-      socket.current.on("getMessage", () => {
+      socket.current.on("getMessage", (data) => {
+        if (data.to === selectedId) {
+          dispatch(
+            setConversation({
+              conversationId: data.conversationId,
+              selectedId: selectedId,
+            })
+          );
+        }
         refetch();
       });
     }
