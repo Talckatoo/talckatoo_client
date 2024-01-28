@@ -151,9 +151,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
 
     try {
-      const response = await refetchMessages();
-      const newMessages = response.data?.conversation?.messages;
-      if (newMessages && newMessages.length > 0) {
+      // const response = await refetchMessages();
+      // const newMessages = response.data?.conversation?.messages;
+      if (messages && messages.length > 0) {
         // add the new messages on top of the old ones
         setIsFetchingMore(true);
         setLimit(limit + 20);
@@ -168,14 +168,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   useEffect(() => {
-    console.log("USEFFECT1");
-
     if (selectedId || conversationId) {
-      console.log("USEFFECT1-1-1-1");
-      // setPage(1);
-      // setLimit(30);
-      // setHasMoreMessages(true);
-      // setIsFetchingMore(false);
+      setPage(1);
+      setLimit(30);
+      setHasMoreMessages(true);
+      setIsFetchingMore(false);
       refetchMessages();
     }
 
@@ -185,8 +182,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [conversationId, selectedId]);
 
   useEffect(() => {
-    console.log("USEFFECT2");
-
     !isFetchingMore && scrollToBottom();
   }, [messages, isFetchingMore]);
 
@@ -199,8 +194,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   useEffect(() => {
-    console.log("USEFFECT3");
-
     const handleScroll = debounce((e) => {
       const { scrollTop } = e.target;
       // Adjust the value based on your design
@@ -295,7 +288,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
 
     if (messagesData) {
-      console.log("dispatch");
       dispatch(setMessages(messages));
     }
   }, [messagesData]);
