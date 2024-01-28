@@ -150,6 +150,17 @@ textarea:focus {
   width: fit-content;
 }
 
+
+.emoji-container {
+  height: 0;
+  overflow: hidden;
+  transition: height 2s ease-in-out;
+}
+
+.emoji-container.open {
+  height: fit-content; /* Adjust the desired height */
+}
+
 @layer components {
   /* main */
   .main-container {
