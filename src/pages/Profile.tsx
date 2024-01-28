@@ -119,7 +119,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
       if ("data" in result) {
         const updatedUser = result.data.user;
-        toast.success("Profile updated successfully!");
 
         dispatch(
           setAuth({
@@ -135,8 +134,10 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             language: updateLanguage,
           })
         );
-        navigateChat();
-        window.location.reload();
+        toast.success("Profile updated successfully!");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
     } catch (error) {
       console.log(error);

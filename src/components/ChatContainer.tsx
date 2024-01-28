@@ -169,11 +169,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   useEffect(() => {
     if (selectedId || conversationId) {
-      setPage(1);
-      setLimit(30);
+      // setPage(1);
+      // setLimit(30);
       setHasMoreMessages(true);
       setIsFetchingMore(false);
-      refetchMessages();
+      // refetchMessages();
     }
 
     if (selectedId && conversationId === "") {
