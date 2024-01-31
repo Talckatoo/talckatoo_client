@@ -32,7 +32,7 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="mt-[4rem] z-[1] md:w-[50%] ">
+        <div className="mt-[4rem] z-[1] md:w-[50%] flex flex-col justify-center">
           <img
             src="/assets/img/herotrans.png"
             alt="hero"
@@ -41,12 +41,12 @@ const Hero = () => {
           <img
             src="/assets/img/text1.png"
             alt="text-image"
-            className=" h-auto mx-auto block md:hidden max-w-screen-md"
+            className=" h-auto mx-auto block md:hidden"
           />
           <img
             src="/assets/img/text2.png"
             alt="text-image"
-            className=" h-auto mx-auto block md:hidden max-w-screen-md"
+            className=" h-auto mx-auto block md:hidden"
           />
         </div>
       </div>
