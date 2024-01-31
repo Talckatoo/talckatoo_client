@@ -16,8 +16,8 @@ const Features = () => {
             </p>
           </div>
           <div className="mt-[5rem] grid sm:grid-cols-2 md:grid-rows-2 gap-4 sm:justify-center ">
-            <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] w-100">
-              <div className="w-1/4">
+            <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] w-100 md:flex-row flex-col">
+              <div className="w-1/4 flex justify-center items-center">
                 <img
                   src="/assets/icons/traduction.png"
                   alt="translate"
@@ -30,8 +30,8 @@ const Features = () => {
                 </span>
               </div>
             </div>
-            <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center  rounded-[25px]">
-              <div className="w-1/4">
+            <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] w-100 md:flex-row flex-col">
+              <div className="w-1/4 flex justify-center items-center">
                 <img
                   src="/assets/icons/voice.png"
                   alt="translate"
@@ -44,8 +44,8 @@ const Features = () => {
                 </span>
               </div>
             </div>
-            <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center  rounded-[25px]">
-              <div className="w-1/4">
+            <div className="md:bg-light-bg md:shadow-lg md:border md:gap-1 md:max-sm:gap-4 md:border-[#EFF0F6] md:p-4 md:flex md:justify-around md:items-center md:rounded-[25px] md:flex-row hidden flex-col">
+              <div className="w-1/4 flex justify-center items-center">
                 <img
                   src="/assets/icons/friend.png"
                   alt="translate"
@@ -58,8 +58,8 @@ const Features = () => {
                 </span>
               </div>
             </div>
-            <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center  rounded-[25px]">
-              <div className="w-1/4">
+            <div className="md:bg-light-bg md:shadow-lg md:border md:gap-1 md:max-sm:gap-4 md:border-[#EFF0F6] md:p-4 md:flex md:justify-around md:items-center md:rounded-[25px] md:flex-row hidden flex-col">
+              <div className="w-1/4 flex justify-center items-center">
                 <img
                   src="/assets/icons/tool.png"
                   alt="translate"
@@ -80,21 +80,29 @@ const Features = () => {
           />
         </div>
         <div className="grid sm:grid-cols-2 gap-4 sm:justify-center ">
-          <div className="bg-light-bg border shadow-lg border-[#EFF0F6] p-4 flex justify-center  items-center gap-8 rounded-[25px]  md:hidden ">
-            <img
-              src="/assets/icons/friend.png"
-              alt="translate"
-              className=" w-[42px] h-[42px]"
-            />
-            <span>Friend Matching </span>
+          <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] flex-col md:hidden">
+            <div className="w-1/4 flex justify-center items-center">
+              <img
+                src="/assets/icons/friend.png"
+                alt="translate"
+                className=" w-[42px] h-[42px]"
+              />
+            </div>
+            <div className="w-3/4 flex justify-center">
+              <span className="text-center text-[20px]">Friend Matching </span>
+            </div>
           </div>
-          <div className="bg-light-bg border shadow-lg border-[#EFF0F6] p-4 flex justify-center   items-center gap-8 rounded-[25px] md:hidden ">
-            <img
-              src="/assets/icons/tool.png"
-              alt="translate"
-              className=" w-[42px] h-[42px]"
-            />
-            <span>AI Assistance</span>
+          <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] flex-col md:hidden">
+            <div className="w-1/4 flex justify-center items-center">
+              <img
+                src="/assets/icons/tool.png"
+                alt="translate"
+                className=" w-[42px] h-[42px]"
+              />
+            </div>
+            <div className="w-3/4 flex justify-center">
+              <span className="text-center text-[20px]">AI Assistance</span>
+            </div>
           </div>
         </div>
       </div>
