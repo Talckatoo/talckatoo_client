@@ -3,7 +3,7 @@ import { MdGTranslate } from "react-icons/md";
 
 const Features = () => {
   return (
-    <section className=" container mt-[8rem] ">
+    <section className=" container md:mt-[8rem] mt-[5rem] ">
       <div className="flex flex-col md:flex-row gap-5 w-full">
         <div className="w-full md:w-[50%]">
           <div className="flex flex-col justify-center items-center md:items-start">
