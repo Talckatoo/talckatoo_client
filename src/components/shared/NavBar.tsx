@@ -50,10 +50,14 @@ const NavBar: FC<NavBarProps> = ({ }) => {
         <div className="w-full flex items-center justify-between max-w-[95%] m-auto max-[430px]:flex-col">
         {/* logo section */}
         <Link to="/" className="font-jakarta text-[20px] font-bold flex items-center justify-left">
-          <img 
-            className="w-[75px] w-min-[75px] h-auto transition ease-in-out duration-300 scale-100 hover:scale-105"
-            src="cockatoo-bw.png"
-          />
+          {
+            /*
+              <img 
+                className="w-[75px] w-min-[75px] h-auto transition ease-in-out duration-300 scale-100 hover:scale-105"
+                src="cockatoo-bw.png"
+              />
+            */        
+          }
           <span>TALCKATOO</span>
         </Link>
         {/* sign up and sign in button */}
