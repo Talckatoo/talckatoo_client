@@ -66,7 +66,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(30);
+  const [limit, setLimit] = useState(1000);
   const conversationState = useAppSelector((state) => state.conversation);
   const selectedId = conversationState?.conversation?.selectedId;
   const user = useAppSelector((state) => state.auth.user);
@@ -124,11 +124,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const token = localStorage.getItem("token");
 
   // TEST //  ------------------------------------------------
-  useEffect(() => {
-    console.log("messages", messages);
-    console.log("messagesData", messagesData);
-    console.log("arrivalMessages", arrivalMessages);
-  }, [messages]);
+  // useEffect(() => {
+  //   console.log("messages", messages);
+  //   console.log("messagesData", messagesData);
+  //   console.log("arrivalMessages", arrivalMessages);
+  // }, [messages]);
 
   // TEST //  ------------------------------------------------
 
@@ -145,35 +145,20 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-  const fetchNextPage = async () => {
-    if (!hasMoreMessages) {
-      return;
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-
-    try {
-      // const response = await refetchMessages();
-      // const newMessages = response.data?.conversation?.messages;
-      if (messages && messages.length > 0) {
-        // add the new messages on top of the old ones
-        setIsFetchingMore(true);
-        setLimit(limit + 20);
-      } else {
-        // No more messages to fetch
-        setHasMoreMessages(false);
-        setIsFetchingMore(false);
-      }
-    } catch (error) {
-      console.error("Error fetching next page:", error);
-    }
-  };
+  }, [messages]);
 
   useEffect(() => {
     if (selectedId || conversationId) {
       // setPage(1);
       // setLimit(30);
       setHasMoreMessages(true);
+      scrollToBottom();
       setIsFetchingMore(false);
-      // refetchMessages();
+      refetchMessages();
     }
 
     if (selectedId && conversationId === "") {
@@ -181,34 +166,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, [conversationId, selectedId]);
 
-  useEffect(() => {
-    !isFetchingMore && scrollToBottom();
-  }, [messages, isFetchingMore]);
-
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return function (...args) {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func.apply(this, args), delay);
-    };
-  };
-
-  useEffect(() => {
-    const handleScroll = debounce((e) => {
-      const { scrollTop } = e.target;
-      // Adjust the value based on your design
-      const isScrolledToTop = scrollTop < 600;
-      if (isScrolledToTop && !isFetchingMore) {
-        fetchNextPage();
-      }
-    }, 300);
-    const scrollContainer = scrollRef.current;
-    scrollContainer?.addEventListener("scroll", handleScroll);
-
-    return () => {
-      scrollContainer?.removeEventListener("scroll", handleScroll);
-    };
-  }, [messages]);
+  // useEffect(() => {
+  //   !isFetchingMore && scrollToBottom();
+  // }, [messages, isFetchingMore]);
 
   // ----------------------- SCROLLING --------------------------------
 
@@ -273,6 +233,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
     const { messages } = messagesData?.conversation || {};
     const { users } = messagesData?.conversation || {};
+
     if (users) {
       if (users[0]?.userName === user?.userName) {
         dispatch(setRecipient(users[1]?.userName));
@@ -326,7 +287,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         const { message, conversation } = response;
 
-        setIsFetchingMore(false);
+        // setIsFetchingMore(false);
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
@@ -434,7 +395,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         const { message, conversation } = response;
 
-        setIsFetchingMore(false);
+        // setIsFetchingMore(false);
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
