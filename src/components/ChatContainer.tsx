@@ -499,7 +499,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     if (socket.current) {
       updateConversation();
-      setIsFetchingMore(false);
       socket.current.on("getMessage", (data: any) => {
         if (data.message) {
           setArrivalMessages({
