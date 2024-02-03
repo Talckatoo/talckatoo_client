@@ -20,7 +20,30 @@ import { RiSettings5Fill } from "react-icons/ri";
 import FriendRequest from "./FriendRequest";
 import { setRequest } from "../../redux/features/user/requestSlice";
 
+import { useTranslation } from 'react-i18next';
+import { FaGlobe } from 'react-icons/fa';
+
+
 const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
+
+  const { i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
+const [showLanguages, setShowLanguages] = useState(false);
+
+  const handleLanguageClick = () => {
+    setShowLanguages(!showLanguages);
+  };
+
+  const handleLanguageChange = (lng) => {
+    changeLanguage(lng);
+    setShowLanguages(false);
+  };
+
+
   const [search, setSearch] = useState("");
   const { isDarkMode } = useContext(UserContext);
   const { users } = useAppSelector((state) => state.user);
@@ -109,6 +132,7 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
     setUsersData(searchData.length > 0 ? searchData : users?.contactedUsers);
   }, [searchData, users]);
 
+  const { t } = useTranslation();
   return (
     <div
       className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${
@@ -150,7 +174,34 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
               } z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
           </div>
+        
+
+          <div
+          className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
+            !showRequest
+              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
+              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+          } mx-2 rounded-[12px]  flex items-center justify-center flex-col
+            transition duration-300 ease-in-out relative
+          `}
+          onClick={handleLanguageClick}
+        >
+          <FaGlobe
+            className={`${
+              !showRequest ? "text-secondary-500" : "text-white"
+            } z-4 object-contain py-1 w-[29px] text-[32px]`}
+          />
+          {showLanguages && (
+            <div className="absolute z-50 bottom-[-60px] left-10 bg-white border-[1px] border-gray-200 rounded-md shadow-md p-2 flex flex-col items-center">
+              <button onClick={() => handleLanguageChange('en')}>English</button>
+              <button onClick={() => handleLanguageChange('es')}>Español</button>
+              <button onClick={() => handleLanguageChange('ar')}>Arabic</button>
+              {/* Add more buttons for additional languages */}
+            </div>
+          )} 
         </div>
+        </div>
+
         <div className="flex flex-col  gap-3 w-full">
           <div
             className={`${
@@ -180,7 +231,16 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
             isDarkMode ? "text-white" : "text-black"
           }`}
         >
-          Chats
+          {t('chats')}
+          {/*<div>
+            <button onClick={() => changeLanguage('en')}>English</button>
+            <button onClick={() => changeLanguage('es')}>Español</button>
+            <div>
+              
+              <h1>{t('welcome')}</h1>
+              <p>{t('greet', { name: 'John' })}</p>
+            </div>
+          </div>*/}
         </div>
 
         <div className="relative flex mx-4">

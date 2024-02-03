@@ -11,6 +11,30 @@ import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import "animate.css";
 
+import { initReactI18next } from 'react-i18next';
+import i18n from 'i18next';
+
+// Import translations
+import enTranslations from './locales/en.json';
+import esTranslations from './locales/es.json';
+import arTranslations from './locales/ar.json';
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: { translation: enTranslations },
+      es: { translation: esTranslations },
+      ar: { translation: arTranslations }
+      // Add more languages as needed
+    },
+    lng: 'en', // Set default language
+    interpolation: {
+      escapeValue: false // React already escapes strings
+    }
+  });
+
+
 // CALL IT ONCE IN YOUR APP
 injectStyle();
 
