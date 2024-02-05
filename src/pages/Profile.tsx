@@ -21,6 +21,7 @@ import { setRequest } from "../redux/features/user/requestSlice";
 import { IoPersonSharp } from "react-icons/io5";
 import { PiChatTextFill } from "react-icons/pi";
 import { RiSettings5Fill } from "react-icons/ri";
+import { useTranslation } from 'react-i18next';
 
 // import UserProfile from "../components/UserProfile";
 
@@ -29,6 +30,7 @@ interface Socket {
 }
 
 const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
+  const { t } = useTranslation();
   const { isDarkMode } = useContext(UserContext);
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
@@ -68,7 +70,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    toast.success("User signed out");
+    toast.success(`${t("User signed out")}`);
     // clear persit root from local storage
     localStorage.removeItem("persist:root");
     dispatch(setAuth(null));
@@ -134,7 +136,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             language: updateLanguage,
           })
         );
-        toast.success("Profile updated successfully!");
+        toast.success(`${t("Profile updated successfully!")}`);
         setTimeout(() => {
           window.location.reload();
         }, 2000);
@@ -242,14 +244,14 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               className="absolute inset-0 opacity-0 cursor-pointer"
               onChange={handleUpload}
             />
-            <span className=" text-[#606060]">Upload Photo</span>
+            <span className=" text-[#606060]">{t('Upload Photo')}</span>
           </div>
 
           <Input
             name="name"
             type="text"
-            label="Username"
-            placeholder="Enter your username"
+            label={t("Username")}
+            placeholder={t("Enter your username")}
             id="name"
             value={formInput.name}
             onChange={handleInputChange}
@@ -260,7 +262,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               htmlFor={name}
               className="block text-[14px] font-medium  mb-4 text-[#606060]"
             >
-              Language
+              {t("Language")}
             </label>
             <select
               className="p-4    w-full bg-[#F5F5F5] rounded-[10px] text-[#606060] focus:outline-none outline-none"
@@ -268,7 +270,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               onChange={handleLanguageChange}
             >
               <option value="" disabled hidden>
-                Select a language
+                {t("Select a language")}
               </option>
               {languagesArray?.map(({ code, language }) => (
                 <option key={code} value={code}>
@@ -279,7 +281,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           </div>
           <div className="flex justify-end">
             <button className="bg-[#25282C] w-auto text-white py-4 px-[3rem] rounded-[10px]">
-              Update Profile
+              {t("Update Profile")}
             </button>
           </div>
         </form>
@@ -291,7 +293,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             <img src="./assets/img/signout.png" alt="logout-icon" />
           </a>
           <span className="text-[#DD0000] font-semibold text-[17px]">
-            Log Out
+            {t("Log Out")}
           </span>
         </div>
       </div>

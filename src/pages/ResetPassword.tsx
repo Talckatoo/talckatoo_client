@@ -5,12 +5,15 @@ import Button from "../UI/Button";
 import { usePasswordResetMutation } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
 import NavBar from "../components/shared/NavBar";
+import { useTranslation } from 'react-i18next';
+
 
 interface ResetPasswordProps {
   // Define your props here
 }
 
 const ResetPassword: React.FC<ResetPasswordProps> = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -37,17 +40,17 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
 
       if ("data" in response) {
         // Password reset successful, handle accordingly
-        toast.success("we sent a link to your email account");
+        toast.success(`${t("we sent a link to your email account")}`);
         setTimeout(() => {
           navigate("/");
         }, 3000);
       } else {
         // Handle error response
-        toast.error("this email is not registered");
+        toast.error(`${t("this email is not registered")}`);
       }
     } catch (error) {
       // Handle network or other errors
-      toast.error("Password reset failed");
+      toast.error(`${t("Password reset failed")}`);
     } finally {
       setLoading(false);
     }

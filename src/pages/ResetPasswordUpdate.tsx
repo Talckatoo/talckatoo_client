@@ -4,8 +4,11 @@ import { usePasswordResetConfirmMutation } from "../redux/services/UserApi";
 import Button from "../UI/Button";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+
 
 const ResetPaaswordUpdate = () => {
+  const { t } = useTranslation();
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -43,7 +46,7 @@ const ResetPaaswordUpdate = () => {
       });
       if ("data" in response) {
         // Password reset successful, handle accordingly
-        toast.success("your password has been changed");
+        toast.success(`${t("your password has been changed")}`);
         setTimeout(() => {
           navigate("/sign-in");
         }, 3000);
@@ -52,7 +55,7 @@ const ResetPaaswordUpdate = () => {
       }
     } catch (error) {
       // Password reset failed, handle accordingly
-      toast.error("your password has not been changed");
+      toast.error(`${t("your password has not been changed")}`);
     }
     setLoading(false);
   };

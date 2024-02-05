@@ -42,7 +42,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { withStyles } from "@material-ui/core/styles";
 import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
-import { skipToken } from "@reduxjs/toolkit/query";
+import { skipToken } from "@reduxjs/toolkit/query";import { useTranslation } from 'react-i18next';
+
 
 interface Socket {
   current: any;
@@ -55,6 +56,7 @@ interface ReceivedCallState {
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
+  const { t } = useTranslation();
   // const ColoredDialog = withStyles({
   //   root: {
   //     "& .MuiDialog-paper": {
@@ -322,7 +324,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       } catch (err) {
         console.log("error from error", err);
         toast.error(
-          "Error sending messages, please try again form handleSendMessage1"
+          `${t("Error sending messages, please try again form handleSendMessage1")}`
         );
       }
     } else if (selectedId && conversationId === "") {
@@ -374,7 +376,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
       } catch (err) {
         toast.error(
-          "Error sending messages, please try again form handleSendMessage2"
+          `${t("Error sending messages, please try again form handleSendMessage2")}`
         );
       }
     }
@@ -435,7 +437,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
       } catch (err) {
-        toast.error("Error sending messages, please try again");
+        toast.error(`${t("Error sending messages, please try again")}`);
       }
     } else if (selectedId && conversationId === "") {
       // // setMessages([]);
@@ -491,7 +493,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
       } catch (err) {
-        toast.error("Error sending messages, please try again");
+        toast.error(`${t("Error sending messages, please try again")}`);
       }
     }
   };
@@ -590,7 +592,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           to: selectedId,
         });
       } catch (err) {
-        toast.error("Error sending messages, please try again");
+        toast.error(`${t("Error sending messages, please try again")}`);
       }
     }
   };
@@ -610,7 +612,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
       }
     } catch (err) {
-      toast.error("Error updating messages, please try again");
+      toast.error(`${t("Error updating messages, please try again")}`);
     }
   };
 

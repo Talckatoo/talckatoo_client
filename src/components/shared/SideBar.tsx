@@ -20,11 +20,13 @@ import { RiSettings5Fill } from "react-icons/ri";
 import FriendRequest from "./FriendRequest";
 import { setRequest } from "../../redux/features/user/requestSlice";
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'; //TRANSLATION languages
 import { FaGlobe } from 'react-icons/fa';
 
 
 const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
+
+  const { t } = useTranslation(); //TRANSLATION languages
 
   const { i18n } = useTranslation();
 
@@ -41,6 +43,7 @@ const [showLanguages, setShowLanguages] = useState(false);
   const handleLanguageChange = (lng) => {
     changeLanguage(lng);
     setShowLanguages(false);
+    setSelectedLanguage(lng);
   };
 
 
@@ -53,6 +56,8 @@ const [showLanguages, setShowLanguages] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
   const [showRequest, setShowRequest] = useState(false);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('en'); // Default to English
   const { requests } = useAppSelector((state) => state.user);
   const [allUser, setAllUser] = useState<any[]>([]);
 
@@ -112,7 +117,6 @@ const [showLanguages, setShowLanguages] = useState(false);
         language: u?.language,
       })
     );
-
     dispatch(setRecipient(u?.userName as any));
   };
 
@@ -132,7 +136,7 @@ const [showLanguages, setShowLanguages] = useState(false);
     setUsersData(searchData.length > 0 ? searchData : users?.contactedUsers);
   }, [searchData, users]);
 
-  const { t } = useTranslation();
+  
   return (
     <div
       className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${
@@ -176,30 +180,41 @@ const [showLanguages, setShowLanguages] = useState(false);
           </div>
         
 
-          <div
-          className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
-            !showRequest
-              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
-          } mx-2 rounded-[12px]  flex items-center justify-center flex-col
+          <div className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
+            !isButtonClicked
+            ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
+            : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
             transition duration-300 ease-in-out relative
-          `}
-          onClick={handleLanguageClick}
-        >
-          <FaGlobe
-            className={`${
-              !showRequest ? "text-secondary-500" : "text-white"
-            } z-4 object-contain py-1 w-[29px] text-[32px]`}
-          />
-          {showLanguages && (
-            <div className="absolute z-50 bottom-[-60px] left-10 bg-white border-[1px] border-gray-200 rounded-md shadow-md p-2 flex flex-col items-center">
-              <button onClick={() => handleLanguageChange('en')}>English</button>
-              <button onClick={() => handleLanguageChange('es')}>Español</button>
-              <button onClick={() => handleLanguageChange('ar')}>Arabic</button>
+            `} onClick={handleLanguageClick}>
+            <FaGlobe
+               className={`${
+                !isButtonClicked ? "text-secondary-500" : "text-white"
+                } z-4 object-contain py-1 w-[29px] text-[32px]`}
+            />
+            {showLanguages && (
+            <div className="overflow-hidden absolute z-50 bottom-[-60px] left-10 bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">          
+            <button
+            onClick={() => handleLanguageChange('en')}
+            className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'en' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}>
+                English
+              </button>
+              <button
+                onClick={() => handleLanguageChange('es')}
+                className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'es' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`} 
+              >
+                Español
+              </button>
+              <button
+                onClick={() => handleLanguageChange('ar')}
+                className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'ar' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}
+              >
+                Arabic
+              </button>
               {/* Add more buttons for additional languages */}
             </div>
-          )} 
-        </div>
+            )} 
+          </div>
         </div>
 
         <div className="flex flex-col  gap-3 w-full">
@@ -251,7 +266,7 @@ const [showLanguages, setShowLanguages] = useState(false);
             className={`${
               isDarkMode ? "bg-input-bg-dark" : "bg-secondary-500"
             } pl-12 text-white rounded-xl focus:outline-none focus:border-0 focus:ring-[3px] focus:ring-blue border-0 placeholder-white::placeholder`}
-            placeholder="Search"
+            placeholder={t('Search')}
           />
           <IoSearch
             className={`absolute left-3 top-3 ${
@@ -306,7 +321,7 @@ const [showLanguages, setShowLanguages] = useState(false);
               ))}
 
             <div className="flex items-center justify-center text-2xl font-bold text-gray-600 mt-8">
-              Friends
+              {t('Friends')}
             </div>
             {allUser
               ? allUser?.map((user: any) => (

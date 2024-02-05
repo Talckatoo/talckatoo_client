@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { addMessage } from "../redux/features/messages/messageSlice";
 import { Socket } from "socket.io-client";
 import { useSendAudioMutation } from "../redux/services/MessagesApi";
+import { useTranslation } from 'react-i18next';
 
 interface VoiceMessageProps {
   socket: Socket;
@@ -19,6 +20,7 @@ interface voiceCode {
 }
 
 const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
+  const { t } = useTranslation();
   const WHISPER_TRANSCRIPTION_URL = import.meta.env
     .VITE_WHISPER_TRANSCRIPTION_URL;
 
@@ -120,7 +122,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
         });
         setRecordedAudio(null);
       } catch (err) {
-        toast.error("Error sending messages, please try again");
+        toast.error(`${t("Error sending messages, please try again")}`);
       }
     }
   };
@@ -145,7 +147,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
       formData.append("model", "whisper-1");
       formData.append("language", "en");
       if (recordedAudio.size > 25 * 1024 * 1024) {
-        toast.error("Please upload an audio file less than 25MB");
+        toast.error(`${t("Please upload an audio file less than 25MB")}`);
         return;
       }
     }
@@ -172,7 +174,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
       <div className="">
         <div className="flex flex-row gap-4">
           <button
-            title="Voice message"
+            title={t("Voice message")}
             onClick={startRecording}
             className=" hover:text-slate-400   px-2.5  items-center justify-center"
           >

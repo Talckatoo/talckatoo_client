@@ -11,6 +11,8 @@ import { useDispatch } from "react-redux";
 import languagesArray from "../util/languages";
 import { setUser } from "../redux/features/user/userSlice";
 import { setAuth } from "../redux/features/user/authSlice";
+import { useTranslation } from 'react-i18next';
+
 
 interface FormData {
   name: string;
@@ -28,6 +30,7 @@ interface FormErrors {
 }
 
 export const SignUp = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   // const { setUser, isDarkMode } = useContext(UserContext);
   const [formData, setFormData] = React.useState<FormData>({
@@ -91,7 +94,7 @@ export const SignUp = () => {
         const user = response?.data?.user;
         localStorage.setItem("token", token as string);
         dispatch(setAuth(user));
-        toast.success("User signed up");
+        toast.success(`${t("User signed up")}`);
         navigate("/chat");
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -100,11 +103,11 @@ export const SignUp = () => {
           toast.error(errorMessage); // Display the error message to the user
         } else {
           // Handle any other errors or log a generic message
-          toast.error("Error signing up");
+          toast.error(`${t("Error signing up")}`);
         }
       }
     } else {
-      toast.warn("Please enter valid entries");
+      toast.warn(`${t("Please enter valid entries")}`);
     }
   };
 

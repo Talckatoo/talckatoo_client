@@ -19,6 +19,8 @@ import Input from "../UI/Input";
 import TextArea from "../UI/TextArea";
 import { IoSend } from "react-icons/io5";
 import { FaFaceSmile } from "react-icons/fa6";
+import { useTranslation } from 'react-i18next';
+
 
 interface ChatInputProps {
   socket: any;
@@ -111,7 +113,7 @@ const ChatInput = ({
 
       if (messageText.substring(0, 7) === AIcall) {
         onHandleSendAIMessage(messageText);
-        toast.loading("Please wait", {
+        toast.loading(`${t("Please wait")}`, {
           position: toast.POSITION.TOP_CENTER,
           progressClassName: "success-progress-bar",
           toastId: 2,
@@ -122,7 +124,7 @@ const ChatInput = ({
       setMessageText("");
     }
   };
-
+  const { t } = useTranslation();
   return (
     <>
       <div className="w-full  relative z-10 pt-2">
@@ -135,7 +137,7 @@ const ChatInput = ({
             onChange={handleTyping as any}
             onKeyDown={handleSendMessage as any}
             id=""
-            placeholder="Type your message or type @birdie to call AI Assistant"
+            placeholder={t("Type your message or type @birdie to call AI Assistant")}
             className={`mb-0 rounded-t-[20px]   border border-[#0E131D] 
              ${messageText.startsWith(AIcall) ? "text-black" : ""}`}
           />

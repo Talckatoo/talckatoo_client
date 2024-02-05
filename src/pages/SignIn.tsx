@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { useTranslation } from 'react-i18next';
+
 
 interface FormData {
   email: string;
@@ -21,6 +23,7 @@ interface FormErrors {
 }
 
 const SignIn = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [formData, setFormData] = React.useState<FormData>({
     email: "",
@@ -72,18 +75,18 @@ const SignIn = () => {
           localStorage.setItem("token", token as string);
           dispatch(setAuth(response.data.user));
           navigate("/chat");
-          toast.success("User signed up");
+          toast.success(`${t("User signed up")}`);
           setLoading(false);
         } else {
-          toast.error("Email or password is incorrect");
+          toast.error(`${t("Email or password is incorrect")}`);
           setLoading(false);
         }
       } catch (error) {
-        toast.error("Email or password is incorrect");
+        toast.error(`${t("Email or password is incorrect")}`);
         setLoading(false);
       }
     } else {
-      toast.warn("Please enter valid entries");
+      toast.warn(`${t("Please enter valid entries")}`);
       setLoading(false);
     }
   };
