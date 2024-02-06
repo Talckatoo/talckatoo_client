@@ -10,6 +10,8 @@ import { useRegisterAuthMutation } from "../redux/services/AuthApi";
 import { useDispatch } from "react-redux";
 import languagesArray from "../util/languages";
 import { setUser } from "../redux/features/user/userSlice";
+import { MdOutlineSecurity } from "react-icons/md";
+
 
 interface FormData {
   name: string;
@@ -230,6 +232,17 @@ export const SignUp = () => {
             </Link>
           </p>
         </form>
+        <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
+          <div className="flex gap-1 items-center">
+           
+            <MdOutlineSecurity />
+            <span>
+              your data is safe with us
+            </span>
+           </div>
+          <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/terms")}>term & privacy</p>
+          
+        </div>
       </div>
       {/* End of Sign up form  */}
       <br />
