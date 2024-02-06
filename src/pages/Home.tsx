@@ -9,7 +9,7 @@ import Footer from "../components/shared/Footer";
 const Home = () => {
   return (
     <div
-       className="relative bg-white h-full w-full font-inter z-[5]  ">
+       className="relative bg-white h-full w-full font-inter z-[5] ">
       <img
         src="/assets/img/world.png"
         alt="shape"
