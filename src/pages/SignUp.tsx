@@ -240,7 +240,7 @@ export const SignUp = () => {
               your data is safe with us
             </span>
            </div>
-          <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/terms")}>term & privacy</p>
+          <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/terms")}>terms & privacy</p>
           
         </div>
       </div>
