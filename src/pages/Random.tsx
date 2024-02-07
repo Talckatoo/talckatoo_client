@@ -1,9 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { SetStateAction, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { PiChatTextFill } from "react-icons/pi";
 import { RiSettings5Fill } from "react-icons/ri";
+import Lottie from "lottie-react";
+import animationData from "../json/Animation - 1707255253148.json";
+import RandomChat from "../components/RandomChat/RandomChat";
 
 interface Socket {
   current: any;
@@ -13,6 +16,9 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
   const { user } = useAppSelector((state) => state.auth);
   const [isLooking, setIsLooking] = useState(false);
+  const [randomData, setRandomData] = useState<any>();
+  const [conversationRandomId, setConversationRandomId] = useState<string>("");
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -27,6 +33,8 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       userName: user.userName,
       url: user?.profileImage?.url,
       language: user.language,
+      id: user._id,
+      email: user.email,
     };
     try {
       socket?.current?.emit("joinRandomChat", data);
@@ -36,11 +44,25 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   useEffect(() => {
-    socket?.current?.on("randomResult", (data) => {
-      console.log(data);
-    });
+    const handleRandomResult = (data: any) => {
+      console.log("randomResult");
+      setRandomData(data);
+      if (data.user2.id) {
+        setIsLooking(false);
+        setIsChatOpen(true);
+      }
+      setConversationRandomId(data.conversationId);
+      // setIsLooking(false);
+    };
+
+    if (socket.current) {
+      socket.current.on("randomResult", handleRandomResult);
+    }
+
     return () => {
-      socket?.current?.disconnect();
+      if (socket.current) {
+        socket.current.off("randomResult", handleRandomResult);
+      }
     };
   }, [socket.current]);
 
@@ -87,25 +109,53 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
         </div>
       </div>
 
-      <div className="mx-auto flex flex-col">
-        <div className="flex justify-center items-center h-full ">
+      {isLooking ? (
+        <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
           <div className="flex flex-col justify-center items-center">
-            <img
-              className="m-auto"
-              src="/assets/img/people.svg"
-              alt="People"
-              width="600"
-              height="403"
+            <Lottie
+              animationData={animationData}
+              loop={true}
+              style={{ width: 500, height: 500 }}
             />
-            <button
-              onClick={handleJoinChat}
-              className="text-center max-md:px-4  max-w-[768px] text-black"
-            >
-              Join Random Chat
-            </button>
+            <p className="text-center text-[35px] font-bold max-md:px-4  max-w-[768px] text-black">
+              Looking for a random chat
+            </p>
           </div>
         </div>
-      </div>
+      ) : (
+        !isChatOpen && (
+          <div className="mx-auto flex flex-col">
+            <div className="flex justify-center items-center h-full ">
+              <div className="flex flex-col justify-center items-center">
+                <img
+                  className="m-auto"
+                  src="/assets/img/people.svg"
+                  alt="People"
+                  width="600"
+                  height="403"
+                />
+                <button
+                  onClick={handleJoinChat}
+                  className="text-center max-md:px-4  max-w-[768px] text-black"
+                >
+                  Join Random Chat
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      )}
+
+      {isChatOpen && (
+        <div className=" w-full h-fullflex flex-col ">
+          <RandomChat
+            randomData={randomData}
+            conversationRandomId={conversationRandomId}
+            socket={socket}
+            setIsChatOpen={setIsChatOpen}
+          />
+        </div>
+      )}
     </div>
   );
 };
