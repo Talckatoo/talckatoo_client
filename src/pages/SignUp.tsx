@@ -6,11 +6,10 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRegisterAuthMutation } from "../redux/services/AuthApi";
-// import { UserContext } from "../context/user-context";
 import { useDispatch } from "react-redux";
 import languagesArray from "../util/languages";
-import { setUser } from "../redux/features/user/userSlice";
 import { MdOutlineSecurity } from "react-icons/md";
+import { setAuth } from "../redux/features/user/authSlice";
 
 interface FormData {
   name: string;
@@ -87,11 +86,10 @@ export const SignUp = () => {
           language: selectedLanguage,
         });
 
-        const token = response.data.token;
-        const user = response.data.user;
-        localStorage.setItem("token", JSON.stringify(token));
-        // setUser(user);
-        dispatch(setUser(user));
+        const token = response?.data?.token;
+        const user = response?.data?.user;
+        localStorage.setItem("token", token as string);
+        dispatch(setAuth(user));
         toast.success("User signed up");
         navigate("/chat");
       } catch (error) {
@@ -236,12 +234,14 @@ export const SignUp = () => {
             <MdOutlineSecurity />
             <span>By signing up, </span>
           </div>
-          <p
-            className="text-[blue] cursor-pointer"
-            onClick={() => navigate("/terms")}
+
+          <Link
+            to="/terms"
+            target="_blank"
+            className="text-black cursor-pointer"
           >
             you agree to our Terms Of Service.
-          </p>
+          </Link>
         </div>
       </div>
       {/* End of Sign up form  */}

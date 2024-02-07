@@ -34,6 +34,7 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
           socket.current.emit("sendFriendRequest", {
             from: userData?._id,
             to: friendId,
+            friendRequest: response.friendRequest,
           });
           dispatch(
             setAuth({

@@ -141,7 +141,8 @@ const ChatInput = ({
             onKeyDown={handleSendMessage as any}
             id=""
             placeholder="Type your message or type @birdie to call AI Assistant"
-            className="mb-0 rounded-t-[20px]   border border-[#0E131D] "
+            className={`mb-0 rounded-t-[20px]   border border-[#0E131D] 
+             ${messageText.startsWith(AIcall) ? "text-black" : ""}`}
           />
 
           <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2 cursor-pointer">
