@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import Button from "../../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../../../public/assets/icons/talckatoo-plain.svg"
+
 
 interface NavBarProps {
   showSign?: boolean;
@@ -51,7 +51,7 @@ const NavBar: FC<NavBarProps> = ({ }) => {
         <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
         {/* logo section */}
         <Link to="/" className="font-jakarta text-[20px] font-bold flex gap-2 items-center">
-          <img src={logo}  alt="logo" className="w-[35px] h-[35px]"/>
+          <img src="/assets/icons/talckatoo-plain.svg"  alt="logo" className="w-[35px] h-[35px]"/>
           <span>TALCKATOO</span>
         </Link>
         {/* sign up and sign in button */}
