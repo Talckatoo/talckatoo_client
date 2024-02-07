@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -6,10 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRegisterAuthMutation } from "../redux/services/AuthApi";
-// import { UserContext } from "../context/user-context";
 import { useDispatch } from "react-redux";
 import languagesArray from "../util/languages";
-import { setUser } from "../redux/features/user/userSlice";
 import { setAuth } from "../redux/features/user/authSlice";
 
 interface FormData {
@@ -17,6 +15,7 @@ interface FormData {
   email: string;
   password: string;
   confirmPassword: string;
+  verificationCode: string;
 }
 
 interface FormErrors {
@@ -25,6 +24,7 @@ interface FormErrors {
   password?: string;
   confirmPassword?: string;
   selectedLanguage?: string;
+  verificationCode?: string;
 }
 
 export const SignUp = () => {
@@ -35,11 +35,44 @@ export const SignUp = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    verificationCode: "",
   });
+
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [registerAuth] = useRegisterAuthMutation();
   const dispatch = useDispatch();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
+  const [correctVerificationCode, setCorrectVerificationCode] = React.useState("");
+
+  const [verificationCode, setVerificationCode] = React.useState("");
+
+  const sendVerificationCode = async () => {
+    try {
+      console.log('Sending verification code to email:', formData.email);
+
+      const response = await axios.post(import.meta.env.VITE_VERIFY_EMAIL, { email: formData.email });
+      const { verificationCode } = response.data;
+      toast.success('Verification code sent to your email. Please check your email.');
+      setVerificationCode(verificationCode);
+      console.log('Verification code:', verificationCode);
+    } catch (error) {
+      console.error('Error requesting verification:', error);
+    }
+  };
+
+  const input1Ref = useRef<HTMLInputElement>(null);
+  const input2Ref = useRef<HTMLInputElement>(null);
+  const input3Ref = useRef<HTMLInputElement>(null);
+  const input4Ref = useRef<HTMLInputElement>(null);
+
+  // Function to concatenate input values
+  const getInputValue = () => {
+    const value1 = input1Ref.current?.value || "";
+    const value2 = input2Ref.current?.value || "";
+    const value3 = input3Ref.current?.value || "";
+    const value4 = input4Ref.current?.value || "";
+    return value1 + value2 + value3 + value4;
+  };
 
   const validateForm = (): boolean => {
     let isValid = true;
@@ -68,6 +101,13 @@ export const SignUp = () => {
     if (!selectedLanguage) {
       isValid = false;
       errors.selectedLanguage = "Please select a language to continue";
+    }
+    // Check if verification code matches
+    const inputVerificationCode = getInputValue();
+    console.log('Correct verification code:', verificationCode, 'Input verification code:', inputVerificationCode);
+    if (verificationCode !== inputVerificationCode) {
+      isValid = false;
+      errors.verificationCode = "Verification code does not match.";
     }
     setFormErrors(errors);
 
@@ -116,12 +156,6 @@ export const SignUp = () => {
         alt="shape"
         className="fixed top-[-5rem] right-0 max-lg:w-[350px]"
       />
-      {/* <img
-        src="/assets/img/wave.svg"
-        alt="shape"
-        className="fixed  left-0  bottom-[-150px] max-lg:w-[350px]"
-      /> */}
-      {/* Nav bar section */}
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
@@ -147,20 +181,38 @@ export const SignUp = () => {
             label={""}
             id={""}
           />
-          <Input
-            // label="Email"
-            type="text"
-            name="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
-            error={formErrors.email}
-            label={""}
-            id={""}
-          />
+          <div className="flex justify-items-start place-items-baseline w-full">
+            <Input
+              // label="Email"
+              type="text"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              className="bg-transparent border-[#33363A] z-[1] rounded-lg-left text-black"
+              error={formErrors.email}
+              label={""}
+              id={""}
+            />
+            <button
+              type="button"
+              onClick={sendVerificationCode}
+              className="bg-black text-white w-[70px] h-[50px] z-[1] rounded-lg-right font-semibold py-3"
+            >
+              Verify
+            </button>
+          </div>
+          {/* verification code input  */}
+          <div className="flex gap-4 max-w-lg mx-auto justify-center font-[sans-serif]">
+            <input  ref={input1Ref} type="text" placeholder="0" className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded" />
+            <input  ref={input2Ref} type="text" placeholder="0" className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded" />
+            <input  ref={input3Ref} type="text" placeholder="0" className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded" />
+            <input  ref={input4Ref} type="text" placeholder="0" className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded" />
+            <p className="text-red-500" >{formErrors.verificationCode}</p>
+          </div>
+
           <Input
             // label="Password"
             name="password"
@@ -191,9 +243,8 @@ export const SignUp = () => {
           />
 
           <select
-            className={`rounded-lg p-3 w-full border text-black relative text-[16px] focus:outline-none z-[1] ${
-              formErrors.selectedLanguage ? "border-red-500" : ""
-            } bg-transparent border-[#33363A]`}
+            className={`rounded-lg p-3 w-full border text-black relative text-[16px] focus:outline-none z-[1] ${formErrors.selectedLanguage ? "border-red-500" : ""
+              } bg-transparent border-[#33363A]`}
             value={selectedLanguage}
             onChange={(e) => setSelectedLanguage(e.target.value)}
           >
@@ -215,7 +266,7 @@ export const SignUp = () => {
           <Button
             type="submit"
             className="bg-black text-white w-full h-[48px] mt-[2rem] z-[1] rounded-lg"
-            onClick={() => {}}
+            onClick={() => { }}
           >
             Sign Up
           </Button>
