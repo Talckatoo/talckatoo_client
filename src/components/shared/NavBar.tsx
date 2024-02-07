@@ -48,14 +48,26 @@ const NavBar: FC<NavBarProps> = ({ }) => {
         backdropFilter: scrolled ? 'blur(8px)' : 'none',
       }}
       >
-        <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
+        <div className="w-full flex items-center justify-between max-w-[95%] m-auto max-[430px]:flex-col">
         {/* logo section */}
+
         <Link to="/" className="font-jakarta text-[20px] font-bold flex gap-2 items-center">
           <img src="/assets/icons/talckatoo-plain.svg"  alt="logo" className="w-[35px] h-[35px]"/>
+
+        <Link to="/" className="font-jakarta text-[20px] font-bold flex items-center justify-left">
+          {
+            /*
+              <img 
+                className="w-[75px] w-min-[75px] h-auto transition ease-in-out duration-300 scale-100 hover:scale-105"
+                src="cockatoo-bw.png"
+              />
+            */        
+          }
+
           <span>TALCKATOO</span>
         </Link>
         {/* sign up and sign in button */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 max-[430px]:w-full max-[430px]:flex max-[430px]:justify-center">
           <Button
             type="button"
             className="max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000]"

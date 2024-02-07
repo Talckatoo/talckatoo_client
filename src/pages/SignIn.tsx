@@ -72,7 +72,7 @@ const SignIn = () => {
           const token = response.data.token;
           localStorage.setItem("token", token as string);
           dispatch(setAuth(response.data.user));
-          navigate("/chat");
+          navigate("/random");
           toast.success("User signed up");
           setLoading(false);
         } else {

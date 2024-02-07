@@ -18,6 +18,7 @@ import {
   updateContactedUserById,
 } from "./redux/features/user/userSlice";
 import { useFetchAllRequestsQuery } from "./redux/services/UserApi";
+import Random from "./pages/Random";
 
 type MyEventMap = {
   connect: () => void;
@@ -107,6 +108,7 @@ const App = () => {
         <Route path="/chat" element={<Chat socket={socket} />} />
         <Route path="/profile" element={<Profile socket={socket} />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/random" element={<Random socket={socket} />} />
         <Route
           path="/call/:roomId/:decodedCallData"
           element={<VideoRoomCall socket={socket} />}

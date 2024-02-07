@@ -158,7 +158,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       setHasMoreMessages(true);
       scrollToBottom();
       setIsFetchingMore(false);
-      refetchMessages();
+      if (selectedId && conversationId) refetchMessages();
     }
 
     if (selectedId && conversationId === "") {
