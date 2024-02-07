@@ -127,7 +127,7 @@ const ChatInput = ({
     <>
       <div className="w-full  relative z-10 pt-2">
       {showEmoji && ( 
-          <div className={`emoji-container relative top-2 ${showEmoji ? 'open' : ''}` }>
+          <div className={`emoji-container relative top-2  ${showEmoji ? 'open' : ''}` }>
             <EmojiPicker width="100%" onEmojiClick={handleEmojiClick} />
           </div>
         )}

@@ -155,6 +155,7 @@ textarea:focus {
   height: 0;
   overflow: hidden;
   transition: height 0.5s ease-in-out;
+  margin: 0 1em;
 }
 
 .emoji-container.open {
