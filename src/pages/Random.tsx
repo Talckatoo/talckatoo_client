@@ -61,7 +61,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
 
     return () => {
       if (socket.current) {
-        socket.current.off("randomResult", handleRandomResult);
+        socket.current.off("randomResult");
       }
     };
   }, [socket.current]);
