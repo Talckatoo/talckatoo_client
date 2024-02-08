@@ -8,10 +8,9 @@ import { toast } from "react-toastify";
 import { useRegisterAuthMutation } from "../redux/services/AuthApi";
 // import { UserContext } from "../context/user-context";
 import { useDispatch } from "react-redux";
+import { MdOutlineSecurity } from "react-icons/md";
 import languagesArray from "../util/languages";
 import { setUser } from "../redux/features/user/userSlice";
-import { MdOutlineSecurity } from "react-icons/md";
-
 
 interface FormData {
   name: string;
@@ -88,11 +87,10 @@ export const SignUp = () => {
           language: selectedLanguage,
         });
 
-        const token = response.data.token;
-        const user = response.data.user;
-        localStorage.setItem("token", JSON.stringify(token));
-        // setUser(user);
-        dispatch(setUser(user));
+        const token = response?.data?.token;
+        const user = response?.data?.user;
+        localStorage.setItem("token", token as string);
+        dispatch(setAuth(user));
         toast.success("User signed up");
         navigate("/chat");
       } catch (error) {

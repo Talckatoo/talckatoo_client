@@ -8,6 +8,7 @@ import {
   setRecipient,
   setRecipientProfileImage,
   setRequests,
+  setUsers,
 } from "../../redux/features/user/userSlice";
 import { UserContext } from "../../context/user-context";
 import {
@@ -41,17 +42,6 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
     useFetchAllRequestsQuery(null) as any;
 
   useEffect(() => {
-    if (socket.current) {
-      socket.current.on("getFriendRequest", () => {
-        refetchFriendsRequest();
-      });
-      socket.current.on("getAcceptFriendRequest", () => {
-        refetch();
-      });
-    }
-  }, [socket.current]);
-
-  useEffect(() => {
     if (requestsData) {
       dispatch(setRequests(requestsData?.friendRequests));
     }
@@ -60,7 +50,6 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
   useEffect(() => {
     if (users) {
       setAllUser(users?.contactedUsers?.concat(users?.uncontactedUsers));
-      console.log(allUser);
     }
   }, [users]);
 
@@ -81,7 +70,8 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    SearchForUser();
+    if (search.length > 0) SearchForUser();
+    else setSearchData([]);
   }, [search]);
 
   const handleSettingClick = () => {
@@ -250,6 +240,7 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
                     selected={selectedId === request._id}
                     socket={socket}
                     refetchFriendsRequest={refetchFriendsRequest}
+                    refetch={refetch}
                   />
                 </div>
               ))}

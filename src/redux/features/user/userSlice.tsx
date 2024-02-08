@@ -23,6 +23,7 @@ export interface UserState {
   data: any;
   recipientPi?: any;
   requests: any[];
+  friendRequest: any;
 }
 
 const initialState: UserState = {
@@ -37,6 +38,7 @@ const initialState: UserState = {
   data: null,
   recipientPi: null,
   requests: [],
+  friendRequest: null,
 };
 
 export const userSlice = createSlice({

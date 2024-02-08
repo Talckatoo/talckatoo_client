@@ -45,13 +45,16 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const userID = localStorage.getItem("userId");
 
-  useEffect(() => {
-    if (socket.current) {
-      socket.current.on("getAcceptFriendRequest", () => {
-        refetch();
-      });
-    }
-  }, [socket.current]);
+  // const refetchF = async () => {
+  //   await refetch();
+  // };
+  // useEffect(() => {
+  //   if (socket.current) {
+  //     socket.current.on("getAcceptFriendRequest", () => {
+  //       refetchF();
+  //     });
+  //   }
+  // }, [socket.current]);
 
   const { data } = useFetchUserByIdQuery(
     userID !== null ? { id: userID } : skipToken
@@ -90,7 +93,15 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     refetch();
     if (socket.current) {
-      socket.current.on("getMessage", () => {
+      socket.current.on("getMessage", (data) => {
+        if (data.to === selectedId) {
+          dispatch(
+            setConversation({
+              conversationId: data.conversationId,
+              selectedId: selectedId,
+            })
+          );
+        }
         refetch();
       });
     }

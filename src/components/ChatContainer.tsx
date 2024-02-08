@@ -42,6 +42,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { withStyles } from "@material-ui/core/styles";
 import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface Socket {
   current: any;
@@ -65,7 +66,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(30);
+  const [limit, setLimit] = useState(1000);
   const conversationState = useAppSelector((state) => state.conversation);
   const selectedId = conversationState?.conversation?.selectedId;
   const user = useAppSelector((state) => state.auth.user);
@@ -101,48 +102,75 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   // fetch all messages by conversation id
   const { data: messagesData, refetch: refetchMessages } =
     useFetchMessagesByConversationIdQuery(
-      { userId: user?._id, conversationId: conversationId, page, limit },
-      { skip: conversationId === "" }
+      conversationId
+        ? { userId: user?._id, conversationId: conversationId, page, limit }
+        : skipToken
     ) as any;
 
   // Post Message
   const [sendMessage, { isLoading }] = useSendMessageMutation();
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
-
-  useEffect(() => {
-    if (selectedId && conversationId) {
-      setPage(1);
-      setLimit(30);
-      setHasMoreMessages(true);
-      setIsFetchingMore(false);
-      refetchMessages();
-    }
-    if (selectedId && conversationId === "") {
-      dispatch(setMessages([]));
-    }
-  }, [selectedId, conversationId]);
-
   const [usersArray, setUsersArray] = useState([]);
   const [arrivalMessages, setArrivalMessages] = useState(null);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [selectedTyping, setSelectedTyping] = useState();
   const [decodedCallData, setDecodedCallData] = useState("");
-
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-
   const idArray = usersArray?.map((obj) => obj._id);
-
-  const fullLanguage = languagesArray.map((l) => {
-    if (l.code === language) return l.language;
-  });
-
   const voiceCode = textToVoiceLanguages.find(
     (la) => la.code === language?.toLowerCase()
   )?.voiceCode;
-
   const token = localStorage.getItem("token");
+
+  // TEST //  ------------------------------------------------
+  // useEffect(() => {
+  //   console.log("messages", messages);
+  //   console.log("messagesData", messagesData);
+  //   console.log("arrivalMessages", arrivalMessages);
+  // }, [messages]);
+
+  // TEST //  ------------------------------------------------
+
+  // ----------------------- SCROLLING --------------------------------
+
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const scrollRefBottom = useRef<HTMLDivElement | null>(null);
+  const scrollToBottom = () => {
+    if (scrollRefBottom.current) {
+      scrollRefBottom.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (selectedId || conversationId) {
+      // setPage(1);
+      // setLimit(30);
+      setHasMoreMessages(true);
+      scrollToBottom();
+      setIsFetchingMore(false);
+      if (selectedId && conversationId) refetchMessages();
+    }
+
+    if (selectedId && conversationId === "") {
+      dispatch(setMessages([]));
+    }
+  }, [conversationId, selectedId]);
+
+  // useEffect(() => {
+  //   !isFetchingMore && scrollToBottom();
+  // }, [messages, isFetchingMore]);
+
+  // ----------------------- SCROLLING --------------------------------
 
   useEffect(() => {
     if (socket.current) {
@@ -201,8 +229,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current]);
 
   useEffect(() => {
+    dispatch(setMessages([]));
+
     const { messages } = messagesData?.conversation || {};
     const { users } = messagesData?.conversation || {};
+
     if (users) {
       if (users[0]?.userName === user?.userName) {
         dispatch(setRecipient(users[1]?.userName));
@@ -216,8 +247,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       };
       setUsersArray([...users, AIuser]);
     }
-    // setMessages(messages);
-    if (messagesData) dispatch(setMessages(messages));
+
+    if (messagesData) {
+      dispatch(setMessages(messages));
+    }
   }, [messagesData]);
 
   const sendAIMessage = (messageAI: any) => {
@@ -250,10 +283,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         }).unwrap();
+        console.log(response);
 
         const { message, conversation } = response;
 
-        setIsFetchingMore(false);
+        // setIsFetchingMore(false);
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
@@ -263,6 +297,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           message: message?.message,
           status: false,
           unread: selectedId,
+          conversationId: conversation?._id,
         });
 
         // modify the latest message   in the users redux
@@ -285,7 +320,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
       } catch (err) {
-        toast.error("Error sending messages, please try again");
+        console.log("error from error", err);
+        toast.error(
+          "Error sending messages, please try again form handleSendMessage1"
+        );
       }
     } else if (selectedId && conversationId === "") {
       // setMessages([]);
@@ -301,6 +339,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }).unwrap();
 
         setIsFetchingMore(false);
+        console.log({ "response in uncontacted": response });
         const { message, conversation } = response;
 
         socket.current.emit("sendMessage", {
@@ -311,6 +350,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           message: message?.message,
           status: false,
           unread: selectedId,
+          conversation: conversation._id,
         });
 
         // modify the latest message   in the users redux
@@ -333,7 +373,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
       } catch (err) {
-        toast.error("Error sending messages, please try again");
+        toast.error(
+          "Error sending messages, please try again form handleSendMessage2"
+        );
       }
     }
   };
@@ -353,7 +395,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         const { message, conversation } = response;
 
-        setIsFetchingMore(false);
+        // setIsFetchingMore(false);
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
@@ -367,6 +409,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           },
           status: false,
           unread: selectedId,
+          conversationId: conversation?._id,
         });
 
         // modify the latest message   in the users redux
@@ -409,7 +452,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         setIsFetchingMore(false);
 
-        const { message, conversation } = response;
+        const { message } = response;
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
@@ -456,7 +499,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     if (socket.current) {
       updateConversation();
-      setIsFetchingMore(false);
       socket.current.on("getMessage", (data: any) => {
         if (data.message) {
           setArrivalMessages({
@@ -506,65 +548,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current, arrivalMessages]);
 
   useEffect(() => {
+    console.log("ARRIVAL MESS");
     arrivalMessages &&
-      idArray?.includes(arrivalMessages.sender) &&
+      idArray?.includes(arrivalMessages?.sender) &&
       dispatch(setMessages([...messages, arrivalMessages]));
   }, [arrivalMessages]);
-
-  const scrollRefBottom = useRef<HTMLDivElement | null>(null);
-  const scrollToBottom = () => {
-    if (scrollRefBottom.current) {
-      scrollRefBottom.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-  };
-
-  useEffect(() => {
-    !isFetchingMore && scrollToBottom();
-  }, [messages, isFetchingMore]);
-
-  const fetchNextPage = async () => {
-    if (!hasMoreMessages) {
-      return;
-    }
-
-    try {
-      const response = await refetchMessages();
-
-      const newMessages = response.data?.conversation?.messages;
-
-      if (newMessages && newMessages.length > 0) {
-        // add the new messages on top of the old ones
-        setIsFetchingMore(true);
-        setLimit(limit + 20);
-      } else {
-        // No more messages to fetch
-        setHasMoreMessages(false);
-        setIsFetchingMore(false);
-      }
-    } catch (error) {
-      console.error("Error fetching next page:", error);
-    }
-  };
-
-  useEffect(() => {
-    const handleScroll = (e) => {
-      const { scrollTop } = e.target;
-      // almost the top
-      const isScrolledToTop = scrollTop < 600;
-      if (isScrolledToTop && messages) {
-        fetchNextPage();
-      }
-    };
-    const scrollContainer = scrollRef.current;
-    scrollContainer?.addEventListener("scroll", handleScroll);
-
-    return () => {
-      scrollContainer?.removeEventListener("scroll", handleScroll);
-    };
-  }, [fetchNextPage, messages]);
 
   const onHandleTranslateText = async (translateText: string) => {
     socket.current.emit("stopTyping", selectedId);
@@ -642,6 +630,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, [receivedCall]);
 
+  // *************************** VIDEO CALL *****************************
+
   return (
     <div
       className={`w-full h-full flex flex-col ${
@@ -684,7 +674,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 ref={scrollRef}
                 className="overflow-y-auto overflow-x-hidden w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
               >
-                {!!selectedId ? (
+                {selectedId ? (
                   <div className="m-2 p-2 ">
                     {messages
                       ? messages.map((msg) => (

@@ -3,6 +3,7 @@ import {
   ChangeEvent,
   useEffect,
   useContext,
+  useRef,
   VoidFunctionComponent,
 } from "react";
 import EmojiPicker from "emoji-picker-react";
@@ -49,10 +50,32 @@ const ChatInput = ({
   const selectedId = conversationState?.conversation?.selectedId;
 
   const [uploadFile] = useUploadFileMutation();
+  const refToggleBox = useRef(null);
+
+  useEffect(() => {
+   
+   const handleClickOutisde = (event:MouseEvent) => { 
+    if(refToggleBox.current && !refToggleBox.current.contains(event.target  as Node)) {
+      // Clicked outside of the toggle box, so close
+      setShowEmoji(false);
+    }
+  }
+    // Attach event listener when the component mounts
+    document.addEventListener('mousedown', handleClickOutisde);
+    //clean up yhe event listeners
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutisde);
+    };
+    
+
+
+  },[]);
 
   const handleShowEmoji = () => {
     setShowEmoji(!showEmoji);
+    console.log('showEmoji', showEmoji);
   };
+
 
   const handleEmojiClick = (event: any) =>
     setMessageText(`${messageText} ${event.emoji}`);
@@ -125,7 +148,7 @@ const ChatInput = ({
 
   return (
     <>
-      <div className="w-full  relative z-10 pt-2">
+      <div className="w-full  relative z-10 pt-2" ref={refToggleBox} >
       {showEmoji && ( 
           <div className={`emoji-container relative top-2  ${showEmoji ? 'open' : ''}` }>
             <EmojiPicker width="100%" onEmojiClick={handleEmojiClick} />
@@ -141,10 +164,12 @@ const ChatInput = ({
             onKeyDown={handleSendMessage as any}
             id=""
             placeholder="Type your message or type @birdie to call AI Assistant"
-            className="mb-0 rounded-t-[20px]   border border-[#0E131D] "
+            className={`mb-0 rounded-t-[20px]   border border-[#0E131D] 
+             ${messageText.startsWith(AIcall) ? "text-black" : ""}`}
           />
 
-          <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2 cursor-pointer">
+          <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2 cursor-pointer"
+          >
             <form
               onSubmit={handleSendMessage}
               className="absolute right-4 cusor-pointer"
