@@ -42,21 +42,30 @@ export const SignUp = () => {
   const [registerAuth] = useRegisterAuthMutation();
   const dispatch = useDispatch();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
-  const [correctVerificationCode, setCorrectVerificationCode] = React.useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const [correctVerificationCode, setCorrectVerificationCode] =
+    React.useState("");
+  const [confirmationCode, setConfirmationCode] = useState(Array(4).fill(""));
+  const refs = useRef<Array<HTMLInputElement>>([]);
 
   const [verificationCode, setVerificationCode] = React.useState("");
 
   const sendVerificationCode = async () => {
     try {
-      console.log('Sending verification code to email:', formData.email);
+      console.log("Sending verification code to email:", formData.email);
 
-      const response = await axios.post(import.meta.env.VITE_VERIFY_EMAIL, { email: formData.email });
+      const response = await axios.post(import.meta.env.VITE_VERIFY_EMAIL, {
+        email: formData.email,
+      });
       const { verificationCode } = response.data;
-      toast.success('Verification code sent to your email. Please check your email.');
+      toast.success(
+        "Verification code sent to your email. Please check your email."
+      );
       setVerificationCode(verificationCode);
-      console.log('Verification code:', verificationCode);
+      console.log("Verification code:", verificationCode);
     } catch (error) {
-      console.error('Error requesting verification:', error);
+      console.error("Error requesting verification:", error);
     }
   };
 
@@ -66,13 +75,13 @@ export const SignUp = () => {
   const input4Ref = useRef<HTMLInputElement>(null);
 
   // Function to concatenate input values
-  const getInputValue = () => {
-    const value1 = input1Ref.current?.value || "";
-    const value2 = input2Ref.current?.value || "";
-    const value3 = input3Ref.current?.value || "";
-    const value4 = input4Ref.current?.value || "";
-    return value1 + value2 + value3 + value4;
-  };
+  // const getInputValue = () => {
+  //   const value1 = input1Ref.current?.value || "";
+  //   const value2 = input2Ref.current?.value || "";
+  //   const value3 = input3Ref.current?.value || "";
+  //   const value4 = input4Ref.current?.value || "";
+  //   return value1 + value2 + value3 + value4;
+  // };
 
   const validateForm = (): boolean => {
     let isValid = true;
@@ -103,12 +112,17 @@ export const SignUp = () => {
       errors.selectedLanguage = "Please select a language to continue";
     }
     // Check if verification code matches
-    const inputVerificationCode = getInputValue();
-    console.log('Correct verification code:', verificationCode, 'Input verification code:', inputVerificationCode);
-    if (verificationCode !== inputVerificationCode) {
-      isValid = false;
-      errors.verificationCode = "Verification code does not match.";
-    }
+    // const inputVerificationCode = getInputValue();
+    // console.log(
+    //   "Correct verification code:",
+    //   verificationCode,
+    //   "Input verification code:",
+    //   inputVerificationCode
+    // );
+    // if (verificationCode !== inputVerificationCode) {
+    //   isValid = false;
+    //   errors.verificationCode = "Verification code does not match.";
+    // }
     setFormErrors(errors);
 
     return isValid;
@@ -118,6 +132,12 @@ export const SignUp = () => {
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
+    const code = confirmationCode.join("");
+    if (code !== verificationCode || code === "") {
+      setError("Verification code does not match");
+      return;
+    }
+    setError(null);
     if (validateForm()) {
       try {
         const response = await registerAuth({
@@ -126,6 +146,11 @@ export const SignUp = () => {
           password: formData.password,
           language: selectedLanguage,
         });
+
+        if (response.error) {
+          toast.error(response.error.data.message);
+          return;
+        }
 
         const token = response?.data?.token;
         const user = response?.data?.user;
@@ -148,6 +173,51 @@ export const SignUp = () => {
     }
   };
 
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text/plain").slice(0, 6);
+    setConfirmationCode(pastedData.split(""));
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const value = e.target.value;
+    const inputType = (e.nativeEvent as any).inputType;
+
+    if (inputType === "deleteContentBackward") {
+      setConfirmationCode((prevState) => {
+        const newState = [...prevState];
+        newState[index] = "";
+        return newState;
+      });
+
+      if (index > 0) {
+        refs.current[index - 1]?.focus();
+      }
+
+      return;
+    }
+
+    // Allow only single digits
+    if (/^\d$/.test(value)) {
+      setError(null);
+
+      setConfirmationCode((prevState) => {
+        const newState = [...prevState];
+        newState[index] = value;
+        return newState;
+      });
+
+      // Automatically focus the next input field
+      if (index < 3) {
+        refs.current[index + 1]?.focus();
+      }
+    } else {
+      setError("Code must consist of 6 digits");
+    }
+  };
   return (
     <section className="relative bg-white h-full w-full font-inter">
       <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
@@ -205,12 +275,50 @@ export const SignUp = () => {
             </button>
           </div>
           {/* verification code input  */}
-          <div className="flex gap-4 max-w-lg mx-auto justify-center font-[sans-serif]">
-            <input  ref={input1Ref} type="text" placeholder="0" className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded" />
-            <input  ref={input2Ref} type="text" placeholder="0" className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded" />
-            <input  ref={input3Ref} type="text" placeholder="0" className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded" />
-            <input  ref={input4Ref} type="text" placeholder="0" className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded" />
-            <p className="text-red-500" >{formErrors.verificationCode}</p>
+          {/* <div className="flex gap-4 max-w-lg mx-auto justify-center font-[sans-serif]">
+            <input
+              ref={input1Ref}
+              type="text"
+              placeholder="0"
+              className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded"
+            />
+            <input
+              ref={input2Ref}
+              type="text"
+              placeholder="0"
+              className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded"
+            />
+            <input
+              ref={input3Ref}
+              type="text"
+              placeholder="0"
+              className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded"
+            />
+            <input
+              ref={input4Ref}
+              type="text"
+              placeholder="0"
+              className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded"
+            />
+            <p className="text-red-500">{formErrors.verificationCode}</p>
+          </div> */}
+          <div
+            className="flex justify-between space-x-2 h-12"
+            onPaste={handlePaste}
+          >
+            {Array.from({ length: 4 }, (_, index) => (
+              <input
+                key={index}
+                type="text"
+                maxLength={1}
+                className={`w-12 h-12 text-center border rounded-md ${
+                  error ? "border-red-500" : "border-gray-300"
+                }`}
+                value={confirmationCode[index]}
+                onChange={(e) => handleInputChange(e, index)}
+                ref={(el) => el && (refs.current[index] = el)}
+              />
+            ))}
           </div>
 
           <Input
@@ -243,8 +351,9 @@ export const SignUp = () => {
           />
 
           <select
-            className={`rounded-lg p-3 w-full border text-black relative text-[16px] focus:outline-none z-[1] ${formErrors.selectedLanguage ? "border-red-500" : ""
-              } bg-transparent border-[#33363A]`}
+            className={`rounded-lg p-3 w-full border text-black relative text-[16px] focus:outline-none z-[1] ${
+              formErrors.selectedLanguage ? "border-red-500" : ""
+            } bg-transparent border-[#33363A]`}
             value={selectedLanguage}
             onChange={(e) => setSelectedLanguage(e.target.value)}
           >
@@ -266,7 +375,7 @@ export const SignUp = () => {
           <Button
             type="submit"
             className="bg-black text-white w-full h-[48px] mt-[2rem] z-[1] rounded-lg"
-            onClick={() => { }}
+            onClick={() => {}}
           >
             Sign Up
           </Button>
