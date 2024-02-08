@@ -61,14 +61,14 @@ const RandomChat = ({
     };
     socket.current.emit("sendRandomMessage", data);
 
-    setMessages((prev: any) => [
-      ...prev,
-      {
-        message,
-        createdAt: new Date(),
-        sender: user?._id,
-      },
-    ]);
+    // setMessages((prev: any) => [
+    //   ...prev,
+    //   {
+    //     message,
+    //     createdAt: new Date(),
+    //     sender: user?._id,
+    //   },
+    // ]);
   };
 
   const sendAIMessage = (message: string) => {
@@ -80,14 +80,14 @@ const RandomChat = ({
     };
     socket.current.emit("sendRandomMessage", data);
 
-    setMessages((prev: any) => [
-      ...prev,
-      {
-        message,
-        createdAt: new Date(),
-        sender: import.meta.env.VITE_AI_ASSISTANT_ID,
-      },
-    ]);
+    // setMessages((prev: any) => [
+    //   ...prev,
+    //   {
+    //     message,
+    //     createdAt: new Date(),
+    //     sender: import.meta.env.VITE_AI_ASSISTANT_ID,
+    //   },
+    // ]);
   };
 
   const onHandleTranslateText = (text: string, targetLanguage: string) => {
@@ -114,18 +114,18 @@ const RandomChat = ({
         socketId: socketId,
       });
 
-      setMessages((prev: any) => [
-        ...prev,
-        {
-          media: {
-            url: media.url,
-            type: media.type,
-            altText: media.altText,
-          },
-          createdAt: new Date(),
-          sender: user?._id,
-        },
-      ]);
+      // setMessages((prev: any) => [
+      //   ...prev,
+      //   {
+      //     media: {
+      //       url: media.url,
+      //       type: media.type,
+      //       altText: media.altText,
+      //     },
+      //     createdAt: new Date(),
+      //     sender: user?._id,
+      //   },
+      // ]);
     } catch (err) {
       toast.error("Error sending messages, please try again");
     }
