@@ -161,6 +161,3 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
 };
 
 export default Random;
-
-
-
