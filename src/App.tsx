@@ -84,6 +84,36 @@ const App = () => {
     }
   }, [socket.current]);
 
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("getFriendRequest", (data: any) => {
+        console.log(data);
+        dispatch(setRequests([...requests, data.friendRequest]));
+      });
+
+      socket.current.on("getAcceptFriendRequest", (data: any) => {
+        dispatch(
+          setUsers({
+            ...users,
+            uncontactedUsers: [
+              ...users?.uncontactedUsers,
+              {
+                _id: data?.Userfrom?._id,
+                userName: data?.Userfrom?.userName,
+                profileImage: data?.Userfrom?.profileImage,
+                language: data?.Userfrom?.language,
+              },
+            ],
+          })
+        );
+      });
+      socket.current.on("getAcceptFriendRequest", () => {
+        console.log("get Accept Friend Request");
+        // refetch();
+      });
+    }
+  }, [socket.current]);
+
   return (
     <div className="w-full h-full">
       <Routes>
