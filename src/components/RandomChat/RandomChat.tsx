@@ -31,6 +31,7 @@ const RandomChat = ({
   const [isTyping, setIsTyping] = React.useState(false);
   // get socket id from randomData
   const [socketId, setSocketId] = React.useState("");
+  const [UserData, setUserData] = React.useState<any>({});
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -42,8 +43,10 @@ const RandomChat = ({
     if (randomData) {
       if (randomData.user2.id === user._id) {
         setSocketId(randomData.user1.socketId);
+        setUserData(randomData.user1);
       } else {
         setSocketId(randomData.user2.socketId);
+        setUserData(randomData.user2);
       }
     }
   }, [randomData]);
@@ -54,6 +57,7 @@ const RandomChat = ({
       conversationRandomId,
       sender: user?._id,
       socketId: socketId,
+      language: UserData.language,
     };
     socket.current.emit("sendRandomMessage", data);
 
