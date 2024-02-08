@@ -131,7 +131,7 @@ const RandomChat = ({
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (socket.current) {
       socket.current.on("getRandomMessage", (data: any) => {
         // add the new message to the state
