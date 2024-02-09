@@ -58,6 +58,12 @@ export const SignUp = () => {
       const response = await axios.post(import.meta.env.VITE_VERIFY_EMAIL, {
         email: formData.email,
       });
+
+      if (response.error) {
+        toast.error(response.error.data.message);
+        return;
+      }
+
       const { verificationCode } = response.data;
       toast.success(
         "Verification code sent to your email. Please check your email."
