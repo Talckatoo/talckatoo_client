@@ -53,16 +53,11 @@ export const SignUp = () => {
 
   const sendVerificationCode = async () => {
     try {
-      console.log("Sending verification code to email:", formData.email);
-
       const response = await axios.post(import.meta.env.VITE_VERIFY_EMAIL, {
         email: formData.email,
       });
 
-      if (response.error) {
-        toast.error(response.error.data.message);
-        return;
-      }
+      console.log("Verification code response:", response);
 
       const { verificationCode } = response.data;
       toast.success(
@@ -71,7 +66,7 @@ export const SignUp = () => {
       setVerificationCode(verificationCode);
       console.log("Verification code:", verificationCode);
     } catch (error) {
-      console.error("Error requesting verification:", error);
+      toast.error(error.response.data.message);
     }
   };
 
