@@ -284,7 +284,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         }).unwrap();
-        console.log(response);
 
         const { message, conversation } = response;
 
@@ -501,7 +500,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     if (socket.current) {
       updateConversation();
       socket.current.on("getMessage", (data: any) => {
-        console.log("Saul", data);
         if (data.message) {
           setArrivalMessages({
             createdAt: data.createdAt,
@@ -550,7 +548,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current, arrivalMessages]);
 
   useEffect(() => {
-    console.log("ARRIVAL MESS");
     arrivalMessages &&
       idArray?.includes(arrivalMessages?.sender) &&
       dispatch(setMessages([...messages, arrivalMessages]));
