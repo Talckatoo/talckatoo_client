@@ -254,6 +254,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [messagesData]);
 
   const sendAIMessage = (messageAI: any) => {
+    
     socket.current.emit("sendMessageChatGPT", {
       message: messageAI,
       from: user?._id,
@@ -263,7 +264,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
     dispatch(
       addMessage({
-        createdAt: Date.now().toString(),
+        createdAt: Date.now(),
         message: messageAI,
         sender: user?._id,
         _id: uuidv4(),
