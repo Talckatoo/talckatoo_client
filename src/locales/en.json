@@ -34,7 +34,19 @@
   "Error sending messages, please try again":"Error sending messages, please try again",
   "Error updating messages, please try again":"Error updating messages, please try again",
   "Please wait":"Please wait",
-  "Error, please try again":"",
-  "welcome": "Welcome!",
-  "greet": "Hello, {{name}}!"
+  "Error, please try again":"Error, please try again",
+  "Welcome back":"Welcome back",
+  "Sign In with Google":"Sign In with Google",
+  "Or, sign in with your email":"Or, sign in with your email",
+  "Email":"Email",
+  "Password":"Password",
+  "Forgot password?":"Forgot password?",
+  "Loading...":"Loading...",
+  "Log in":"Log in",
+  "Don't have an account?":"Don't have an account?",
+  "Sign Up":"Sign Up",
+  "Sign In":"Sign In",
+  "English":"English",
+  "Spanish":"Spanish",
+  "Arabic":"Arabic"
 }

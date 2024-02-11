@@ -34,5 +34,19 @@
       "Error sending messages, please try again":"خطأ إرسال الرسائل ، يرجى المحاولة مرة أخرى",
       "Error updating messages, please try again":"خطأ في تحديث الرسائل ، يرجى المحاولة مرة أخرى",
       "Please wait":"انتظر من فضلك",
-      "Error, please try again":"خطأ ، يرجى المحاولة مرة أخرى"
+      "Error, please try again":"خطأ ، يرجى المحاولة مرة أخرى",
+      "Welcome back":"مرحبًا بعودتك",
+      "Sign In with Google": "تسجيل الدخول باستخدام جوجل",
+      "Or, sign in with your email":"أو ، قم بتسجيل الدخول باستخدام بريدك الإلكتروني",
+      "Email":"البريد الإلكتروني",
+      "Password":"كلمة المرور",
+      "Forgot password?":"هل نسيت كلمة السر؟",
+      "Loading...":"جاري التحميل...",
+      "Log in":"تسجيل الدخول",
+      "Don't have an account?":"ليس لديك حساب؟",
+      "Sign Up":"إنشاء حساب",
+      "Sign In":"تسجيل الدخول",
+      "English":"الإنجليزية",
+      "Spanish":"الأسبانية",
+      "Arabic":"العربية"
 }

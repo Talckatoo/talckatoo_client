@@ -113,7 +113,7 @@ const SignIn = () => {
       {/* End of Nav bar section */}
       <div className="container">
         <h2 className="head-text text-center mt-[5rem] mb-10 text-black">
-          Welcome back
+          {t("Welcome back")}
         </h2>
         {/* Sign up form  */}
         <form
@@ -133,7 +133,7 @@ const SignIn = () => {
                 className="w-8 h-8"
               />
 
-              <span className="text-black">Sign In with Google</span>
+              <span className="text-black">{t("Sign In with Google")}</span>
             </Button>
           </div>
           {/* End of Google button red */}
@@ -141,7 +141,7 @@ const SignIn = () => {
           <div className="flex items-center gap-4 w-full my-[2rem]">
             <div className="w-full h-[2px] bg-[#33363A]"></div>
             <p className="text-black whitespace-nowrap">
-              Or, sign in with your email
+              {t("Or, sign in with your email")}
             </p>
             <div className="w-full h-[2px] bg-[#33363A]"></div>
           </div>
@@ -151,7 +151,7 @@ const SignIn = () => {
             type="text"
             name="email"
             id="email"
-            placeholder="Email"
+            placeholder={t("Email")}
             value={formData.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
@@ -165,7 +165,7 @@ const SignIn = () => {
             id="password"
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder={t("Password")}
             value={formData.password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
@@ -180,25 +180,25 @@ const SignIn = () => {
             }}
             className="text-black"
           >
-            Forgot password?
+            {t("Forgot password?")}
           </Button>
 
           <Button
             type="submit"
             className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1]"
           >
-            {loading ? "Loading..." : "Log in"}
+            {loading ? `${t("Loading...")}` : `${t("Log in")}`}
           </Button>
 
           <p className="text-black mt-4 z-[1] ">
-            Don't have an account?{" "}
+            {t("Don't have an account?")}{" "}
             <span
               className="text-black cursor-pointer z-[1] underline font-semibold"
               onClick={() => {
                 navigate("/sign-up");
               }}
             >
-              Sign Up
+              {t("Sign Up")}
             </span>
           </p>
         </form>

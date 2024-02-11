@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState,useRef } from "react";
 import Button from "../../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/user-context";
@@ -11,6 +11,7 @@ interface NavBarProps {
 }
 
 const NavBar: FC<NavBarProps> = ({ }) => {
+  const languageRef = useRef(null);
   const { t } = useTranslation(); //TRANSLATION languages
 
   const { i18n } = useTranslation();
@@ -21,13 +22,13 @@ const NavBar: FC<NavBarProps> = ({ }) => {
 
 const [showLanguages, setShowLanguages] = useState(false);
 
-  const handleLanguageClick = () => {
-    setShowLanguages(!showLanguages);
-  };
+const handleLanguageClick = () => {
+  setShowLanguages((prev) => !prev);
+};
 
   const handleLanguageChange = (lng) => {
     changeLanguage(lng);
-    setShowLanguages(false);
+    setShowLanguages(false); // Close the dropdown
     setSelectedLanguage(lng);
   };
 
@@ -53,6 +54,18 @@ const [showLanguages, setShowLanguages] = useState(false);
   // scrool event 
 
   useEffect(() => {
+    const handleClickOutside = (event) => {
+    if (languageRef.current && !languageRef.current.contains(event.target)) {
+      // Clicked outside the language dropdown, close it
+      setShowLanguages(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+
     const handleScroll = () => {
       // Check if the page has been scrolled, e.g., if the vertical scroll position is greater than 0.
       const isScrolled = window.scrollY > 10;
@@ -82,11 +95,11 @@ const [showLanguages, setShowLanguages] = useState(false);
         </Link>
         {/* sign up and sign in button */}
         <div className="flex items-center gap-4">
-        <div className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
+        <div className={`${isDarkMode ? "" : " "}${
             !isButtonClicked
-            ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-            : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
+            ? " border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
+            : " border-[1px] border-secondary-500 hover:bg-black"
+            } py-2 px-2 rounded-[3px] max-md:px-1 max-md:py-1 rounded-[12px]  flex items-center justify-center flex-col
             transition duration-300 ease-in-out relative
             `} onClick={handleLanguageClick}>
             <FaGlobe
@@ -95,23 +108,23 @@ const [showLanguages, setShowLanguages] = useState(false);
                 } z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
             {showLanguages && (
-            <div className="overflow-hidden absolute z-50 bottom-[-60px] left-10 bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">          
+            <div ref={languageRef} className="overflow-hidden absolute z-50 bottom-[-100px] left-10 bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">          
             <button
             onClick={() => handleLanguageChange('en')}
             className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'en' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}>
-                English
+                {t("English")}
               </button>
               <button
                 onClick={() => handleLanguageChange('es')}
                 className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'es' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`} 
               >
-                Español
+                {t("Spanish")}
               </button>
               <button
                 onClick={() => handleLanguageChange('ar')}
                 className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'ar' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}
               >
-                Arabic
+                {t("Arabic")}
               </button>
               {/* Add more buttons for additional languages */}
             </div>
@@ -122,7 +135,7 @@ const [showLanguages, setShowLanguages] = useState(false);
             className="max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000]"
             onClick={handleSignInClick}
           >
-            Sign In
+            {t("Sign In")}
           </Button>
           <Button
             type="button"
@@ -131,7 +144,7 @@ const [showLanguages, setShowLanguages] = useState(false);
               navigate("/sign-up");
             }}
           >
-            Sign Up
+            {t("Sign Up")}
           </Button>
 
         </div>
