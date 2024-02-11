@@ -1,14 +1,42 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import Button from "../../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/user-context";
+
+import { useTranslation } from 'react-i18next'; //TRANSLATION languages
+import { FaGlobe } from 'react-icons/fa';
 
 interface NavBarProps {
   showSign?: boolean;
 }
 
 const NavBar: FC<NavBarProps> = ({ }) => {
+  const { t } = useTranslation(); //TRANSLATION languages
+
+  const { i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
+const [showLanguages, setShowLanguages] = useState(false);
+
+  const handleLanguageClick = () => {
+    setShowLanguages(!showLanguages);
+  };
+
+  const handleLanguageChange = (lng) => {
+    changeLanguage(lng);
+    setShowLanguages(false);
+    setSelectedLanguage(lng);
+  };
+
+  const { isDarkMode } = useContext(UserContext);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('en'); // Default
 
   const handleSignInClick = () => {
     // Check if token exists in local storage
@@ -54,6 +82,41 @@ const NavBar: FC<NavBarProps> = ({ }) => {
         </Link>
         {/* sign up and sign in button */}
         <div className="flex items-center gap-4">
+        <div className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
+            !isButtonClicked
+            ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
+            : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
+            transition duration-300 ease-in-out relative
+            `} onClick={handleLanguageClick}>
+            <FaGlobe
+               className={`${
+                !isButtonClicked ? "text-secondary-500" : "text-white"
+                } z-4 object-contain py-1 w-[29px] text-[32px]`}
+            />
+            {showLanguages && (
+            <div className="overflow-hidden absolute z-50 bottom-[-60px] left-10 bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">          
+            <button
+            onClick={() => handleLanguageChange('en')}
+            className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'en' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}>
+                English
+              </button>
+              <button
+                onClick={() => handleLanguageChange('es')}
+                className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'es' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`} 
+              >
+                Español
+              </button>
+              <button
+                onClick={() => handleLanguageChange('ar')}
+                className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'ar' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}
+              >
+                Arabic
+              </button>
+              {/* Add more buttons for additional languages */}
+            </div>
+            )} 
+          </div>
           <Button
             type="button"
             className="max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000]"
@@ -70,6 +133,7 @@ const NavBar: FC<NavBarProps> = ({ }) => {
           >
             Sign Up
           </Button>
+
         </div>
       </div>
     </header>
