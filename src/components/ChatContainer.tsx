@@ -283,7 +283,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           status: false,
           unread: selectedId,
         }).unwrap();
-        console.log(response);
 
         const { message, conversation } = response;
 
@@ -548,7 +547,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current, arrivalMessages]);
 
   useEffect(() => {
-    console.log("ARRIVAL MESS");
     arrivalMessages &&
       idArray?.includes(arrivalMessages?.sender) &&
       dispatch(setMessages([...messages, arrivalMessages]));
