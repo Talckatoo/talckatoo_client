@@ -43,46 +43,28 @@ export const SignUp = () => {
   const dispatch = useDispatch();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [error, setError] = useState<string | null>(null);
-
-  const [correctVerificationCode, setCorrectVerificationCode] =
-    React.useState("");
   const [confirmationCode, setConfirmationCode] = useState(Array(4).fill(""));
   const refs = useRef<Array<HTMLInputElement>>([]);
-
   const [verificationCode, setVerificationCode] = React.useState("");
 
   const sendVerificationCode = async () => {
     try {
-      const response = await axios.post(import.meta.env.VITE_VERIFY_EMAIL, {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/account/emailVerification`, {
         email: formData.email,
       });
-
-      console.log("Verification code response:", response);
-
-      const { verificationCode } = response.data;
-      toast.success(
-        "Verification code sent to your email. Please check your email."
-      );
-      setVerificationCode(verificationCode);
-      console.log("Verification code:", verificationCode);
+      if (response){
+        const { verificationCode } = response.data;
+        toast.success(
+          "Verification code sent to your email. Please check your email."
+        );
+        setVerificationCode(verificationCode);
+      }
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (error.response.data.message === "The email is already in use"){
+        toast.error("The email is already in use. Please use another email or sign in");
+      }
     }
   };
-
-  const input1Ref = useRef<HTMLInputElement>(null);
-  const input2Ref = useRef<HTMLInputElement>(null);
-  const input3Ref = useRef<HTMLInputElement>(null);
-  const input4Ref = useRef<HTMLInputElement>(null);
-
-  // Function to concatenate input values
-  // const getInputValue = () => {
-  //   const value1 = input1Ref.current?.value || "";
-  //   const value2 = input2Ref.current?.value || "";
-  //   const value3 = input3Ref.current?.value || "";
-  //   const value4 = input4Ref.current?.value || "";
-  //   return value1 + value2 + value3 + value4;
-  // };
 
   const validateForm = (): boolean => {
     let isValid = true;
@@ -112,18 +94,6 @@ export const SignUp = () => {
       isValid = false;
       errors.selectedLanguage = "Please select a language to continue";
     }
-    // Check if verification code matches
-    // const inputVerificationCode = getInputValue();
-    // console.log(
-    //   "Correct verification code:",
-    //   verificationCode,
-    //   "Input verification code:",
-    //   inputVerificationCode
-    // );
-    // if (verificationCode !== inputVerificationCode) {
-    //   isValid = false;
-    //   errors.verificationCode = "Verification code does not match.";
-    // }
     setFormErrors(errors);
 
     return isValid;
@@ -275,34 +245,6 @@ export const SignUp = () => {
               Verify
             </button>
           </div>
-          {/* verification code input  */}
-          {/* <div className="flex gap-4 max-w-lg mx-auto justify-center font-[sans-serif]">
-            <input
-              ref={input1Ref}
-              type="text"
-              placeholder="0"
-              className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded"
-            />
-            <input
-              ref={input2Ref}
-              type="text"
-              placeholder="0"
-              className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded"
-            />
-            <input
-              ref={input3Ref}
-              type="text"
-              placeholder="0"
-              className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded"
-            />
-            <input
-              ref={input4Ref}
-              type="text"
-              placeholder="0"
-              className="w-12 h-10 flex items-center text-center  text-black text-base border-2 border-gray-300 focus:border-[#007bff] outline-none rounded"
-            />
-            <p className="text-red-500">{formErrors.verificationCode}</p>
-          </div> */}
           <div
             className="flex justify-between space-x-2 h-12"
             onPaste={handlePaste}
