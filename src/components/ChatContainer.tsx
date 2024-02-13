@@ -262,6 +262,13 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     });
 
     dispatch(
+      setConversation({
+        conversationId: conversationId,
+        selectedId: selectedId,
+        language: language,
+      })
+    );
+    dispatch(
       addMessage({
         createdAt: Date.now().toString(),
         message: messageAI,
@@ -312,13 +319,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
 
-        dispatch(
-          setConversation({
-            conversationId: conversation?._id,
-            selectedId: selectedId,
-            language: language,
-          })
-        );
+        
       } catch (err) {
         console.log("error from error", err);
         toast.error(
@@ -549,6 +550,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   useEffect(() => {
     console.log("ARRIVAL MESS");
+
+    console.log("conversationId", conversationId);
+    console.log("selectedId", selectedId);
     arrivalMessages &&
       idArray?.includes(arrivalMessages?.sender) &&
       dispatch(setMessages([...messages, arrivalMessages]));

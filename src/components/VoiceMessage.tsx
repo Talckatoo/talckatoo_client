@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { addMessage } from "../redux/features/messages/messageSlice";
 import { Socket } from "socket.io-client";
 import { useSendAudioMutation } from "../redux/services/MessagesApi";
+import { useUploadFileMutation } from "../redux/services/MediaApi";
 
 interface VoiceMessageProps {
   socket: Socket;
@@ -30,6 +31,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   const conversationId = conversationState?.conversation?.conversationId;
 
   const [sendAudio, { isLoading: isSendingAudio }] = useSendAudioMutation();
+  const [uploadFile, { isLoading }] = useUploadFileMutation();
 
   const dispatch = useAppDispatch();
 
@@ -37,6 +39,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
+  const [audioURL, setAudioURL] = useState<string | null>(null);
 
   const startRecording = () => {
     setIsRecording(true);
@@ -59,6 +62,27 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
     });
   };
 
+  const handleUpload = async (file: any) => {
+    let response: any = null;
+    let formData = new FormData();
+    formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", file.type.split("/")[0]);
+    formData.append("altText", file.name);
+
+    response = await uploadFile(formData);
+
+    if ("data" in response) {
+      if (response.data && !response.data.error) {
+        setAudioURL(response.data.media.url);
+      } else {
+        console.log("error", response.data.error);
+      }
+    } else {
+      console.log("error", response.error);
+    }
+  };
+
   const stopRecording = () => {
     if (recorder) {
       recorder.stopRecording(async () => {
@@ -69,6 +93,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
         });
 
         setRecordedAudio(file);
+        handleUpload(file);
         setIsRecording(false);
         setIsReadyToSend(true); // Set the audio ready to be sent
       });
@@ -90,9 +115,9 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
     if (recordedAudio) {
       const formData = new FormData();
 
-      formData.append("audio", recordedAudio);
+      if (audioURL) formData.append("url", audioURL);
       formData.append("from", user?._id);
-      formData.append("to", selectedId);
+      if (selectedId) formData.append("to", selectedId);
 
       try {
         const response = await sendAudio(formData).unwrap();

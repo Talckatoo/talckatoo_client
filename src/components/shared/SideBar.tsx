@@ -93,17 +93,17 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
     dispatch(setRecipient(u?.userName as any));
   };
 
-  useEffect(() => {
-    dispatch(
-      setConversation({
-        conversationId: selectedUser?.conversation?._id ?? "",
-        selectedId: selectedUser?._id,
-        language: selectedUser?.language,
-      })
-    );
+  // useEffect(() => {
+  //   dispatch(
+  //     setConversation({
+  //       conversationId: selectedUser?.conversation?._id ?? "",
+  //       selectedId: selectedUser?._id,
+  //       language: selectedUser?.language,
+  //     })
+  //   );
 
-    dispatch(setRecipient(selectedUser?.userName as any));
-  }, [selectedUser]);
+  //   dispatch(setRecipient(selectedUser?.userName as any));
+  // }, [selectedUser]);
 
   useEffect(() => {
     setUsersData(searchData.length > 0 ? searchData : users?.contactedUsers);
