@@ -1,10 +1,13 @@
-
+import Button from "../../UI/Button";
+import { useNavigate } from "react-router-dom";
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="container py-[2rem] mt-[5rem] max-[430px]:mt-[7rem]  ">
       <div className="flex flex-col md:flex-row  md:items-center justify-center">
         <div className=" w-full md:w-[50%]">
-          <div className="w-full flex flex-col">
+          <div className="w-full flex flex-col items-start">
             <h1 className="head-text max-md:mx-auto max-md:text-[32px] text-[50px] text-center  md:text-start max-w-[536px]  z-[1] text-black ">
               Bridging Conversations Across Languages
             </h1>
@@ -12,8 +15,18 @@ const Hero = () => {
               Seamlessly chat with individuals across language barriers. No more
               copy-pasting. Just real-time, in-chat translations.
             </p>
+            <Button
+              type="submit"
+              className="bg-black text-white px-8 py-2 mt-[2rem] z-[1]"
+              onClick={() => {
+                navigate("/sign-up");
+              }}
+            >
+              Join now
+            </Button>
           </div>
-          <div className="mt-[3rem] w-full flex flex-col justify-center  md:justify-start">
+
+          <div className="mt-[2rem] w-full flex flex-col justify-center  md:justify-start">
             <div className="flex gap-1 max-md:mx-auto">
               <img src="/assets/icons/Star.svg" alt="SVG" />
             </div>

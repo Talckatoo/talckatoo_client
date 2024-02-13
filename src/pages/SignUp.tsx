@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -6,10 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRegisterAuthMutation } from "../redux/services/AuthApi";
-// import { UserContext } from "../context/user-context";
 import { useDispatch } from "react-redux";
 import languagesArray from "../util/languages";
-import { setUser } from "../redux/features/user/userSlice";
 import { setAuth } from "../redux/features/user/authSlice";
 
 interface FormData {
@@ -17,6 +15,7 @@ interface FormData {
   email: string;
   password: string;
   confirmPassword: string;
+  verificationCode: string;
 }
 
 interface FormErrors {
@@ -25,6 +24,7 @@ interface FormErrors {
   password?: string;
   confirmPassword?: string;
   selectedLanguage?: string;
+  verificationCode?: string;
 }
 
 export const SignUp = () => {
@@ -35,11 +35,36 @@ export const SignUp = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    verificationCode: "",
   });
+
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [registerAuth] = useRegisterAuthMutation();
   const dispatch = useDispatch();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
+  const [error, setError] = useState<string | null>(null);
+  const [confirmationCode, setConfirmationCode] = useState(Array(4).fill(""));
+  const refs = useRef<Array<HTMLInputElement>>([]);
+  const [verificationCode, setVerificationCode] = React.useState("");
+
+  const sendVerificationCode = async () => {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/account/emailVerification`, {
+        email: formData.email,
+      });
+      if (response){
+        const { verificationCode } = response.data;
+        toast.success(
+          "Verification code sent to your email. Please check your email."
+        );
+        setVerificationCode(verificationCode);
+      }
+    } catch (error) {
+      if (error.response.data.message === "The email is already in use"){
+        toast.error("The email is already in use. Please use another email or sign in");
+      }
+    }
+  };
 
   const validateForm = (): boolean => {
     let isValid = true;
@@ -78,6 +103,12 @@ export const SignUp = () => {
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
+    const code = confirmationCode.join("");
+    if (code !== verificationCode || code === "") {
+      setError("Verification code does not match");
+      return;
+    }
+    setError(null);
     if (validateForm()) {
       try {
         const response = await registerAuth({
@@ -86,6 +117,11 @@ export const SignUp = () => {
           password: formData.password,
           language: selectedLanguage,
         });
+
+        if (response.error) {
+          toast.error(response.error.data.message);
+          return;
+        }
 
         const token = response?.data?.token;
         const user = response?.data?.user;
@@ -108,6 +144,51 @@ export const SignUp = () => {
     }
   };
 
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text/plain").slice(0, 6);
+    setConfirmationCode(pastedData.split(""));
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const value = e.target.value;
+    const inputType = (e.nativeEvent as any).inputType;
+
+    if (inputType === "deleteContentBackward") {
+      setConfirmationCode((prevState) => {
+        const newState = [...prevState];
+        newState[index] = "";
+        return newState;
+      });
+
+      if (index > 0) {
+        refs.current[index - 1]?.focus();
+      }
+
+      return;
+    }
+
+    // Allow only single digits
+    if (/^\d$/.test(value)) {
+      setError(null);
+
+      setConfirmationCode((prevState) => {
+        const newState = [...prevState];
+        newState[index] = value;
+        return newState;
+      });
+
+      // Automatically focus the next input field
+      if (index < 3) {
+        refs.current[index + 1]?.focus();
+      }
+    } else {
+      setError("Code must consist of 6 digits");
+    }
+  };
   return (
     <section className="relative bg-white h-full w-full font-inter">
       <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
@@ -116,12 +197,6 @@ export const SignUp = () => {
         alt="shape"
         className="fixed top-[-5rem] right-0 max-lg:w-[350px]"
       />
-      {/* <img
-        src="/assets/img/wave.svg"
-        alt="shape"
-        className="fixed  left-0  bottom-[-150px] max-lg:w-[350px]"
-      /> */}
-      {/* Nav bar section */}
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
@@ -147,20 +222,48 @@ export const SignUp = () => {
             label={""}
             id={""}
           />
-          <Input
-            // label="Email"
-            type="text"
-            name="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
-            error={formErrors.email}
-            label={""}
-            id={""}
-          />
+          <div className="flex justify-items-start place-items-baseline w-full">
+            <Input
+              // label="Email"
+              type="text"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              className="bg-transparent border-[#33363A] z-[1] rounded-lg-left text-black"
+              error={formErrors.email}
+              label={""}
+              id={""}
+            />
+            <button
+              type="button"
+              onClick={sendVerificationCode}
+              className="bg-black text-white w-[70px] h-[50px] z-[1] rounded-lg-right font-semibold py-3"
+            >
+              Verify
+            </button>
+          </div>
+          <div
+            className="flex justify-between space-x-2 h-12"
+            onPaste={handlePaste}
+          >
+            {Array.from({ length: 4 }, (_, index) => (
+              <input
+                key={index}
+                type="text"
+                maxLength={1}
+                className={`w-12 h-12 text-center border rounded-md ${
+                  error ? "border-red-500" : "border-gray-300"
+                }`}
+                value={confirmationCode[index]}
+                onChange={(e) => handleInputChange(e, index)}
+                ref={(el) => el && (refs.current[index] = el)}
+              />
+            ))}
+          </div>
+
           <Input
             // label="Password"
             name="password"
