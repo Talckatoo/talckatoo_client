@@ -28,7 +28,6 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
   const HandleSendFriendRequest = async (friendId: string) => {
     try {
       const response = await addFriend({ identifier: friendId }).unwrap();
-      console.log(response);
       if ("message" in response) {
         if (response.message === "Friend request sent successfully") {
           socket.current.emit("sendFriendRequest", {
