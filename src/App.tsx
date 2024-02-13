@@ -56,7 +56,6 @@ const App = () => {
   useEffect(() => {
     if (socket.current) {
       socket.current.on("getFriendRequest", (data: any) => {
-        console.log(data);
         dispatch(setRequests([...requests, data.friendRequest]));
       });
 
@@ -77,8 +76,6 @@ const App = () => {
         );
       });
       socket.current.on("getAcceptFriendRequest", () => {
-        console.log("get Accept Friend Request");
-        // refetch();
       });
     }
   }, [socket.current]);

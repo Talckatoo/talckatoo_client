@@ -112,10 +112,10 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   // };
 
   const handleSendAudio = async () => {
-    if (recordedAudio) {
+    if (audioURL) {
       const formData = new FormData();
 
-      if (audioURL) formData.append("url", audioURL);
+      formData.append("url", audioURL);
       formData.append("from", user?._id);
       if (selectedId) formData.append("to", selectedId);
 
@@ -190,7 +190,6 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
     }
   };
 
-  // URL.revokeObjectURL(audioURL);
 
   return (
     <>

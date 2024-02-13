@@ -58,12 +58,10 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setformInput((prev) => ({ ...prev, [name]: value }));
-    console.log(formInput.name);
   };
 
   const handleLanguageChange = (e: any) => {
     setUpdateLanguage(e.target.value);
-    console.log(updateLanguage);
   };
 
   const handleLogout = () => {
@@ -174,17 +172,15 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   return (
     <div
-      className={`flex flex-1 justify-center items-center  w-full h-full ${
-        isDarkMode ? "bg-slate-950" : ""
-      }`}
+      className={`flex flex-1 justify-center items-center  w-full h-full ${isDarkMode ? "bg-slate-950" : ""
+        }`}
     >
       {/*First column */}
       <div className="w-[80px] pt-[2rem] min-w-[80px] border-r  border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
         <div className="flex flex-col  gap-3 w-full">
           <div
-            className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500 "
-            }${"bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"} mx-2 rounded-[12px]  flex items-center justify-center flex-col
+            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "
+              }${"bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"} mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
             onClick={() => navigateChat()}
@@ -197,9 +193,8 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
         <div className="flex flex-col  gap-4 w-full">
           <div
-            className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
+            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500"
+              } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
           >
             <RiSettings5Fill
               className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
