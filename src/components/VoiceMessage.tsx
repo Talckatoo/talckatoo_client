@@ -75,6 +75,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
     if ("data" in response) {
       if (response.data && !response.data.error) {
         setAudioURL(response.data.media.url);
+        return response.data.media.url;
       } else {
         console.log("error", response.data.error);
       }
@@ -93,7 +94,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
         });
 
         setRecordedAudio(file);
-        handleUpload(file);
+
         setIsRecording(false);
         setIsReadyToSend(true); // Set the audio ready to be sent
       });
@@ -112,10 +113,12 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   // };
 
   const handleSendAudio = async () => {
-    if (audioURL) {
+    if (recordedAudio) {
+      const audioResponse = await handleUpload(recordedAudio);
+
       const formData = new FormData();
 
-      formData.append("url", audioURL);
+      if (audioResponse) formData.append("url", audioResponse);
       formData.append("from", user?._id);
       if (selectedId) formData.append("to", selectedId);
 
@@ -189,7 +192,6 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
       console.log(err);
     }
   };
-
 
   return (
     <>
