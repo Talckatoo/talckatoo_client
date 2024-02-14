@@ -25,7 +25,7 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   // use the userRedirect hook
-  useUserRedirect();
+  // useUserRedirect();
 
   return (
     <UserContext.Provider

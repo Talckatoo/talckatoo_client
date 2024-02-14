@@ -67,6 +67,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
     toast.success("User signed out");
     // clear persit root from local storage
     localStorage.removeItem("persist:root");
