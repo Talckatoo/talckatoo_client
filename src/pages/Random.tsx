@@ -8,6 +8,7 @@ import Lottie from "lottie-react";
 import animationData from "../json/Animation - 1707255253148.json";
 import RandomChat from "../components/RandomChat/RandomChat";
 import LeftSideBar from "../components/shared/LeftSideBar";
+import Button from "../UI/Button";
 
 interface Socket {
   current: any;
@@ -77,9 +78,8 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
 
   return (
     <div
-      className={`flex flex-1 justify-center items-center  w-full h-full ${
-        isDarkMode ? "bg-slate-950" : ""
-      }`}
+      className={`flex flex-1 justify-center items-center  w-full h-full ${isDarkMode ? "bg-slate-950" : ""
+        }`}
     >
       {/*First column */}
       <LeftSideBar
@@ -114,12 +114,13 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
                   width="600"
                   height="403"
                 />
-                <button
-                  onClick={handleJoinChat}
-                  className="text-center max-md:px-4  max-w-[768px] text-black"
+                <Button
+                  type="button"
+                  onClick={() => navigate("/random?join=true")}
+                  className="bg-secondary-500 hover:bg-primary-600 text-white font-bold py-2 px-8 rounded-xl"
                 >
                   Join Random Chat
-                </button>
+                </Button>
               </div>
             </div>
           </div>
