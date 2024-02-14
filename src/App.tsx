@@ -7,7 +7,7 @@ import SignIn from "./pages/SignIn";
 // import VideoCall from "./pages/VideoCall";
 import VideoRoomCall from "./pages/VideoRoomCall";
 import { SignUp } from "./pages/SignUp";
-import ResetPaaswordUpdate from "./pages/ResetPasswordUpdate";
+import ResetPasswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
 import { io, Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
@@ -87,7 +87,7 @@ const App = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           path="/reset-password/:token"
-          element={<ResetPaaswordUpdate />}
+          element={<ResetPasswordUpdate />}
         />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/" element={<Home />} />
