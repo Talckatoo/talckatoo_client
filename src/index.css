@@ -156,6 +156,10 @@ textarea:focus {
     @apply flex  flex-1 flex-col items-center px-6 pb-10  max-md:pb-32 sm:px-10 mt-[1.5rem];
   }
 
+  .tooltip {
+    @apply absolute -top-9 -left-14 bg-black text-white text-[12px] rounded h-5 w-[150px] px-2 flex items-center justify-center opacity-0 transition-opacity duration-200 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto;
+  }
+  
   .container {
     @apply w-full max-w-[1284px] m-auto;
   }

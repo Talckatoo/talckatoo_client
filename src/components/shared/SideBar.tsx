@@ -19,6 +19,8 @@ import { PiChatTextFill } from "react-icons/pi";
 import { RiSettings5Fill } from "react-icons/ri";
 import FriendRequest from "./FriendRequest";
 import { setRequest } from "../../redux/features/user/requestSlice";
+import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
+import LeftSideBar from "./LeftSideBar";
 
 const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
   const [search, setSearch] = useState("");
@@ -73,9 +75,6 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
     else setSearchData([]);
   }, [search]);
 
-  const handleSettingClick = () => {
-    navigate("/profile");
-  };
   const handleSelectContact = (u: any) => {
     if (searchData.length > 0) return;
     setSelectedUser(u);
@@ -97,67 +96,23 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
 
   return (
     <div
-      className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
-        }`}
+      className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${
+        isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
+      }`}
     >
       {/*First column */}
-      <div className="w-[80px] min-w-[80px] border-r pt-5 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
-        <div className="flex flex-col  gap-3 w-full">
-          <div
-            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${showRequest
-              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
-              } mx-2 rounded-[12px]  flex items-center justify-center flex-col
-              transition duration-300 ease-in-out 
-            `}
-            onClick={() => setShowRequest(!showRequest)}
-          >
-            <PiChatTextFill
-              className={`${showRequest ? "text-secondary-500" : "text-white"
-                } z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-          <div
-            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${!showRequest
-              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
-              } mx-2 rounded-[12px]  flex items-center justify-center flex-col
-              transition duration-300 ease-in-out 
-            `}
-            onClick={() => setShowRequest(!showRequest)}
-          >
-            <IoPersonSharp
-              className={`${!showRequest ? "text-secondary-500" : "text-white"
-                } z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-        </div>
-        <div className="flex flex-col  gap-3 w-full">
-          <div
-            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500"
-              } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
-            onClick={handleSettingClick}
-          >
-            <RiSettings5Fill
-              className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-          <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
-            <img
-              src={user?.profileImage?.url || "/assets/icons/user.png"}
-              // src={`${user?.profileImage?.url}`}
-              className="h-14 w-14 object-cover rounded-full"
-              alt="Profile-picture"
-            />
-          </div>
-        </div>
-      </div>
-
+      <LeftSideBar
+        showSetting={false}
+        showRequest={showRequest}
+        setShowRequest={setShowRequest}
+        showRandom={false}
+      />
       {/*Second column */}
       <div className="w-4/5 overflow-y-auto ">
         <div
-          className={`my-4 ml-4 font-extrabold text-[20px] ${isDarkMode ? "text-white" : "text-black"
-            }`}
+          className={`my-4 ml-4 font-extrabold text-[20px] ${
+            isDarkMode ? "text-white" : "text-black"
+          }`}
         >
           Chats
         </div>
@@ -167,13 +122,15 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={`${isDarkMode ? "bg-input-bg-dark" : "bg-secondary-500"
-              } pl-12 text-white rounded-xl focus:outline-none focus:border-0 focus:ring-[3px] focus:ring-blue border-0 placeholder-white::placeholder`}
+            className={`${
+              isDarkMode ? "bg-input-bg-dark" : "bg-secondary-500"
+            } pl-12 text-white rounded-xl focus:outline-none focus:border-0 focus:ring-[3px] focus:ring-blue border-0 placeholder-white::placeholder`}
             placeholder="Search"
           />
           <IoSearch
-            className={`absolute left-3 top-3 ${isDarkMode ? "text-sidebar-dark-500" : "text-white"
-              }`}
+            className={`absolute left-3 top-3 ${
+              isDarkMode ? "text-sidebar-dark-500" : "text-white"
+            }`}
             size={24}
           />
         </div>
@@ -182,16 +139,16 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
           <div>
             {usersData
               ? usersData?.map((user: any) => (
-                <div key={user._id} onClick={() => handleSelectContact(user)}>
-                  <Friend
-                    key={user.id}
-                    user={user}
-                    isDarkMode={isDarkMode}
-                    selected={selectedId === user._id}
-                    socket={socket}
-                  />
-                </div>
-              ))
+                  <div key={user._id} onClick={() => handleSelectContact(user)}>
+                    <Friend
+                      key={user.id}
+                      user={user}
+                      isDarkMode={isDarkMode}
+                      selected={selectedId === user._id}
+                      socket={socket}
+                    />
+                  </div>
+                ))
               : null}
           </div>
         ) : (
@@ -199,10 +156,10 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
             {requests?.filter(
               (r: any) => r.status === "pending" && r.to._id === user._id
             ).length > 0 && (
-                <div className="flex items-center justify-center text-2xl font-bold text-gray-600">
-                  Friend Requests
-                </div>
-              )}
+              <div className="flex items-center justify-center text-2xl font-bold text-gray-600">
+                Friend Requests
+              </div>
+            )}
 
             {requests
               ?.filter(
@@ -227,16 +184,16 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
             </div>
             {allUser
               ? allUser?.map((user: any) => (
-                <div key={user._id} onClick={() => handleSelectContact(user)}>
-                  <Friend
-                    key={user.id}
-                    user={user}
-                    isDarkMode={isDarkMode}
-                    selected={selectedId === user._id}
-                    socket={socket}
-                  />
-                </div>
-              ))
+                  <div key={user._id} onClick={() => handleSelectContact(user)}>
+                    <Friend
+                      key={user.id}
+                      user={user}
+                      isDarkMode={isDarkMode}
+                      selected={selectedId === user._id}
+                      socket={socket}
+                    />
+                  </div>
+                ))
               : null}
           </div>
         )}
