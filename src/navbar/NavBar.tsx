@@ -18,6 +18,7 @@ import ChatNavSearch from "../components/ChatNavSearch";
 import languagesArray from "../util/languages";
 import { PiVideoCameraThin } from "react-icons/pi";
 import { PiPhoneCallLight } from "react-icons/pi";
+import { IoChevronBack } from "react-icons/io5";
 
 interface NavBarProps {
   onHandleCall: () => void;
@@ -97,12 +98,27 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
     onHandleCall();
   };
 
+  const handleBack = () => {
+    dispatch(
+      setConversation({
+        conversationId: null,
+        selectedId: null,
+        language: null,
+      })
+    );
+  };
+
   return (
     <nav className="relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm ">
       <div className="flex w-[80%] gap-2 md:gap-8">
         <div className="flex items-center ml-2 gap-2 md:gap-4 ">
           {user && (
             <>
+              <IoChevronBack
+                className="text-black max-md:hidden min-w-[24px] text-[24px] md:text-[28px] md:min-w-[28px] cursor-pointer"
+                onClick={handleBack}
+              />
+
               <div
                 ref={profilePictureRef}
                 onClick={handleDropdownClick}

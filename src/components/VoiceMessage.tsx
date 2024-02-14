@@ -9,6 +9,7 @@ import { addMessage } from "../redux/features/messages/messageSlice";
 import { Socket } from "socket.io-client";
 import { useSendAudioMutation } from "../redux/services/MessagesApi";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
+import { HiTranslate } from "react-icons/hi";
 
 interface VoiceMessageProps {
   socket: Socket;
@@ -196,7 +197,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   return (
     <>
       <div className="">
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-4 relative">
           <button
             title="Voice message"
             onClick={startRecording}
@@ -204,43 +205,48 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
           >
             <FaMicrophone className="text-white text-[20px]" />
           </button>
-          {recordedAudio ? (
+          {recordedAudio && !isRecording ? (
             <>
               <button
                 onClick={playAudio}
-                className="bg-slate-300 hover:bg-slate-400 rounded-full  px-2.5"
                 disabled={!isReadyToSend}
+                className=" hover:text-slate-400   px-2.5  items-center justify-center"
               >
-                <FaPlay />
+                <FaPlay className="text-white text-[20px]" />
               </button>
               <button
                 onClick={removeAudio}
-                className="bg-slate-300 hover:bg-red-300 rounded-full px-2.5"
+                className=" hover:text-slate-400   px-2.5  items-center justify-center"
                 disabled={!isReadyToSend}
               >
-                <MdDelete />
+                <MdDelete className="text-white text-[20px]" />
               </button>
               <button
                 onClick={handleSendAudio}
-                className="bg-slate-300 hover:bg-green-300 rounded-full  px-2.5"
                 disabled={!isReadyToSend}
+                className="hover:text-slate-400 mr-3 relative px-2.5 items-center justify-center group"
               >
-                <FaPaperPlane />
+                <FaPaperPlane className="text-white text-[20px]" />
+                <span className="tooltip">
+                  {isSendingAudio ? "Sending..." : "Send Your Audio"}
+                </span>
               </button>
               <button
                 onClick={handleTranslateAudio}
-                className="bg-slate-300 hover:bg-green-300 rounded-full  px-2.5"
+                className="hover:text-slate-400 mr-3 relative px-2.5 items-center justify-center group"
                 disabled={!isReadyToSend}
               >
-                Translate
+                <HiTranslate className="text-white text-[20px]" />
+                {/* add tooltip */}
+                <span className="tooltip">Translate Your Audio</span>
               </button>
             </>
           ) : null}
 
           {isRecording ? (
             <>
-              <div className="w-1/5">
-                <div className="flex items-center justify-center">
+              <div className="w-1/4 h-8">
+                <div className="flex items-center justify-center  mx-5">
                   <div id="bars">
                     <div className="bar"></div>
                     <div className="bar"></div>
@@ -255,11 +261,8 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
                   </div>
                 </div>
               </div>
-              <button
-                onClick={stopRecording}
-                className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
-              >
-                <FaStop />
+              <button onClick={stopRecording}>
+                <FaStop className="text-white text-[20px] ml-3" />
               </button>
             </>
           ) : null}
