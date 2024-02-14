@@ -7,6 +7,8 @@ import { RiSettings5Fill } from "react-icons/ri";
 import Lottie from "lottie-react";
 import animationData from "../json/Animation - 1707255253148.json";
 import RandomChat from "../components/RandomChat/RandomChat";
+import LeftSideBar from "../components/shared/LeftSideBar";
+import Button from "../UI/Button";
 
 interface Socket {
   current: any;
@@ -19,6 +21,9 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   const [randomData, setRandomData] = useState<any>();
   const [conversationRandomId, setConversationRandomId] = useState<string>("");
   const [isChatOpen, setIsChatOpen] = useState(false);
+  // get the query params
+  const urlParams = new URLSearchParams(window.location.search);
+  const join = urlParams.get("join");
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -26,6 +31,12 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   const navigateChat = () => {
     navigate("/chat");
   };
+
+  useEffect(() => {
+    if (join) {
+      handleJoinChat();
+    }
+  }, [join]);
 
   const handleJoinChat = () => {
     setIsLooking(true);
@@ -45,7 +56,6 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
 
   useEffect(() => {
     const handleRandomResult = (data: any) => {
-      console.log("randomResult");
       setRandomData(data);
       if (data.user2.id) {
         setIsLooking(false);
@@ -68,50 +78,20 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
 
   return (
     <div
-      className={`flex flex-1 justify-center items-center  w-full h-full ${
-        isDarkMode ? "bg-slate-950" : ""
-      }`}
+      className={`flex flex-1 justify-center items-center  w-full h-full ${isDarkMode ? "bg-slate-950" : ""
+        }`}
     >
       {/*First column */}
-      <div className="w-[80px] pt-[2rem] min-w-[80px] border-r  border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
-        <div className="flex flex-col  gap-3 w-full">
-          <div
-            className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500 "
-            }${"bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"} mx-2 rounded-[12px]  flex items-center justify-center flex-col
-              transition duration-300 ease-in-out 
-            `}
-            onClick={() => navigateChat()}
-          >
-            <PiChatTextFill
-              className={`${"text-secondary-500"} z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col  gap-4 w-full">
-          <div
-            className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
-          >
-            <RiSettings5Fill
-              className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-          <div className="mx-2 pt-1 flex items-center justify-center flex-col rounded-full overflow-hidden">
-            <img
-              src={`${user?.profileImage?.url}`}
-              className="h-14 w-14 object-cover rounded-full"
-              alt="Profile-picture"
-            />
-          </div>
-        </div>
-      </div>
+      <LeftSideBar
+        showSetting={false}
+        showRequest={false}
+        setShowRequest={navigateChat}
+        showRandom={true}
+      />
 
       {isLooking ? (
         <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center w-full items-center">
             <Lottie
               animationData={animationData}
               loop={true}
@@ -134,12 +114,13 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
                   width="600"
                   height="403"
                 />
-                <button
-                  onClick={handleJoinChat}
-                  className="text-center max-md:px-4  max-w-[768px] text-black"
+                <Button
+                  type="button"
+                  onClick={() => navigate("/random?join=true")}
+                  className="bg-secondary-500 hover:bg-primary-600 text-white font-bold py-2 px-8 rounded-xl"
                 >
                   Join Random Chat
-                </button>
+                </Button>
               </div>
             </div>
           </div>

@@ -82,6 +82,7 @@ const ChatInput = ({
   };
 
   const handleUpload = async (e: any) => {
+    e.preventDefault();
     let response: any = null;
     let formData = new FormData();
     formData = new FormData();
@@ -102,12 +103,12 @@ const ChatInput = ({
     }
   };
 
-  const handleSendMessage = (e: ChangeEvent<HTMLFormElement>) => {
+  const handleSendMessageKeyDown = (e: ChangeEvent<HTMLFormElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
       if (messageText.trim() === "") {
         return;
       }
+      e.preventDefault();
 
       if (messageText.substring(0, 7) === AIcall) {
         onHandleSendAIMessage(messageText);
@@ -123,6 +124,22 @@ const ChatInput = ({
     }
   };
 
+  const handleSendMessage = (e: ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (messageText.substring(0, 7) === AIcall) {
+      onHandleSendAIMessage(messageText);
+      toast.loading("Please wait", {
+        position: toast.POSITION.TOP_CENTER,
+        progressClassName: "success-progress-bar",
+        toastId: 2,
+      });
+    } else {
+      onHandleSendMessage(messageText);
+    }
+    setMessageText("");
+  };
+
   return (
     <>
       <div className="w-full  relative z-10 pt-2">
@@ -133,16 +150,16 @@ const ChatInput = ({
             type="text"
             value={messageText}
             onChange={handleTyping as any}
-            onKeyDown={handleSendMessage as any}
+            onKeyDown={handleSendMessageKeyDown as any}
             id=""
             placeholder="Type your message or type @birdie to call AI Assistant"
             className={`mb-0 rounded-t-[20px]   border border-[#0E131D] 
-             ${messageText.startsWith(AIcall) ? "text-black" : ""}`}
+            ${messageText.startsWith(AIcall) ? "text-gray-700 italic font-semibold" : ""}`}
           />
 
           <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2">
             <form onSubmit={handleSendMessage} className="absolute right-4 ">
-              <button>
+              <button type="submit">
                 <IoSend className="text-white text-[20px]" />
               </button>
             </form>
