@@ -4,7 +4,13 @@ import { createBrowserHistory } from "history";
 import { UserContext } from ".././context/user-context";
 import { toast } from "react-toastify";
 
-const allowedRoutes = ["/", "/sign-in", "/sign-up", "/reset-password/:token", "/reset-password"];
+const allowedRoutes = [
+  "/",
+  "/sign-in",
+  "/sign-up",
+  /^\/reset-password\/[a-zA-Z0-9]+$/, // Regular expression to match reset-password/:token
+];
+
 const history = createBrowserHistory();
 
 const useUserRedirect = () => {
