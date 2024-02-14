@@ -4,6 +4,7 @@ import { usePasswordResetConfirmMutation } from "../redux/services/UserApi";
 import Button from "../UI/Button";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import NavBar from "../components/shared/NavBar";
 
 const ResetPaaswordUpdate = () => {
   const [newPassword, setNewPassword] = useState<string>("");
