@@ -35,6 +35,9 @@ const SignIn = () => {
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  const { data } = useFetchUserByIdQuery(
+    userId ? { id: userId } : skipToken ) as any;
+  
   const validateForm = (): boolean => {
     let isValid = true;
     const errors: FormErrors = {};
@@ -91,6 +94,14 @@ const SignIn = () => {
   const redirectTogoogle = async (): Promise<void> => {
     window.open(`${import.meta.env.VITE_GOOGLE_URL}`, "_self");
   };
+  
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+      dispatch(setAuth(data as any));
+      navigate("/chat");
+    }
+  }, [token, userId, data]);
 
   return (
     <section className="relative bg-white h-full w-full font-inter">
