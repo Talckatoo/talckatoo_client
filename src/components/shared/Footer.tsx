@@ -5,7 +5,7 @@ const Footer = () => {
     <footer className="flex items-center max-md:p-5 px-[2.5rem] justify-between container mt-[2rem] max-md:mt-0 max-md:items-center text-center gap-3 max-sm:flex-col-reverse">
       <p className="">
         Made with love by
-        <span className=" text-black"> Talckatoo</span>. All rights reserved.
+        <span className=" text-black"> Talckatoo</span>. All rights reserved © 2023-2024.
       </p>
 
       <div className="flex items-center gap-4 res">
