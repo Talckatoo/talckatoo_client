@@ -18,6 +18,7 @@ import {
 } from "./redux/features/user/userSlice";
 import { useFetchAllRequestsQuery } from "./redux/services/UserApi";
 import Random from "./pages/Random";
+import useUserRedirect from "./hooks/useUserRedirect";
 
 type MyEventMap = {
   connect: () => void;
@@ -30,11 +31,11 @@ type MyEventMap = {
 };
 
 const App = () => {
+  useUserRedirect();
   const dispatch = useAppDispatch();
   const socket = useRef<Socket<MyEventMap> | null>();
   const { requests } = useAppSelector((state) => state.user);
   const { users } = useAppSelector((state) => state.user);
-
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
 
@@ -75,8 +76,7 @@ const App = () => {
           })
         );
       });
-      socket.current.on("getAcceptFriendRequest", () => {
-      });
+      socket.current.on("getAcceptFriendRequest", () => {});
     }
   }, [socket.current]);
 
