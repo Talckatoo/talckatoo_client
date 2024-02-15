@@ -40,6 +40,12 @@ const RandomChat = ({
   }, [messages]);
 
   useEffect(() => {
+    window.onbeforeunload = () => {
+      return "Are you sure you want to leave?";
+    };
+  }, []);
+
+  useEffect(() => {
     if (randomData) {
       if (randomData.user2.id === user._id) {
         setSocketId(randomData.user1.socketId);
