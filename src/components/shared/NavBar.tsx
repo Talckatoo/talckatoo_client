@@ -47,27 +47,26 @@ const NavBar: FC<NavBarProps> = ({ }) => {
         backdropFilter: scrolled ? 'blur(8px)' : 'none',
       }}
       >
-        <div className="w-full flex items-center justify-between max-w-[95%] m-auto max-[430px]:flex-col">
-        {/* logo section */}
+        <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
         <Link to="/" className="font-jakarta text-[20px] font-bold flex items-center justify-left">
-          {
-            /*
+          
+            
               <img 
-                className="w-[75px] w-min-[75px] h-auto transition ease-in-out duration-300 scale-100 hover:scale-105"
-                src="cockatoo-bw.png"
+                className="w-[40px] w-min-[45px] mr-1 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
+                src="cockatoo.svg"
               />
-            */        
-          }
-          <span>TALCKATOO</span>
+                
+          
+          <span className="hidden sm:inline">TALCKATOO</span>
         </Link>
         {/* sign up and sign in button */}
-        <div className="flex items-center gap-4 max-[430px]:w-full max-[430px]:flex max-[430px]:justify-center">
+        <div className="flex items-center gap-4  max-[430px]:flex max-[430px]:justify-center">
           <Button
             type="button"
             className="max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000]"
             onClick={handleSignInClick}
           >
-            Sign In
+            Log In
           </Button>
           <Button
             type="button"
@@ -76,7 +75,7 @@ const NavBar: FC<NavBarProps> = ({ }) => {
               navigate("/sign-up");
             }}
           >
-            Sign Up
+            Get Started
           </Button>
         </div>
       </div>

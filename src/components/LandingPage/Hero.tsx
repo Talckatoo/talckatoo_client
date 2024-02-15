@@ -7,7 +7,7 @@ const Hero = () => {
     <section className="container py-[2rem] mt-[5rem] max-[430px]:mt-[7rem]  ">
       <div className="flex flex-col md:flex-row  md:items-center justify-center">
         <div className=" w-full md:w-[50%]">
-          <div className="w-full flex flex-col items-start">
+          <div className="w-full flex flex-col items-start  max-md:items-center">
             <h1 className="head-text max-md:mx-auto max-md:text-[32px] text-[50px] text-center  md:text-start max-w-[536px]  z-[1] text-black ">
               Bridging Conversations Across Languages
             </h1>
@@ -22,7 +22,7 @@ const Hero = () => {
                 navigate("/sign-up");
               }}
             >
-              Join now
+              Get Started
             </Button>
           </div>
 
