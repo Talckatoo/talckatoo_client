@@ -7,8 +7,8 @@ import SignIn from "./pages/SignIn";
 // import VideoCall from "./pages/VideoCall";
 import VideoRoomCall from "./pages/VideoRoomCall";
 import { SignUp } from "./pages/SignUp";
-import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import ResetPasswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
 import { io, Socket } from "socket.io-client";
@@ -88,7 +88,7 @@ const App = () => {
           })
         );
       });
-      socket.current.on("getAcceptFriendRequest", () => {});
+      socket.current.on("getAcceptFriendRequest", () => { });
     }
   }, [socket.current]);
 
