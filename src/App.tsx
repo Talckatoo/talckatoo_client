@@ -5,6 +5,7 @@ import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 // import VideoCall from "./pages/VideoCall";
 import VideoRoomCall from "./pages/VideoRoomCall";
 import { SignUp } from "./pages/SignUp";
@@ -129,6 +130,7 @@ const App = () => {
         <Route path="/profile" element={<Profile socket={socket} />} />
         <Route path="/random" element={<Random socket={socket} />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
         <Route
           path="/call/:roomId/:decodedCallData"
           element={<VideoRoomCall socket={socket} />}
