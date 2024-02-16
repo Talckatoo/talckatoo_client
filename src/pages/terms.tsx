@@ -19,7 +19,7 @@ const Terms = () => {
         businesses, and organizations (Users) and OmeTV (ome.tv), which may also
         be referred to as the
         <b>"Website" or "Web-site"</b> hereafter.
-        <p/> </p>
+         </p>
       </div>
      
       <div>

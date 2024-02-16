@@ -731,7 +731,7 @@ const Privacy = () => {
         <p className="">
           If you have any questions about this policy, please contact us by 
         </p>
-        <buttton onClick= {() => window.location ="mailto:talcakatoodev@gmail.com"} className="text-teal-600"> talcakatoodev@gmail.com</buttton>
+        <button onClick= {() => window.location ="mailto:talcakatoodev@gmail.com"} className="text-teal-600"> talcakatoodev@gmail.com</button>
         </div>
         
       </div>
