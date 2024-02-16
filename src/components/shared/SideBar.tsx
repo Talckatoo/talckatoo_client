@@ -19,6 +19,8 @@ import { PiChatTextFill } from "react-icons/pi";
 import { RiSettings5Fill } from "react-icons/ri";
 import FriendRequest from "./FriendRequest";
 import { setRequest } from "../../redux/features/user/requestSlice";
+import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
+import LeftSideBar from "./LeftSideBar";
 
 const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
   const [search, setSearch] = useState("");
@@ -58,7 +60,6 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
   const SearchForUser = async () => {
     try {
       const response = await searchuser({ identifier: search }).unwrap();
-      console.log(response);
       if ("seachedUser" in response) setSearchData([response.seachedUser]);
       else alert("User not found");
     } catch (error) {
@@ -74,12 +75,8 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
     else setSearchData([]);
   }, [search]);
 
-  const handleSettingClick = () => {
-    navigate("/profile");
-  };
   const handleSelectContact = (u: any) => {
     if (searchData.length > 0) return;
-    console.log(u, "selected user");
     setSelectedUser(u);
     dispatch(setRecipientProfileImage(u?.profileImage?.url as any));
     dispatch(
@@ -94,18 +91,6 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
   };
 
   useEffect(() => {
-    dispatch(
-      setConversation({
-        conversationId: selectedUser?.conversation?._id ?? "",
-        selectedId: selectedUser?._id,
-        language: selectedUser?.language,
-      })
-    );
-
-    dispatch(setRecipient(selectedUser?.userName as any));
-  }, [selectedUser]);
-
-  useEffect(() => {
     setUsersData(searchData.length > 0 ? searchData : users?.contactedUsers);
   }, [searchData, users]);
 
@@ -116,63 +101,12 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
       }`}
     >
       {/*First column */}
-      <div className="w-[80px] min-w-[80px] border-r pt-5 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
-        <div className="flex flex-col  gap-3 w-full">
-          <div
-            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
-              showRequest
-                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
-              transition duration-300 ease-in-out 
-            `}
-            onClick={() => setShowRequest(!showRequest)}
-          >
-            <PiChatTextFill
-              className={`${
-                showRequest ? "text-secondary-500" : "text-white"
-              } z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-          <div
-            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
-              !showRequest
-                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
-              transition duration-300 ease-in-out 
-            `}
-            onClick={() => setShowRequest(!showRequest)}
-          >
-            <IoPersonSharp
-              className={`${
-                !showRequest ? "text-secondary-500" : "text-white"
-              } z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-        </div>
-        <div className="flex flex-col  gap-3 w-full">
-          <div
-            className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
-            onClick={handleSettingClick}
-          >
-            <RiSettings5Fill
-              className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-          <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
-            <img
-              src={user?.profileImage?.url || "/assets/icons/user.png"}
-              // src={`${user?.profileImage?.url}`}
-              className="h-14 w-14 object-cover rounded-full"
-              alt="Profile-picture"
-            />
-          </div>
-        </div>
-      </div>
-
+      <LeftSideBar
+        showSetting={false}
+        showRequest={showRequest}
+        setShowRequest={setShowRequest}
+        showRandom={false}
+      />
       {/*Second column */}
       <div className="w-4/5 overflow-y-auto ">
         <div

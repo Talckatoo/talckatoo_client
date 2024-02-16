@@ -31,6 +31,7 @@ const RandomChat = ({
   const [isTyping, setIsTyping] = React.useState(false);
   // get socket id from randomData
   const [socketId, setSocketId] = React.useState("");
+  const [UserData, setUserData] = React.useState<any>({});
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -42,8 +43,10 @@ const RandomChat = ({
     if (randomData) {
       if (randomData.user2.id === user._id) {
         setSocketId(randomData.user1.socketId);
+        setUserData(randomData.user1);
       } else {
         setSocketId(randomData.user2.socketId);
+        setUserData(randomData.user2);
       }
     }
   }, [randomData]);
@@ -54,17 +57,18 @@ const RandomChat = ({
       conversationRandomId,
       sender: user?._id,
       socketId: socketId,
+      language: UserData.language,
     };
     socket.current.emit("sendRandomMessage", data);
 
-    setMessages((prev: any) => [
-      ...prev,
-      {
-        message,
-        createdAt: new Date(),
-        sender: user?._id,
-      },
-    ]);
+    // setMessages((prev: any) => [
+    //   ...prev,
+    //   {
+    //     message,
+    //     createdAt: new Date(),
+    //     sender: user?._id,
+    //   },
+    // ]);
   };
 
   const sendAIMessage = (message: string) => {
@@ -76,14 +80,14 @@ const RandomChat = ({
     };
     socket.current.emit("sendRandomMessage", data);
 
-    setMessages((prev: any) => [
-      ...prev,
-      {
-        message,
-        createdAt: new Date(),
-        sender: import.meta.env.VITE_AI_ASSISTANT_ID,
-      },
-    ]);
+    // setMessages((prev: any) => [
+    //   ...prev,
+    //   {
+    //     message,
+    //     createdAt: new Date(),
+    //     sender: import.meta.env.VITE_AI_ASSISTANT_ID,
+    //   },
+    // ]);
   };
 
   const onHandleTranslateText = (text: string, targetLanguage: string) => {
@@ -110,24 +114,24 @@ const RandomChat = ({
         socketId: socketId,
       });
 
-      setMessages((prev: any) => [
-        ...prev,
-        {
-          media: {
-            url: media.url,
-            type: media.type,
-            altText: media.altText,
-          },
-          createdAt: new Date(),
-          sender: user?._id,
-        },
-      ]);
+      // setMessages((prev: any) => [
+      //   ...prev,
+      //   {
+      //     media: {
+      //       url: media.url,
+      //       type: media.type,
+      //       altText: media.altText,
+      //     },
+      //     createdAt: new Date(),
+      //     sender: user?._id,
+      //   },
+      // ]);
     } catch (err) {
       toast.error("Error sending messages, please try again");
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (socket.current) {
       socket.current.on("getRandomMessage", (data: any) => {
         // add the new message to the state

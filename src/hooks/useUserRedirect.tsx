@@ -1,10 +1,15 @@
-// hooks/useUserRedirect.ts
 import { useEffect, useContext } from "react";
 import { createBrowserHistory } from "history";
 import { UserContext } from ".././context/user-context";
 import { toast } from "react-toastify";
 
-const allowedRoutes = ["/", "/sign-in", "/sign-up"];
+const allowedRoutes = [
+  "/",
+  "/sign-in",
+  "/sign-up",
+  /^\/reset-password\/[a-zA-Z0-9]+$/, // Allow access to reset password routes
+];
+
 const history = createBrowserHistory();
 
 const useUserRedirect = () => {
@@ -20,18 +25,23 @@ const useUserRedirect = () => {
       }
 
       setIsLoading(true);
+
       try {
         // Check if token is present
         const token = localStorage.getItem("token");
 
-        if (!token || token === undefined || token === null) {
-          // If no token, check if the current route is allowed
-          if (!allowedRoutes.includes(history.location.pathname)) {
-            // Set the flag to avoid additional redirects
-            isRedirecting = true;
-            // Redirect to landing page if the route is not allowed
-            history.push("/");
-          }
+        // Skip redirection if token exists or if the route is a reset password route
+        if (token || isResetPasswordRoute(history.location.pathname)) {
+          setIsLoading(false);
+          return;
+        }
+
+        // If no token and not a reset password route, redirect to landing page
+        if (!allowedRoutes.includes(history.location.pathname)) {
+          // Set the flag to avoid additional redirects
+          isRedirecting = true;
+          // Redirect to landing page if the route is not allowed
+          history.push("/");
         }
       } catch (error) {
         // Handle error (e.g., show a toast notification)
@@ -59,6 +69,11 @@ const useUserRedirect = () => {
   return {
     // You can add more functions or values if needed
   };
+};
+
+const isResetPasswordRoute = (pathname: string) => {
+  // Check if the pathname matches the reset password route pattern
+  return /^\/reset-password\/[a-zA-Z0-9]+$/.test(pathname);
 };
 
 export default useUserRedirect;

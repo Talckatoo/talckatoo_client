@@ -93,6 +93,14 @@ const SignIn = () => {
     window.open(`${import.meta.env.VITE_GOOGLE_URL}`, "_self");
   };
 
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", userId as string);
+      navigate("/chat");
+    }
+  }, [token, userId]);
+
   return (
     <section className="relative bg-white h-full w-full font-inter">
       <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>

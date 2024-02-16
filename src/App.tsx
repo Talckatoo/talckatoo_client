@@ -9,7 +9,7 @@ import VideoRoomCall from "./pages/VideoRoomCall";
 import { SignUp } from "./pages/SignUp";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
-import ResetPaaswordUpdate from "./pages/ResetPasswordUpdate";
+import ResetPasswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
 import { io, Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
@@ -20,6 +20,7 @@ import {
 } from "./redux/features/user/userSlice";
 import { useFetchAllRequestsQuery } from "./redux/services/UserApi";
 import Random from "./pages/Random";
+import useUserRedirect from "./hooks/useUserRedirect";
 
 type MyEventMap = {
   connect: () => void;
@@ -32,11 +33,11 @@ type MyEventMap = {
 };
 
 const App = () => {
+  useUserRedirect();
   const dispatch = useAppDispatch();
   const socket = useRef<Socket<MyEventMap> | null>();
   const { requests } = useAppSelector((state) => state.user);
   const { users } = useAppSelector((state) => state.user);
-
   useEffect(() => {
     socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
 
@@ -68,7 +69,6 @@ const App = () => {
   useEffect(() => {
     if (socket.current) {
       socket.current.on("getFriendRequest", (data: any) => {
-        console.log(data);
         dispatch(setRequests([...requests, data.friendRequest]));
       });
 
@@ -88,10 +88,7 @@ const App = () => {
           })
         );
       });
-      socket.current.on("getAcceptFriendRequest", () => {
-        console.log("get Accept Friend Request");
-        // refetch();
-      });
+      socket.current.on("getAcceptFriendRequest", () => {});
     }
   }, [socket.current]);
 
@@ -102,7 +99,7 @@ const App = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           path="/reset-password/:token"
-          element={<ResetPaaswordUpdate />}
+          element={<ResetPasswordUpdate />}
         />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/" element={<Home />} />

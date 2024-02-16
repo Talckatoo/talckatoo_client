@@ -3,7 +3,7 @@ import Hero from "../components/LandingPage/Hero";
 import Features from "../components/LandingPage/Features";
 import About from "../components/LandingPage/About";
 import Testimonials from "../components/LandingPage/Testimonials";
-import Contact from "../components/LandingPage/Contact";
+import Newsletter from "../components/LandingPage/Newsletter";
 import Footer from "../components/shared/Footer";
 
 const Home = () => {
@@ -35,7 +35,7 @@ const Home = () => {
       <Testimonials />
       {/* End testimonials section */}
       <div className="container p-0 max-md:p-5">
-        <Contact />
+        <Newsletter />
       </div>
       <Footer />
       <br />
