@@ -6,9 +6,10 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRegisterAuthMutation } from "../redux/services/AuthApi";
+// import { UserContext } from "../context/user-context";
 import { useDispatch } from "react-redux";
-import { MdOutlineSecurity } from "react-icons/md";
 import languagesArray from "../util/languages";
+import { setUser } from "../redux/features/user/userSlice";
 import { setAuth } from "../redux/features/user/authSlice";
 
 interface FormData {
@@ -229,20 +230,6 @@ export const SignUp = () => {
             </Link>
           </p>
         </form>
-        <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
-          <div className="flex gap-1 items-center">
-            <MdOutlineSecurity />
-            <span>By signing up, </span>
-          </div>
-
-          <Link
-            to="/terms"
-            target="_blank"
-            className="text-black cursor-pointer"
-          >
-            you agree to our Terms Of Service.
-          </Link>
-        </div>
       </div>
       {/* End of Sign up form  */}
       <br />

@@ -4,11 +4,11 @@ import { Route, Routes } from "react-router-dom";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
-import Terms from "./pages/Terms";
-import Privacy from "./pages/Privacy";
 // import VideoCall from "./pages/VideoCall";
 import VideoRoomCall from "./pages/VideoRoomCall";
 import { SignUp } from "./pages/SignUp";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import ResetPaaswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
 import { io, Socket } from "socket.io-client";
@@ -53,30 +53,10 @@ const App = () => {
         dispatch(updateContactedUserById(data));
       });
     }
-  }, [socket.current]);
 
-  useEffect(() => {
     if (socket.current) {
-      socket.current.on("getFriendRequest", (data: any) => {
-        console.log(data);
-        dispatch(setRequests([...requests, data.friendRequest]));
-      });
-
-      socket.current.on("getAcceptFriendRequest", (data: any) => {
-        dispatch(
-          setUsers({
-            ...users,
-            uncontactedUsers: [
-              ...users?.uncontactedUsers,
-              {
-                _id: data?.Userfrom?._id,
-                userName: data?.Userfrom?.userName,
-                profileImage: data?.Userfrom?.profileImage,
-                language: data?.Userfrom?.language,
-              },
-            ],
-          })
-        );
+      socket.current.on("getFriendRequest", () => {
+        refetchFriendsRequest();
       });
       socket.current.on("getAcceptFriendRequest", () => {
         console.log("get Accept Friend Request");
@@ -128,8 +108,8 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat socket={socket} />} />
         <Route path="/profile" element={<Profile socket={socket} />} />
-        <Route path="/random" element={<Random socket={socket} />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/random" element={<Random socket={socket} />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route
           path="/call/:roomId/:decodedCallData"

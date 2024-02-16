@@ -208,7 +208,11 @@ const SignIn = () => {
               your data is safe with us
             </span>
            </div>
-          <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/terms")}>terms & privacy</p>
+           <div className="flex gap-2">
+           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/terms")}>terms & </p>
+           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/privacy")}> privacy</p>
+           </div>
+         
           
         </div>
       </div>
