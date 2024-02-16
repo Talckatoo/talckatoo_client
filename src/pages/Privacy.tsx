@@ -728,7 +728,7 @@ const Privacy = () => {
       <div className="flex gap-4 mb-8 ">
         <span className="">15.1</span>
         <p className="">
-          If you have any questions about this policy, please contact us by
+          If you have any questions about this policy, please contact us by <Link to="talcakatoodev@gmail.com"> talcakatoodev@gmail.com</Link>
         </p>
       </div>
     </div>
