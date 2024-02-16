@@ -230,6 +230,21 @@ export const SignUp = () => {
             </Link>
           </p>
         </form>
+        <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
+          <div className="flex gap-1 items-center">
+           
+            <MdOutlineSecurity />
+            <span>
+              your data is safe with us
+            </span>
+           </div>
+           <div className="flex gap-2">
+           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/terms")}>terms & </p>
+           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/privacy")}> privacy</p>
+           </div>
+         
+          
+        </div>
       </div>
       {/* End of Sign up form  */}
       <br />
