@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import languagesArray from "../util/languages";
 import { setUser } from "../redux/features/user/userSlice";
 import { setAuth } from "../redux/features/user/authSlice";
+import { MdOutlineSecurity } from "react-icons/md";
 
 interface FormData {
   name: string;
