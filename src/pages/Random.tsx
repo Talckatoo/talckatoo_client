@@ -9,6 +9,7 @@ import animationData from "../json/Animation - 1707255253148.json";
 import RandomChat from "../components/RandomChat/RandomChat";
 import LeftSideBar from "../components/shared/LeftSideBar";
 import Button from "../UI/Button";
+import NavBarRandom from "../navbar/NavBarRandom";
 
 interface Socket {
   current: any;
@@ -18,16 +19,14 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
   const { user } = useAppSelector((state) => state.auth);
   const [isLooking, setIsLooking] = useState(false);
-  const [randomData, setRandomData] = useState<any>();
+  const [randomData, setRandomData] = useState<any>(null);
   const [conversationRandomId, setConversationRandomId] = useState<string>("");
   const [isChatOpen, setIsChatOpen] = useState(false);
   const navigate = useNavigate();
 
-  const dispatch = useAppDispatch();
 
-  const handleCancel = async () => {
+  const handleCancel = () => {
     setIsLooking(false);
-
     socket?.current?.emit("leaveRandomChat", {
       conversationId: randomData?._id,
       socketId: socket.current.id,
@@ -53,7 +52,6 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const join = urlParams.get("join");
-
     if (join || isLooking) {
       joinRandomChat();
     }
@@ -95,11 +93,20 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
     navigate("/chat");
   };
 
+  const leaveRandomChat = () => {
+    setRandomData(null)
+    setConversationRandomId("")
+    setIsChatOpen(false)
+    setIsLooking(false)
+    socket?.current?.emit("leaveRandomChat", {
+      randomData
+    });
+  }
+
   return (
     <div
-      className={`flex flex-1 justify-center items-center  w-full h-full ${
-        isDarkMode ? "bg-slate-950" : ""
-      }`}
+      className={`flex flex-1 justify-center items-center  w-full h-full ${isDarkMode ? "bg-slate-950" : ""
+        }`}
     >
       {/*Left sidebar */}
       <LeftSideBar
@@ -155,7 +162,8 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       )}
 
       {isChatOpen && (
-        <div className=" w-full h-fullflex flex-col ">
+        <div className=" w-full h-full flex flex-col ">
+          <NavBarRandom leaveRandomChat={leaveRandomChat} />
           <RandomChat
             randomData={randomData}
             conversationRandomId={conversationRandomId}
@@ -163,8 +171,9 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
             setIsChatOpen={setIsChatOpen}
           />
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 
