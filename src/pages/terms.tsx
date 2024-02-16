@@ -1,6 +1,6 @@
 import React from "react";
 
-const Terms = () => {
+export const Terms = () => {
   return (
     <div className="container p-11">
       <h1 className="text-center text-[#C11B23] text-[30px] font-bold mb-8">
@@ -634,4 +634,3 @@ const Terms = () => {
   );
 };
 
-export default Terms
