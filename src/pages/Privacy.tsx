@@ -727,9 +727,13 @@ const Privacy = () => {
 
       <div className="flex gap-4 mb-8 ">
         <span className="">15.1</span>
+        <div className="flex gap-2">
         <p className="">
-          If you have any questions about this policy, please contact us by <Link to="talcakatoodev@gmail.com"> talcakatoodev@gmail.com</Link>
+          If you have any questions about this policy, please contact us by 
         </p>
+        <buttton onClick= {() => window.location ="mailto:talcakatoodev@gmail.com"} className="text-teal-600"> talcakatoodev@gmail.com</buttton>
+        </div>
+        
       </div>
     </div>
   );
