@@ -8,36 +8,37 @@ import { FaGlobe } from 'react-icons/fa';
 
 interface NavBarProps {
   showSign?: boolean;
+  setSelectedLanguage: React.Dispatch<React.SetStateAction<string>>;
+  selectedLanguage: string;
 }
 
-const NavBar: FC<NavBarProps> = ({ }) => {
-  const languageRef = useRef(null);
+const NavBar: FC<NavBarProps> = ({}) => {
+  const languageRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(); //TRANSLATION languages
-
   const { i18n } = useTranslation();
+  const { setSelectedLanguage, selectedLanguage } = useContext(UserContext); // Access setSelectedLanguage and selectedLanguage from UserContext
 
-  const changeLanguage = (lng) => {
+  const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+    setSelectedLanguage(lng); // Update selected language in state
   };
 
-const [showLanguages, setShowLanguages] = useState(false);
-
-const handleLanguageClick = () => {
-  setShowLanguages((prev) => !prev);
-};
-
-  const handleLanguageChange = (lng) => {
-    changeLanguage(lng);
-    setShowLanguages(false); // Close the dropdown
-    setSelectedLanguage(lng);
-  };
-
+  const [showLanguages, setShowLanguages] = useState<boolean>(false);
   const { isDarkMode } = useContext(UserContext);
+
+  const handleLanguageClick = () => {
+    setShowLanguages((prev) => !prev);
+  };
+
+  const handleLanguageChange = (lng: string) => {
+    changeLanguage(lng);
+    setSelectedLanguage(lng); // Update selected language in UserContext
+    setShowLanguages(false); // Close the dropdown
+  };
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('en'); // Default
 
   const handleSignInClick = () => {
     // Check if token exists in local storage
@@ -54,7 +55,7 @@ const handleLanguageClick = () => {
   // scrool event 
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: { target: any; }) => {
     if (languageRef.current && !languageRef.current.contains(event.target)) {
       // Clicked outside the language dropdown, close it
       setShowLanguages(false);
