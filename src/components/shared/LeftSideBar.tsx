@@ -31,8 +31,8 @@ const LeftSideBar = ({
         <div
           className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
             showRequest || showRandom || showSetting
-              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200 hover:cursor-pointer"
+              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black hover:cursor-pointer"
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
@@ -49,8 +49,8 @@ const LeftSideBar = ({
         <div
           className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
             !showRequest
-              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200 hover:cursor-pointer"
+              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black hover:cursor-pointer"
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
@@ -67,8 +67,8 @@ const LeftSideBar = ({
           <div
             className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
               !showRandom
-                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200 hover:cursor-pointer"
+                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black hover:cursor-pointer"
             } mx-2 rounded-[12px]  flex items-center justify-center flex-col
       transition duration-300 ease-in-out 
     `}
@@ -85,7 +85,7 @@ const LeftSideBar = ({
         <div
           className={`
           ${isDarkMode ? "bg-primary-500" : "bg-secondary-500"} 
-          ${!showSetting ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200 ": "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black "}
+          ${!showSetting ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200 hover:cursor-pointer ": "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black hover:cursor-pointer"}
            mx-2 rounded-[12px]  flex items-center justify-center flex-col transition duration-300 ease-in-out`}
           onClick={handleSettingClick}
         >
