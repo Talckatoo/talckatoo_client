@@ -23,7 +23,6 @@ import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import LeftSideBar from "./LeftSideBar";
 
 const SideBar = ({ socket, refetch, buttonSelected }: { socket: any; refetch: any; buttonSelected:string}) => {
-  console.log(buttonSelected);
   const [search, setSearch] = useState("");
   const { isDarkMode } = useContext(UserContext);
   const { users } = useAppSelector((state) => state.user);

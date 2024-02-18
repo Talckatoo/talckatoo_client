@@ -173,7 +173,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const handleSetButtonSelected = (buttonSelected:string) => {
-    console.log(buttonSelected);
     navigate("/chat", {state: {buttonSelected}});
   };
   return (
