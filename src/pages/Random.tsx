@@ -28,8 +28,9 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const navigateChat = () => {
-    navigate("/chat");
+  const handleSetButtonSelected = (buttonSelected:string) => {
+    console.log(buttonSelected);
+    navigate("/chat", {state: {buttonSelected}});
   };
 
   useEffect(() => {
@@ -85,7 +86,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       <LeftSideBar
         showSetting={false}
         showRequest={false}
-        setShowRequest={navigateChat}
+        setButtonSelected={handleSetButtonSelected}
         showRandom={true}
       />
 

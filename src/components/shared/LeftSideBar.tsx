@@ -40,7 +40,7 @@ const LeftSideBar = ({
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
-            onClick={pathname !== "/profile" ? () => setShowRequest(!showRequest) : ()=>setButtonSelected("chats")}
+            onClick={(pathname === "/chat") ? () => setShowRequest(!showRequest) : ()=>setButtonSelected("chats")}
             >
           <PiChatTextFill
             className={`${
@@ -58,7 +58,7 @@ const LeftSideBar = ({
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
-          onClick={pathname !== "/profile" ? () => setShowRequest(!showRequest) : ()=>setButtonSelected("friends")}
+            onClick={(pathname === "/chat") ? () => setShowRequest(!showRequest) : ()=>setButtonSelected("friends")}
         >
           <IoPersonSharp
             className={`${
