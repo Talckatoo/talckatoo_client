@@ -172,8 +172,9 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-  const handleSetRequest = () => {
-    navigate("/chat");
+  const handleSetButtonSelected = (buttonSelected:string) => {
+    console.log(buttonSelected);
+    navigate("/chat", {state: {buttonSelected}});
   };
   return (
     <div
@@ -185,7 +186,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
       <LeftSideBar
         showSetting={true}
         showRequest={false}
-        setShowRequest={handleSetRequest}
+        setButtonSelected={handleSetButtonSelected}
         showRandom={false}
       />
 
