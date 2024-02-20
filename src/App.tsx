@@ -88,7 +88,7 @@ const App = () => {
           })
         );
       });
-      socket.current.on("getAcceptFriendRequest", () => { });
+      socket.current.on("getAcceptFriendRequest", () => {});
     }
   }, [socket.current]);
 
