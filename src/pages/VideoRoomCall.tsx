@@ -92,6 +92,14 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
         console.log(error);
         if (error instanceof DOMException && error.name === 'NotFoundError') {
         setMedia(false);
+        if (socket.current) {
+          socket.current.emit("leaveCall", {
+            roomId,
+          });
+        }
+        if (connectionRef.current) {
+          connectionRef.current.destroy();
+        }
         }       
       }
     };
