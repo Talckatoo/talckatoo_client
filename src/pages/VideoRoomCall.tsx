@@ -2,13 +2,14 @@ import End from "../components/VideoCall/End";
 import VideoPlayer from "../components/VideoCall/VideoPlayer";
 import Options from "../components/VideoCall/Options";
 import { useEffect, useState, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { useParams, useRouteLoaderData } from "react-router-dom";
+import { useAppSelector } from "../redux/hooks";
+import { useParams } from "react-router-dom";
 import CallUser from "../components/VideoCall/services/CallUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
 import LeaveCall from "../components/VideoCall/services/LeaveCall";
 import { Base64 } from "js-base64";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface Socket {
   current: any;
@@ -16,10 +17,7 @@ interface Socket {
 
 const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { roomId, decodedCallData } = useParams();
-
   const [stream, setStream] = useState(null);
   const [userData, setUserData] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
@@ -91,6 +89,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
         }
       } catch (error) {
         console.error("Error accessing media stream:", error);
+        toast.error("Failed to access camera or microphone. Please check your settings and try again.");
       }
     };
 
@@ -133,16 +132,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
     <>
       {!callEnded ? (
         <div className="flex flex-col w-full h-full">
-          {/* <img
-      src="/assets/img/Shapes.png"
-      alt="shape"
-      className="fixed left-6  -bottom-8 w-[30%] z-[1] "
-    />
-    <img
-      src="/assets/img/Shape.png"
-      alt="shape"
-      className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
-    /> */}
           <div className="flex h-1/6">
             <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
               <Link to="/" className="font-jakarta text-[20px] font-bold">
