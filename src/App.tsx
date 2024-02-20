@@ -2,12 +2,12 @@ import { useEffect, useRef } from "react";
 import Chat from "./pages/Chat";
 import { Route, Routes } from "react-router-dom";
 import Profile from "./pages/Profile";
+import Term from "./pages/Term";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 // import VideoCall from "./pages/VideoCall";
 import VideoRoomCall from "./pages/VideoRoomCall";
 import { SignUp } from "./pages/SignUp";
-import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import ResetPasswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
@@ -88,7 +88,7 @@ const App = () => {
           })
         );
       });
-      socket.current.on("getAcceptFriendRequest", () => {});
+      socket.current.on("getAcceptFriendRequest", () => { });
     }
   }, [socket.current]);
 
@@ -105,7 +105,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat socket={socket} />} />
         <Route path="/profile" element={<Profile socket={socket} />} />
-        <Route path="/terms" element={<Terms />} />
+        <Route path="/terms" element={<Term />} />
         <Route path="/random" element={<Random socket={socket} />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route
