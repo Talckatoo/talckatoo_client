@@ -8,7 +8,7 @@ import CallUser from "../components/VideoCall/services/CallUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
 import LeaveCall from "../components/VideoCall/services/LeaveCall";
 import { Base64 } from "js-base64";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 interface Socket {
@@ -22,6 +22,8 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const [userData, setUserData] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
+  const [media, setMedia] = useState(true);
+  console.log(media)
 
   const myVideo = useRef();
   const userVideo = useRef();
@@ -90,6 +92,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
       } catch (error) {
         console.error("Error accessing media stream:", error);
         toast.error("Failed to access camera or microphone. Please check your settings and try again.");
+        setMedia(false)
       }
     };
 
@@ -116,7 +119,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current, roomId, decodedCallData]);
 
   useEffect(() => {
-    socket?.current?.on("roomCreated", (data: { message: any }) => {});
+    socket?.current?.on("roomCreated", (data: { message: any }) => { });
 
     return () => {
       // Clean up event listeners on component unmount
@@ -162,6 +165,11 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
       ) : (
         <End callEnded={callEnded} />
       )}
+      {!media ?
+        (
+          <End callEnded={callEnded} />
+        )
+        : null}
     </>
   );
 };
