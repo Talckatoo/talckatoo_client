@@ -22,7 +22,7 @@ import { setRequest } from "../../redux/features/user/requestSlice";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import LeftSideBar from "./LeftSideBar";
 
-const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
+const SideBar = ({ socket, refetch, buttonSelected }: { socket: any; refetch: any; buttonSelected:string}) => {
   const [search, setSearch] = useState("");
   const { isDarkMode } = useContext(UserContext);
   const { users } = useAppSelector((state) => state.user);
@@ -31,7 +31,7 @@ const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
   const [usersData, setUsersData] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
-  const [showRequest, setShowRequest] = useState(false);
+  const [showRequest, setShowRequest] = useState(buttonSelected==="friends"?true:false);
   const { requests } = useAppSelector((state) => state.user);
   const [allUser, setAllUser] = useState<any[]>([]);
 
