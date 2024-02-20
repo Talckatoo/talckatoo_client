@@ -58,10 +58,16 @@ const Privacy = () => {
           We do not seek to obtain or require access to any further of your
           personal data stored on the Facebook platform besides these pieces of
           data. Facebook’s data and privacy policy is accessible here
-          <Link to="https://www.facebook.com/about/privacy" target="blank" className="text-blue">  https://www.facebook.com/about/privacy . </Link>
-          The profile data may be
-          processed for the purpose of enabling and monitoring your use of our
-          service.
+          <Link
+            to="https://www.facebook.com/about/privacy"
+            target="blank"
+            className="text-blue"
+          >
+            {" "}
+            https://www.facebook.com/about/privacy .{" "}
+          </Link>
+          The profile data may be processed for the purpose of enabling and
+          monitoring your use of our service.
         </p>
       </div>
 
@@ -586,7 +592,15 @@ const Privacy = () => {
           Analytics gathers information about website use by means of cookies.
           The information gathered relating to our website is used to create
           reports about the use of our website. Google's privacy policy is
-          available at: <Link to="https://www.google.com/policies/privacy/" target="blank" className="text-blue"> https://www.google.com/policies/privacy/ .</Link> 
+          available at:{" "}
+          <Link
+            to="https://www.google.com/policies/privacy/"
+            target="blank"
+            className="text-blue"
+          >
+            {" "}
+            https://www.google.com/policies/privacy/ .
+          </Link>
         </p>
       </div>
 
@@ -606,11 +620,17 @@ const Privacy = () => {
           comment) will be directly transferred to and stored by Facebook. To
           prevent this, you must log out of your Facebook account before
           visiting our website. Please refer to Facebook’s privacy policy
-          <Link to="https://www.facebook.com/privacy/explanation" target="blank" className="text-blue"> (https://www.facebook.com/privacy/explanation ) </Link>
-          for more information
-          on: the purpose and scope of data collection and data analysis
-          undertaken by Facebook, your rights, how to modify settings and how to
-          protect your privacy.
+          <Link
+            to="https://www.facebook.com/privacy/explanation"
+            target="blank"
+            className="text-blue"
+          >
+            {" "}
+            (https://www.facebook.com/privacy/explanation ){" "}
+          </Link>
+          for more information on: the purpose and scope of data collection and
+          data analysis undertaken by Facebook, your rights, how to modify
+          settings and how to protect your privacy.
         </p>
       </div>
 
@@ -619,11 +639,23 @@ const Privacy = () => {
         <p className="">
           We use Twitter Tweet Button widget to share the information about our
           service on Twitter. Twitter uses cookies for purposes described at
-          <Link to="https://help.twitter.com/rules-and-policies/twitter-cookies" target="blank" className="text-blue">  https://help.twitter.com/rules-and-policies/twitter-cookies. </Link>
-           You
-          can view the privacy policy of Twitter provider at 
-          <Link to="https://twitter.com/privacy" target="blank" className="text-blue">  https://twitter.com/privacy. </Link>
-         
+          <Link
+            to="https://help.twitter.com/rules-and-policies/twitter-cookies"
+            target="blank"
+            className="text-blue"
+          >
+            {" "}
+            https://help.twitter.com/rules-and-policies/twitter-cookies.{" "}
+          </Link>
+          You can view the privacy policy of Twitter provider at
+          <Link
+            to="https://twitter.com/privacy"
+            target="blank"
+            className="text-blue"
+          >
+            {" "}
+            https://twitter.com/privacy.{" "}
+          </Link>
         </p>
       </div>
 
@@ -728,12 +760,17 @@ const Privacy = () => {
       <div className="flex gap-4 mb-8 ">
         <span className="">15.1</span>
         <div className="flex gap-2">
-        <p className="">
-          If you have any questions about this policy, please contact us by 
-        </p>
-        <button onClick= {() => window.location ="mailto:talcakatoodev@gmail.com"} className="text-teal-600"> talcakatoodev@gmail.com</button>
+          <p className="">
+            If you have any questions about this policy, please contact us by
+          </p>
+          <button
+            onClick={() => (window.location = "mailto:talcakatoodev@gmail.com")}
+            className="text-teal-600"
+          >
+            {" "}
+            talcakatoodev@gmail.com
+          </button>
         </div>
-        
       </div>
     </div>
   );
