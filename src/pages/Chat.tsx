@@ -19,6 +19,7 @@ import SideBar from "../components/shared/SideBar";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { setAuth } from "../redux/features/user/authSlice";
 import HandleCall from "../components/VideoCall/services/HandleCall";
+import { useLocation } from "react-router-dom";
 
 interface Socket {
   current: any;
@@ -35,6 +36,9 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const { users } = useAppSelector((state) => state.user);
   const { requests } = useAppSelector((state) => state.user);
   const { recipient } = useAppSelector((state) => state.user);
+  let {state} = useLocation();
+  state ||= {buttonSelected:"chats"};
+  let {buttonSelected} = state;
 
   // RTK Query
   const {
@@ -162,7 +166,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   return (
     <>
       <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
-        <SideBar socket={socket} refetch={refetch} />
+        <SideBar socket={socket} refetch={refetch} buttonSelected={buttonSelected}/>
 
         <div className=" w-full h-full flex flex-col bg-white">
           {selectedId && <Navbar onHandleCall={handleCall} />}
