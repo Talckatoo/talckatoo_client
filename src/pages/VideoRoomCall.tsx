@@ -23,7 +23,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const [callAccepted, setCallAccepted] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
   const [media, setMedia] = useState(true);
-  console.log(media)
 
   const myVideo = useRef();
   const userVideo = useRef();
@@ -90,9 +89,10 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           );
         }
       } catch (error) {
-        console.error("Error accessing media stream:", error);
-        toast.error("Failed to access camera or microphone. Please check your settings and try again.");
-        setMedia(false)
+        console.log(error);
+        if (error instanceof DOMException && error.name === 'NotFoundError') {
+        setMedia(false);
+        }       
       }
     };
 
@@ -142,34 +142,37 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
               </Link>
             </div>
           </div>
-          <div className="flex w-full h-full">
-            <VideoPlayer
-              callAccepted={callAccepted}
-              myVideo={myVideo}
-              userVideo={userVideo}
-              callEnded={callEnded}
-              userData={userData}
-            />
-          </div>
-          <div className="flex h-1/6 bg-[#25282C]">
-            <Options
-              callAccepted={callAccepted}
-              callEnded={callEnded}
-              myVideo={myVideo}
-              userVideo={userVideo}
-              leaveCall={leaveCall}
-              userData={userData}
-            ></Options>
-          </div>
+          {media ? ( // Check if media access error occurred
+            <>
+              <div className="flex w-full h-full">
+                <VideoPlayer
+                  callAccepted={callAccepted}
+                  myVideo={myVideo}
+                  userVideo={userVideo}
+                  callEnded={callEnded}
+                  userData={userData}
+                />
+              </div>
+              <div className="flex h-1/6 bg-[#25282C]">
+                <Options
+                  callAccepted={callAccepted}
+                  callEnded={callEnded}
+                  myVideo={myVideo}
+                  userVideo={userVideo}
+                  leaveCall={leaveCall}
+                  userData={userData}
+                ></Options>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-red-500 font-bold">Failed to access camera or microphone. Please check your settings and try again.</p>
+            </div>
+          )}
         </div>
       ) : (
         <End callEnded={callEnded} />
       )}
-      {!media ?
-        (
-          <End callEnded={callEnded} />
-        )
-        : null}
     </>
   );
 };
