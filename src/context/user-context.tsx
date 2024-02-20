@@ -1,5 +1,4 @@
 import React, { createContext, useState, ReactNode } from "react";
-import useUserRedirect from "./../hooks/useUserRedirect";
 
 interface UserContextProviderProps {
   isDarkMode: boolean;
@@ -9,12 +8,26 @@ interface UserContextProviderProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface UserContextProviderProps {
+  isDarkMode: boolean;
+  setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+
+  notification: Notification | null; // Add the 'notification' property
+  setNotification: React.Dispatch<React.SetStateAction<Notification | null>>; // Add the 'setNotification' property
+}
+
 export const UserContext = createContext<UserContextProviderProps>({
   isDarkMode: false,
   setIsDarkMode: () => {},
 
   isLoading: false,
   setIsLoading: () => {},
+
+  notification: null,
+  setNotification: () => {},
 });
 
 export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
@@ -24,8 +37,7 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // use the userRedirect hook
-  // useUserRedirect();
+  const [notification, setNotification] = useState<Notification | null>(null);
 
   return (
     <UserContext.Provider
@@ -35,6 +47,9 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
 
         isLoading,
         setIsLoading,
+
+        notification,
+        setNotification,
       }}
     >
       {children}
