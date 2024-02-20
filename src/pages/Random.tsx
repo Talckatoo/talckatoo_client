@@ -70,7 +70,6 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     const handleRandomResult = (data: any) => {
       setRandomData(data);
-      console.log(data);
       if (data.user2.id) {
         setIsLooking(false);
         setIsChatOpen(true);
@@ -80,6 +79,12 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
 
     if (socket.current) {
       socket.current.on("randomResult", handleRandomResult);
+      socket.current.on("leaveRandomChat", () => {
+        setRandomData(null)
+        setConversationRandomId("")
+        setIsChatOpen(false)
+        setIsLooking(false)
+      });
     }
 
     return () => {
