@@ -72,7 +72,6 @@ const ChatInput = ({
 
   const handleShowEmoji = () => {
     setShowEmoji(!showEmoji);
-    console.log("showEmoji", showEmoji);
   };
 
   const handleEmojiClick = (event: any) =>
@@ -197,7 +196,7 @@ const ChatInput = ({
                 <IoSend className="text-white text-[20px]" />
               </button>
             </form>
-            <div className=" ``w-[200px] flex items-center">
+            <div className="w-[200px] flex items-center">
               <div className="flex">
                 <VoiceMessage
                   socket={socket}
