@@ -10,12 +10,15 @@ import App from "./App";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import "animate.css";
+import React from "react";
+import Notify from "./UI/Notify";
 
 // CALL IT ONCE IN YOUR APP
 injectStyle();
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 // Dispatch clearCall action when the application is loaded
+const notify = ReactDOM.createRoot(document.getElementById("notify")!);
 
 root.render(
   <>
@@ -30,4 +33,12 @@ root.render(
     </UserContextProvider>
     <ToastContainer />
   </>
+);
+
+notify.render(
+  <React.StrictMode>
+    <Notify type={""} message={""} dismissNotification={function (): void {
+      throw new Error("Function not implemented.");
+    } } />
+  </React.StrictMode>
 );
