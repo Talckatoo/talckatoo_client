@@ -344,3 +344,25 @@ textarea:focus {
     rgba(74, 134, 247, 0) 100%
   );
 }
+
+@keyframes countdown {
+  0% {
+    width: 0%;
+    left: 0%;
+  }
+  50% {
+    left: 0%;
+  }
+  100% {
+    width: 100%;
+    left: 0%;
+  }
+}
+
+.countdown-bar {
+  height: 5px;
+  background-color: rgb(0, 0, 0);
+  position: absolute;
+  bottom: 0;
+  animation: countdown 3s linear forwards;
+}

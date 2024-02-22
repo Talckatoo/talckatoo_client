@@ -8,12 +8,12 @@ interface NotifyProps {
 
 const Notify = ({ type, message, dismissNotification }: NotifyProps) => {
   const [isVisible, setIsVisible] = useState(true);
-
+  console.log("Notify -> isVisible");
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false);
       dismissNotification(); // Dismiss notification after timeout
-    }, 5000); // 5 seconds
+    }, 3500); // 5 seconds
 
     return () => {
       clearTimeout(timer);
@@ -53,14 +53,16 @@ const Notify = ({ type, message, dismissNotification }: NotifyProps) => {
     <>
       {isVisible && (
         <div className='fixed top-0 left-0 w-full h-full flex bg-black opacity-[0.9] z-[99999] items-center justify-center'>
-          <div className='bg-white opacity-100 fixed w-[400px] h-[400px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 border-l-4 rounded-lg z-50 flex flex-col items-center justify-evenly'>
-            <div className={`p-6  w-[50%] h-[50%] flex justify-center items-center ${bgColor} ${borderColor} ${textColor}`}>
+          <div className={`${bgColor} fixed w-[30%] h-[20%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 border-l-4 rounded-lg z-50 flex flex-col items-center justify-evenly`}>
+            <div className={`p-6  flex justify-center items-center ${borderColor} ${textColor}`}>
               <p className="font-semibold text-wrap">{message}</p>
               <button onClick={handleDismiss} className="absolute top-1 right-2" aria-label="Dismiss">
                 &#10005;
               </button>
             </div>
-            <h3 className='fixed bottom-0  text-center'>TalckaToo</h3>
+            <h3 className='fixed bottom-0  text-center p-2'>TalckaToo
+              <div className="countdown-bar absolute bottom-0 right-0 mb-[2px]"></div>
+            </h3>
           </div>
         </div>
       )}
