@@ -54,16 +54,6 @@ const App = () => {
         dispatch(updateContactedUserById(data));
       });
     }
-
-    if (socket.current) {
-      socket.current.on("getFriendRequest", () => {
-        refetchFriendsRequest();
-      });
-      socket.current.on("getAcceptFriendRequest", () => {
-        console.log("get Accept Friend Request");
-        // refetch();
-      });
-    }
   }, [socket.current]);
 
   useEffect(() => {
@@ -88,7 +78,7 @@ const App = () => {
           })
         );
       });
-      socket.current.on("getAcceptFriendRequest", () => { });
+      socket.current.on("getAcceptFriendRequest", () => {});
     }
   }, [socket.current]);
 

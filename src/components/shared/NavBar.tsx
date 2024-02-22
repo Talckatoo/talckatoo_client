@@ -47,17 +47,17 @@ const NavBar: FC<NavBarProps> = ({}) => {
         backgroundColor: scrolled ? "rgba(255, 255, 255, 0.9)" : "transparent",
         backdropFilter: scrolled ? "blur(8px)" : "none",
       }}
-      >
-        <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
-        <Link to="/" className="font-jakarta text-[20px] font-bold flex items-center justify-left">
-          
-            
-              <img 
-                className="w-[40px] w-min-[45px] mr-1 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
-                src="cockatoo.svg"
-              />
-                
-          
+    >
+      <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
+        <Link
+          to="/"
+          className="font-jakarta text-[20px] font-bold flex items-center justify-left"
+        >
+          <img
+            className="w-[40px] w-min-[45px] mr-1 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
+            src="cockatoo.svg"
+          />
+
           <span className="hidden sm:inline">TALCKATOO</span>
         </Link>
         {/* sign up and sign in button */}
