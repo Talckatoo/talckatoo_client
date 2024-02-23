@@ -45,6 +45,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       conversationId: random.randomData?._id,
       socketId: socket.current.id,
     });
+
   };
 
   const joinRandomChat = () => {
@@ -81,7 +82,6 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [join]);
 
   useEffect(() => {
-    console.log(random.islooking);
     if (random.islooking === true) {
       console.log("joining");
       joinRandomChat();
@@ -93,7 +93,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       const timeoutId = setTimeout(() => {
         handleCancel();
         alert("No one is available to chat right now");
-      }, 5000);
+      }, 1000*60*5);
       return () => clearTimeout(timeoutId);
     }
   }, [random.randomData, random.islooking]);
@@ -156,6 +156,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
     socket?.current?.emit("leaveRandomChat", {
       randomData: random.randomData,
     });
+
   };
 
   const handleJoinRandomChat = () => {
