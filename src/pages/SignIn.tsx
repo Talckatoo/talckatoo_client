@@ -118,7 +118,7 @@ const SignIn = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
-        <h2 className="head-text text-center mt-[5rem] mb-10 text-black">
+        <h2 className="head-text text-center mt-[12rem] mb-10 text-black">
           Welcome back
         </h2>
         {/* Sign up form  */}
@@ -191,7 +191,7 @@ const SignIn = () => {
 
           <Button
             type="submit"
-            className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1]"
+            className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1] rounded-lg"
           >
             {loading ? "Loading..." : "Log in"}
           </Button>

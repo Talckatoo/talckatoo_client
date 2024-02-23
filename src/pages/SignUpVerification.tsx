@@ -1,4 +1,4 @@
-import React, {  useState, useRef } from "react";
+import React, {  useState, useRef, useContext } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -7,6 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { MdOutlineSecurity } from "react-icons/md";
+import { UserContext } from "../context/user-context";
 
 interface FormData {
   email: string;
@@ -14,6 +15,7 @@ interface FormData {
 
 const SignUpVerification = () => {
   const navigate = useNavigate();
+  const { setUserEmail } = useContext(UserContext);
   const [formData, setFormData] = React.useState<FormData>({
     email: "",
   });
@@ -99,6 +101,7 @@ const SignUpVerification = () => {
       setError("Verification code does not match");
       return;
     }
+    setUserEmail(formData.email); 
     navigate("/sign-up");
   }
   return (
@@ -111,15 +114,14 @@ const SignUpVerification = () => {
       />
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
-      <div className="container">
+      <div className="justify-center align-center text-center">
         <h1 className="head-text text-center mt-[12rem] mb-6 text-black">
-          Join Talckatoo Today!
+          Let's get started!
         </h1>
         {!sendEmail ? (
             <>
-          <div className="flex justify-center text-center place-items-baseline mt-8">
+<div className="max-w-[400px] mt-[4rem] mx-auto">
           <Input
-            // label="Email"
             type="text"
             name="email"
             placeholder="Enter your email"
@@ -127,18 +129,19 @@ const SignUpVerification = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1] rounded-lg-left text-black"
+            className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
             label={""}
             id={""}
           />
-        </div>
-        <Button
+          <Button
           type="submit"
-          className="bg-black text-white w-full h-[48px] z-[1] rounded-lg"
+          className="w-full bg-black justify-center text-center text-white h-[48px] z-[1] rounded-lg "
           onClick={sendVerificationCode}
         >
           Send verification code
         </Button>
+        </div>
+        
         </>
         ):(
             <>
@@ -146,7 +149,7 @@ const SignUpVerification = () => {
             className="text-black mt-4 z-[1] text-center"
             >Please enter the code we sent to your email</span>
             <div
-            className="flex justify-between space-x-2 h-12"
+            className="w-[10%] flex mx-auto my-6 justify-between space-x-2 h-12"
             onPaste={handlePaste}
           >
             {Array.from({ length: 4 }, (_, index) => (
@@ -165,7 +168,7 @@ const SignUpVerification = () => {
           </div>
           <Button
           type="submit"
-          className="bg-black text-white text-center justify-center h-[48px] z-[1] rounded-lg mt-4"
+          className="bg-black text-white text-center justify-center h-[48px] z-[1] rounded-lg mt-2"
           onClick={handleContinue}
         >
           Continue
