@@ -10,6 +10,7 @@ import RandomChat from "../components/RandomChat/RandomChat";
 import LeftSideBar from "../components/shared/LeftSideBar";
 import Button from "../UI/Button";
 import NavBarRandom from "../navbar/NavBarRandom";
+import { setRandom } from "../redux/features/socket/socketSlice";
 
 interface Socket {
   current: any;
@@ -18,23 +19,36 @@ interface Socket {
 const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   const { isDarkMode } = useContext(UserContext);
   const { user } = useAppSelector((state) => state.auth);
-  const [isLooking, setIsLooking] = useState(false);
-  const [randomData, setRandomData] = useState<any>(null);
-  const [conversationRandomId, setConversationRandomId] = useState<string>("");
-  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const dispatch = useAppDispatch();
+
+  const { random } = useAppSelector((state) => state.socket);
+
+  useEffect(() => {
+    console.log(random);
+  }, [random]);
+
   const navigate = useNavigate();
 
-
   const handleCancel = () => {
-    setIsLooking(false);
+    dispatch(
+      setRandom({
+        islooking: false,
+      })
+    );
+
     socket?.current?.emit("leaveRandomChat", {
-      conversationId: randomData?._id,
+      conversationId: random.randomData?._id,
       socketId: socket.current.id,
     });
   };
 
   const joinRandomChat = () => {
-    setIsLooking(true);
+    dispatch(
+      setRandom({
+        islooking: true,
+      })
+    );
     const data = {
       userName: user.userName,
       url: user?.profileImage?.url,
@@ -49,41 +63,69 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const join = urlParams.get("join");
-    if (join || isLooking) {
-      joinRandomChat();
-    }
-  }, [isLooking]);
+  const urlParams = new URLSearchParams(window.location.search);
+  const join = urlParams.get("join");
 
   useEffect(() => {
-    if (randomData && isLooking) {
+    if (join === "true") {
+      dispatch(
+        setRandom({
+          islooking: true,
+        })
+      );
+    }
+  }, [join]);
+
+  useEffect(() => {
+    console.log(random.islooking);
+    if (random.islooking === true) {
+      console.log("joining");
+      joinRandomChat();
+    }
+  }, [random.islooking]);
+
+  useEffect(() => {
+    if (random.randomData && random.islooking) {
       const timeoutId = setTimeout(() => {
         handleCancel();
         alert("No one is available to chat right now");
       }, 5000);
       return () => clearTimeout(timeoutId);
     }
-  }, [randomData, isLooking]);
+  }, [random.randomData, random.islooking]);
 
   useEffect(() => {
     const handleRandomResult = (data: any) => {
-      setRandomData(data);
-      if (data.user2.id) {
-        setIsLooking(false);
-        setIsChatOpen(true);
+      dispatch(
+        setRandom({
+          randomData: data,
+          isChatOpen: false,
+          islooking: true,
+        })
+      );
+      if (data?.user2?.id) {
+        dispatch(
+          setRandom({
+            randomData: data,
+            conversationRandomId: data._id,
+            isChatOpen: true,
+            islooking: false,
+          })
+        );
       }
-      setConversationRandomId(data._id);
     };
 
     if (socket.current) {
       socket.current.on("randomResult", handleRandomResult);
       socket.current.on("leaveRandomChat", () => {
-        setRandomData(null)
-        setConversationRandomId("")
-        setIsChatOpen(false)
-        setIsLooking(false)
+        dispatch(
+          setRandom({
+            randomData: null,
+            conversationRandomId: "",
+            isChatOpen: false,
+            islooking: false,
+          })
+        );
       });
     }
 
@@ -99,19 +141,31 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const leaveRandomChat = () => {
-    setRandomData(null)
-    setConversationRandomId("")
-    setIsChatOpen(false)
-    setIsLooking(false)
+    dispatch(
+      setRandom({
+        randomData: null,
+        conversationRandomId: "",
+        isChatOpen: false,
+        islooking: false,
+      })
+    );
     socket?.current?.emit("leaveRandomChat", {
-      randomData
+      randomData: random.randomData,
     });
-  }
+  };
 
+  const handleJoinRandomChat = () => {
+    dispatch(
+      setRandom({
+        islooking: true,
+      })
+    );
+  };
   return (
     <div
-      className={`flex flex-1 justify-center items-center  w-full h-full ${isDarkMode ? "bg-slate-950" : ""
-        }`}
+      className={`flex flex-1 justify-center items-center  w-full h-full ${
+        isDarkMode ? "bg-slate-950" : ""
+      }`}
     >
       {/*Left sidebar */}
       <LeftSideBar
@@ -121,7 +175,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
         showRandom={true}
       />
 
-      {isLooking ? (
+      {random.islooking === true ? (
         <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
           <div className="flex flex-col justify-center w-full items-center">
             <Lottie
@@ -142,7 +196,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
           </div>
         </div>
       ) : (
-        !isChatOpen && (
+        !random.isChatOpen && (
           <div className="mx-auto flex flex-col">
             <div className="flex justify-center items-center h-full ">
               <div className="flex flex-col justify-center items-center">
@@ -155,7 +209,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
                 />
                 <Button
                   type="button"
-                  onClick={() => setIsLooking(true)}
+                  onClick={handleJoinRandomChat}
                   className="bg-secondary-500 hover:bg-primary-600 text-white font-bold py-2 px-8 rounded-xl"
                 >
                   Join Random Chat
@@ -166,19 +220,17 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
         )
       )}
 
-      {isChatOpen && (
+      {random.isChatOpen && (
         <div className=" w-full h-full flex flex-col ">
           <NavBarRandom leaveRandomChat={leaveRandomChat} />
           <RandomChat
-            randomData={randomData}
-            conversationRandomId={conversationRandomId}
+            randomData={random.randomData}
+            conversationRandomId={random.conversationRandomId}
             socket={socket}
-            setIsChatOpen={setIsChatOpen}
           />
         </div>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 };
 

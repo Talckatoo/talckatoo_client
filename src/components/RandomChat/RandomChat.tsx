@@ -13,12 +13,10 @@ const RandomChat = ({
   randomData,
   conversationRandomId,
   socket,
-  setIsChatOpen,
 }: {
   randomData: any;
   conversationRandomId: string;
   socket: any;
-  setIsChatOpen: any;
 }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
   const [messages, setMessages] = React.useState<any>([]);
@@ -32,6 +30,7 @@ const RandomChat = ({
   // get socket id from randomData
   const [socketId, setSocketId] = React.useState("");
   const [UserData, setUserData] = React.useState<any>({});
+  const { random } = useAppSelector((state) => state.socket);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -46,16 +45,17 @@ const RandomChat = ({
   }, []);
 
   useEffect(() => {
-    if (randomData) {
-      if (randomData.user2.id === user._id) {
-        setSocketId(randomData.user1.socketId);
-        setUserData(randomData.user1);
+    if (random.randomData) {
+      console.log(random.randomData, "from random chat");
+      if (random.randomData.user2.id === user._id) {
+        setSocketId(random.randomData.user1.socketId);
+        setUserData(random.randomData.user1);
       } else {
-        setSocketId(randomData.user2.socketId);
-        setUserData(randomData.user2);
+        setSocketId(random.randomData?.user2?.socketId);
+        setUserData(random.randomData.user2);
       }
     }
-  }, [randomData]);
+  }, [random.randomData]);
 
   const handleSendMessage = (message: string) => {
     const data = {
@@ -109,8 +109,8 @@ const RandomChat = ({
       socket.current.emit("sendRandomMessage", {
         createdAt: new Date(),
         sender: user?._id,
-        to: randomData?.user2?.id,
-        targetLanguage: randomData?.user2?.language,
+        to: random.randomData?.user2?.id,
+        targetLanguage: random.randomData?.user2?.language,
         media: {
           url: media.url,
           type: media.type,
@@ -175,7 +175,7 @@ const RandomChat = ({
                     ? messages.map((msg: any) => (
                         <div
                           className={
-                            "" +
+                            "first:mt-[6rem]" +
                             (msg.sender === user?._id ? " mb-6" : "") +
                             (msg.sender == import.meta.env.VITE_AI_ASSISTANT_ID
                               ? "text-center "

@@ -9,40 +9,36 @@ import { IoChevronBack } from "react-icons/io5";
 import { BiLogOut } from "react-icons/bi";
 
 const NavBarRandom = ({ leaveRandomChat }) => {
-    const profilePictureRef = useRef();
-    const { user } = useAppSelector((state) => state.auth);
-    const navigate = useNavigate();
+  const profilePictureRef = useRef();
+  const { user } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
 
+  const dispatch = useAppDispatch();
 
-    const dispatch = useAppDispatch();
+  const handleLeaveRandomChat = () => {
+    leaveRandomChat();
+  };
 
-    const handleLeaveRandomChat = () => {
-        leaveRandomChat()
+  const handleRandomVideoCall = () => {};
 
-    };
+  return (
+    <nav className="fixed   w-full z-10 max-md:px-2 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm ">
+      <div className="relative flex items-center justify-between w-[90%]">
+        <div className="flex  w-[80%] md:gap-8">
+          <div className="flex items-center md:gap-4 ">
+            {user && (
+              <>
+                <div
+                  className="flex justify-center mt-5 gap-2 cursor-pointer"
+                  onClick={handleLeaveRandomChat}
+                >
+                  <BiLogOut color="red" size={28} />
+                  <span className="text-[#ff1818] font-semibold mb-8">
+                    Leave Chat
+                  </span>
+                </div>
 
-
-    const handleRandomVideoCall = () => {
-
-    }
-
-    return (
-        <nav className="relative z-10 max-md:px-2 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm ">
-            <div className="flex w-[80%] md:gap-8">
-                <div className="flex items-center md:gap-4 ">
-                    {user && (
-                        <>
-                            <div
-                                className="flex justify-center mt-5 gap-2 cursor-pointer"
-                                onClick={handleLeaveRandomChat}
-                            >
-                                <BiLogOut color="red" size={28} />
-                                <span className="text-[#ff1818] font-semibold mb-8">
-                                    Leave Chat
-                                </span>
-                            </div>
-
-                            {/* <div
+                {/* <div
                 ref={profilePictureRef}
                 onClick={handleDropdownClick}
                 className="w-10 h-10 min-h-10 min-w-10  max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
@@ -64,23 +60,24 @@ const NavBarRandom = ({ leaveRandomChat }) => {
                 )}
               </div> */}
 
-                            {/* <div className="bg-[#25282C] py-2 flex items-center text-white px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ">
+                {/* <div className="bg-[#25282C] py-2 flex items-center text-white px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ">
                 <span className="max-md:text-[12px] md:text-[14px] ">
                   {fullLanguage}
                 </span>
               </div> */}
-                        </>
-                    )}
-                </div>
-            </div>
+              </>
+            )}
+          </div>
+        </div>
 
-            <div className="flex gap-6 items-center max-md:gap-2 ">
-                <button className="text-black" onClick={handleRandomVideoCall}>
-                    <PiVideoCameraThin size={34} />
-                </button>
-            </div>
-        </nav>
-    );
+        <div className="flex gap-6 items-center max-md:gap-2 ">
+          <button className="text-black" onClick={handleRandomVideoCall}>
+            <PiVideoCameraThin size={34} />
+          </button>
+        </div>
+      </div>
+    </nav>
+  );
 };
 
 export default NavBarRandom;
