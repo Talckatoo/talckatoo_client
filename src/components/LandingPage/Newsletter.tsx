@@ -66,11 +66,11 @@ const Newsletter = () => {
             name="email"
           />
 
-          <button className="md:w-44 h-[46px] bg-black text-white rounded-r-lg p-2 hover:text-orange-500" onClick={handleSubscribe} type="submit" >Subscribe</button>
+          <button className="md:w-44 h-[46px] bg-black text-white rounded-r-lg p-2" onClick={handleSubscribe} type="submit" >Subscribe</button>
         </div>
       </section>
       <div className="flex justify-center items-center">
-        We care about the protection of your data. Read our <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="https://talckatoo.me/terms">  &#160;Privacy Policy</a>
+        We care about the protection of your data. Read our <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="https://talckatoo.me/privacy">  &#160;Privacy Policy</a>
       </div>
       {notification && <Notify type={notification.type} message={notification.message} dismissNotification={dismissNotification} />} 
     </>

@@ -8,17 +8,16 @@ interface NotifyProps {
 
 const Notify = ({ type, message, dismissNotification }: NotifyProps) => {
   const [isVisible, setIsVisible] = useState(true);
-  console.log("Notify -> isVisible");
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      dismissNotification(); // Dismiss notification after timeout
-    }, 3500); // 5 seconds
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setIsVisible(false);
+  //     dismissNotification(); // Dismiss notification after timeout
+  //   }, 3500); // 5 seconds
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [dismissNotification]); // Add dismissNotification to dependencies
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, [dismissNotification]); // Add dismissNotification to dependencies
 
   let bgColor, borderColor, textColor;
 
@@ -52,16 +51,16 @@ const Notify = ({ type, message, dismissNotification }: NotifyProps) => {
   return (
     <>
       {isVisible && (
-        <div className='fixed top-0 left-0 w-full h-full flex bg-black bg-opacity-5 z-50 items-center justify-center'>
-          <div className={`bg-white fixed w-[30%] h-[30%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-lg z-50 flex flex-col items-center justify-evenly max-sm:w-[90%]`}>
-            <div className={`${bgColor} w-10 h-10 flex items-center justify-center rounded-full font-extrabold m-0 p-0 `}>!</div>
-            <div className={`p-2 flex justify-center items-center ${borderColor} ${textColor}`}>
+        <div className='fixed top-0 left-0 w-full h-full flex bg-black bg-opacity-10 z-50 items-center justify-center'>
+          <div className={`bg-white fixed w-[30%] shadow-sm shadow-black h-[30%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-lg z-50 flex flex-col items-center justify-evenly max-sm:w-[90%]`}>
+            {/* <div className={`${bgColor} w-10 h-10 flex items-center justify-center rounded-full font-extrabold m-0 p-0 `}>!</div> */}
+            <div className={`p-2 flex justify-center items-center `}>
               <p className="font-semibold text-[18px] text-wrap">{message}</p>
-              <button onClick={handleDismiss} className="absolute top-1 right-2" aria-label="Dismiss">
+              <button onClick={handleDismiss} className="absolute top-2 right-3" aria-label="Dismiss">
                 &#10005;
               </button>
             </div>
-            <h3 className='fixed bottom-0  text-center p-2'>TalckaToo
+            <h3 className='fixed bottom-0  font-thin text-sm text-center p-2'>TalckaToo
               <div className="countdown-bar absolute bottom-0 right-0 mb-[2px]"></div>
             </h3>
           </div>
