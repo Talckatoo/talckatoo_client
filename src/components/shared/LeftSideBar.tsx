@@ -3,7 +3,7 @@ import { UserContext } from "../../context/user-context";
 import { PiChatTextFill } from "react-icons/pi";
 import { IoPersonSharp } from "react-icons/io5";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { RiSettings5Fill } from "react-icons/ri";
 import { useAppSelector } from "../../redux/hooks";
 
@@ -11,17 +11,21 @@ const LeftSideBar = ({
   showSetting,
   showRequest,
   showRandom,
-  setShowRequest,
+  setShowRequest = ()=>{},
+  setButtonSelected = ()=>{},
 }: {
   showSetting?: boolean;
   showRequest: boolean;
   showRandom: boolean;
-  setShowRequest: (showRequest: boolean) => void;
+  setShowRequest?: (showRequest: boolean) => void;
+  setButtonSelected?: (buttonSelected: string)=>void;
+
 }) => {
   const navigate = useNavigate();
   const { isDarkMode } = useContext(UserContext);
   const { user } = useAppSelector((state) => state.auth);
-
+  const location = useLocation()
+  const {pathname} = location;
   const handleSettingClick = () => {
     navigate("/profile");
   };
@@ -31,13 +35,13 @@ const LeftSideBar = ({
         <div
           className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
             showRequest || showRandom || showSetting
-              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200 hover:cursor-pointer"
+              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black hover:cursor-pointer"
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
-          onClick={() => setShowRequest(!showRequest)}
-        >
+            onClick={(pathname === "/chat") ? () => setShowRequest(!showRequest) : ()=>setButtonSelected("chats")}
+            >
           <PiChatTextFill
             className={`${
               showRequest || showRandom || showSetting
@@ -49,12 +53,12 @@ const LeftSideBar = ({
         <div
           className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
             !showRequest
-              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200 hover:cursor-pointer"
+              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black hover:cursor-pointer"
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
-          onClick={() => setShowRequest(!showRequest)}
+            onClick={(pathname === "/chat") ? () => setShowRequest(!showRequest) : ()=>setButtonSelected("friends")}
         >
           <IoPersonSharp
             className={`${
@@ -67,8 +71,8 @@ const LeftSideBar = ({
           <div
             className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
               !showRandom
-                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200 hover:cursor-pointer"
+                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black hover:cursor-pointer"
             } mx-2 rounded-[12px]  flex items-center justify-center flex-col
       transition duration-300 ease-in-out 
     `}
@@ -83,13 +87,17 @@ const LeftSideBar = ({
       </div>
       <div className="flex flex-col  gap-3 w-full">
         <div
-          className={`${
-            isDarkMode ? "bg-primary-500" : "bg-secondary-500"
-          } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
+          className={`
+          ${isDarkMode ? "bg-primary-500" : "bg-secondary-500"} 
+          ${!showSetting ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200 hover:cursor-pointer ": "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black hover:cursor-pointer"}
+           mx-2 rounded-[12px]  flex items-center justify-center flex-col transition duration-300 ease-in-out`}
           onClick={handleSettingClick}
         >
           <RiSettings5Fill
-            className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
+            className={`
+            ${!showSetting ? "text-secondary-500" : "text-white"} 
+            z-4 object-contain py-1 w-[29px] text-[32px]`
+          }
           />
         </div>
         <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">

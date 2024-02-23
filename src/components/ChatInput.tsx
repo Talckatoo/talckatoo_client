@@ -3,6 +3,7 @@ import {
   ChangeEvent,
   useEffect,
   useContext,
+  useRef,
   VoidFunctionComponent,
 } from "react";
 import EmojiPicker from "emoji-picker-react";
@@ -49,6 +50,25 @@ const ChatInput = ({
   const selectedId = conversationState?.conversation?.selectedId;
 
   const [uploadFile] = useUploadFileMutation();
+  const refToggleBox = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutisde = (event: MouseEvent) => {
+      if (
+        refToggleBox.current &&
+        !refToggleBox.current.contains(event.target as Node)
+      ) {
+        // Clicked outside of the toggle box, so close
+        setShowEmoji(false);
+      }
+    };
+    // Attach event listener when the component mounts
+    document.addEventListener("mousedown", handleClickOutisde);
+    //clean up yhe event listeners
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutisde);
+    };
+  }, []);
 
   const handleShowEmoji = () => {
     setShowEmoji(!showEmoji);
@@ -126,6 +146,9 @@ const ChatInput = ({
 
   const handleSendMessage = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (messageText.trim() === "") {
+      return;
+    }
 
     if (messageText.substring(0, 7) === AIcall) {
       onHandleSendAIMessage(messageText);
@@ -142,7 +165,16 @@ const ChatInput = ({
 
   return (
     <>
-      <div className="w-full  relative z-10 pt-2">
+      <div className="w-full  relative z-10 pt-2" ref={refToggleBox}>
+        {showEmoji && (
+          <div
+            className={`cursor-pointer emoji-container relative top-2  ${
+              showEmoji ? "open" : ""
+            }`}
+          >
+            <EmojiPicker width="100%" onEmojiClick={handleEmojiClick} />
+          </div>
+        )}
         <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  ">
           <TextArea
             label=""
@@ -154,7 +186,11 @@ const ChatInput = ({
             id=""
             placeholder="Type your message or type @birdie to call AI Assistant"
             className={`mb-0 rounded-t-[20px]   border border-[#0E131D] 
-            ${messageText.startsWith(AIcall) ? "text-gray-700 italic font-semibold" : ""}`}
+            ${
+              messageText.startsWith(AIcall)
+                ? "text-gray-700 italic font-semibold"
+                : ""
+            }`}
           />
 
           <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2">
@@ -173,7 +209,10 @@ const ChatInput = ({
 
               <div className="flex items-center gap-2">
                 <img src="./assets/img/line.png" className="i" />
-                <FaFaceSmile className="text-white text-[20px]" />
+                <FaFaceSmile
+                  className="text-white text-[20px]"
+                  onClick={handleShowEmoji}
+                />
 
                 <label className="cursor-pointer">
                   <MdOutlineAttachFile className="text-white text-[20px]" />
