@@ -70,7 +70,7 @@ const Newsletter = () => {
         </div>
       </section>
       <div className="flex justify-center items-center">
-        We care about the protection of your data. Read our <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="https://talckatoo.me/terms"> Privacy Policy</a>
+        We care about the protection of your data. Read our <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="https://talckatoo.me/terms">  &#160;Privacy Policy</a>
       </div>
       {notification && <Notify type={notification.type} message={notification.message} dismissNotification={dismissNotification} />} 
     </>
