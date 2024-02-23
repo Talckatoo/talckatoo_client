@@ -52,10 +52,10 @@ const Notify = ({ type, message, dismissNotification }: NotifyProps) => {
   return (
     <>
       {isVisible && (
-        <div className='fixed top-0 left-0 w-full h-full flex bg-black opacity-[0.9] z-[99999] items-center justify-center'>
-          <div className={`${bgColor} fixed w-[30%] h-[20%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 border-l-4 rounded-lg z-50 flex flex-col items-center justify-evenly`}>
-            <div className={`p-6  flex justify-center items-center ${borderColor} ${textColor}`}>
-              <p className="font-semibold text-wrap">{message}</p>
+        <div className='fixed top-0 left-0 w-full h-full flex bg-black bg-opacity-25 z-50 items-center justify-center'>
+          <div className={`${bgColor} fixed w-[30%] h-[20%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-lg z-50 flex flex-col items-center justify-evenly max-sm:w-[90%]`}>
+            <div className={`p-6 flex justify-center items-center ${borderColor} ${textColor}`}>
+              <p className="font-semibold text-[18px] text-wrap">{message}</p>
               <button onClick={handleDismiss} className="absolute top-1 right-2" aria-label="Dismiss">
                 &#10005;
               </button>
