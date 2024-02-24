@@ -3,6 +3,7 @@ import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/user-context";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRegisterAuthMutation } from "../redux/services/AuthApi";
@@ -30,7 +31,7 @@ interface FormErrors {
 
 export const SignUp = () => {
   const navigate = useNavigate();
-  // const { setUser, isDarkMode } = useContext(UserContext);
+  const { isDarkMode } = useContext(UserContext);
   const [formData, setFormData] = React.useState<FormData>({
     name: "",
     email: "",
@@ -50,10 +51,13 @@ export const SignUp = () => {
 
   const sendVerificationCode = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/account/emailVerification`, {
-        email: formData.email,
-      });
-      if (response){
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/account/emailVerification`,
+        {
+          email: formData.email,
+        }
+      );
+      if (response) {
         const { verificationCode } = response.data;
         toast.success(
           "Verification code sent to your email. Please check your email."
@@ -61,8 +65,10 @@ export const SignUp = () => {
         setVerificationCode(verificationCode);
       }
     } catch (error) {
-      if (error.response.data.message === "The email is already in use"){
-        toast.error("The email is already in use. Please use another email or sign in");
+      if (error.response.data.message === "The email is already in use") {
+        toast.error(
+          "The email is already in use. Please use another email or sign in"
+        );
       }
     }
   };
@@ -191,8 +197,8 @@ export const SignUp = () => {
     }
   };
   return (
-    <section className="relative bg-white h-full w-full font-inter">
-      <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
+    <section className="relativeh-full w-full font-inter">
+      <div className=" fixed top-0 left-0 w-full h-full -z-20"></div>
       <img
         src="/assets/img/wave.svg"
         alt="shape"
@@ -201,7 +207,11 @@ export const SignUp = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
-        <h1 className="head-text text-center mt-[6rem] mb-6 text-black">
+        <h1
+          className={`head-text text-center mt-[6rem] mb-6 ${
+            isDarkMode ? "text-white" : "text-black"
+          }`}
+        >
           Join Talckatoo Today!
         </h1>
         {/* Sign up form  */}
@@ -218,7 +228,7 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, name: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
+            className="bg-transparent border-[#33363A] z-[1] rounded-lg"
             error={formErrors.name}
             label={""}
             id={""}
@@ -295,17 +305,23 @@ export const SignUp = () => {
           />
 
           <select
-            className={`rounded-lg p-3 w-full border text-black relative text-[16px] focus:outline-none z-[1] ${
+            className={`rounded-lg p-3 w-full border  relative text-[16px] focus:outline-none z-[1] ${
               formErrors.selectedLanguage ? "border-red-500" : ""
-            } bg-transparent border-[#33363A]`}
+            } bg-transparent border-[#33363A] ${
+              isDarkMode ? "text-white" : "text-black"
+            }`}
             value={selectedLanguage}
             onChange={(e) => setSelectedLanguage(e.target.value)}
           >
-            <option value="" disabled hidden>
+            <option value="" disabled hidden className="text-black">
               Select Your Language
             </option>
             {languagesArray?.map(({ code, language }) => (
-              <option key={code} value={code} className="bg-white">
+              <option
+                key={code}
+                value={code}
+                className={isDarkMode ? "bg-[#0E131D]" : "bg-white"}
+              >
                 {language}
               </option>
             ))}
@@ -324,10 +340,10 @@ export const SignUp = () => {
             Sign Up
           </Button>
 
-          <p className="text-black mt-4 z-[1]">
+          <p className={` ${isDarkMode ? "text-white" : ""} mt-4 z-[1]`}>
             Already have an account?{" "}
             <Link
-              className="text-black cursor-pointer rounded-lg underline font-semibold"
+              className=" cursor-pointer rounded-lg underline font-semibold"
               to="/sign-in"
             >
               Sign In
@@ -336,17 +352,26 @@ export const SignUp = () => {
         </form>
         <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
           <div className="flex gap-1 items-center">
-            <MdOutlineSecurity />
-            <span>
-            By signing up,you agree to our 
+            <MdOutlineSecurity className={isDarkMode ? "text-white" : ""} />
+            <span className={isDarkMode ? "text-white" : ""}>
+              By signing up, you agree to our
             </span>
-           </div>
-           <div className="flex gap-2">
-           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/terms")}>Terms of Service & </p>
-           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/privacy")}> Privacy</p>
-           </div>
-         
-          
+          </div>
+          <div className="flex gap-2">
+            <p
+              className="text-[blue] cursor-pointer"
+              onClick={() => navigate("/terms")}
+            >
+              Terms of Service &{" "}
+            </p>
+            <p
+              className="text-[blue] cursor-pointer"
+              onClick={() => navigate("/privacy")}
+            >
+              {" "}
+              Privacy
+            </p>
+          </div>
         </div>
       </div>
       {/* End of Sign up form  */}
