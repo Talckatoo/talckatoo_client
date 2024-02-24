@@ -118,7 +118,7 @@ export const SignUp = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
   
-        <h1 className="head-text text-center mt-[12rem] mb-6 text-black">
+        <h1 className="head-text text-center mt-[6rem] mb-6 text-black">
           Join Talckatoo Today!
         </h1>
         {/* Sign up form  */}

@@ -115,7 +115,7 @@ const SignUpVerification = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="justify-center align-center text-center">
-        <h1 className="head-text text-center mt-[12rem] mb-6 text-black">
+        <h1 className="head-text text-center mt-[6rem] mb-6 text-black">
           Let's get started!
         </h1>
         {!sendEmail ? (
@@ -185,7 +185,7 @@ const SignUpVerification = () => {
               Sign In
             </Link>
           </p>
-        <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
+          <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
           <div className="flex gap-1 items-center">
             <MdOutlineSecurity />
             <span>
