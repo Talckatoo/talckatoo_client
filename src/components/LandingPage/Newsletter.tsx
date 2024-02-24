@@ -36,7 +36,7 @@ const Newsletter = () => {
       });
 
       if (!response.ok) {
-        setNotification({ type: 'error', message: 'Your email is already Subscribed' });
+        setNotification({ type: 'error', message: 'Your email is already subscribed' });
       } else {
         setNotification({ type: 'success', message: 'Subscribed successfully' });
       }
