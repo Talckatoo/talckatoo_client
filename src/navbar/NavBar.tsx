@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
 import { HiOutlineUserCircle } from "react-icons/hi";
+import { MdDarkMode } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import COCKATOO from "./.././assests/cockatoo.png";
 import { setAuth } from "../redux/features/user/authSlice";
@@ -39,7 +40,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
     if (l.code === language?.toLowerCase()) return l.language;
   });
 
-  const { isDarkMode, setIsDarkMode } = useContext(UserContext);
+  const { isDarkMode, toggleDarkMode } = useContext(UserContext);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClicks);
@@ -90,10 +91,6 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
 
   const navigate = useNavigate();
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
   const handleVideoCall = () => {
     onHandleCall();
   };
@@ -109,7 +106,11 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
   };
 
   return (
-    <nav className="relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm ">
+    <nav
+      className={`relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center   shadow-sm ${
+        isDarkMode ? "bg-[#0E131D]  " : "bg-white  border-b border-opacity-20"
+      }`}
+    >
       <div className="flex w-[80%] gap-2 md:gap-8">
         <div className="flex items-center ml-2 gap-2 md:gap-4 ">
           {user && (
@@ -134,7 +135,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
 
               <div className="flex flex-col  hover:text-gray-300   mr-2 focus:outline-none sm:block">
                 {user && user?.userName ? (
-                  <p className="max-md:text-[16px] md: text-[16px] text-bold text-[#25282C]">
+                  <p className= {` max-md:text-[16px] md: text-[16px] text-bold text-[#25282C] ${isDarkMode ? "text-white" : "text-black"}`}>
                     {recipient}
                   </p>
                 ) : (
@@ -191,7 +192,15 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
       </div>
 
       <div className="flex gap-6 items-center max-md:gap-2 ">
-        <button className="text-black" onClick={handleVideoCall}>
+        <MdDarkMode
+          className={
+            isDarkMode
+              ? "text-[25px] text-white cursor-pointer"
+              : "text-[25px] cursor-pointer"
+          }
+          onClick={toggleDarkMode}
+        />
+        <button className={isDarkMode ? "text-white " : "text-black" } onClick={handleVideoCall}>
           <PiVideoCameraThin size={34} />
         </button>
         {/* 
