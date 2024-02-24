@@ -73,7 +73,7 @@ const NavBar: FC<NavBarProps> = ({}) => {
             type="button"
             className="bg-black rounded-[3px] max-md:px-4 max-md:py-2 text-white px-7 py-2"
             onClick={() => {
-              navigate("/sign-up");
+              navigate("/sign-up/verification");
             }}
           >
             Get Started
