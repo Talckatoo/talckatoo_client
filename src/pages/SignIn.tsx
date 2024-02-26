@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks";
 import { setAuth } from "../redux/features/user/authSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { MdOutlineSecurity } from "react-icons/md";
 
 interface FormData {
   email: string;
@@ -117,7 +118,7 @@ const SignIn = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
-        <h2 className="head-text text-center mt-[5rem] mb-10 text-black">
+        <h2 className="head-text text-center mt-[12rem] mb-10 text-black">
           Welcome back
         </h2>
         {/* Sign up form  */}
@@ -190,7 +191,7 @@ const SignIn = () => {
 
           <Button
             type="submit"
-            className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1]"
+            className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1] rounded-lg"
           >
             {loading ? "Loading..." : "Log in"}
           </Button>
@@ -207,6 +208,21 @@ const SignIn = () => {
             </span>
           </p>
         </form>
+        <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
+          <div className="flex gap-1 items-center">
+           
+            <MdOutlineSecurity />
+            <span>
+              your data is safe with us
+            </span>
+           </div>
+           <div className="flex gap-2">
+           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/terms")}>terms & </p>
+           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/privacy")}> privacy</p>
+           </div>
+         
+          
+        </div>
       </div>
       {/* End of Sign up form  */}
       <br />

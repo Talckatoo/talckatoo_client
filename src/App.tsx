@@ -2,11 +2,13 @@ import { useEffect, useRef } from "react";
 import Chat from "./pages/Chat";
 import { Route, Routes } from "react-router-dom";
 import Profile from "./pages/Profile";
+import Term from "./pages/Term";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 // import VideoCall from "./pages/VideoCall";
 import VideoRoomCall from "./pages/VideoRoomCall";
 import { SignUp } from "./pages/SignUp";
+import Privacy from "./pages/Privacy";
 import ResetPasswordUpdate from "./pages/ResetPasswordUpdate";
 import ResetPassword from "./pages/ResetPassword";
 import { io, Socket } from "socket.io-client";
@@ -18,6 +20,7 @@ import {
 } from "./redux/features/user/userSlice";
 import Random from "./pages/Random";
 import useUserRedirect from "./hooks/useUserRedirect";
+import SignUpVerification from "./pages/SignUpVerification"
 
 type MyEventMap = {
   connect: () => void;
@@ -89,10 +92,13 @@ const App = () => {
           element={<ResetPasswordUpdate />}
         />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-up/verification" element={<SignUpVerification />} />
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat socket={socket} />} />
         <Route path="/profile" element={<Profile socket={socket} />} />
+        <Route path="/terms" element={<Term />} />
         <Route path="/random" element={<Random socket={socket} />} />
+        <Route path="/privacy" element={<Privacy />} />
         <Route
           path="/call/:roomId/:decodedCallData"
           element={<VideoRoomCall socket={socket} />}
