@@ -18,7 +18,6 @@ import {
   setUsers,
   updateContactedUserById,
 } from "./redux/features/user/userSlice";
-import { useFetchAllRequestsQuery } from "./redux/services/UserApi";
 import Random from "./pages/Random";
 import useUserRedirect from "./hooks/useUserRedirect";
 import SignUpVerification from "./pages/SignUpVerification"

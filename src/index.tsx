@@ -10,7 +10,6 @@ import App from "./App";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import "animate.css";
-
 // CALL IT ONCE IN YOUR APP
 injectStyle();
 
