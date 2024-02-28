@@ -2,13 +2,14 @@ import End from "../components/VideoCall/End";
 import VideoPlayer from "../components/VideoCall/VideoPlayer";
 import Options from "../components/VideoCall/Options";
 import { useEffect, useState, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { useParams, useRouteLoaderData } from "react-router-dom";
+import { useAppSelector } from "../redux/hooks";
+import { useParams } from "react-router-dom";
 import CallUser from "../components/VideoCall/services/CallUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
 import LeaveCall from "../components/VideoCall/services/LeaveCall";
 import { Base64 } from "js-base64";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface Socket {
   current: any;
@@ -16,14 +17,12 @@ interface Socket {
 
 const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { roomId, decodedCallData } = useParams();
-
   const [stream, setStream] = useState(null);
   const [userData, setUserData] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
+  const [media, setMedia] = useState(true);
 
   const myVideo = useRef();
   const userVideo = useRef();
@@ -90,7 +89,18 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
           );
         }
       } catch (error) {
-        console.error("Error accessing media stream:", error);
+        console.log(error);
+        if (error instanceof DOMException && error.name === 'NotFoundError') {
+        setMedia(false);
+        if (socket.current) {
+          socket.current.emit("leaveCall", {
+            roomId,
+          });
+        }
+        if (connectionRef.current) {
+          connectionRef.current.destroy();
+        }
+        }       
       }
     };
 
@@ -117,7 +127,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current, roomId, decodedCallData]);
 
   useEffect(() => {
-    socket?.current?.on("roomCreated", (data: { message: any }) => {});
+    socket?.current?.on("roomCreated", (data: { message: any }) => { });
 
     return () => {
       // Clean up event listeners on component unmount
@@ -133,16 +143,6 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
     <>
       {!callEnded ? (
         <div className="flex flex-col w-full h-full">
-          {/* <img
-      src="/assets/img/Shapes.png"
-      alt="shape"
-      className="fixed left-6  -bottom-8 w-[30%] z-[1] "
-    />
-    <img
-      src="/assets/img/Shape.png"
-      alt="shape"
-      className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
-    /> */}
           <div className="flex h-1/6">
             <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
               <Link to="/" className="font-jakarta text-[20px] font-bold">
@@ -150,25 +150,33 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
               </Link>
             </div>
           </div>
-          <div className="flex w-full h-full">
-            <VideoPlayer
-              callAccepted={callAccepted}
-              myVideo={myVideo}
-              userVideo={userVideo}
-              callEnded={callEnded}
-              userData={userData}
-            />
-          </div>
-          <div className="flex h-1/6 bg-[#25282C]">
-            <Options
-              callAccepted={callAccepted}
-              callEnded={callEnded}
-              myVideo={myVideo}
-              userVideo={userVideo}
-              leaveCall={leaveCall}
-              userData={userData}
-            ></Options>
-          </div>
+          {media ? ( // Check if media access error occurred
+            <>
+              <div className="flex w-full h-full">
+                <VideoPlayer
+                  callAccepted={callAccepted}
+                  myVideo={myVideo}
+                  userVideo={userVideo}
+                  callEnded={callEnded}
+                  userData={userData}
+                />
+              </div>
+              <div className="flex h-1/6 bg-[#25282C]">
+                <Options
+                  callAccepted={callAccepted}
+                  callEnded={callEnded}
+                  myVideo={myVideo}
+                  userVideo={userVideo}
+                  leaveCall={leaveCall}
+                  userData={userData}
+                ></Options>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-red-500 font-bold">Failed to access camera or microphone. Please check your settings and try again.</p>
+            </div>
+          )}
         </div>
       ) : (
         <End callEnded={callEnded} />

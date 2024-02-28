@@ -23,6 +23,10 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const { random } = useAppSelector((state) => state.socket);
+  const handleSetButtonSelected = (buttonSelected: string) => {
+    console.log(buttonSelected);
+    navigate("/chat", { state: { buttonSelected } });
+  };
 
   useEffect(() => {
     console.log(random);
@@ -163,7 +167,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   };
   return (
     <div
-      className={`flex flex-1 justify-center items-center  w-full h-full ${
+      className={`flex flex-1 flex-grow w-full h-full ${
         isDarkMode ? "bg-slate-950" : ""
       }`}
     >
@@ -171,7 +175,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       <LeftSideBar
         showSetting={false}
         showRequest={false}
-        setShowRequest={navigateChat}
+        setButtonSelected={handleSetButtonSelected}
         showRandom={true}
       />
 
