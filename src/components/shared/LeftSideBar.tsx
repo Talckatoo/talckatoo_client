@@ -26,8 +26,8 @@ const LeftSideBar = ({
     navigate("/profile");
   };
   return (
-    <div className="w-[80px] min-w-[80px] border-r pt-5 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
-      <div className="flex flex-col  gap-3 w-full">
+    <div className={`w-[80px] min-w-[80px]  grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] ${isDarkMode ? "border-r border-[#5D5DFF] border-opacity-20" : "border-r pt-5 border-opacity-20"}`}>
+      <div className="flex flex-col  gap-3 w-full"> 
         <div
           className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
             showRequest || showRandom || showSetting
