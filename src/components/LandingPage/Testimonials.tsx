@@ -12,7 +12,7 @@ const Testimonials = () => {
           </span>
         </div>
         <div className="flex flex-col items-center md:items-start">
-          <h2 className=" text-center md:text-start font-dms text-black max-md:text-[25px] md:text-[40px]  max-w-[883px] z-[1]">
+          <h2 className=" text-center md:text-start font-dms max-md:text-[25px] md:text-[40px]  max-w-[883px] z-[1]">
             Don't take our word for it...
           </h2>
           <p className=" mt-3 max-md:text-[16px]  text-[18px] text-center md:text-start md:max-w-[433px] z-[1]">
@@ -26,14 +26,16 @@ const Testimonials = () => {
               key={index}
               className="p-16 bg-light-bg border shadow-lg border-[#EFF0F6] rounded-[20px] card"
             >
-              <p className="max-md:text-[16px]  text-[18px]">{item.text}</p>
-              <div className="flex items-center gap-4  mt-4">
+              <p className="max-md:text-[16px]   text-black text-[18px]">
+                {item.text}
+              </p>
+              <div className="flex items-center  gap-4  mt-4">
                 <img src={item.image} alt="i" />
                 <div className="flex flex-col">
-                  <h4 className="max-md:text-[16px]  text-[18px] font-bold">
+                  <h4 className="max-md:text-[16px]  text-black text-[18px] font-bold">
                     {item.name}
                   </h4>
-                  <span className="max-md:text-[16px]  text-[18px]">
+                  <span className="max-md:text-[16px]  text-black text-[18px]">
                     {item.title}
                   </span>
                 </div>
