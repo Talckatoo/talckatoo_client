@@ -116,7 +116,9 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
           {user && (
             <>
               <IoChevronBack
-                className="text-black max-md:hidden min-w-[24px] text-[24px] md:text-[28px] md:min-w-[28px] cursor-pointer"
+                className={`max-md:hidden min-w-[24px] text-[24px] md:text-[28px] md:min-w-[28px] cursor-pointer ${
+                  isDarkMode ? "text-white" : "text-black"
+                }`}
                 onClick={handleBack}
               />
 
@@ -135,7 +137,11 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
 
               <div className="flex flex-col  hover:text-gray-300   mr-2 focus:outline-none sm:block">
                 {user && user?.userName ? (
-                  <p className= {` max-md:text-[16px] md: text-[16px] text-bold text-[#25282C] ${isDarkMode ? "text-white" : "text-black"}`}>
+                  <p
+                    className={` max-md:text-[16px] md: text-[16px] text-bold text-[#25282C] ${
+                      isDarkMode ? "text-white" : "text-black"
+                    }`}
+                  >
                     {recipient}
                   </p>
                 ) : (
@@ -200,7 +206,10 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
           }
           onClick={toggleDarkMode}
         />
-        <button className={isDarkMode ? "text-white " : "text-black" } onClick={handleVideoCall}>
+        <button
+          className={isDarkMode ? "text-white " : "text-black"}
+          onClick={handleVideoCall}
+        >
           <PiVideoCameraThin size={34} />
         </button>
         {/* 
