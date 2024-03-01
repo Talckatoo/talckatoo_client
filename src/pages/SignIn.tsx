@@ -172,7 +172,7 @@ const SignIn = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="bg-transparent border-[#33363A] rounded-lg text-black"
+            className={`bg-transparent border-[#33363A] rounded-lg  ${isDarkMode ? " text-white": "text-black"}`}
             error={formErrors.email}
           />
 
@@ -186,7 +186,7 @@ const SignIn = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="bg-transparent border-[#33363A] rounded-lg text-black"
+            className={`bg-transparent border-[#33363A] rounded-lg  ${isDarkMode ? " text-white": "text-black"}`}
             error={formErrors.password}
           />
           <Button
