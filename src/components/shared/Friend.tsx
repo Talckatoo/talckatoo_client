@@ -103,7 +103,7 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
           </div>
         </div>
         {/* Column 3: Red Circle */}
-        <div className="flex-none relative pr-4 space-y-4">
+        <div className="flex-none relative pr-4 space-y-4">git 
           <div
             className={`text-md font-medium ${
               isDarkMode ? "text-white" : "text-black"

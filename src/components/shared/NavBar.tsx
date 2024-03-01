@@ -1,6 +1,8 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useContext } from "react";
 import Button from "../../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/user-context";
+import { MdDarkMode } from "react-icons/md";
 
 interface NavBarProps {
   showSign?: boolean;
@@ -9,6 +11,7 @@ interface NavBarProps {
 const NavBar: FC<NavBarProps> = ({}) => {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const { isDarkMode, toggleDarkMode } = useContext(UserContext);
 
   const handleSignInClick = () => {
     // Check if token exists in local storage
@@ -22,6 +25,7 @@ const NavBar: FC<NavBarProps> = ({}) => {
       navigate("/sign-in");
     }
   };
+
   // scrool event
 
   useEffect(() => {
@@ -42,10 +46,22 @@ const NavBar: FC<NavBarProps> = ({}) => {
 
   return (
     <header
-      className="w-full py-4 fixed top-0 z-50"
+      className={
+        isDarkMode
+          ? "w-full py-4 fixed top-0 z-50 bg-black"
+          : "bg-withe w-full py-4 fixed top-0 z-50"
+      }
+      // style={{isDarkMode ?
+      //   { backgroundColor: scrolled ? "rgba(255, 255, 255, 0.9)" : "transparent",
+      //   backdropFilter: scrolled ? "blur(8px)" : "none" }
+      // }}
       style={{
-        backgroundColor: scrolled ? "rgba(255, 255, 255, 0.9)" : "transparent",
-        backdropFilter: scrolled ? "blur(8px)" : "none",
+        backgroundColor: isDarkMode
+          ? "transparent"
+          : scrolled
+          ? "rgba(255, 255, 255, 0.9)"
+          : "transparent",
+        backdropFilter: isDarkMode ? "none" : scrolled ? "blur(8px)" : "none",
       }}
     >
       <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
@@ -60,18 +76,31 @@ const NavBar: FC<NavBarProps> = ({}) => {
 
           <span className="hidden sm:inline">TALCKATOO</span>
         </Link>
+
         {/* sign up and sign in button */}
         <div className="flex items-center gap-4  max-[430px]:flex max-[430px]:justify-center">
+          <MdDarkMode
+            className={
+              isDarkMode
+                ? "text-[25px] text-white cursor-pointer"
+                : "text-[25px] cursor-pointer"
+            }
+            onClick={toggleDarkMode}
+          />
           <Button
             type="button"
-            className="max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000]"
+            className={`max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000] ${
+              isDarkMode ? `bg-white text-black` : `bg-black text-white`
+            }`}
             onClick={handleSignInClick}
           >
             Log In
           </Button>
           <Button
             type="button"
-            className="bg-black rounded-[3px] max-md:px-4 max-md:py-2 text-white px-7 py-2"
+            className={` rounded-[3px] max-md:px-4 max-md:py-2 px-7 py-2 ${
+              isDarkMode ? `bg-white text-black` : `bg-black text-white`
+            }`}
             onClick={() => {
               navigate("/sign-up");
             }}

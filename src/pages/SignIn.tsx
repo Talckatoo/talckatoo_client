@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -7,6 +7,7 @@ import { useLoginAuthMutation } from "../redux/services/AuthApi";
 import { useFetchUserByIdQuery } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks";
+import { UserContext } from "../context/user-context";
 import { setAuth } from "../redux/features/user/authSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { MdOutlineSecurity } from "react-icons/md";
@@ -32,6 +33,7 @@ const SignIn = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
   const userId = urlParams.get("userId");
+  const { isDarkMode } = useContext(UserContext);
 
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -102,8 +104,8 @@ const SignIn = () => {
   }, [token, userId]);
 
   return (
-    <section className="relative bg-white h-full w-full font-inter">
-      <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
+    <section className="relative h-full w-full font-inter">
+      <div className="fixed top-0 left-0 w-full h-full -z-20"></div>
       <img
         src="/assets/img/wave.svg"
         alt="shape"
@@ -118,7 +120,11 @@ const SignIn = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
-        <h2 className="head-text text-center mt-[5rem] mb-10 text-black">
+        <h2
+          className={`head-text text-center mt-[5rem] mb-1 ${
+            isDarkMode ? "text-white" : " text-black"
+          }`}
+        >
           Welcome back
         </h2>
         {/* Sign up form  */}
@@ -146,7 +152,11 @@ const SignIn = () => {
 
           <div className="flex items-center gap-4 w-full my-[2rem]">
             <div className="w-full h-[2px] bg-[#33363A]"></div>
-            <p className="text-black whitespace-nowrap">
+            <p
+              className={`text-black whitespace-nowrap ${
+                isDarkMode ? "text-white" : " text-black"
+              }`}
+            >
               Or, sign in with your email
             </p>
             <div className="w-full h-[2px] bg-[#33363A]"></div>
@@ -184,7 +194,7 @@ const SignIn = () => {
             onClick={() => {
               navigate(`/reset-password`);
             }}
-            className="text-black"
+            className={isDarkMode ? "text-white" : " text-black"}
           >
             Forgot password?
           </Button>
@@ -196,10 +206,16 @@ const SignIn = () => {
             {loading ? "Loading..." : "Log in"}
           </Button>
 
-          <p className="text-black mt-4 z-[1] ">
+          <p
+            className={` mt-4 z-[1] ${
+              isDarkMode ? "text-white" : " text-black"
+            }`}
+          >
             Don't have an account?{" "}
             <span
-              className="text-black cursor-pointer z-[1] underline font-semibold"
+              className={`text-black cursor-pointer z-[1] underline font-semibold ${
+                isDarkMode ? "text-white" : " text-black"
+              }`}
               onClick={() => {
                 navigate("/sign-up");
               }}
@@ -210,18 +226,26 @@ const SignIn = () => {
         </form>
         <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
           <div className="flex gap-1 items-center">
-           
-            <MdOutlineSecurity />
-            <span>
+            <MdOutlineSecurity className={isDarkMode ? "text-white" : ""} />
+            <span className={isDarkMode ? "text-white" : ""}>
               your data is safe with us
             </span>
-           </div>
-           <div className="flex gap-2">
-           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/terms")}>terms & </p>
-           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/privacy")}> privacy</p>
-           </div>
-         
-          
+          </div>
+          <div className="flex gap-2">
+            <p
+              className="text-[blue] cursor-pointer"
+              onClick={() => navigate("/terms")}
+            >
+              terms &{" "}
+            </p>
+            <p
+              className="text-[blue] cursor-pointer"
+              onClick={() => navigate("/privacy")}
+            >
+              {" "}
+              privacy
+            </p>
+          </div>
         </div>
       </div>
       {/* End of Sign up form  */}

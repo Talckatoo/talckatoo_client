@@ -13,8 +13,16 @@ const FetchLatestMessages: React.FC<{
       truncateText = truncateText + "...";
     }
   }
-
-  return <div className="text-[14px]">{truncateText}</div>;
+  const { isDarkMode } = useContext(UserContext);
+  return (
+    <div
+      className={
+        isDarkMode ? "text-white text-[14px]" : "text-black text-[14px]"
+      }
+    >
+      {truncateText}
+    </div>
+  );
 };
 
 export default FetchLatestMessages;
