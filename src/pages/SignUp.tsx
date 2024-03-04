@@ -228,7 +228,9 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, name: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1] rounded-lg"
+            className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
+              isDarkMode ? " text-white" : "text-black"
+            }`}
             error={formErrors.name}
             label={""}
             id={""}
@@ -243,7 +245,9 @@ export const SignUp = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              className="bg-transparent border-[#33363A] z-[1] rounded-lg-left text-black"
+              className={`bg-transparent border-[#33363A] z-[1] rounded-lg-left ${
+                isDarkMode ? " text-white" : "text-black"
+              }`}
               error={formErrors.email}
               label={""}
               id={""}
@@ -284,7 +288,9 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
+            className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
+              isDarkMode ? " text-white" : "text-black"
+            }`}
             error={formErrors.password}
             label={""}
             id={""}
@@ -298,7 +304,9 @@ export const SignUp = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, confirmPassword: e.target.value })
             }
-            className="bg-transparent border-[#33363A] z-[1] rounded-lg"
+            className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
+              isDarkMode ? " text-white" : "text-black"
+            }`}
             error={formErrors.confirmPassword}
             label={""}
             id={""}
