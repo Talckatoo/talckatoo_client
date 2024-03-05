@@ -51,7 +51,6 @@ const ChatInput = ({
 
   const [uploadFile] = useUploadFileMutation();
   const refToggleBox = useRef(null);
-
   useEffect(() => {
     const handleClickOutisde = (event: MouseEvent) => {
       if (

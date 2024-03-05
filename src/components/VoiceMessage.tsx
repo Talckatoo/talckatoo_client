@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaMicrophone, FaStop, FaPlay, FaPaperPlane } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -10,6 +10,8 @@ import { Socket } from "socket.io-client";
 import { useSendAudioMutation } from "../redux/services/MessagesApi";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { HiTranslate } from "react-icons/hi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 interface VoiceMessageProps {
   socket: Socket;
@@ -20,7 +22,11 @@ interface voiceCode {
   voiceCode: string | undefined;
 }
 
-const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
+const VoiceMessage = ({
+  socket,
+  onIsAudioLoading,
+  onHandleTranslateText,
+}: VoiceMessageProps) => {
   const WHISPER_TRANSCRIPTION_URL = import.meta.env
     .VITE_WHISPER_TRANSCRIPTION_URL;
 
@@ -226,10 +232,21 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
                 disabled={!isReadyToSend}
                 className="hover:text-slate-400 mr-3 relative px-2.5 items-center justify-center group"
               >
-                <FaPaperPlane className="text-white text-[20px]" />
-                <span className="tooltip">
-                  {isSendingAudio ? "Sending..." : "Send Your Audio"}
-                </span>
+                {isSendingAudio ? (
+                        <FontAwesomeIcon
+                    className="text-white"
+                    icon={faSpinner}
+                    spin
+                  />
+      
+                ) : (
+                  <>
+                    <FaPaperPlane className="text-white text-[20px]" />
+                    <span className="tooltip">
+                      {isSendingAudio ? "Sending..." : "Send Your Audio"}
+                    </span>
+                  </>
+                )}
               </button>
               <button
                 onClick={handleTranslateAudio}
