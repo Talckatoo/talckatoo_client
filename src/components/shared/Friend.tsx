@@ -53,14 +53,14 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
       {selected && (
         <div
           className={`absolute top-0 left-0 h-full w-2 ${
-            isDarkMode ? "bg-primary-500" : "bg-secondary-500"
+            isDarkMode ? "bg-white" : "bg-secondary-500"
           } p-1`}
         ></div>
       )}
 
       <div
         className={`h-full flex items-center py-4 px-4
-      ${selected ? "bg-[#F5F5F5] pl-8" : "bg-transparent"}
+      ${selected ? ` ${ isDarkMode ? "bg-[#141A27] pl-8" : "bg-[#F5F5F5] pl-8"}` : "bg-transparent"}
       `}
       >
         <div className="relative">
