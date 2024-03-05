@@ -24,7 +24,6 @@ interface voiceCode {
 
 const VoiceMessage = ({
   socket,
-  onIsAudioLoading,
   onHandleTranslateText,
 }: VoiceMessageProps) => {
   const WHISPER_TRANSCRIPTION_URL = import.meta.env
@@ -47,7 +46,7 @@ const VoiceMessage = ({
   const [recorder, setRecorder] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
   const [audioURL, setAudioURL] = useState<string | null>(null);
-
+  const [isTranslationLoading, setIsTranslationLoading] = useState<boolean>(false);
   const startRecording = () => {
     setIsRecording(true);
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -173,6 +172,7 @@ const VoiceMessage = ({
   };
 
   const handleTranslateAudio = async () => {
+    setIsTranslationLoading(true);
     const formData = new FormData();
 
     if (recordedAudio) {
@@ -195,6 +195,7 @@ const VoiceMessage = ({
       });
       const data = await response.json();
       onHandleTranslateText(data);
+      setIsTranslationLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -233,12 +234,11 @@ const VoiceMessage = ({
                 className="hover:text-slate-400 mr-3 relative px-2.5 items-center justify-center group"
               >
                 {isSendingAudio ? (
-                        <FontAwesomeIcon
+                  <FontAwesomeIcon
                     className="text-white"
                     icon={faSpinner}
                     spin
                   />
-      
                 ) : (
                   <>
                     <FaPaperPlane className="text-white text-[20px]" />
@@ -253,9 +253,18 @@ const VoiceMessage = ({
                 className="hover:text-slate-400 mr-3 relative px-2.5 items-center justify-center group"
                 disabled={!isReadyToSend}
               >
-                <HiTranslate className="text-white text-[20px]" />
-                {/* add tooltip */}
-                <span className="tooltip">Translate Your Audio</span>
+                {isTranslationLoading ? (
+                  <FontAwesomeIcon
+                    className="text-white"
+                    icon={faSpinner}
+                    spin
+                  />
+                ) : (
+                  <>
+                    <HiTranslate className="text-white text-[20px]" />
+                    <span className="tooltip">Translate Your Audio</span>
+                  </>
+                )}
               </button>
             </>
           ) : null}
