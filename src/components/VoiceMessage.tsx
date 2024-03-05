@@ -196,6 +196,7 @@ const VoiceMessage = ({
       const data = await response.json();
       onHandleTranslateText(data);
       setIsTranslationLoading(false);
+      setRecordedAudio(null);
     } catch (err) {
       console.log(err);
     }
