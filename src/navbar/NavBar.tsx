@@ -108,7 +108,9 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
   return (
     <nav
       className={`relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center   shadow-sm ${
-        isDarkMode ? "bg-[#0E131D]  " : "bg-white  border-b border-opacity-20"
+        isDarkMode
+          ? "bg-[#0E131D] border-l border-[#5D5DFF] border-opacity-20 "
+          : "bg-white  border-b border-opacity-20"
       }`}
     >
       <div className="flex w-[80%] gap-2 md:gap-8">
@@ -178,7 +180,13 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
                   </div>
                 </div>
               )} */}
-              <div className="bg-[#25282C] py-2 flex items-center text-white px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ">
+              <div
+                className={`py-2 flex items-center  px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ${
+                  isDarkMode
+                    ? "bg-[#D9E3EA] text-black"
+                    : "bg-[#25282C] text-white"
+                }`}
+              >
                 <span className="max-md:text-[12px] md:text-[14px] ">
                   {fullLanguage}
                 </span>
