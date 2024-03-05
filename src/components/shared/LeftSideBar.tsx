@@ -37,8 +37,12 @@ const LeftSideBar = ({
         <div
           className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
             showRequest || showRandom || showSetting
-              ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+              ? `bg-white border-[1px]  hover:bg-gray-200 hover:border-gray-200 ${
+                  isDarkMode ? "border-white" : "border-black"
+                }`
+              : ` border-[1px] border-secondary-500 hover:bg-black ${
+                  isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500"
+                }`
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
@@ -47,16 +51,20 @@ const LeftSideBar = ({
           <PiChatTextFill
             className={`${
               showRequest || showRandom || showSetting
-                ? "text-secondary-500"
-                : "text-white"
+                ? `${isDarkMode ? "text-white " : "text-secondary-500"}`
+                : `${isDarkMode ? "text-black" : "text-white"}`
             } z-4 object-contain py-1 w-[29px] text-[32px]`}
           />
         </div>
         <div
           className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
             !showRequest
-              ? `bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200 ${isDarkMode ? "" : ""}`
-              : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+              ? `bg-white border-[1px]  hover:bg-gray-200 hover:border-gray-200 ${
+                  isDarkMode ? "border-white" : "border-black"
+                }`
+              : `bg-secondary-500 border-[1px]  hover:bg-black ${
+                  isDarkMode ? "bg-[#E9E9EF]" : "border-secondary-500"
+                }`
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
@@ -64,7 +72,9 @@ const LeftSideBar = ({
         >
           <IoPersonSharp
             className={`${
-              !showRequest ? `${isDarkMode ? "text-white" : "text-secondary-500"}` : "text-white"
+              !showRequest
+                ? `${isDarkMode ? "text-white " : "text-secondary-500"}`
+                : `${isDarkMode ? "text-black" : "text-white"}`
             } z-4 object-contain py-1 w-[29px] text-[32px]`}
           />
         </div>
@@ -73,15 +83,21 @@ const LeftSideBar = ({
           <div
             className={`${isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500 "}${
               !showRandom
-                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
+                ? `bg-white border-[1px]  hover:bg-gray-200 hover:border-gray-200 ${
+                    isDarkMode ? "border-white" : "border-black"
+                  }`
+                : `bg-secondary-500 border-[1px]  hover:bg-black ${
+                    isDarkMode ? "bg-[#E9E9EF]" : "border-secondary-500"
+                  }`
             } mx-2 rounded-[12px]  flex items-center justify-center flex-col
       transition duration-300 ease-in-out 
     `}
           >
             <GiPerspectiveDiceSixFacesRandom
               className={`${
-                !showRandom ?  `${isDarkMode ? "text-white" : "text-secondary-500"}` : "text-white"
+                !showRandom
+                  ? `${isDarkMode ? "text-white" : "text-secondary-500"}`
+                  : `${isDarkMode ? "text-black" : "text-white"}`
               } z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
           </div>

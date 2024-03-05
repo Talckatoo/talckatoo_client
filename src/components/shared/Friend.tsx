@@ -60,7 +60,11 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
 
       <div
         className={`h-full flex items-center py-4 px-4
-      ${selected ? ` ${ isDarkMode ? "bg-[#141A27] pl-8" : "bg-[#F5F5F5] pl-8"}` : "bg-transparent"}
+      ${
+        selected
+          ? ` ${isDarkMode ? "bg-[#141A27] pl-8" : "bg-[#F5F5F5] pl-8"}`
+          : "bg-transparent"
+      }
       `}
       >
         <div className="relative">
@@ -103,7 +107,8 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
           </div>
         </div>
         {/* Column 3: Red Circle */}
-        <div className="flex-none relative pr-4 space-y-4">git 
+        <div className="flex-none relative pr-4 space-y-4">
+          git
           <div
             className={`text-md font-medium ${
               isDarkMode ? "text-white" : "text-black"
