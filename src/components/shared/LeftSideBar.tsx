@@ -35,7 +35,7 @@ const LeftSideBar = ({
     >
       <div className="flex flex-col  gap-3 w-full">
         <div
-          className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
+          className={`${isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500 "}${
             showRequest || showRandom || showSetting
               ? `bg-white border-[1px]  hover:bg-gray-200 hover:border-gray-200 ${
                   isDarkMode ? "border-white" : "border-black"
