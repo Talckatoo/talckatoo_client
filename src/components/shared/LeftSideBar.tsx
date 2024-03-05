@@ -26,8 +26,14 @@ const LeftSideBar = ({
     navigate("/profile");
   };
   return (
-    <div className={`w-[80px] min-w-[80px]  grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] ${isDarkMode ? "border-r border-[#5D5DFF] border-opacity-20" : "border-r pt-5 border-opacity-20"}`}>
-      <div className="flex flex-col  gap-3 w-full"> 
+    <div
+      className={`w-[80px] min-w-[80px]  grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] ${
+        isDarkMode
+          ? "border-r border-[#5D5DFF] border-opacity-20"
+          : "border-r pt-5 border-opacity-20"
+      }`}
+    >
+      <div className="flex flex-col  gap-3 w-full">
         <div
           className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
             showRequest || showRandom || showSetting
@@ -84,12 +90,14 @@ const LeftSideBar = ({
       <div className="flex flex-col  gap-3 w-full">
         <div
           className={`${
-            isDarkMode ? "bg-primary-500" : "bg-secondary-500"
+            isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500"
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
           onClick={handleSettingClick}
         >
           <RiSettings5Fill
-            className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
+            className={`z-4 object-contain py-1 w-[29px] text-[32px] ${
+              isDarkMode ? "text-[#25282C]" : "text-white"
+            } `}
           />
         </div>
         <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
