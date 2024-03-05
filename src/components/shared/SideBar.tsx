@@ -180,7 +180,7 @@ const SideBar = ({
             {isLoading ? (
               <div className="h-full w-full flex flex-col items-center justify-center py-4 px-4 ">
                 <FontAwesomeIcon
-                  className="h-auto w-1/5"
+                  className="h-auto w-1/12"
                   icon={faSpinner}
                   spin
                 />
@@ -202,7 +202,7 @@ const SideBar = ({
               ))
             ) : (
               <div className="h-full w-full flex flex-col items-center justify-center py-4 px-4 ">
-                <FaUserXmark className="w-1/5 h-auto text-secondary-500 animate__animated animate__headShake" />
+                <FaUserXmark className="w-1/12 h-auto text-secondary-500 animate__animated animate__headShake" />
                 <p className="w-full font-extrabold text-[20px] text-center flex justify-center animate__animated animate__headShake">
                   We didn't find any results
                 </p>
