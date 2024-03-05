@@ -657,12 +657,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         >
           <div className="w-full flex flex-col h-full">
             <img
-              src="/assets/img/Shapes.png"
+              src={`${isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"}`}
               alt="shape"
               className="fixed left-24  -bottom-14 w-[40%] z-[1] "
             />
             <img
-              src="/assets/img/Shape.png"
+              src={`${isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"}`}
               alt="shape"
               className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
             />
@@ -700,7 +700,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                   (msg.sender === user?._id &&
                                   msg.sender !==
                                     import.meta.env.VITE_AI_ASSISTANT_ID
-                                    ? " bg-[#F5F5F5] h-full text-right text-[#000] rounded-t-[20px] rounded-bl-[20px]"
+                                    ? `h-full text-right text-[#000] rounded-t-[20px] rounded-bl-[20px] ${isDarkMode ? "bg-[#D9E3EA]" : "bg-[#F5F5F5]"}`
                                     : msg.sender !==
                                       import.meta.env.VITE_AI_ASSISTANT_ID
                                     ? "bg-[#25282C] text-left text-white  rounded-t-[20px] rounded-br-[20px]"
