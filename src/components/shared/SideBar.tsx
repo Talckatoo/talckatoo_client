@@ -129,7 +129,7 @@ const SideBar = ({ socket, refetch, buttonSelected }: { socket: any; refetch: an
           />
           <IoSearch
             className={`absolute left-3 top-3 ${
-              isDarkMode ? "text-sidebar-dark-500" : "text-white"
+              isDarkMode ? "text-white" : "text-white"
             }`}
             size={24}
           />

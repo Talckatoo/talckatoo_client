@@ -53,14 +53,18 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
       {selected && (
         <div
           className={`absolute top-0 left-0 h-full w-2 ${
-            isDarkMode ? "bg-primary-500" : "bg-secondary-500"
+            isDarkMode ? "bg-white" : "bg-secondary-500"
           } p-1`}
         ></div>
       )}
 
       <div
         className={`h-full flex items-center py-4 px-4
-      ${selected ? "bg-[#F5F5F5] pl-8" : "bg-transparent"}
+      ${
+        selected
+          ? ` ${isDarkMode ? "bg-[#141A27] pl-8" : "bg-[#F5F5F5] pl-8"}`
+          : "bg-transparent"
+      }
       `}
       >
         <div className="relative">
@@ -90,7 +94,11 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
           <div className="relative">
             {user?.conversation?.unread?.includes(userData?._id) &&
               user?._id !== selectedId && (
-                <div className="min-w-5 absolute right-1 top-[-0.5rem] w-5 min-h-5 h-5 rounded-full bg-red-500 flex justify-center items-center text-white text-xs animate-pulse" />
+                <div
+                  className={`min-w-5 absolute right-1 top-[-0.5rem] w-5 min-h-5 h-5 rounded-full bg-red-500 flex justify-center items-center text-xs animate-pulse ${
+                    isDarkMode ? "text-white" : "text-white "
+                  }`}
+                />
               )}
           </div>
 
@@ -100,6 +108,7 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
         </div>
         {/* Column 3: Red Circle */}
         <div className="flex-none relative pr-4 space-y-4">
+          git
           <div
             className={`text-md font-medium ${
               isDarkMode ? "text-white" : "text-black"
@@ -116,7 +125,7 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
             />
           ) : (
             // pending friend request
-            <MdPending className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark " />
+            <MdPending className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark" />
           ))}
       </div>
       {/* {!userData?.friendsRequest?.includes(user?._id) && (

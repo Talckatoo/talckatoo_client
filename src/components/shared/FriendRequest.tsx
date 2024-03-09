@@ -113,8 +113,9 @@ const FriendRequest = ({
     <div className="relative overflow-hidden bg" key={key}>
       {selected && (
         <div
-          className={`absolute top-0 left-0 h-full w-2 ${isDarkMode ? "bg-primary-500" : "bg-secondary-500"
-            } p-1`}
+          className={`absolute top-0 left-0 h-full w-2 ${
+            isDarkMode ? "bg-primary-500" : "bg-secondary-500"
+          } p-1`}
         ></div>
       )}
 
@@ -154,8 +155,9 @@ const FriendRequest = ({
         <div className="flex-grow px-3 w-full ">
           <div className="flex items-center ">
             <p
-              className={`mr-2 font-bold text-base ${isDarkMode ? "text-white" : "text-black"
-                } line-clamp-1`}
+              className={`mr-2 font-bold text-base ${
+                isDarkMode ? "text-white" : "text-black"
+              } line-clamp-1`}
             >
               {user.from.userName}
             </p>
@@ -174,8 +176,9 @@ const FriendRequest = ({
         {/* Column 3: Red Circle */}
         <div className="flex-none relative pr-4 space-y-4">
           <div
-            className={`text-md font-medium ${isDarkMode ? "text-white" : "text-black"
-              } `}
+            className={`text-md font-medium ${
+              isDarkMode ? "text-white" : "text-black"
+            } `}
           ></div>
         </div>
         {/* {!userData?.friends
@@ -199,24 +202,25 @@ const FriendRequest = ({
             onClick={() => HandleActionFriend("accept")}
           >
             <FaCheckCircle className="text-green-500 text-[22px]" />
-            Accept
+            <span className={isDarkMode ? "text-white" : ""}>Accept</span>
           </div>
           <div
             className="flex items-center  gap-2 font-semibold"
             onClick={() => HandleActionFriend("reject")}
           >
             <IoMdCloseCircle className="text-red-500 text-[22px]" />
-            Decline
+            <span className={isDarkMode ? "text-white" : ""}>Decline</span>
           </div>
         </div>
       )}
 
       {/* Line Divider */}
       <div
-        className={`absolute bottom-0 left-4 border-t ${isDarkMode
+        className={`absolute bottom-0 left-4 border-t ${
+          isDarkMode
             ? "border-primary-500 border-opacity-20"
             : "border-black opacity-50"
-          } w-[90%]`}
+        } w-[90%]`}
       ></div>
     </div>
   );

@@ -1,14 +1,17 @@
+import { useContext } from "react";
 import Button from "../../UI/Button";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/user-context";
 const Hero = () => {
   const navigate = useNavigate();
+  const { isDarkMode } = useContext(UserContext);
 
   return (
     <section className="container py-[2rem] mt-[5rem] max-[430px]:mt-[7rem]  ">
       <div className="flex flex-col md:flex-row  md:items-center justify-center">
         <div className=" w-full md:w-[50%]">
           <div className="w-full flex flex-col items-start  max-md:items-center">
-            <h1 className="head-text max-md:mx-auto max-md:text-[32px] text-[50px] text-center  md:text-start max-w-[536px]  z-[1] text-black ">
+            <h1 className="head-text max-md:mx-auto max-md:text-[32px] text-[50px] text-center  md:text-start max-w-[536px]  z-[1] ">
               Bridging Conversations Across Languages
             </h1>
             <p className="text-back max-md:mx-auto text-[18px] max-md:text-[16px] text-center md:text-start  mt-4  max-w-[536px] z-[1]">
@@ -17,7 +20,9 @@ const Hero = () => {
             </p>
             <Button
               type="submit"
-              className="bg-black text-white px-8 py-2 mt-[2rem] z-[1]"
+              className={` px-8 py-2 mt-[2rem] z-[1] ${
+                isDarkMode ? "bg-white text-black" : "bg-black text-white"
+              }`}
               onClick={() => {
                 navigate("/sign-up");
               }}

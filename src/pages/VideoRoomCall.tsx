@@ -90,17 +90,17 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
         }
       } catch (error) {
         console.log(error);
-        if (error instanceof DOMException && error.name === 'NotFoundError') {
-        setMedia(false);
-        if (socket.current) {
-          socket.current.emit("leaveCall", {
-            roomId,
-          });
-        }
-        if (connectionRef.current) {
-          connectionRef.current.destroy();
-        }
-        }       
+        // if (error instanceof DOMException && error.name === 'NotFoundError') {
+        // setMedia(false);
+        // if (socket.current) {
+        //   socket.current.emit("leaveCall", {
+        //     roomId,
+        //   });
+        // }
+        // if (connectionRef.current) {
+        //   connectionRef.current.destroy();
+        // }
+        // }       
       }
     };
 
