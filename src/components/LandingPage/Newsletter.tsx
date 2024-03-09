@@ -57,7 +57,9 @@ const Newsletter = () => {
   return (
     <>
       <section
-        className={`md:mx-10 md:mt-[5rem]  p-16 max-sm:p-6 z-[1] font-inter relative border rounded-xl cursor-pointer`}
+        className={`md:mx-10 md:mt-[5rem]  p-16 max-sm:p-6 z-[1] font-inter relative border rounded-xl cursor-pointer ${
+          isDarkMode ? " bg-[#0e131d6f]" : ""
+        }`}
       >
         <h2 className="text-[28px] font-bold text-center mb-5">TALCKATOO</h2>
         <h2 className="text-[20px] font-bold text-center">
@@ -65,7 +67,7 @@ const Newsletter = () => {
         </h2>
         <p
           className={`text-center text-[15px]  mb-4 ${
-            isDarkMode ? "text-[#E6F7E6]" : "text-gray-500"
+            isDarkMode ? "text-[#E6F7E6] news" : "text-gray-500"
           }`}
         >
           Stay up to date with the roadmap progress, announcements and exclusive
@@ -90,7 +92,11 @@ const Newsletter = () => {
           </button>
         </div>
       </section>
-      <div className="flex justify-center items-center">
+      <div
+        className={`flex justify-center items-center  mt-4 ${
+          isDarkMode ? "news" : ""
+        }`}
+      >
         We care about the protection of your data. Read our{" "}
         <a
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"

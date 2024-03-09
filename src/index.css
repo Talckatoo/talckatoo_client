@@ -138,6 +138,9 @@ textarea {
   margin-bottom: 20px;
   transition: 0.3s;
 }
+.news {
+  text-shadow: 2px 2px #000 ;
+}
 
 /* input:focus,
 textarea:focus {
