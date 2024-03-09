@@ -68,8 +68,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    toast.success("User signed out");
-    // clear persit root from local storage
     localStorage.removeItem("persist:root");
     dispatch(setAuth(null));
     dispatch(setUser(null));
@@ -78,7 +76,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     dispatch(setMessages([]));
     dispatch(setRequest(null));
     dispatch(setRequests([]));
-
     navigate("/");
   };
 
@@ -172,12 +169,12 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-  const handleSetRequest = () => {
-    navigate("/chat");
+  const handleSetButtonSelected = (buttonSelected:string) => {
+    navigate("/chat", {state: {buttonSelected}});
   };
   return (
     <div
-      className={`flex flex-1 justify-center items-center  w-full h-full ${
+      className={`flex flex-1 flex-grow justify-center w-full h-full ${
         isDarkMode ? "bg-slate-950" : ""
       }`}
     >
@@ -185,11 +182,11 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
       <LeftSideBar
         showSetting={true}
         showRequest={false}
-        setShowRequest={handleSetRequest}
+        setButtonSelected={handleSetButtonSelected}
         showRandom={false}
       />
 
-      <div className="   mx-auto flex flex-col md:text-[14px]">
+      <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
         <form
           className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px]"
           onSubmit={handleSubmit}

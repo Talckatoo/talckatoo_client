@@ -201,7 +201,7 @@ const SignIn = () => {
 
           <Button
             type="submit"
-            className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1]"
+            className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1] rounded-lg"
           >
             {loading ? "Loading..." : "Log in"}
           </Button>
@@ -257,6 +257,4 @@ const SignIn = () => {
 };
 
 export default SignIn;
-function jwt_decode(token: string): { id: string } {
-  throw new Error("Function not implemented.");
-}
+

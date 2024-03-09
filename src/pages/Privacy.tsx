@@ -764,11 +764,11 @@ const Privacy = () => {
             If you have any questions about this policy, please contact us by
           </p>
           <button
-            onClick={() => (window.location = "mailto:talcakatoodev@gmail.com")}
+            onClick={() => (window.location = "mailto:talckatoodev@gmail.com")}
             className="text-teal-600"
           >
             {" "}
-            talcakatoodev@gmail.com
+            talckatoodev@gmail.com
           </button>
         </div>
       </div>

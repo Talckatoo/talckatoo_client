@@ -3,7 +3,7 @@ import { UserContext } from "../../context/user-context";
 import { PiChatTextFill } from "react-icons/pi";
 import { IoPersonSharp } from "react-icons/io5";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { RiSettings5Fill } from "react-icons/ri";
 import { useAppSelector } from "../../redux/hooks";
 
@@ -11,17 +11,21 @@ const LeftSideBar = ({
   showSetting,
   showRequest,
   showRandom,
-  setShowRequest,
+  setShowRequest = ()=>{},
+  setButtonSelected = ()=>{},
 }: {
   showSetting?: boolean;
   showRequest: boolean;
   showRandom: boolean;
-  setShowRequest: (showRequest: boolean) => void;
+  setShowRequest?: (showRequest: boolean) => void;
+  setButtonSelected?: (buttonSelected: string)=>void;
+
 }) => {
   const navigate = useNavigate();
   const { isDarkMode } = useContext(UserContext);
   const { user } = useAppSelector((state) => state.auth);
-
+  const location = useLocation()
+  const {pathname} = location;
   const handleSettingClick = () => {
     navigate("/profile");
   };
@@ -46,8 +50,8 @@ const LeftSideBar = ({
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
-          onClick={() => setShowRequest(!showRequest)}
-        >
+            onClick={(pathname === "/chat") ? () => setShowRequest(!showRequest) : ()=>setButtonSelected("chats")}
+            >
           <PiChatTextFill
             className={`${
               showRequest || showRandom || showSetting
@@ -68,7 +72,7 @@ const LeftSideBar = ({
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
-          onClick={() => setShowRequest(!showRequest)}
+            onClick={(pathname === "/chat") ? () => setShowRequest(!showRequest) : ()=>setButtonSelected("friends")}
         >
           <IoPersonSharp
             className={`${

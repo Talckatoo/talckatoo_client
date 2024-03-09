@@ -18,9 +18,9 @@ import {
   setUsers,
   updateContactedUserById,
 } from "./redux/features/user/userSlice";
-import { useFetchAllRequestsQuery } from "./redux/services/UserApi";
 import Random from "./pages/Random";
 import useUserRedirect from "./hooks/useUserRedirect";
+import SignUpVerification from "./pages/SignUpVerification"
 
 type MyEventMap = {
   connect: () => void;
@@ -92,6 +92,7 @@ const App = () => {
           element={<ResetPasswordUpdate />}
         />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-up/verification" element={<SignUpVerification />} />
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat socket={socket} />} />
         <Route path="/profile" element={<Profile socket={socket} />} />

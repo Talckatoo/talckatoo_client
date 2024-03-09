@@ -1,17 +1,32 @@
-import { useContext, useState } from "react";
-import { UserContext } from "../../context/user-context";
-
-import Button from "../../UI/Button";
+import { useState, useContext } from 'react';
+import { UserContext } from './../../context/user-context';
+import Notify from '../../UI/Notify';
 
 const Newsletter = () => {
-  const [email, setEmail] = useState("");
+  const { notification, setNotification } = useContext(UserContext);
+  const [email, setEmail] = useState('');
   const { isDarkMode } = useContext(UserContext);
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  
+  const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    if (email === '') {
+      setNotification({ type: 'warning', message: 'Email is required' });
+      return false;
+    } else if (!re.test(email)) {
+      setNotification({ type: 'warning', message: 'Please enter a valid email' });
+      return false;
+    }
+    return true; // Return true if email is valid
+  };
+
   const handleSubscribe = async () => {
-    console.log("Subscribing with email:", email);
+    if (!validateEmail(email)) {
+      return;
+    }
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}/account/news-letter`,
@@ -25,14 +40,18 @@ const Newsletter = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to subscribe");
+        setNotification({ type: 'error', message: 'Your email is already subscribed' });
+      } else {
+        setNotification({ type: 'success', message: 'Subscribed successfully' });
       }
 
-      // Optionally, you can handle success scenarios here
-      console.log("Subscribed successfully");
-    } catch (error: any) {
-      console.error("Error subscribing:", error.message);
+    } catch (error) {
+      setNotification({ type: 'error', message: error.message });
     }
+  };
+
+  const dismissNotification = () => {
+    setNotification(null); // Clear notification
   };
 
   return (
@@ -56,10 +75,10 @@ const Newsletter = () => {
           <input
             type="email"
             placeholder="Enter your email"
-            className="w-full h-fit md:w-96 border border-gray-700 rounded-l-lg  rounded-r-none"
+            className="w-full md:w-96 border border-gray-700 rounded-l-lg  rounded-r-none"
             value={email}
             onChange={handleEmailChange}
-            name="email" // Add name attribute here
+            name="email"
           />
 
           <button
@@ -81,6 +100,7 @@ const Newsletter = () => {
           Privacy Policy
         </a>
       </div>
+      {notification && <Notify type={notification.type} message={notification.message} dismissNotification={dismissNotification} />} 
     </>
   );
 };

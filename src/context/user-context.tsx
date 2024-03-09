@@ -1,66 +1,28 @@
-// import React, { createContext, useState, ReactNode } from "react";
-// // import useUserRedirect from "./../hooks/useUserRedirect";
-
-// interface UserContextProviderProps {
-//   isDarkMode: boolean;
-//   toggleDarkMode: () => void;
-
-//   isLoading: boolean;
-//   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-// }
-
-// export const UserContext = createContext<UserContextProviderProps>({
-//   isDarkMode: false,
-//   toggleDarkMode: () => {},
-
-//   isLoading: false,
-//   setIsLoading: () => {},
-// });
-
-// export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
-//   children,
-// }) => {
-//   const [isDarkMode, setIsDarkMode] = useState(false);
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   const toggleDarkMode = () => {
-//     setIsDarkMode( prevMode => !prevMode);
-//   };
-
-
-
-//   // use the userRedirect hook
-//   // useUserRedirect();
-
-//   return (
-//     <UserContext.Provider
-//       value={{
-//         isDarkMode,
-//         toggleDarkMode,
-
-//         isLoading,
-//         setIsLoading,
-//       }}
-//     >
-//       {children}
-//     </UserContext.Provider>
-//   );
-// };
-
-import React, { createContext, useState, ReactNode, Dispatch, SetStateAction, useEffect } from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 
 interface UserContextProviderProps {
   isDarkMode: boolean;
+  setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
   toggleDarkMode: () => void;
   isLoading: boolean;
-  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  notification: Notification | null; // Add the 'notification' property
+  setNotification: React.Dispatch<React.SetStateAction<Notification | null>>; // Add the 'setNotification' property
+  userEmail: string; 
+  setUserEmail: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const UserContext = createContext<UserContextProviderProps>({
   isDarkMode: false,
+  setIsDarkMode: () => {},
   toggleDarkMode: () => {},
   isLoading: false,
   setIsLoading: () => {},
+  notification: null,
+  setNotification: () => {},
+  userEmail: "", // Initialize userEmail state
+  setUserEmail: () => {}, // Initialize setUserEmail function
+
 });
 
 export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
@@ -68,6 +30,8 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState<Notification | null>(null);
+  const [userEmail, setUserEmail] = useState("");
 
   const toggleDarkMode = () => {
     setIsDarkMode(prevMode => !prevMode);
@@ -82,16 +46,19 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [isDarkMode]);
 
-  // Uncomment the hook if you intend to use it
-  // useUserRedirect();
 
   return (
     <UserContext.Provider
       value={{
         isDarkMode,
+        setIsDarkMode,
         toggleDarkMode,
         isLoading,
         setIsLoading,
+        notification,
+        setNotification,
+        userEmail, 
+        setUserEmail,
       }}
     >
       {children}

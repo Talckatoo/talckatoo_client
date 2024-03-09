@@ -70,7 +70,7 @@ const NavBar: FC<NavBarProps> = ({}) => {
           className="font-jakarta text-[20px] font-bold flex items-center justify-left"
         >
           <img
-            className="w-[40px] w-min-[45px] mr-1 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
+            className="w-[40px] w-min-[45px] mr-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
             src="cockatoo.svg"
           />
 
@@ -102,7 +102,7 @@ const NavBar: FC<NavBarProps> = ({}) => {
               isDarkMode ? `bg-white text-black` : `bg-black text-white`
             }`}
             onClick={() => {
-              navigate("/sign-up");
+              navigate("/sign-up/verification");
             }}
           >
             Get Started

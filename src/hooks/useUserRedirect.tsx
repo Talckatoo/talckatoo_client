@@ -7,6 +7,7 @@ const allowedRoutes = [
   "/",
   "/sign-in",
   "/sign-up",
+  "/sign-up/verification",
   /^\/reset-password\/[a-zA-Z0-9]+$/, // Allow access to reset password routes
 ];
 
