@@ -6,7 +6,7 @@ const Newsletter = () => {
   const { notification, setNotification } = useContext(UserContext);
   const [email, setEmail] = useState('');
   const { isDarkMode } = useContext(UserContext);
-  
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -97,12 +97,11 @@ const Newsletter = () => {
           isDarkMode ? "news" : ""
         }`}
       >
-        We care about the protection of your data. Read our{" "}
+        We care about the protection of your data. Read our&nbsp;
         <a
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
           href="https://talckatoo.me/terms"
         >
-          {" "}
           Privacy Policy
         </a>
       </div>
