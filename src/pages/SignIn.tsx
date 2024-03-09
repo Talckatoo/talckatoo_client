@@ -201,7 +201,7 @@ const SignIn = () => {
             <span
               className="text-black cursor-pointer z-[1] underline font-semibold"
               onClick={() => {
-                navigate("/sign-up");
+                navigate("/sign-up/verification");
               }}
             >
               Sign Up

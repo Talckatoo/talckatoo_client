@@ -36,7 +36,6 @@ export const SignUp = () => {
     confirmPassword: "",
     verificationCode: "",
   });
-  console.log(userEmail)
 
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [registerAuth] = useRegisterAuthMutation();
