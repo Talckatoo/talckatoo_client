@@ -318,9 +318,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
       } catch (err) {
         console.log("error from error", err);
-        toast.error(
-          "Error sending messages, please try again form handleSendMessage1"
-        );
       }
     } else if (selectedId && conversationId === "") {
       // setMessages([]);

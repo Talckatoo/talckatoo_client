@@ -96,18 +96,22 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationId = conversationState?.conversation?.conversationId;
 
   const FetchFriends = async () => {
-    const result = (await axios.get(
-      `http://localhost:8000/api/v1/users/friends`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+    try {
+      const result = (await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/users/friends`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )) as any;
+      if (result){
+        dispatch(setUsers(result.data.users));
       }
-    )) as any;
+    } catch (err){
+      console.log(err)
+    }
 
-    console.log(result, "result");
-
-    dispatch(setUsers(result.data.users));
   };
 
   useEffect(() => {
