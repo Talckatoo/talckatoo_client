@@ -10,11 +10,18 @@ import App from "./App";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import "animate.css";
+import { useEffect } from "react";
+import { persistStore } from "redux-persist";
 // CALL IT ONCE IN YOUR APP
 injectStyle();
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
+
 // Dispatch clearCall action when the application is loaded
+useEffect(() => {
+  const persistor = persistStore(store);
+  return () => persistor.persist();
+}, []);
 
 root.render(
   <>
