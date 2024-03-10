@@ -77,13 +77,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
     localStorage.removeItem("token");
     toast.success("User signed out");
     // clear persisted state
-    dispatch(setAuth(null));
-    dispatch(setUser(null));
-    dispatch(setUsers([]));
-    dispatch(setConversation({}));
-    dispatch(setMessages([]));
-    dispatch(setRequest(null));
-    dispatch(setRecipient(null));
+    localStorage.removeItem("persist:root");
 
     navigate("/");
   };
@@ -124,8 +118,9 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
                 onClick={handleDropdownClick}
                 className="w-10 h-10 min-h-10 min-w-10  max-md:text-[16px] md:text-[18px]  rounded-full shadow-xl flex items-center justify-center cursor-pointer"
                 style={{
-                  backgroundImage: `url(${recipientPi || "/assets/icons/user.png"
-                    })`,
+                  backgroundImage: `url(${
+                    recipientPi || "/assets/icons/user.png"
+                  })`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}

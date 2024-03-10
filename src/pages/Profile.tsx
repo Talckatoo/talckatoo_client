@@ -69,13 +69,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("persist:root");
-    dispatch(setAuth(null));
-    dispatch(setUser(null));
-    dispatch(setUsers([]));
-    dispatch(setRecipient(null));
-    dispatch(setMessages([]));
-    dispatch(setRequest(null));
-    dispatch(setRequests([]));
+
     navigate("/");
   };
 
@@ -169,8 +163,8 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-  const handleSetButtonSelected = (buttonSelected:string) => {
-    navigate("/chat", {state: {buttonSelected}});
+  const handleSetButtonSelected = (buttonSelected: string) => {
+    navigate("/chat", { state: { buttonSelected } });
   };
   return (
     <div
@@ -256,7 +250,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
         </form>
         <div
           className="flex justify-center mt-5 gap-4 cursor-pointer"
-          onClick={handleLogout}
+          onClick={() => handleLogout()}
         >
           <a href="">
             <img src="./assets/img/signout.png" alt="logout-icon" />
