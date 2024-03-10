@@ -46,7 +46,6 @@ const RandomChat = ({
 
   useEffect(() => {
     if (random.randomData) {
-      console.log(random.randomData, "from random chat");
       if (random.randomData.user2.id === user._id) {
         setSocketId(random.randomData.user1.socketId);
         setUserData(random.randomData.user1);

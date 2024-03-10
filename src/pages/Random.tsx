@@ -24,13 +24,9 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const { random } = useAppSelector((state) => state.socket);
   const handleSetButtonSelected = (buttonSelected: string) => {
-    console.log(buttonSelected);
     navigate("/chat", { state: { buttonSelected } });
   };
 
-  useEffect(() => {
-    console.log(random);
-  }, [random]);
 
   const navigate = useNavigate();
 
@@ -83,7 +79,6 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
 
   useEffect(() => {
     if (random.islooking === true) {
-      console.log("joining");
       joinRandomChat();
     }
   }, [random.islooking]);
@@ -168,9 +163,8 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   };
   return (
     <div
-      className={`flex flex-1 justify-center items-center  w-full h-full ${
-        isDarkMode ? "bg-slate-950" : ""
-      }`}
+      className={`flex flex-1 flex-grow w-full h-full ${isDarkMode ? "bg-slate-950" : ""
+    }`}
     >
       {/*Left sidebar */}
       <LeftSideBar
