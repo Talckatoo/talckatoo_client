@@ -171,7 +171,7 @@ const RandomChat = ({
               >
                 <div className="m-2 p-2 ">
                   {messages
-                    ? messages.map((msg: any) => (
+                    ? messages.map((msg: any, index:any) => (
                         <div
                           className={
                             "first:mt-[6rem]" +
@@ -180,7 +180,7 @@ const RandomChat = ({
                               ? "text-center "
                               : "")
                           }
-                          key={msg._id}
+                          key={index}
                         >
                           <div
                             className={
