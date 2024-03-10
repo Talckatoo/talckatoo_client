@@ -89,6 +89,7 @@ export const SignUp = () => {
         const token = response?.data?.token;
         const user = response?.data?.user;
         localStorage.setItem("token", token as string);
+        localStorage.removeItem("persist:root");
         dispatch(setAuth(user));
         toast.success("User signed up");
         navigate("/chat");
