@@ -11,7 +11,7 @@ interface NavBarProps {
 const NavBar: FC<NavBarProps> = ({}) => {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
-  const { isDarkMode, toggleDarkMode } = useContext(UserContext);
+  const { isDarkMode } = useContext(UserContext);
 
   const handleSignInClick = () => {
     // Check if token exists in local storage
@@ -74,19 +74,17 @@ const NavBar: FC<NavBarProps> = ({}) => {
             src="/cockatoo.svg"
           />
 
-          <span className="hidden sm:inline">TALCKATOO</span>
+          <span
+            className={`hidden sm:inline ${
+              isDarkMode ? "text-white" : "text-black"
+            }`}
+          >
+            TALCKATOO
+          </span>
         </Link>
 
         {/* sign up and sign in button */}
         <div className="flex items-center gap-4  max-[430px]:flex max-[430px]:justify-center">
-          <MdDarkMode
-            className={
-              isDarkMode
-                ? "text-[25px] text-white cursor-pointer"
-                : "text-[25px] cursor-pointer"
-            }
-            onClick={toggleDarkMode}
-          />
           <Button
             type="button"
             className={`max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000] ${
