@@ -5,27 +5,27 @@ import { IoPersonSharp } from "react-icons/io5";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { RiSettings5Fill } from "react-icons/ri";
+import { MdDarkMode } from "react-icons/md";
 import { useAppSelector } from "../../redux/hooks";
 
 const LeftSideBar = ({
   showSetting,
   showRequest,
   showRandom,
-  setShowRequest = ()=>{},
-  setButtonSelected = ()=>{},
+  setShowRequest = () => {},
+  setButtonSelected = () => {},
 }: {
   showSetting?: boolean;
   showRequest: boolean;
   showRandom: boolean;
   setShowRequest?: (showRequest: boolean) => void;
-  setButtonSelected?: (buttonSelected: string)=>void;
-
+  setButtonSelected?: (buttonSelected: string) => void;
 }) => {
   const navigate = useNavigate();
-  const { isDarkMode } = useContext(UserContext);
+  const { isDarkMode, toggleDarkMode } = useContext(UserContext);
   const { user } = useAppSelector((state) => state.auth);
-  const location = useLocation()
-  const {pathname} = location;
+  const location = useLocation();
+  const { pathname } = location;
   const handleSettingClick = () => {
     navigate("/profile");
   };
@@ -33,7 +33,7 @@ const LeftSideBar = ({
     <div
       className={`w-[80px] min-w-[80px]  grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] ${
         isDarkMode
-          ? "border-r border-[#5D5DFF] border-opacity-20"
+          ? "border-r pt-5 border-[#5D5DFF] border-opacity-20"
           : "border-r pt-5 border-opacity-20"
       }`}
     >
@@ -50,8 +50,12 @@ const LeftSideBar = ({
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
-            onClick={(pathname === "/chat") ? () => setShowRequest(!showRequest) : ()=>setButtonSelected("chats")}
-            >
+          onClick={
+            pathname === "/chat"
+              ? () => setShowRequest(!showRequest)
+              : () => setButtonSelected("chats")
+          }
+        >
           <PiChatTextFill
             className={`${
               showRequest || showRandom || showSetting
@@ -72,7 +76,11 @@ const LeftSideBar = ({
           } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
-            onClick={(pathname === "/chat") ? () => setShowRequest(!showRequest) : ()=>setButtonSelected("friends")}
+          onClick={
+            pathname === "/chat"
+              ? () => setShowRequest(!showRequest)
+              : () => setButtonSelected("friends")
+          }
         >
           <IoPersonSharp
             className={`${
@@ -108,6 +116,17 @@ const LeftSideBar = ({
         </Link>
       </div>
       <div className="flex flex-col  gap-3 w-full">
+        <div className="flex justify-center">
+          <MdDarkMode
+            className={
+              isDarkMode
+                ? "text-[25px] text-white cursor-pointer"
+                : "text-[25px] cursor-pointer"
+            }
+            onClick={toggleDarkMode}
+          />
+        </div>
+
         <div
           className={`${
             isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500"
