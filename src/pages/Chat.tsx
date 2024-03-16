@@ -94,6 +94,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const selectedId = conversationState?.conversation?.selectedId;
   const conversationId = conversationState?.conversation?.conversationId;
+  const language = conversationState?.conversation?.language;
 
   const FetchFriends = async () => {
     try {
@@ -113,34 +114,19 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-  // get the conversation id and selected id from local storage
-  const conversationIdFromLocalStorage = localStorage.getItem("conversationId");
-  const selectedIdFromLocalStorage = localStorage.getItem("selectedId");
-  const languageFromLocalStorage = localStorage.getItem("language");
-
   useEffect(() => {
     FetchFriends();
     if (socket.current) {
       socket.current.on("getMessage", (data) => {
-        if (data.from === selectedId) {
+        if (data.to === selectedId || data.from === selectedId) {
           dispatch(
             setConversation({
-              conversationId: conversationIdFromLocalStorage,
-              selectedId: selectedIdFromLocalStorage,
-              language: languageFromLocalStorage,
+              conversationId: conversationId,
+              selectedId: selectedId,
+              language: language,
             })
           );
         }
-        if (data.messageReply && data?.messageReply?.sender === selectedId) {
-          dispatch(
-            setConversation({
-              conversationId: conversationIdFromLocalStorage,
-              selectedId: selectedIdFromLocalStorage,
-              language: languageFromLocalStorage,
-            })
-          );
-        }
-
         FetchFriends();
       });
     }

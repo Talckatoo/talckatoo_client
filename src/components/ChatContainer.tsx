@@ -259,7 +259,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       to: selectedId,
       createdAt: Date.now(),
     });
-
+    console.log(
+      "conversation id from sendAIMessage",
+      selectedId,
+      conversationId
+    );
     dispatch(
       setConversation({
         conversationId: conversationId,
@@ -267,6 +271,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         language: language,
       })
     );
+
     dispatch(
       addMessage({
         createdAt: Date.now(),
@@ -357,6 +362,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             unread: selectedId,
           })
         );
+        console.log("conversation id from handleSendMessage", conversationId);
 
         dispatch(
           setConversation({
@@ -420,6 +426,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             unread: selectedId,
           })
         );
+        console.log("conversation id from onHandleSendFile", conversationId);
+
         dispatch(
           setConversation({
             conversationId: conversation?._id,
@@ -476,6 +484,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             unread: selectedId,
           })
         );
+
+        console.log("conversation id from onHandleSendFile", conversationId);
+
         dispatch(
           setConversation({
             conversationId: conversation?._id,
@@ -493,12 +504,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     if (socket.current) {
       updateConversation();
       socket.current.on("getMessage", (data: any) => {
-        dispatch(
-          setConversation({
-            conversationId: conversationId,
-            selectedId: selectedId,
-          })
-        );
         if (data.message) {
           setArrivalMessages({
             createdAt: data.createdAt,

@@ -27,7 +27,6 @@ const persistConfig = {
   key: "root",
   storage,
   whitelist: ["auth"],
-  blacklist: ["socket", "call", "conversation", "messages", "request", "media"],
 };
 
 export interface RootState extends PersistPartial {
@@ -41,6 +40,7 @@ export interface RootState extends PersistPartial {
   [UserApi.reducerPath]: any;
   [AuthApi.reducerPath]: any;
   [MessagesApi.reducerPath]: any;
+  [MediaApi.reducerPath]: any;
 }
 
 const persistedReducer = persistReducer(

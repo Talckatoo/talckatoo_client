@@ -123,6 +123,8 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             welcome: result?.data?.user?.welcome,
           })
         );
+        console.log("conversation id from profile");
+
         dispatch(
           setConversation({
             language: updateLanguage,
