@@ -69,6 +69,9 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("persist:root");
+    localStorage.removeItem("conversationId");
+    localStorage.removeItem("selectedId");
+    localStorage.removeItem("language");
 
     navigate("/");
   };

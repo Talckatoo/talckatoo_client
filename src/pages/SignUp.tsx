@@ -91,6 +91,11 @@ export const SignUp = () => {
         const user = response?.data?.user;
         localStorage.setItem("token", token as string);
         localStorage.removeItem("persist:root");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("persist:root");
+        localStorage.removeItem("conversationId");
+        localStorage.removeItem("selectedId");
+        localStorage.removeItem("language");
         dispatch(setMessages([]));
         dispatch(setConversation({ conversationId: null, selectedId: null }));
 

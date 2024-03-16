@@ -105,27 +105,42 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
           },
         }
       )) as any;
-      if (result){
+      if (result) {
         dispatch(setUsers(result.data.users));
       }
-    } catch (err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
-
   };
+
+  // get the conversation id and selected id from local storage
+  const conversationIdFromLocalStorage = localStorage.getItem("conversationId");
+  const selectedIdFromLocalStorage = localStorage.getItem("selectedId");
+  const languageFromLocalStorage = localStorage.getItem("language");
 
   useEffect(() => {
     FetchFriends();
     if (socket.current) {
       socket.current.on("getMessage", (data) => {
-        if (data.to === selectedId) {
+        if (data.from === selectedId) {
           dispatch(
             setConversation({
-              conversationId: data.conversationId,
-              selectedId: selectedId,
+              conversationId: conversationIdFromLocalStorage,
+              selectedId: selectedIdFromLocalStorage,
+              language: languageFromLocalStorage,
             })
           );
         }
+        if (data.messageReply && data?.messageReply?.sender === selectedId) {
+          dispatch(
+            setConversation({
+              conversationId: conversationIdFromLocalStorage,
+              selectedId: selectedIdFromLocalStorage,
+              language: languageFromLocalStorage,
+            })
+          );
+        }
+
         FetchFriends();
       });
     }

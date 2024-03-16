@@ -493,6 +493,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     if (socket.current) {
       updateConversation();
       socket.current.on("getMessage", (data: any) => {
+        dispatch(
+          setConversation({
+            conversationId: conversationId,
+            selectedId: selectedId,
+          })
+        );
         if (data.message) {
           setArrivalMessages({
             createdAt: data.createdAt,

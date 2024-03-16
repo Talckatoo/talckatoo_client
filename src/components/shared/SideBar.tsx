@@ -104,6 +104,11 @@ const SideBar = ({
       })
     );
 
+    // set the conversation id and selected id and language in local storage
+    localStorage.setItem("conversationId", u?.conversation?._id);
+    localStorage.setItem("selectedId", u?._id);
+    localStorage.setItem("language", u?.language);
+
     dispatch(setRecipient(u?.userName as any));
   };
 
@@ -163,6 +168,7 @@ const SideBar = ({
                       isDarkMode={isDarkMode}
                       selected={selectedId === user._id}
                       socket={socket}
+                      search={search}
                     />
                   </div>
                 ))
@@ -208,6 +214,7 @@ const SideBar = ({
                       isDarkMode={isDarkMode}
                       selected={selectedId === user._id}
                       socket={socket}
+                      search={search}
                     />
                   </div>
                 ))
