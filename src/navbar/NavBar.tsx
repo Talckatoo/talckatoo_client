@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
 import { HiOutlineUserCircle } from "react-icons/hi";
-import { MdDarkMode } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import COCKATOO from "./.././assests/cockatoo.png";
 import { setAuth } from "../redux/features/user/authSlice";
@@ -206,14 +205,6 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
       </div>
 
       <div className="flex gap-6 items-center max-md:gap-2 ">
-        <MdDarkMode
-          className={
-            isDarkMode
-              ? "text-[25px] text-white cursor-pointer"
-              : "text-[25px] cursor-pointer"
-          }
-          onClick={toggleDarkMode}
-        />
         <button
           className={isDarkMode ? "text-white " : "text-black"}
           onClick={handleVideoCall}
