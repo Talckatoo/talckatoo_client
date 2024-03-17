@@ -10,7 +10,7 @@ import JumpingDotsAnimation from "../UI/animation";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
-import { MdDownload } from "react-icons/md";
+import { MdCancel, MdDownload } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -45,6 +45,8 @@ import { setConversation } from "../redux/features/conversation/conversationSlic
 import { skipToken } from "@reduxjs/toolkit/query";
 import { IoSend } from "react-icons/io5";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 interface Socket {
   current: any;
@@ -87,9 +89,14 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [open, setOpen] = useState(false);
 
   // Sending a file...
-  const [openSendImageDialog, setOpenSendImageDialog] = useState<boolean>(false);
-  const [imageToBeSent, setImageToBeSent] = useState<{formData:any, localImage:any}>({formData:null, localImage:null});
+  const [openSendImageDialog, setOpenSendImageDialog] =
+    useState<boolean>(false);
+  const [imageToBeSent, setImageToBeSent] = useState<{
+    formData: any;
+    localImage: any;
+  }>({ formData: null, localImage: null });
   const [uploadFile] = useUploadFileMutation();
+  const [isFileUploading, setIsFileUploading] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -147,11 +154,12 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages,openSendImageDialog]);
 
   useEffect(() => {
     if (selectedId || conversationId) {
@@ -380,6 +388,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const onSendFile = async () => {
+    setIsFileUploading(true);
     const response = await uploadFile(imageToBeSent.formData);
     if ("data" in response) {
       if (response.data && !response.data.error) {
@@ -397,11 +406,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 status: false,
                 unread: selectedId,
               }).unwrap();
-      
+
               const { message, conversation } = response;
-      
+
               // setIsFetchingMore(false);
-      
+
               socket.current.emit("sendMessage", {
                 createdAt: message?.createdAt,
                 from: user?._id,
@@ -416,9 +425,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 unread: selectedId,
                 conversationId: conversation?._id,
               });
-      
+
               // modify the latest message   in the users redux
-      
+
               dispatch(
                 addMessage({
                   createdAt: message?.createdAt,
@@ -439,9 +448,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                   language: language,
                 })
               );
+              setIsFileUploading(false);
               setOpenSendImageDialog(false);
             } catch (err) {
               toast.error("Error sending messages, please try again");
+              setIsFileUploading(false);
               setOpenSendImageDialog(false);
             }
           } else if (selectedId && conversationId === "") {
@@ -456,11 +467,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 status: false,
                 unread: selectedId,
               }).unwrap();
-      
+
               setIsFetchingMore(false);
-      
+
               const { message } = response;
-      
+
               socket.current.emit("sendMessage", {
                 createdAt: message?.createdAt,
                 from: user?._id,
@@ -474,9 +485,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 status: false,
                 unread: selectedId,
               });
-      
+
               // modify the latest message   in the users redux
-      
+
               dispatch(
                 addMessage({
                   createdAt: message?.createdAt,
@@ -497,31 +508,42 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                   language: language,
                 })
               );
+              setIsFileUploading(false);
               setOpenSendImageDialog(false);
             } catch (err) {
               toast.error("Error sending messages, please try again");
+              setIsFileUploading(false);
               setOpenSendImageDialog(false);
             }
           }
         }
       } else {
         console.log("error", response.data.error);
+        setIsFileUploading(false);
         setOpenSendImageDialog(false);
       }
     } else {
       console.log("error", response.error);
+      setIsFileUploading(false);
       setOpenSendImageDialog(false);
     }
-  }
+  };
 
-  const onHandleSendFile = (imageData:{file:any,type:"string",altText:"string"}) => {
-      setOpenSendImageDialog(true);
-      console.log(imageData);
-      const formData = new FormData();
-      formData.append("file", imageData.file);
-      formData.append("type", imageData.type);
-      formData.append("altText", imageData.altText);
-      setImageToBeSent({formData, localImage:URL.createObjectURL(imageData.file)});
+  const onHandleSendFile = (imageData: {
+    file: any;
+    type: "string";
+    altText: "string";
+  }) => {
+    setOpenSendImageDialog(true);
+    console.log(imageData);
+    const formData = new FormData();
+    formData.append("file", imageData.file);
+    formData.append("type", imageData.type);
+    formData.append("altText", imageData.altText);
+    setImageToBeSent({
+      formData,
+      localImage: URL.createObjectURL(imageData.file),
+    });
 
     /**/
   };
@@ -688,16 +710,32 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       <div className="relative h-full">
         {openSendImageDialog ? (
           <div className="overflow-y-auto overflow-x-hidden w-full h-full flex gap-8 flex-col justify-center items-center bg-secondary-500/75	">
-            <div className="bg-white w-1/2 h-2/3  rounded-lg flex justify-center items-center h-1/2">
-              <img className="w-1/2 h-auto" src={imageToBeSent.localImage}>
-              </img>
+            <div className="relative bg-white w-1/2 h-2/3 rounded-lg flex flex-col justify-center items-center h-1/2">
+              <div
+                className="absolute top-0 right-0 p-5"
+                onClick={() => setOpenSendImageDialog(false)}
+              >
+                <MdCancel className="text-[32px] text-secondary-500 hover:scale-105 transition ease-in-out duration-300 cursor-pointer"></MdCancel>
+              </div>
+              <img
+                className="w-full object-contain h-full p-5"
+                src={imageToBeSent.localImage}
+              ></img>
             </div>
             <div className="w-1/2 flex justify-center items-center rounded">
-              <div 
+              <div
                 className="flex justify-center w-16 h-16 items-center rounded-full bg-secondary-500 border-black hover:scale-105 transition ease-in-out duration-300 cursor-pointer"
                 onClick={onSendFile}
               >
-                <IoSend className="text-white text-[24px]"></IoSend>
+                {isFileUploading ? (
+                  <FontAwesomeIcon
+                    className="text-white text-[24px]"
+                    icon={faSpinner}
+                    spin
+                  />
+                ) : (
+                  <IoSend className="text-white text-[24px]"></IoSend>
+                )}
               </div>
             </div>
           </div>
