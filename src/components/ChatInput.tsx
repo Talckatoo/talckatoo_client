@@ -30,7 +30,7 @@ interface ChatInputProps {
   onHandleSendMessage: (message: string) => void;
   onHandleSendAIMessage: (messageAI: string) => void;
   onHandleTranslateText: (voiceMessage: string) => void;
-  onHandleSendFile: (fileId: string, media: any) => void;
+  onHandleSendFile: (imageData:{file:any,type:"string",altText:"string"}) => void;
 }
 const ChatInput = ({
   socket,
@@ -102,14 +102,14 @@ const ChatInput = ({
 
   const handleUpload = async (e: any) => {
     e.preventDefault();
-    let response: any = null;
-    let formData = new FormData();
-    formData = new FormData();
-    formData.append("file", e.target.files[0]);
-    formData.append("type", e.target.files[0].type.split("/")[0]);
-    formData.append("altText", e.target.files[0].name);
+    const imageData = {
+      file: e.target.files[0],
+      type: e.target.files[0].type.split("/")[0],
+      altText: e.target.files[0].name
+    };
+    onHandleSendFile(imageData);
 
-    response = await uploadFile(formData);
+   /* response = await uploadFile(formData);
 
     if ("data" in response) {
       if (response.data && !response.data.error) {
@@ -119,7 +119,7 @@ const ChatInput = ({
       }
     } else {
       console.log("error", response.error);
-    }
+    }*/
   };
 
   const handleSendMessageKeyDown = (e: ChangeEvent<HTMLFormElement>) => {
