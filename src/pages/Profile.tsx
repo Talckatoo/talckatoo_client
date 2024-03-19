@@ -1,7 +1,6 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
-import { FaArrowLeft, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useUpdateUserMutation } from "../redux/services/UserApi";
 import languagesArray from "../util/languages";
@@ -10,19 +9,8 @@ import { setAuth } from "../redux/features/user/authSlice";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
 import Input from "../UI/Input";
-import {
-  setRecipient,
-  setRequests,
-  setUser,
-  setUsers,
-} from "../redux/features/user/userSlice";
-import { setMessages } from "../redux/features/messages/messageSlice";
-import { setRequest } from "../redux/features/user/requestSlice";
-import { IoPersonSharp } from "react-icons/io5";
-import { PiChatTextFill } from "react-icons/pi";
-import { RiSettings5Fill } from "react-icons/ri";
+import { useDeleteAccountMutation } from "../redux/services/AuthApi";
 import LeftSideBar from "../components/shared/LeftSideBar";
-
 // import UserProfile from "../components/UserProfile";
 
 interface Socket {
@@ -42,11 +30,25 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const [updateUser] = useUpdateUserMutation();
   const { onlineFriends } = useAppSelector((state) => state.socket);
   const [uploadFile] = useUploadFileMutation();
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const [deleteAccount] = useDeleteAccountMutation();
 
-  const navigateChat = () => {
-    navigate("/chat");
-  };
+  // Delete account function
+  const handleDeleteAccount = async () => {
+    if (window.confirm('Are you sure you want to delete your account? There is no going back after this point.'))
+    try {
+      const result = await deleteAccount(user?.email);
+      if ("data" in result) {
+        toast.success("Account deleted successfully!");
+        localStorage.clear();
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   interface FormInput {
     name: string;
@@ -171,101 +173,116 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleSetButtonSelected = (buttonSelected: string) => {
     navigate("/chat", { state: { buttonSelected } });
   };
+
   return (
-    <div
-      className={`flex flex-1 flex-grow justify-center w-full h-full ${
-        isDarkMode ? "bg-slate-950" : ""
-      }`}
-    >
-      {/*First column */}
-      <LeftSideBar
-        showSetting={true}
-        showRequest={false}
-        setButtonSelected={handleSetButtonSelected}
-        showRandom={false}
-      />
+      <div
+        className={`flex flex-1 flex-grow justify-center w-full h-full ${isDarkMode ? "bg-slate-950" : ""
+          }`}
+      >
+        {/*First column */}
+        <LeftSideBar
+          showSetting={true}
+          showRequest={false}
+          setButtonSelected={handleSetButtonSelected}
+          showRandom={false}
+        />
 
-      <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
-        <form
-          className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px]"
-          onSubmit={handleSubmit}
-          style={{
-            boxShadow: "6px 6px 54px 0px rgba(0, 0, 0, 0.03)",
-          }}
-        >
-          <div className="mb-8  flex items-center justify-center gap-4 cursor-pointer relative">
-            {image ? (
-              <img
-                src={URL.createObjectURL(image)}
-                alt="User"
-                className=" object-cover h-[85px] w-[85px] rounded-full"
+        <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
+          <form
+            className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px]"
+            onSubmit={handleSubmit}
+            style={{
+              boxShadow: "6px 6px 54px 0px rgba(0, 0, 0, 0.03)",
+            }}
+          >
+            <div className="mb-8  flex items-center justify-center gap-4 cursor-pointer relative">
+              {image ? (
+                <img
+                  src={URL.createObjectURL(image)}
+                  alt="User"
+                  className=" object-cover h-[85px] w-[85px] rounded-full"
+                />
+              ) : (
+                <img
+                  src={user?.profileImage?.url}
+                  className="h-[85px] w-[85px] rounded-full"
+                />
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={handleUpload}
               />
-            ) : (
-              <img
-                src={user?.profileImage?.url}
-                className="h-[85px] w-[85px] rounded-full"
-              />
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              onChange={handleUpload}
+              <span className=" text-[#606060]">Upload Photo</span>
+            </div>
+
+            <Input
+              name="name"
+              type="text"
+              label="Username"
+              placeholder="Enter your username"
+              id="name"
+              value={formInput.name}
+              onChange={handleInputChange}
+              className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
             />
-            <span className=" text-[#606060]">Upload Photo</span>
-          </div>
-
-          <Input
-            name="name"
-            type="text"
-            label="Username"
-            placeholder="Enter your username"
-            id="name"
-            value={formInput.name}
-            onChange={handleInputChange}
-            className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
-          />
-          <div className="mb-12 ">
-            <label
-              htmlFor={name}
-              className="block text-[14px] font-medium  mb-4 text-[#606060]"
-            >
-              Language
-            </label>
-            <select
-              className="p-4    w-full bg-[#F5F5F5] rounded-[10px] text-[#606060] focus:outline-none outline-none"
-              value={updateLanguage}
-              onChange={handleLanguageChange}
-            >
-              <option value="" disabled hidden>
-                Select a language
-              </option>
-              {languagesArray?.map(({ code, language }) => (
-                <option key={code} value={code}>
-                  {language}
+            <div className="mb-12 ">
+              <label
+                htmlFor={name}
+                className="block text-[14px] font-medium  mb-4 text-[#606060]"
+              >
+                Language
+              </label>
+              <select
+                className="p-4    w-full bg-[#F5F5F5] rounded-[10px] text-[#606060] focus:outline-none outline-none"
+                value={updateLanguage}
+                onChange={handleLanguageChange}
+              >
+                <option value="" disabled hidden>
+                  Select a language
                 </option>
-              ))}
-            </select>
+                {languagesArray?.map(({ code, language }) => (
+                  <option key={code} value={code}>
+                    {language}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex justify-end">
+              <button className="bg-[#25282C] w-auto text-white py-4 px-[3rem] rounded-[10px]">
+                Update Profile
+              </button>
+            </div>
+          </form>
+          <div
+            className="flex justify-center mt-5 gap-4 cursor-pointer"
+            onClick={() => handleLogout()}
+          >
+            <a href="">
+              <img src="./assets/img/signout.png" alt="logout-icon" />
+            </a>
+            <span className="text-[#DD0000] font-semibold text-[17px]">
+              Log Out
+            </span>
           </div>
-          <div className="flex justify-end">
-            <button className="bg-[#25282C] w-auto text-white py-4 px-[3rem] rounded-[10px]">
-              Update Profile
-            </button>
+          {/* delete account zone danger */}
+          <div className="border border-black-500 shadow-xl mt-2">
+            <div className="flex px-3 flex-col mt-5 gap-4 cursor-pointer">
+              <h3 className="text-body-bold text-red-500">Danger</h3>
+              <div className="flex justify-between px-4 py-2">
+                <div>
+                  <h4 className="text-body-medium text-red-400">Delete Account</h4>
+                  <p className="opacity-90">Delete your account and all its associated data</p>
+                </div>
+                <button onClick={handleDeleteAccount} className="rounded-md text-[#fafafa] bg-red-600  p-2 font-semibold text-[17px]">
+                  DELETE ACCOUNT
+                </button>
+              </div>
+            </div>
           </div>
-        </form>
-        <div
-          className="flex justify-center mt-5 gap-4 cursor-pointer"
-          onClick={() => handleLogout()}
-        >
-          <a href="">
-            <img src="./assets/img/signout.png" alt="logout-icon" />
-          </a>
-          <span className="text-[#DD0000] font-semibold text-[17px]">
-            Log Out
-          </span>
         </div>
       </div>
-    </div>
   );
 };
 

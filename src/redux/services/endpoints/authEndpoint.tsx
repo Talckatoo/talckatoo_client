@@ -16,6 +16,13 @@ type MyReducerPath = "AuthApi";
 export const authEndpoints = (
   builder: EndpointBuilder<MyApiBaseQuery, MyTagTypes, MyReducerPath>
 ) => ({
+  deleteAccount: builder.mutation<UserState, Partial<UserState>>({
+    query: ({ email }: { email: string}) => ({
+      url: "/account/delete",
+      method: "DELETE",
+      body: {email},
+    }),
+  }),
   loginAuth: builder.mutation<UserState, { email: string; password: string }>({
     query: ({ email, password }: { email: string; password: string }) => ({
       url: "/account/log-in",
