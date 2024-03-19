@@ -118,7 +118,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
     FetchFriends();
     if (socket.current) {
       socket.current.on("getMessage", (data) => {
-        if (data.from === selectedId) {
+        if (data.to === selectedId) {
           dispatch(
             setConversation({
               conversationId: conversationId,

@@ -543,7 +543,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           setArrivalMessages({
             createdAt: data.messageReply.createdAt,
             message: data.messageReply.message,
-            sender: data.messageReply.sender,
+            sender: data.from,
             _id: uuidv4(),
           });
         }
