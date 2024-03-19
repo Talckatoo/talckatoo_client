@@ -18,7 +18,7 @@ export const authEndpoints = (
 ) => ({
   deleteAccount: builder.mutation<UserState, Partial<UserState>>({
     query: ({ email }: { email: string}) => ({
-      url: "/account/delete",
+      url: "/account/delete-account",
       method: "DELETE",
       body: {email},
     }),
