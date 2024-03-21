@@ -154,12 +154,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages,openSendImageDialog]);
+  }, [messages, openSendImageDialog]);
 
   useEffect(() => {
     if (selectedId || conversationId) {
