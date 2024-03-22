@@ -48,9 +48,7 @@ const ResetPasswordUpdate = () => {
         setTimeout(() => {
           navigate("/sign-in");
         }, 3000);
-      } else {
-        console.log(response.error);
-      }
+      } 
     } catch (error) {
       // Password reset failed, handle accordingly
       toast.error("your password has not been changed");

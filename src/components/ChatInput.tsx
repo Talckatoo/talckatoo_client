@@ -108,18 +108,6 @@ const ChatInput = ({
       altText: e.target.files[0].name
     };
     onHandleSendFile(imageData);
-
-   /* response = await uploadFile(formData);
-
-    if ("data" in response) {
-      if (response.data && !response.data.error) {
-        onHandleSendFile(response.data.media._id, response.data.media);
-      } else {
-        console.log("error", response.data.error);
-      }
-    } else {
-      console.log("error", response.error);
-    }*/
   };
 
   const handleSendMessageKeyDown = (e: ChangeEvent<HTMLFormElement>) => {

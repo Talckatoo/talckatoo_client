@@ -272,11 +272,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       to: selectedId,
       createdAt: Date.now(),
     });
-    console.log(
-      "conversation id from sendAIMessage",
-      selectedId,
-      conversationId
-    );
     dispatch(
       setConversation({
         conversationId: conversationId,
@@ -375,8 +370,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             unread: selectedId,
           })
         );
-        console.log("conversation id from handleSendMessage", conversationId);
-
         dispatch(
           setConversation({
             conversationId: conversation?._id,
@@ -541,7 +534,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     altText: "string";
   }) => {
     setOpenSendImageDialog(true);
-    console.log(imageData);
     const formData = new FormData();
     formData.append("file", imageData.file);
     formData.append("type", imageData.type);
