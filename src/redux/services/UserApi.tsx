@@ -3,7 +3,7 @@ import { userEndpoints } from "./endpoints/userEndpoint";
 
 export const UserApi = createApi({
   reducerPath: "UserApi",
-  refetchOnFocus: true,
+  tagTypes: ["UserState"],
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_BASE_URL as string,
     prepareHeaders: (headers) => {

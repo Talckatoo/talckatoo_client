@@ -26,7 +26,8 @@ import { MessagesApi } from "./services/MessagesApi";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "user", "conversation", "messages", "call"],
+  whitelist: ["auth"],
+  blacklist: ["socket", "call", "conversation", "messages", "request", "media"],
 };
 
 export interface RootState extends PersistPartial {

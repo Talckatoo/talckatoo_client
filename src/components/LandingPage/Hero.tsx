@@ -19,7 +19,7 @@ const Hero = () => {
               type="submit"
               className="bg-black text-white px-8 py-2 mt-[2rem] z-[1]"
               onClick={() => {
-                navigate("/sign-up");
+                navigate("/sign-up/verification");
               }}
             >
               Get Started

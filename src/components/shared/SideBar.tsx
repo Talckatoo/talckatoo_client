@@ -65,6 +65,12 @@ const SideBar = ({
   }, [requestsData]);
 
   useEffect(() => {
+    socket?.current?.on("getAcceptFriendRequest", (data: any) => {
+      setSearch("");
+    });
+  }, [socket.current]);
+
+  useEffect(() => {
     if (users) {
       setAllUser(users?.contactedUsers?.concat(users?.uncontactedUsers));
       setTimeout(()=>{

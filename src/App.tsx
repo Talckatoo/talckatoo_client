@@ -18,10 +18,9 @@ import {
   setUsers,
   updateContactedUserById,
 } from "./redux/features/user/userSlice";
-import { useFetchAllRequestsQuery } from "./redux/services/UserApi";
 import Random from "./pages/Random";
 import useUserRedirect from "./hooks/useUserRedirect";
-import SignUpVerification from "./pages/SignUpVerification"
+import SignUpVerification from "./pages/SignUpVerification";
 
 type MyEventMap = {
   connect: () => void;
@@ -70,16 +69,18 @@ const App = () => {
             uncontactedUsers: [
               ...users?.uncontactedUsers,
               {
-                _id: data?.Userfrom?._id,
-                userName: data?.Userfrom?.userName,
-                profileImage: data?.Userfrom?.profileImage,
-                language: data?.Userfrom?.language,
+                _id: data?.Userto?._id,
+                userName: data?.Userto?.userName,
+                profileImage: data?.Userto?.profileImage,
+                language: data?.Userto?.language,
+                conversation: {
+                  _id: data?.Userto?.conversationId,
+                },
               },
             ],
           })
         );
       });
-      socket.current.on("getAcceptFriendRequest", () => {});
     }
   }, [socket.current]);
 

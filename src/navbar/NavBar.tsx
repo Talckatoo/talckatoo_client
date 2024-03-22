@@ -77,13 +77,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
     localStorage.removeItem("token");
     toast.success("User signed out");
     // clear persisted state
-    dispatch(setAuth(null));
-    dispatch(setUser(null));
-    dispatch(setUsers([]));
-    dispatch(setConversation({}));
-    dispatch(setMessages([]));
-    dispatch(setRequest(null));
-    dispatch(setRecipient(null));
+    localStorage.removeItem("persist:root");
 
     navigate("/");
   };
@@ -140,37 +134,8 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
                 ) : (
                   ""
                 )}
-                {/* <div className="flex gap-2 items-center">
-                  <img src="/assets/img/online.png" alt="oline point" />
-                  <span className="text-[#879795] max-md:[12px] md:text-[14px] ">
-                    Active now
-                  </span>
-                </div> */}
               </div>
-              {/* {isDropdownOpen && (
-                <div className="relative z-20" ref={dropdownRef}>
-                  <div className="absolute right-0 mt-5 w-48 bg-white rounded-lg shadow-xl">
-                    <a
-                      href="#"
-                      className={`block px-4 py-2 rounded-lg text-${
-                        isDarkMode ? "gray-800" : "gray-700"
-                      } hover:bg-gray-300`}
-                      onClick={handleProfileClick}
-                    >
-                      Profile
-                    </a>
-                    <a
-                      href=""
-                      className={`block px-4 py-2 rounded-lg text-${
-                        isDarkMode ? "gray-800" : "gray-700"
-                      } hover:bg-gray-300`}
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </a>
-                  </div>
-                </div>
-              )} */}
+
               <div className="bg-[#25282C] py-2 flex items-center text-white px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ">
                 <span className="max-md:text-[12px] md:text-[14px] ">
                   {fullLanguage}
@@ -179,7 +144,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
             </>
           )}
         </div>
-        <ChatNavSearch
+        {/* <ChatNavSearch
           type="text"
           name="chat"
           value=""
@@ -187,7 +152,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
           id="chatsearch"
           label=""
           className="max-md:hidden max-md:"
-        />
+        /> */}
       </div>
 
       <div className="flex gap-6 items-center max-md:gap-2 ">
