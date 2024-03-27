@@ -21,7 +21,6 @@ const CallUser = (
     });
 
     peer.on("connect", () => {
-      console.log("CONNECT");
       peer.send("whatever" + Math.random());
     });
 
