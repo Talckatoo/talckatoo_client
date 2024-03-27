@@ -1,15 +1,18 @@
+import { useTranslation } from 'react-i18next';
+
 const Hero = () => {
+  const { t } = useTranslation(); 
   return (
     <section className="container py-[2rem] mt-[5rem]  ">
       <div className="flex flex-col md:flex-row  md:items-center justify-center">
         <div className=" w-full md:w-[50%]">
           <div className="w-full flex flex-col">
             <h1 className="head-text max-md:mx-auto max-md:text-[32px] text-[50px] text-center  md:text-start max-w-[536px]  z-[1] text-black ">
-              Bridging Conversations Across Languages
+              
+              {t("Bridging Conversations Across Languages")}
             </h1>
             <p className="text-back max-md:mx-auto text-[18px] max-md:text-[16px] text-center md:text-start  mt-4  max-w-[536px] z-[1]">
-              Seamlessly chat with individuals across language barriers. No more
-              copy-pasting. Just real-time, in-chat translations.
+              {t("Seamlessly chat with individuals across language barriers")}
             </p>
           </div>
           <div className="mt-[3rem] w-full flex flex-col justify-center  md:justify-start">
@@ -17,13 +20,11 @@ const Hero = () => {
               <img src="/assets/icons/Star.svg" alt="SVG" />
             </div>
             <h2 className="font-jakarta mt-4 font-bold max-md:mx-auto">
-              Best translation chat app in market!
+            {t("Best translation chat app in market")}
             </h2>
           </div>
           <p className="pt-2  text-center md:text-start text-[18px] max-md:text-[16px]">
-            Talckatoo has revolutionized how our team communicates. The
-            real-time translation feature means we can work seamlessly with
-            international partners without missing a beat!
+            {t("Talckatoo has revolutionized how our team communicates")}
           </p>
           <div className="flex justify-center  md:justify-start gap-2 items-center mt-4 ">
             <img src="/assets/img/Ellipse.png" alt="SVG" />
