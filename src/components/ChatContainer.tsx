@@ -153,7 +153,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       setHasMoreMessages(true);
       scrollToBottom();
       setIsFetchingMore(false);
-      if (selectedId && conversationId) refetchMessages();
+
+      if (selectedId && conversationId) {
+        dispatch(setMessages([]));
+        refetchMessages();
+      }
     }
 
     if (selectedId && conversationId === "") {
@@ -255,7 +259,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       to: selectedId,
       createdAt: Date.now(),
     });
-
+    console.log(
+      "conversation id from sendAIMessage",
+      selectedId,
+      conversationId
+    );
     dispatch(
       setConversation({
         conversationId: conversationId,
@@ -263,6 +271,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         language: language,
       })
     );
+
     dispatch(
       addMessage({
         createdAt: Date.now(),
@@ -314,9 +323,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
       } catch (err) {
         console.log("error from error", err);
-        toast.error(
-          "Error sending messages, please try again form handleSendMessage1"
-        );
       }
     } else if (selectedId && conversationId === "") {
       // setMessages([]);
@@ -356,6 +362,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             unread: selectedId,
           })
         );
+        console.log("conversation id from handleSendMessage", conversationId);
 
         dispatch(
           setConversation({
@@ -419,6 +426,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             unread: selectedId,
           })
         );
+        console.log("conversation id from onHandleSendFile", conversationId);
+
         dispatch(
           setConversation({
             conversationId: conversation?._id,
@@ -475,6 +484,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             unread: selectedId,
           })
         );
+
+        console.log("conversation id from onHandleSendFile", conversationId);
+
         dispatch(
           setConversation({
             conversationId: conversation?._id,
@@ -531,7 +543,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           setArrivalMessages({
             createdAt: data.messageReply.createdAt,
             message: data.messageReply.message,
-            sender: data.messageReply.sender,
+            sender: data.from,
             _id: uuidv4(),
           });
         }

@@ -73,6 +73,12 @@ const SignIn = () => {
         if ("data" in response) {
           const token = response.data.token;
           localStorage.setItem("token", token as string);
+          localStorage.removeItem("persist:root");
+          localStorage.removeItem("userId");
+          localStorage.removeItem("persist:root");
+          localStorage.removeItem("conversationId");
+          localStorage.removeItem("selectedId");
+          localStorage.removeItem("language");
           dispatch(setAuth(response.data.user));
           navigate("/random");
           toast.success("User signed up");
@@ -217,7 +223,7 @@ const SignIn = () => {
                 isDarkMode ? "text-white" : " text-black"
               }`}
               onClick={() => {
-                navigate("/sign-up");
+                navigate("/sign-up/verification");
               }}
             >
               Sign Up

@@ -21,8 +21,17 @@ import FriendRequest from "./FriendRequest";
 import { setRequest } from "../../redux/features/user/requestSlice";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import LeftSideBar from "./LeftSideBar";
+import { setMessages } from "../../redux/features/messages/messageSlice";
 
-const SideBar = ({ socket, refetch, buttonSelected }: { socket: any; refetch: any; buttonSelected:string}) => {
+const SideBar = ({
+  socket,
+  refetch,
+  buttonSelected,
+}: {
+  socket: any;
+  refetch: any;
+  buttonSelected: string;
+}) => {
   const [search, setSearch] = useState("");
   const { isDarkMode } = useContext(UserContext);
   const { users } = useAppSelector((state) => state.user);
@@ -31,7 +40,9 @@ const SideBar = ({ socket, refetch, buttonSelected }: { socket: any; refetch: an
   const [usersData, setUsersData] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
-  const [showRequest, setShowRequest] = useState(buttonSelected==="friends"?true:false);
+  const [showRequest, setShowRequest] = useState(
+    buttonSelected === "friends" ? true : false
+  );
   const { requests } = useAppSelector((state) => state.user);
   const [allUser, setAllUser] = useState<any[]>([]);
 
@@ -48,6 +59,12 @@ const SideBar = ({ socket, refetch, buttonSelected }: { socket: any; refetch: an
       dispatch(setRequests(requestsData?.friendRequests));
     }
   }, [requestsData]);
+
+  useEffect(() => {
+    socket?.current?.on("getAcceptFriendRequest", (data: any) => {
+      setSearch("");
+    });
+  }, [socket.current]);
 
   useEffect(() => {
     if (users) {
@@ -86,6 +103,11 @@ const SideBar = ({ socket, refetch, buttonSelected }: { socket: any; refetch: an
         language: u?.language,
       })
     );
+
+    // set the conversation id and selected id and language in local storage
+    localStorage.setItem("conversationId", u?.conversation?._id);
+    localStorage.setItem("selectedId", u?._id);
+    localStorage.setItem("language", u?.language);
 
     dispatch(setRecipient(u?.userName as any));
   };
@@ -146,6 +168,7 @@ const SideBar = ({ socket, refetch, buttonSelected }: { socket: any; refetch: an
                       isDarkMode={isDarkMode}
                       selected={selectedId === user._id}
                       socket={socket}
+                      search={search}
                     />
                   </div>
                 ))
@@ -191,6 +214,7 @@ const SideBar = ({ socket, refetch, buttonSelected }: { socket: any; refetch: an
                       isDarkMode={isDarkMode}
                       selected={selectedId === user._id}
                       socket={socket}
+                      search={search}
                     />
                   </div>
                 ))

@@ -146,6 +146,9 @@ const ChatInput = ({
 
   const handleSendMessage = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (messageText.trim() === "") {
+      return;
+    }
 
     if (messageText.substring(0, 7) === AIcall) {
       onHandleSendAIMessage(messageText);

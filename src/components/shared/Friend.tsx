@@ -12,9 +12,17 @@ interface FriendProps {
   isDarkMode: boolean;
   selected: boolean;
   socket: any;
+  search: string;
 }
 
-const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
+const Friend = ({
+  user,
+  key,
+  isDarkMode,
+  selected,
+  socket,
+  search,
+}: FriendProps) => {
   const { onlineFriends } = useAppSelector((state) => state.socket);
   const conversationState = useAppSelector((state) => state.conversation);
   const { user: userData } = useAppSelector((state) => state.auth);
@@ -115,18 +123,20 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
             } `}
           ></div>
         </div>
-        {!userData?.friends
-          ?.map((friend: any) => friend._id)
-          .includes(user?._id) &&
-          (!userData?.friendRequests?.includes(user?._id) ? (
-            <FaPlusCircle
-              className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark "
-              onClick={() => HandleSendFriendRequest(user?._id)}
-            />
-          ) : (
-            // pending friend request
-            <MdPending className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark" />
-          ))}
+        {search !== ""
+          ? !userData?.friends
+              ?.map((friend: any) => friend._id)
+              .includes(user?._id) &&
+            (!userData?.friendRequests?.includes(user?._id) ? (
+              <FaPlusCircle
+                className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark "
+                onClick={() => HandleSendFriendRequest(user?._id)}
+              />
+            ) : (
+              // pending friend request
+              <MdPending className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark " />
+            ))
+          : null}
       </div>
       {/* {!userData?.friendsRequest?.includes(user?._id) && (
         <div className="flex items-center justify-around mb-4">

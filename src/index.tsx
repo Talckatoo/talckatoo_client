@@ -14,6 +14,7 @@ import "animate.css";
 injectStyle();
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
+
 // Dispatch clearCall action when the application is loaded
 
 root.render(

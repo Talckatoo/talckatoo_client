@@ -11,6 +11,8 @@ import languagesArray from "../util/languages";
 import { setAuth } from "../redux/features/user/authSlice";
 import { MdOutlineSecurity } from "react-icons/md";
 import { UserContext } from "../context/user-context";
+import { setMessages } from "../redux/features/messages/messageSlice";
+import { setConversation } from "../redux/features/conversation/conversationSlice";
 
 interface FormData {
   name: string;
@@ -29,14 +31,13 @@ interface FormErrors {
 
 export const SignUp = () => {
   const navigate = useNavigate();
-  const { userEmail } = useContext(UserContext); 
+  const { userEmail } = useContext(UserContext);
   const [formData, setFormData] = React.useState<FormData>({
     name: "",
     password: "",
     confirmPassword: "",
     verificationCode: "",
   });
-  console.log(userEmail)
 
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [registerAuth] = useRegisterAuthMutation();
@@ -90,6 +91,15 @@ export const SignUp = () => {
         const token = response?.data?.token;
         const user = response?.data?.user;
         localStorage.setItem("token", token as string);
+        localStorage.removeItem("persist:root");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("persist:root");
+        localStorage.removeItem("conversationId");
+        localStorage.removeItem("selectedId");
+        localStorage.removeItem("language");
+        dispatch(setMessages([]));
+        dispatch(setConversation({ conversationId: null, selectedId: null }));
+
         dispatch(setAuth(user));
         toast.success("User signed up");
         navigate("/chat");
@@ -105,7 +115,6 @@ export const SignUp = () => {
       toast.warn("Please enter valid entries");
     }
   };
-
 
   return (
     <section className="relative h-full w-full font-inter">
