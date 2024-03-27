@@ -57,7 +57,6 @@ const NavBar: FC<NavBarProps> = ({}) => {
             className="w-[40px] w-min-[45px] mr-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
             src="/assets/img/logo.svg"
           />
-
           <span className="hidden sm:inline">TALCKATOO</span>
         </Link>
         {/* sign up and sign in button */}

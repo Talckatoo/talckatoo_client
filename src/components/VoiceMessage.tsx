@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaMicrophone, FaStop, FaPlay, FaPaperPlane } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -10,6 +10,8 @@ import { Socket } from "socket.io-client";
 import { useSendAudioMutation } from "../redux/services/MessagesApi";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { HiTranslate } from "react-icons/hi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 interface VoiceMessageProps {
   socket: Socket;
@@ -20,7 +22,10 @@ interface voiceCode {
   voiceCode: string | undefined;
 }
 
-const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
+const VoiceMessage = ({
+  socket,
+  onHandleTranslateText,
+}: VoiceMessageProps) => {
   const WHISPER_TRANSCRIPTION_URL = import.meta.env
     .VITE_WHISPER_TRANSCRIPTION_URL;
 
@@ -41,7 +46,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   const [recorder, setRecorder] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
   const [audioURL, setAudioURL] = useState<string | null>(null);
-
+  const [isTranslationLoading, setIsTranslationLoading] = useState<boolean>(false);
   const startRecording = () => {
     setIsRecording(true);
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -167,6 +172,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   };
 
   const handleTranslateAudio = async () => {
+    setIsTranslationLoading(true);
     const formData = new FormData();
 
     if (recordedAudio) {
@@ -189,6 +195,8 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
       });
       const data = await response.json();
       onHandleTranslateText(data);
+      setIsTranslationLoading(false);
+      setRecordedAudio(null);
     } catch (err) {
       console.log(err);
     }
@@ -226,19 +234,38 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
                 disabled={!isReadyToSend}
                 className="hover:text-slate-400 mr-3 relative px-2.5 items-center justify-center group"
               >
-                <FaPaperPlane className="text-white text-[20px]" />
-                <span className="tooltip">
-                  {isSendingAudio ? "Sending..." : "Send Your Audio"}
-                </span>
+                {isSendingAudio ? (
+                  <FontAwesomeIcon
+                    className="text-white"
+                    icon={faSpinner}
+                    spin
+                  />
+                ) : (
+                  <>
+                    <FaPaperPlane className="text-white text-[20px]" />
+                    <span className="tooltip">
+                      {isSendingAudio ? "Sending..." : "Send Your Audio"}
+                    </span>
+                  </>
+                )}
               </button>
               <button
                 onClick={handleTranslateAudio}
                 className="hover:text-slate-400 mr-3 relative px-2.5 items-center justify-center group"
                 disabled={!isReadyToSend}
               >
-                <HiTranslate className="text-white text-[20px]" />
-                {/* add tooltip */}
-                <span className="tooltip">Translate Your Audio</span>
+                {isTranslationLoading ? (
+                  <FontAwesomeIcon
+                    className="text-white"
+                    icon={faSpinner}
+                    spin
+                  />
+                ) : (
+                  <>
+                    <HiTranslate className="text-white text-[20px]" />
+                    <span className="tooltip">Translate Your Audio</span>
+                  </>
+                )}
               </button>
             </>
           ) : null}

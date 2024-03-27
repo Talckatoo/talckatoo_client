@@ -10,7 +10,7 @@ import JumpingDotsAnimation from "../UI/animation";
 import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
-import { MdDownload } from "react-icons/md";
+import { MdCancel, MdDownload } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -43,6 +43,10 @@ import { withStyles } from "@material-ui/core/styles";
 import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { IoSend } from "react-icons/io5";
+import { useUploadFileMutation } from "../redux/services/MediaApi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 interface Socket {
   current: any;
@@ -97,6 +101,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       });
     }
   };
+  // Sending a file...
+  const [openSendImageDialog, setOpenSendImageDialog] =
+    useState<boolean>(false);
+  const [imageToBeSent, setImageToBeSent] = useState<{
+    formData: any;
+    localImage: any;
+  }>({ formData: null, localImage: null });
+  const [uploadFile] = useUploadFileMutation();
+  const [isFileUploading, setIsFileUploading] = useState(false);
 
   // RTK Query
   // fetch all messages by conversation id
@@ -144,7 +157,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+}, [messages, openSendImageDialog]);
 
   useEffect(() => {
     if (selectedId || conversationId) {
@@ -259,11 +272,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       to: selectedId,
       createdAt: Date.now(),
     });
-    console.log(
-      "conversation id from sendAIMessage",
-      selectedId,
-      conversationId
-    );
     dispatch(
       setConversation({
         conversationId: conversationId,
@@ -362,8 +370,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             unread: selectedId,
           })
         );
-        console.log("conversation id from handleSendMessage", conversationId);
-
         dispatch(
           setConversation({
             conversationId: conversation?._id,
@@ -379,126 +385,167 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-  const onHandleSendFile = async (fileId: string, media: any) => {
-    socket.current.emit("stopTyping", selectedId);
-    if (selectedId && conversationId) {
-      try {
-        const response = await sendMessage({
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          media: fileId,
-          status: false,
-          unread: selectedId,
-        }).unwrap();
+  const onSendFile = async () => {
+    setIsFileUploading(true);
+    const response = await uploadFile(imageToBeSent.formData);
+    if ("data" in response) {
+      if (response.data && !response.data.error) {
+        {
+          socket.current.emit("stopTyping", selectedId);
+          const fileId = response.data.media._id;
+          const media = response.data.media;
+          if (selectedId && conversationId) {
+            try {
+              const response = await sendMessage({
+                from: user?._id,
+                to: selectedId,
+                targetLanguage: language,
+                media: fileId,
+                status: false,
+                unread: selectedId,
+              }).unwrap();
 
-        const { message, conversation } = response;
+              const { message, conversation } = response;
 
-        // setIsFetchingMore(false);
+              // setIsFetchingMore(false);
 
-        socket.current.emit("sendMessage", {
-          createdAt: message?.createdAt,
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          media: {
-            url: media.url,
-            type: media.type,
-            altText: media.altText,
-          },
-          status: false,
-          unread: selectedId,
-          conversationId: conversation?._id,
-        });
+              socket.current.emit("sendMessage", {
+                createdAt: message?.createdAt,
+                from: user?._id,
+                to: selectedId,
+                targetLanguage: language,
+                media: {
+                  url: media.url,
+                  type: media.type,
+                  altText: media.altText,
+                },
+                status: false,
+                unread: selectedId,
+                conversationId: conversation?._id,
+              });
 
-        // modify the latest message   in the users redux
+              // modify the latest message   in the users redux
 
-        dispatch(
-          addMessage({
-            createdAt: message?.createdAt,
-            media: {
-              url: media.url,
-              type: media.type,
-              altText: media.altText,
-            },
-            sender: user?._id,
-            _id: message?._id,
-            unread: selectedId,
-          })
-        );
-        console.log("conversation id from onHandleSendFile", conversationId);
+              dispatch(
+                addMessage({
+                  createdAt: message?.createdAt,
+                  media: {
+                    url: media.url,
+                    type: media.type,
+                    altText: media.altText,
+                  },
+                  sender: user?._id,
+                  _id: message?._id,
+                  unread: selectedId,
+                })
+              );
+              dispatch(
+                setConversation({
+                  conversationId: conversation?._id,
+                  selectedId: selectedId,
+                  language: language,
+                })
+              );
+              setIsFileUploading(false);
+              setOpenSendImageDialog(false);
+            } catch (err) {
+              toast.error("Error sending messages, please try again");
+              setIsFileUploading(false);
+              setOpenSendImageDialog(false);
+            }
+          } else if (selectedId && conversationId === "") {
+            // // setMessages([]);
+            // dispatch(setMessages([]));
+            try {
+              const response = await sendMessage({
+                from: user?._id,
+                to: selectedId,
+                targetLanguage: language,
+                media: fileId,
+                status: false,
+                unread: selectedId,
+              }).unwrap();
 
-        dispatch(
-          setConversation({
-            conversationId: conversation?._id,
-            selectedId: selectedId,
-            language: language,
-          })
-        );
-      } catch (err) {
-        toast.error("Error sending messages, please try again");
+              setIsFetchingMore(false);
+
+              const { message } = response;
+
+              socket.current.emit("sendMessage", {
+                createdAt: message?.createdAt,
+                from: user?._id,
+                to: selectedId,
+                targetLanguage: language,
+                media: {
+                  url: media.url,
+                  type: media.type,
+                  altText: media.altText,
+                },
+                status: false,
+                unread: selectedId,
+              });
+
+              // modify the latest message   in the users redux
+
+              dispatch(
+                addMessage({
+                  createdAt: message?.createdAt,
+                  media: {
+                    url: media.url,
+                    type: media.type,
+                    altText: media.altText,
+                  },
+                  sender: user?._id,
+                  _id: message?._id,
+                  unread: selectedId,
+                })
+              );
+              dispatch(
+                setConversation({
+                  conversationId: conversation?._id,
+                  selectedId: selectedId,
+                  language: language,
+                })
+              );
+              setIsFileUploading(false);
+              setOpenSendImageDialog(false);
+            } catch (err) {
+              toast.error("Error sending messages, please try again");
+              setIsFileUploading(false);
+              setOpenSendImageDialog(false);
+            }
+          }
+        }
+      } else {
+        console.log("error", response.data.error);
+        setIsFileUploading(false);
+        setOpenSendImageDialog(false);
       }
-    } else if (selectedId && conversationId === "") {
-      // // setMessages([]);
-      // dispatch(setMessages([]));
-      try {
-        const response = await sendMessage({
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          media: fileId,
-          status: false,
-          unread: selectedId,
-        }).unwrap();
-
-        setIsFetchingMore(false);
-
-        const { message } = response;
-
-        socket.current.emit("sendMessage", {
-          createdAt: message?.createdAt,
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          media: {
-            url: media.url,
-            type: media.type,
-            altText: media.altText,
-          },
-          status: false,
-          unread: selectedId,
-        });
-
-        // modify the latest message   in the users redux
-
-        dispatch(
-          addMessage({
-            createdAt: message?.createdAt,
-            media: {
-              url: media.url,
-              type: media.type,
-              altText: media.altText,
-            },
-            sender: user?._id,
-            _id: message?._id,
-            unread: selectedId,
-          })
-        );
-
-        console.log("conversation id from onHandleSendFile", conversationId);
-
-        dispatch(
-          setConversation({
-            conversationId: conversation?._id,
-            selectedId: selectedId,
-            language: language,
-          })
-        );
-      } catch (err) {
-        toast.error("Error sending messages, please try again");
-      }
+    } else {
+      console.log("error", response.error);
+      setIsFileUploading(false);
+      setOpenSendImageDialog(false);
     }
   };
+
+
+  const onHandleSendFile = (imageData: {
+    file: any;
+    type: "string";
+    altText: "string";
+  }) => {
+    setOpenSendImageDialog(true);
+    const formData = new FormData();
+    formData.append("file", imageData.file);
+    formData.append("type", imageData.type);
+    formData.append("altText", imageData.altText);
+    setImageToBeSent({
+      formData,
+      localImage: URL.createObjectURL(imageData.file),
+    });
+
+    /**/
+  };
+
 
   useEffect(() => {
     if (socket.current) {
@@ -660,6 +707,38 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       </Dialog>
 
       <div className="relative h-full">
+      {openSendImageDialog ? (
+          <div className="overflow-y-auto overflow-x-hidden w-full h-full flex gap-8 flex-col justify-center items-center bg-secondary-500/75	">
+            <div className="relative bg-white w-1/2 h-2/3 rounded-lg flex flex-col justify-center items-center h-1/2">
+              <div
+                className="absolute top-0 right-0 p-5"
+                onClick={() => setOpenSendImageDialog(false)}
+              >
+                <MdCancel className="text-[32px] text-secondary-500 hover:scale-105 transition ease-in-out duration-300 cursor-pointer"></MdCancel>
+              </div>
+              <img
+                className="w-full object-contain h-full p-5"
+                src={imageToBeSent.localImage}
+              ></img>
+            </div>
+            <div className="w-1/2 flex justify-center items-center rounded">
+              <div
+                className="flex justify-center w-16 h-16 items-center rounded-full bg-secondary-500 border-black hover:scale-105 transition ease-in-out duration-300 cursor-pointer"
+                onClick={onSendFile}
+              >
+                {isFileUploading ? (
+                  <FontAwesomeIcon
+                    className="text-white text-[24px]"
+                    icon={faSpinner}
+                    spin
+                  />
+                ) : (
+                  <IoSend className="text-white text-[24px]"></IoSend>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
         <div className="flex flex-col shadow-sm border-l border-opacity-20 h-full ">
           <div className="w-full flex flex-col h-full">
             <img
@@ -830,27 +909,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                   />
                                 </div>
                               </div>
-
-                              {/* {msg.voiceNote && (
-                                <audio className="w-60 h-15" controls>
-                                  <source
-                                    src={msg.voiceNote?.url}
-                                    type="audio/mpeg"
-                                  />
-                                </audio>
-                              )} */}
-
-                              {/* {msg.sender !==
-                                import.meta.env.VITE_AI_ASSISTANT_ID && (
-                                <img
-                                  src={
-                                    msg.sender === user?._id
-                                      ? `${user?.profileImage.url}`
-                                      : `${recipientPi}`
-                                  }
-                                  className=" w-[36px] h-[36px] rounded-full border border-[#E9E9EF]"
-                                />
-                              )} */}
                               <div ref={scrollRefBottom}></div>
                             </div>
                           </div>
@@ -885,7 +943,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
               </>
             ) : null}
           </div>
-        </div>
+        </div> )}
       </div>
     </div>
   );
