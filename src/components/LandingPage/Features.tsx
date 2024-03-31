@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next';
 
-import React from "react";
-
 const Features = () => {
   const { t } = useTranslation(); 
   return (
