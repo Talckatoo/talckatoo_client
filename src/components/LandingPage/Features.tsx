@@ -25,7 +25,7 @@ const Features = () => {
           </div>
            <div className="bg-light-bg shadow-lg border max-sm:gap-4 border-[#EFF0F6] p-4 flex  items-center  rounded-[25px]">
             <img src="/assets/icons/voice.png" alt="translate" className=" w-[42px] h-[42px]" />
-            <span className="text-center max-sm:text-[18px]  text-[20px]">Voice-to-Voice Translation</span>
+            <span className="text-center max-sm:text-[18px]  text-[20px]">{t("Voice-to-Voice Translation")}</span>
            </div>
            <div className="bg-light-bg border shadow-lg border-[#EFF0F6] p-4  items-center gap-8 rounded-[25px] hidden md:flex">
             <img src="/assets/icons/friend.png" alt="translate" className=" w-[42px] h-[42px]" />
@@ -33,7 +33,7 @@ const Features = () => {
            </div>
            <div className="bg-light-bg shadow-lg border border-[#EFF0F6] p-4 items-center gap-8 rounded-[25px] hidden md:flex">
             <img src="/assets/icons/tool.png" alt="translate" className=" w-[42px] h-[42px]" />
-            <span className="text-center text-[20px]">AI Assistance</span>
+            <span className="text-center text-[20px]">{t("AI Assistance")}</span>
            </div>
         </div>
   

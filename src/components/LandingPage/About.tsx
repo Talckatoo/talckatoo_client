@@ -1,16 +1,30 @@
-import React from "react";
+import { useTranslation } from 'react-i18next';
 import { MdDone } from "react-icons/md";
 
 const About = () => {
+  const { t } = useTranslation();
   return (
     <section className="container mt-[5rem]  max-md:p-5 ">
       <div className="flex flex-col ">
         <div className="flex flex-col justify-center items-center md:items-start">
         <h2 className="head-text text-center md:text-start text-black max-w-[883px] z-[1]">
-          One Chat Platform, Unlimited Opportunities
+          {t("One Chat Platform, Unlimited Opportunities")}
         </h2>
         <p className="text-center md:text-start mt-4  text-[18px] max-md:text-[16px] max-w-[964px] z-[1]">
-        From casual conversations to professional meetings, make every word understood, every emotion felt.
+        {t("There are no limits to the extent")}
+          <br/>
+          <ul className='px-5 m-5'>
+            <li>{t("Business meetings in companies that hire globally")}</li>  
+            <li>{t("Friends and family catchups")}</li>
+            <li>{t("Random friend matching")}</li>
+            <li>{t("Customer support")}</li>
+            <li>{t("…and much more")}</li>
+          </ul>
+
+
+
+
+
         </p>
 
         </div>
