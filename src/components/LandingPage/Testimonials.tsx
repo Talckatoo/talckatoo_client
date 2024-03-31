@@ -1,7 +1,10 @@
-import React from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "./../../context/user-context";
 import { testimonials } from "../../constants/testimonials";
 
 const Testimonials = () => {
+  const { isDarkMode } = useContext(UserContext);
+
   return (
     <section className=" max-md:p-5 container mt-[8rem] ">
       <div className="flex flex-col w-full ">
@@ -24,18 +27,20 @@ const Testimonials = () => {
           {testimonials.map((item, index) => (
             <div
               key={index}
-              className="p-16 bg-light-bg border shadow-lg border-[#EFF0F6] rounded-[20px] card"
+              className={`p-16  border shadow-lg  rounded-[20px] card ${
+                isDarkMode
+                  ? "bg-[#282828] text-white border-[#575757]"
+                  : " bg-light-bg border-[#EFF0F6] text-black"
+              }`}
             >
-              <p className="max-md:text-[16px]   text-black text-[18px]">
-                {item.text}
-              </p>
+              <p className="max-md:text-[16px]    text-[18px]">{item.text}</p>
               <div className="flex items-center  gap-4  mt-4">
                 <img src={item.image} alt="i" />
                 <div className="flex flex-col">
-                  <h4 className="max-md:text-[16px]  text-black text-[18px] font-bold">
+                  <h4 className="max-md:text-[16px]   text-[18px] font-bold">
                     {item.name}
                   </h4>
-                  <span className="max-md:text-[16px]  text-black text-[18px]">
+                  <span className="max-md:text-[16px]   text-[18px]">
                     {item.title}
                   </span>
                 </div>
