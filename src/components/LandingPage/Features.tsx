@@ -82,7 +82,7 @@ const Features = () => {
         </div>
         <div className="md:w-[50%] flex p-4 md:p-0 justify-center">
           <img
-            src="/assets/img/iPhone.png"
+            src={isDarkMode ? "/assets/img/iPhonePro.png" : "/assets/img/iPhone.png"}
             alt="iPhone"
             className="md:max-w-[50%] h-full object-contain"
           />

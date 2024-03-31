@@ -96,16 +96,16 @@ const NavBar: FC<NavBarProps> = ({}) => {
           <Button
             type="button"
             className={`max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000] ${
-              isDarkMode ? `bg-white text-black` : `bg-black text-white`
+              isDarkMode ? "border border-[#F5F5F5] text-white" : "bg-black text-white"
             }`}
             onClick={handleSignInClick}
           >
-            Log In
+            Sign in
           </Button>
           <Button
             type="button"
             className={` rounded-[3px] max-md:px-4 max-md:py-2 px-7 py-2 ${
-              isDarkMode ? `bg-white text-black` : `bg-black text-white`
+              isDarkMode ? "bg-[#F5F5F5] border border-[#F5F5F5] text-black" : "text-white"
             }`}
             onClick={() => {
               navigate("/sign-up/verification");
