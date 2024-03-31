@@ -27,7 +27,7 @@ const Hero = () => {
                 navigate("/sign-up");
               }}
             >
-              Get Started
+              Explore now
             </Button>
           </div>
 
@@ -52,7 +52,7 @@ const Hero = () => {
 
         <div className="mt-[4rem] z-[1] md:w-[50%] flex flex-col justify-center">
           <img
-            src="/assets/img/herotrans.png"
+            src={isDarkMode ? "/assets/img/disc.png" : "/assets/img/herotrans.png"}
             alt="hero"
             className="w-[583px]  h-full object-contain hidden md:block"
           />
