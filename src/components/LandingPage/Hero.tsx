@@ -24,7 +24,7 @@ const Hero = () => {
             </h2>
           </div>
           <p className="pt-2  text-center md:text-start text-[18px] max-md:text-[16px]">
-            {t("Talckatoo has revolutionized how our team communicates")}
+            {t("Talkcatoo has revolutionized how our team communicates. The real-time translation feature means we can work seamlessly with international partners without missing  a beat!")}
           </p>
           <div className="flex justify-center  md:justify-start gap-2 items-center mt-4 ">
             <img src="/assets/img/Ellipse.png" alt="SVG" />
