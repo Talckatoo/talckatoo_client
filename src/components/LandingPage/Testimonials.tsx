@@ -1,22 +1,23 @@
-import React from "react";
+import { useTranslation } from 'react-i18next';
 import { testimonials } from "../../constants/testimonials";
 
 const Testimonials = () => {
+  const { t } = useTranslation();
   return (
     <section className=" max-md:p-5 container mt-[8rem] ">
       <div className="flex flex-col w-full ">
         <div className="flex justify-center md:justify-start  gap-4 uppercase">
           <img src="/assets/icons/Rectangle.svg" alt="rectangle" />
           <span className=" font-dms max-md:text-[16px] text-[18px] text-[#5D5DFF] text-bold">
-            Testimonials
+            {t("Testimonials")}
           </span>
         </div>
         <div className="flex flex-col items-center md:items-start">
           <h2 className=" text-center md:text-start font-dms text-black max-md:text-[25px] md:text-[40px]  max-w-[883px] z-[1]">
-            Don't take our word for it...
+            {t("Don't take our word for it...")}
           </h2>
           <p className=" mt-3 max-md:text-[16px]  text-[18px] text-center md:text-start md:max-w-[433px] z-[1]">
-            Hear what our satisfied users have to say about Talckatoo.
+            {t("Hear what our satisfied users have to say about Talckatoo.")}
           </p>
         </div>
 

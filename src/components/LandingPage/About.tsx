@@ -12,6 +12,7 @@ const About = () => {
         </h2>
         <p className="text-center md:text-start mt-4  text-[18px] max-md:text-[16px] max-w-[964px] z-[1]">
         {t("There are no limits to the extent")}
+        </p>
           <br/>
           <ul className='px-5 m-5'>
             <li>{t("Business meetings in companies that hire globally")}</li>  
@@ -20,7 +21,6 @@ const About = () => {
             <li>{t("Customer support")}</li>
             <li>{t("…and much more")}</li>
           </ul>
-        </p>
 
         </div>
         
