@@ -82,7 +82,14 @@
   "Testimonials":"Testimonios",
   "Don't take our word for it...":"No nos creas...",
   "Hear what our satisfied users have to say about Talckatoo.":"Escuche las opiniones de nuestros usuarios satisfechos sobre Talckatoo.",
-  "Product Developer at Webflow":"Desarrollador de productos en Webflow"
-
+  "Product Developer at Webflow":"Desarrollador de productos en Webflow",
+  "Contact Us":"Contacte con nosotros",
+  "We're always eager to hear from you":"Siempre estamos deseando saber de ti. Si tienes preguntas, comentarios o simplemente quieres saludarnos, utiliza el siguiente formulario:",
+  "Enter Your name":"Introduzca su nombre",
+  "Your email":"Su correo electrónico",
+  "Enter your message":"Escriba su mensaje",
+  "Send":"Enviar",
+  "Made with love by":"Hecho con amor por",
+  "All rights reserved.":"Todos los derechos reservados."
 
 } 
