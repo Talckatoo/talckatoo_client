@@ -1,8 +1,14 @@
 import { useTranslation } from 'react-i18next';
-import { testimonials } from "../../constants/testimonials";
+import { testimonials as untranslatedTestimonials } from "../../constants/testimonials";
 
 const Testimonials = () => {
   const { t } = useTranslation();
+  const testimonials = untranslatedTestimonials.map(testimonial => ({
+    ...testimonial,
+    text: t(testimonial.text),
+    name: t(testimonial.name),
+    title: t(testimonial.title)
+  }));
   return (
     <section className=" max-md:p-5 container mt-[8rem] ">
       <div className="flex flex-col w-full ">
