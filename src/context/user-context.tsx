@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 import useUserRedirect from "./../hooks/useUserRedirect";
 import { useTranslation, I18nextProvider } from 'react-i18next';
 import i18n from 'i18next'; // Import i18n from i18next
@@ -45,6 +45,17 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
     i18n.changeLanguage(lng);
     setSelectedLanguage(lng); // Update selected language in state
   };
+
+  useEffect(() => {
+    // Check if the selected language is Arabic
+    if (selectedLanguage === 'ar') {
+      // Set the direction of the whole app to RTL
+      document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+      // Set the direction of the whole app to LTR
+      document.documentElement.setAttribute('dir', 'ltr');
+    }
+  }, [selectedLanguage]); // Run this effect whenever the selected language changes
 
   return (
     <I18nextProvider i18n={i18n}> {/* Wrap the children with I18nextProvider */}
