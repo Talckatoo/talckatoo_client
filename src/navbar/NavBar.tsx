@@ -108,7 +108,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
     <nav
       className={`relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center   shadow-sm ${
         isDarkMode
-          ? "bg-[#0E131D] border-l border-[#5D5DFF] border-opacity-20 "
+          ? "bg-[#181818] border border-[#000] border-opacity-20 "
           : "bg-white  border-b border-opacity-20"
       }`}
     >
@@ -182,7 +182,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
               <div
                 className={`py-2 flex items-center  px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ${
                   isDarkMode
-                    ? "bg-[#D9E3EA] text-black"
+                    ? "bg-[#F5F5F5] text-black"
                     : "bg-[#25282C] text-white"
                 }`}
               >
