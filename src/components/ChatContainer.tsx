@@ -626,7 +626,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   return (
     <div
       className={`w-full h-full flex flex-col ${
-        isDarkMode ? "bg-[#0E131D]" : "bg-white"
+        isDarkMode ? "bg-[#181818]" : "bg-white"
       }`}
     >
       <Dialog
@@ -651,7 +651,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         <div
           className={`flex flex-col shadow-sm  h-full ${
             isDarkMode
-              ? "border-l border-[#5D5DFF] border-opacity-20"
+              ? "border-l border-[#000] border-opacity-20"
               : "border-l border-opacity-20"
           }`}
         >
