@@ -175,7 +175,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   return (
     <div
       className={`flex flex-1 flex-grow justify-center w-full h-full ${
-        isDarkMode ? "bg-slate-950" : ""
+        isDarkMode ? "bg-[#181818]" : ""
       }`}
     >
       {/*First column */}
