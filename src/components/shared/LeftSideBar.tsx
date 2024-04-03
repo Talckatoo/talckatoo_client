@@ -33,7 +33,7 @@ const LeftSideBar = ({
     <div
       className={`w-[80px] min-w-[80px]  grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] ${
         isDarkMode
-          ? "border-r pt-5 border-[#5D5DFF] border-opacity-20"
+          ? "border-r pt-5 border-[#000] border-opacity-20"
           : "border-r pt-5 border-opacity-20"
       }`}
     >

@@ -28,9 +28,9 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleSetButtonSelected = (buttonSelected:string) => {
+  const handleSetButtonSelected = (buttonSelected: string) => {
     console.log(buttonSelected);
-    navigate("/chat", {state: {buttonSelected}});
+    navigate("/chat", { state: { buttonSelected } });
   };
 
   useEffect(() => {
@@ -78,11 +78,10 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current]);
 
   return (
-    
     <div
-    
-      className={`flex flex-1 flex-grow w-full h-full ${isDarkMode ? "bg-slate-950" : ""
-        }`}
+      className={`flex flex-1 flex-grow w-full h-full ${
+        isDarkMode ? "bg-[#181818]" : ""
+      }`}
     >
       {/*First column */}
       <LeftSideBar
@@ -111,6 +110,24 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
             <div className="flex justify-center items-center h-full ">
               <div className="flex flex-col justify-center items-center">
                 <img
+                  src={`${
+                    isDarkMode
+                      ? "/assets/img/Shapesde.png"
+                      : "/assets/img/Shapes.png"
+                  }`}
+                  alt="shape"
+                  className="fixed left-24 bottom-14 w-[40%] z-[1] "
+                />
+                <img
+                  src={`${
+                    isDarkMode
+                      ? "/assets/img/Shapesd.png"
+                      : "/assets/img/Shapes.png"
+                  }`}
+                  alt="shape"
+                  className="fixed right-[2rem] top-16 w-[23%] z-[1] "
+                />
+                <img
                   className="m-auto"
                   src="/assets/img/people.svg"
                   alt="People"
@@ -131,7 +148,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       )}
 
       {isChatOpen && (
-        <div className=" w-full h-fullflex flex-col ">
+        <div className=" w-full h-full flex flex-col ">
           <RandomChat
             randomData={randomData}
             conversationRandomId={conversationRandomId}
