@@ -183,7 +183,7 @@ const ChatInput = ({
             id=""
             placeholder="Type your message or type @birdie to call AI Assistant"
             className={`mb-0 rounded-t-[20px]   border  
-            ${isDarkMode ? "bg-[#282828] border-[#141414]" : "bg-white border-[#0E131D]"}
+            ${isDarkMode ? "bg-[#282828] border-[#141414] text-white" : "bg-white border-[#0E131D]"}
             ${
               messageText.startsWith(AIcall)
                 ? "text-gray-700 italic font-semibold"

@@ -169,8 +169,8 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-  const handleSetButtonSelected = (buttonSelected:string) => {
-    navigate("/chat", {state: {buttonSelected}});
+  const handleSetButtonSelected = (buttonSelected: string) => {
+    navigate("/chat", { state: { buttonSelected } });
   };
   return (
     <div
@@ -187,20 +187,20 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
       />
 
       <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
-      <img
-            src={`${
-              isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
-            }`}
-            alt="shape"
-            className="fixed left-24  -bottom-14 w-[40%] z-[1] "
-          />
-          <img
-            src={`${
-              isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"
-            }`}
-            alt="shape"
-            className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
-          />
+        <img
+          src={`${
+            isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
+          }`}
+          alt="shape"
+          className="fixed left-24  bottom-[-9rem] w-[40%] z-[1] "
+        />
+        <img
+          src={`${
+            isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"
+          }`}
+          alt="shape"
+          className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
+        />
         <form
           className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px]"
           onSubmit={handleSubmit}

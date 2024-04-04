@@ -116,7 +116,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
                       : "/assets/img/Shapes.png"
                   }`}
                   alt="shape"
-                  className="fixed left-24 bottom-14 w-[40%] z-[1] "
+                  className="fixed left-24 bottom-[-9rem] w-[40%] z-[1] "
                 />
                 <img
                   src={`${
