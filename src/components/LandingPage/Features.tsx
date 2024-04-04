@@ -97,7 +97,9 @@ const Features = () => {
               />
             </div>
             <div className="w-3/4 flex justify-center">
-              <span className="text-center text-[20px]">Friend Matching </span>
+              <span className={`text-center max-sm:text-[18px] text-[20px] ${
+                    isDarkMode ? "text-black" : "text-black"
+                  }`}>Friend Matching </span>
             </div>
           </div>
           <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] flex-col md:hidden">
@@ -109,7 +111,9 @@ const Features = () => {
               />
             </div>
             <div className="w-3/4 flex justify-center">
-              <span className="text-center text-[20px]">AI Assistance</span>
+              <span className={`text-center max-sm:text-[18px] text-[20px] ${
+                    isDarkMode ? "text-black" : "text-black"
+                  }`}>AI Assistance</span>
             </div>
           </div>
         </div>
