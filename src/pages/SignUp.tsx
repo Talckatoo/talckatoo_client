@@ -11,6 +11,8 @@ import languagesArray from "../util/languages";
 import { setAuth } from "../redux/features/user/authSlice";
 import { MdOutlineSecurity } from "react-icons/md";
 import { UserContext } from "../context/user-context";
+import { setMessages } from "../redux/features/messages/messageSlice";
+import { setConversation } from "../redux/features/conversation/conversationSlice";
 
 interface FormData {
   name: string;
@@ -29,14 +31,13 @@ interface FormErrors {
 
 export const SignUp = () => {
   const navigate = useNavigate();
-  const { userEmail } = useContext(UserContext); 
+  const { userEmail } = useContext(UserContext);
   const [formData, setFormData] = React.useState<FormData>({
     name: "",
     password: "",
     confirmPassword: "",
     verificationCode: "",
   });
-  console.log(userEmail)
 
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [registerAuth] = useRegisterAuthMutation();
@@ -45,6 +46,7 @@ export const SignUp = () => {
   const [error, setError] = useState<string | null>(null);
   const refs = useRef<Array<HTMLInputElement>>([]);
   const { isDarkMode } = useContext(UserContext);
+
 
   const validateForm = (): boolean => {
     let isValid = true;
@@ -90,6 +92,15 @@ export const SignUp = () => {
         const token = response?.data?.token;
         const user = response?.data?.user;
         localStorage.setItem("token", token as string);
+        localStorage.removeItem("persist:root");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("persist:root");
+        localStorage.removeItem("conversationId");
+        localStorage.removeItem("selectedId");
+        localStorage.removeItem("language");
+        dispatch(setMessages([]));
+        dispatch(setConversation({ conversationId: null, selectedId: null }));
+
         dispatch(setAuth(user));
         toast.success("User signed up");
         navigate("/chat");
@@ -106,10 +117,9 @@ export const SignUp = () => {
     }
   };
 
-
   return (
-    <section className="relative h-full w-full font-inter">
-      <div className="fixed top-0 left-0 w-full h-full -z-20"></div>
+    <section className="relative bg-white h-full w-full font-inter">
+      <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
       <img
         src="/assets/img/wave.svg"
         alt="shape"
@@ -117,125 +127,135 @@ export const SignUp = () => {
       />
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
-  
-      <h1
-          className={`head-text text-center mt-[6rem] mb-6 ${
+
+      <h1    className={`head-text text-center mt-[6rem] mb-6 ${
             isDarkMode ? "text-white" : "text-black"
+          }`}>
+        Join Talckatoo Today!
+      </h1>
+      {/* Sign up form  */}
+      <form
+        className="flex flex-col items-center justify-center max-w-[400px] mx-auto"
+        onSubmit={handleSubmit}
+      >
+        <Input
+          // label="Username"
+          type="text"
+          name="name"
+          placeholder="Username"
+          value={formData.name}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setFormData({ ...formData, name: e.target.value })
+          }
+          className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
+            isDarkMode ? " text-white" : "text-black"
           }`}
-        >
-          Join Talckatoo Today!
-        </h1>
-        {/* Sign up form  */}
-        <form
-          className="flex flex-col items-center justify-center max-w-[400px] mx-auto"
-          onSubmit={handleSubmit}
-        >
-          <Input
-            // label="Username"
-            type="text"
-            name="name"
-            placeholder="Username"
-            value={formData.name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
-            className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
-              isDarkMode ? " text-white" : "text-black"
-            }`}
-            error={formErrors.name}
-            label={""}
-            id={""}
-          />
+          error={formErrors.name}
+          label={""}
+          id={""}
+        />
 
-          <Input
-            // label="Password"
-            name="password"
-            type="password"
-            placeholder="Password (at least 8 characters)"
-            value={formData.password}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-            className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
-              isDarkMode ? " text-white" : "text-black"
-            }`}
-            error={formErrors.password}
-            label={""}
-            id={""}
-          />
-          <Input
-            // label="Confirm Password"
-            name="confirmPassword"
-            type="password"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, confirmPassword: e.target.value })
-            }
-            className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
-              isDarkMode ? " text-white" : "text-black"
-            }`}
-            error={formErrors.confirmPassword}
-            label={""}
-            id={""}
-          />
+        <Input
+          // label="Password"
+          name="password"
+          type="password"
+          placeholder="Password (at least 8 characters)"
+          value={formData.password}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setFormData({ ...formData, password: e.target.value })
+          }
+          className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
+            isDarkMode ? " text-white" : "text-black"
+          }`}
+          error={formErrors.password}
+          label={""}
+          id={""}
+        />
+        <Input
+          // label="Confirm Password"
+          name="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
+          value={formData.confirmPassword}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setFormData({ ...formData, confirmPassword: e.target.value })
+          }
+          className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
+            isDarkMode ? " text-white" : "text-black"
+          }`}
+          error={formErrors.confirmPassword}
+          label={""}
+          id={""}
+        />
 
-          <select
-  className={`rounded-lg p-3 w-full border  relative text-[16px] focus:outline-none z-[1] ${
-    formErrors.selectedLanguage ? "border-red-500" : ""
-  } bg-transparent border-[#33363A] ${
-    isDarkMode ? "text-white" : "text-black"
-  }`}
-            value={selectedLanguage}
-            onChange={(e) => setSelectedLanguage(e.target.value)}
-          >
-      <option value="" disabled hidden className="text-black">
-              Select Your Language
+        <select
+     className={`rounded-lg p-3 w-full border  relative text-[16px] focus:outline-none z-[1] ${
+      formErrors.selectedLanguage ? "border-red-500" : ""
+    } bg-transparent border-[#33363A] ${
+      isDarkMode ? "text-white" : "text-black"
+    }`}
+          value={selectedLanguage}
+          onChange={(e) => setSelectedLanguage(e.target.value)}
+        >
+ <option value="" disabled hidden className="text-black">
+            Select Your Language
+          </option>
+          {languagesArray?.map(({ code, language }) => (
+   <option key={code} value={code} 
+   className={isDarkMode ? "bg-[#0E131D]" : "bg-white"}
+   >
+              {language}
             </option>
-            {languagesArray?.map(({ code, language }) => (
-              <option key={code} value={code} 
-              className={isDarkMode ? "bg-[#0E131D]" : "bg-white"}
-              >
-                {language}
-              </option>
-            ))}
-          </select>
-          {formErrors.selectedLanguage && (
-            <p className="mt-2 text-[16px] md:text-[18px] text-red-500">
-              {formErrors.selectedLanguage}
-            </p>
-          )}
-
-          <Button
-            type="submit"
-            className="bg-black text-white w-full h-[48px] mt-[2rem] z-[1] rounded-lg"
-            onClick={() => {}}
-          >
-            Sign Up
-          </Button>
-
-          <p className={` ${isDarkMode ? "text-white" : ""} mt-4 z-[1]`}>
-            Already have an account?{" "}
-            <Link
-   className=" cursor-pointer rounded-lg underline font-semibold"
-              to="/sign-in"
-            >
-              Sign In
-            </Link>
+          ))}
+        </select>
+        {formErrors.selectedLanguage && (
+          <p className="mt-2 text-[16px] md:text-[18px] text-red-500">
+            {formErrors.selectedLanguage}
           </p>
-        </form>
-        <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
-          <div className="flex gap-1 items-center">
-          <MdOutlineSecurity className={isDarkMode ? "text-white" : ""} />
-          <span className={isDarkMode ? "text-white" : ""}>
-            By signing up, you agree to our 
-            </span>
-           </div>
-           <div className="flex gap-2">
-           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/terms")}>Terms of Service & </p>
-           <p className="text-[blue] cursor-pointer" onClick={()=> navigate("/privacy")}> Privacy</p>
-           </div>
+        )}
+
+        <Button
+          type="submit"
+          className="bg-black text-white w-full h-[48px] mt-[2rem] z-[1] rounded-lg"
+          onClick={() => {}}
+        >
+          Sign Up
+        </Button>
+
+        <p className={` ${isDarkMode ? "text-white" : ""} mt-4 z-[1]`}>
+          Already have an account?{" "}
+          <Link
+className=" cursor-pointer rounded-lg underline font-semibold"
+            to="/sign-in"
+          >
+            Sign In
+          </Link>
+        </p>
+      </form>
+      <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
+        <div className="flex gap-1 items-center">
+        <MdOutlineSecurity className={isDarkMode ? "text-white" : ""} />
+          <span
+      className={isDarkMode ? "text-white" : ""}
+          >By signing up, you agree to our</span>
         </div>
+        <div className="flex gap-2">
+          <p
+            className="text-[blue] cursor-pointer"
+            onClick={() => navigate("/terms")}
+          >
+            Terms of Service &{" "}
+          </p>
+          <p
+            className="text-[blue] cursor-pointer"
+            onClick={() => navigate("/privacy")}
+          >
+            {" "}
+            Privacy
+          </p>
+        </div>
+      </div>
+
       <br />
       <br />
       <br />

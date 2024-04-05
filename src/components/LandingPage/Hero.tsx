@@ -24,7 +24,7 @@ const Hero = () => {
                 isDarkMode ? "bg-white text-black" : "bg-black text-white"
               }`}
               onClick={() => {
-                navigate("/sign-up");
+                navigate("/sign-up/verification");
               }}
             >
               Explore now
