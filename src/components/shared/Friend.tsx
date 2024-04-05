@@ -122,7 +122,7 @@ const Friend = ({
             } `}
           ></div>
         </div>
-        {search?.length >= 2
+        {search?.length > 0
           ? !userData?.friends
               ?.map((friend: any) => friend._id)
               .includes(user?._id) &&

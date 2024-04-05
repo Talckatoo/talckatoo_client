@@ -73,8 +73,8 @@ const SideBar = ({
   useEffect(() => {
     if (users) {
       setAllUser(users?.contactedUsers?.concat(users?.uncontactedUsers));
-      setTimeout(()=>{
-        setIsLoading(false)
+      setTimeout(() => {
+        setIsLoading(false);
       }, 500);
     }
   }, [users]);
@@ -208,6 +208,7 @@ const SideBar = ({
                     isDarkMode={isDarkMode}
                     selected={selectedId === user._id}
                     socket={socket}
+                    search={search}
                   />
                 </div>
               ))
