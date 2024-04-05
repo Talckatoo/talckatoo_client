@@ -39,7 +39,8 @@ const FriendRequest = ({
   const { users } = useAppSelector((state) => state.user);
   const [addFriend, { isLoading }] = useAddFriendMutation();
   const { requests } = useAppSelector((state) => state.user);
-  const [actionFriend] = useActionFriendMutation();
+  const [actionFriend, { isLoading: AcceptIsLoading }] =
+    useActionFriendMutation();
 
   const dispatch = useAppDispatch();
 
@@ -47,6 +48,7 @@ const FriendRequest = ({
   const conversationId = conversationState?.conversation?.conversationId;
 
   const HandleActionFriend = async (action: string) => {
+    if (AcceptIsLoading) return;
     try {
       const response = await actionFriend({
         userId: userData?._id,
@@ -216,13 +218,21 @@ const FriendRequest = ({
       </div>
       {!userData?.friendsRequest?.includes(user?._id) && (
         <div className="flex items-center justify-around mb-4">
-          <div
-            className="flex items-center  gap-2 font-semibold"
-            onClick={() => HandleActionFriend("accept")}
-          >
-            <FaCheckCircle className="text-green-500 text-[22px]" />
-            Accept
-          </div>
+          {AcceptIsLoading ? (
+            <div className="flex items-center gap-2 font-semibold">
+              <PiBirdFill className="text-primary-500 text-[22px] animate-spin" />
+              Loading...
+            </div>
+          ) : (
+            <div
+              className="flex items-center  gap-2 font-semibold"
+              onClick={() => HandleActionFriend("accept")}
+            >
+              <FaCheckCircle className="text-green-500 text-[22px]" />
+              Accept
+            </div>
+          )}
+
           <div
             className="flex items-center  gap-2 font-semibold"
             onClick={() => HandleActionFriend("reject")}
