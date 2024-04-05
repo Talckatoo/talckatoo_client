@@ -122,7 +122,7 @@ const Friend = ({
             } `}
           ></div>
         </div>
-        {search !== ""
+        {search?.length >= 2
           ? !userData?.friends
               ?.map((friend: any) => friend._id)
               .includes(user?._id) &&
@@ -137,18 +137,6 @@ const Friend = ({
             ))
           : null}
       </div>
-      {/* {!userData?.friendsRequest?.includes(user?._id) && (
-        <div className="flex items-center justify-around mb-4">
-          <div className="flex items-center  gap-2 font-semibold">
-            <FaCheckCircle className="text-green-500 text-[22px]" />
-            Accept
-          </div>
-          <div className="flex items-center  gap-2 font-semibold">
-            <IoMdCloseCircle className="text-red-500 text-[22px]" />
-            Decline
-          </div>
-        </div>
-      )} */}
 
       {/* Line Divider */}
       <div
