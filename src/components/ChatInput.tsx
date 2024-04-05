@@ -172,7 +172,8 @@ const ChatInput = ({
             onKeyDown={handleSendMessageKeyDown as any}
             id=""
             placeholder="Type your message or type @birdie to call AI Assistant"
-            className={`mb-0 rounded-t-[20px]   border border-[#0E131D] 
+            className={`mb-0 rounded-t-[20px]   border  
+            ${isDarkMode ? "bg-[#282828] border-[#141414] text-white" : "bg-white border-[#0E131D]"}
             ${
               messageText.startsWith(AIcall)
                 ? "text-gray-700 italic font-semibold"
@@ -180,13 +181,17 @@ const ChatInput = ({
             }`}
           />
 
-          <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2">
+          <div
+          className={`flex justify-between items-center relative bottom-[2rem] py-3 border rounded-b-[20px] px-2 ${
+            isDarkMode ? "bg-[#181818] border-[#141414]" : "bg-[#25282C] "
+          }`}
+          >
             <form onSubmit={handleSendMessage} className="absolute right-4 ">
               <button type="submit">
                 <IoSend className="text-white text-[20px]" />
               </button>
             </form>
-            <div className="w-[200px] flex items-center">
+            <div className="w-[200px] flex items-center ">
               <div className="flex">
                 <VoiceMessage
                   socket={socket}

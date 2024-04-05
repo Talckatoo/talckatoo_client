@@ -104,6 +104,16 @@ body {
   min-width: 100%;
   font-family: "inter", sans-serif;
   /* font-size: 16px; */
+  background-color: white;
+}
+
+.App {
+  background-color: #fff ;
+  color: #000
+}
+
+.dark-mode {
+  background-color: #181818 ;
 }
 
 .res img {
@@ -127,6 +137,9 @@ textarea {
   outline: none;
   margin-bottom: 20px;
   transition: 0.3s;
+}
+.news {
+  text-shadow: 2px 2px #000 ;
 }
 
 /* input:focus,
@@ -177,7 +190,7 @@ textarea:focus {
   }
   /* Head Text */
   .head-text {
-    @apply text-title-500 text-[38px] max-lg:text-[25px]  font-extrabold;
+    @apply text-[38px] max-lg:text-[25px]  font-extrabold;
   }
 
   .title-text {

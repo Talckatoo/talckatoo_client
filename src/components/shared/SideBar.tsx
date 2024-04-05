@@ -148,7 +148,7 @@ const SideBar = ({
   return (
     <div
       className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${
-        isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
+        isDarkMode ? "bg-[#181818]" : "bg-white"
       }`}
     >
       {/*First column */}
@@ -174,13 +174,13 @@ const SideBar = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className={`${
-              isDarkMode ? "bg-input-bg-dark" : "bg-secondary-500"
+              isDarkMode ? "bg-[#282828]" : "bg-secondary-500"
             } pl-12 text-white rounded-xl focus:outline-none focus:border-0 focus:ring-[3px] focus:ring-blue border-0 placeholder-white::placeholder`}
             placeholder="Search"
           />
           <IoSearch
             className={`absolute left-3 top-3 ${
-              isDarkMode ? "text-sidebar-dark-500" : "text-white"
+              isDarkMode ? "text-white" : "text-white"
             }`}
             size={24}
           />

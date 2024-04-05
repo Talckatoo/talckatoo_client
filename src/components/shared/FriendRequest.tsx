@@ -238,7 +238,7 @@ const FriendRequest = ({
             onClick={() => HandleActionFriend("reject")}
           >
             <IoMdCloseCircle className="text-red-500 text-[22px]" />
-            Decline
+            <span className={isDarkMode ? "text-white" : ""}>Decline</span>
           </div>
         </div>
       )}

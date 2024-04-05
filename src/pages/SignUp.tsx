@@ -45,6 +45,8 @@ export const SignUp = () => {
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [error, setError] = useState<string | null>(null);
   const refs = useRef<Array<HTMLInputElement>>([]);
+  const { isDarkMode } = useContext(UserContext);
+
 
   const validateForm = (): boolean => {
     let isValid = true;
@@ -126,7 +128,9 @@ export const SignUp = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
 
-      <h1 className="head-text text-center mt-[6rem] mb-6 text-black">
+      <h1    className={`head-text text-center mt-[6rem] mb-6 ${
+            isDarkMode ? "text-white" : "text-black"
+          }`}>
         Join Talckatoo Today!
       </h1>
       {/* Sign up form  */}
@@ -143,7 +147,9 @@ export const SignUp = () => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFormData({ ...formData, name: e.target.value })
           }
-          className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
+          className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
+            isDarkMode ? " text-white" : "text-black"
+          }`}
           error={formErrors.name}
           label={""}
           id={""}
@@ -158,7 +164,9 @@ export const SignUp = () => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFormData({ ...formData, password: e.target.value })
           }
-          className="bg-transparent border-[#33363A] z-[1] rounded-lg text-black"
+          className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
+            isDarkMode ? " text-white" : "text-black"
+          }`}
           error={formErrors.password}
           label={""}
           id={""}
@@ -172,24 +180,30 @@ export const SignUp = () => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFormData({ ...formData, confirmPassword: e.target.value })
           }
-          className="bg-transparent border-[#33363A] z-[1] rounded-lg"
+          className={`bg-transparent border-[#33363A] z-[1] rounded-lg ${
+            isDarkMode ? " text-white" : "text-black"
+          }`}
           error={formErrors.confirmPassword}
           label={""}
           id={""}
         />
 
         <select
-          className={`rounded-lg p-3 my-4 w-full border text-black relative text-[16px] focus:outline-none z-[1] ${
-            formErrors.selectedLanguage ? "border-red-500" : ""
-          } bg-transparent border-[#33363A]`}
+     className={`rounded-lg p-3 w-full border  relative text-[16px] focus:outline-none z-[1] ${
+      formErrors.selectedLanguage ? "border-red-500" : ""
+    } bg-transparent border-[#33363A] ${
+      isDarkMode ? "text-white" : "text-black"
+    }`}
           value={selectedLanguage}
           onChange={(e) => setSelectedLanguage(e.target.value)}
         >
-          <option value="" disabled hidden>
+ <option value="" disabled hidden className="text-black">
             Select Your Language
           </option>
           {languagesArray?.map(({ code, language }) => (
-            <option key={code} value={code} className="bg-white">
+   <option key={code} value={code} 
+   className={isDarkMode ? "bg-[#0E131D]" : "bg-white"}
+   >
               {language}
             </option>
           ))}
@@ -208,10 +222,10 @@ export const SignUp = () => {
           Sign Up
         </Button>
 
-        <p className="text-black mt-4 z-[1]">
+        <p className={` ${isDarkMode ? "text-white" : ""} mt-4 z-[1]`}>
           Already have an account?{" "}
           <Link
-            className="text-black cursor-pointer rounded-lg underline font-semibold"
+className=" cursor-pointer rounded-lg underline font-semibold"
             to="/sign-in"
           >
             Sign In
@@ -220,8 +234,10 @@ export const SignUp = () => {
       </form>
       <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
         <div className="flex gap-1 items-center">
-          <MdOutlineSecurity />
-          <span>By signing up, you agree to our</span>
+        <MdOutlineSecurity className={isDarkMode ? "text-white" : ""} />
+          <span
+      className={isDarkMode ? "text-white" : ""}
+          >By signing up, you agree to our</span>
         </div>
         <div className="flex gap-2">
           <p
