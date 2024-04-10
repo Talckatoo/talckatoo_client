@@ -35,19 +35,19 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   // Delete account function
   const handleDeleteAccount = async () => {
     if (window.confirm('Are you sure you want to delete your account? There is no going back after this point.'))
-    try {
-      const result = await deleteAccount(user?.email);
-      if ("data" in result) {
-        toast.success("Account deleted successfully!");
-        localStorage.clear();
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      }
+      try {
+        const result = await deleteAccount(user?.email);
+        if ("data" in result) {
+          toast.success("Account deleted successfully!");
+          localStorage.clear();
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
 
-    } catch (error) {
-      console.log(error);
-    }
+      } catch (error) {
+        console.log(error);
+      }
   }
 
   interface FormInput {
@@ -176,9 +176,8 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   return (
     <div
-      className={`flex flex-1 flex-grow justify-center w-full h-full ${
-        isDarkMode ? "bg-[#181818]" : ""
-      }`}
+      className={`flex flex-1 flex-grow justify-center w-full h-full ${isDarkMode ? "bg-[#181818]" : ""
+        }`}
     >
       {/*First column */}
       <LeftSideBar
@@ -190,16 +189,14 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
       <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
         <img
-          src={`${
-            isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
-          }`}
+          src={`${isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
+            }`}
           alt="shape"
           className="fixed left-24  bottom-[-9rem] w-[40%] z-[1] "
         />
         <img
-          src={`${
-            isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"
-          }`}
+          src={`${isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"
+            }`}
           alt="shape"
           className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
         />
@@ -232,72 +229,78 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             <span className=" text-[#606060]">Upload Photo</span>
           </div>
 
-            <Input
-              name="name"
-              type="text"
-              label="Username"
-              placeholder="Enter your username"
-              id="name"
-              value={formInput.name}
-              onChange={handleInputChange}
-              className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
-            />
-            <div className="mb-12 ">
-              <label
-                htmlFor={name}
-                className="block text-[14px] font-medium  mb-4 text-[#606060]"
-              >
-                Language
-              </label>
-              <select
-                className="p-4    w-full bg-[#F5F5F5] rounded-[10px] text-[#606060] focus:outline-none outline-none"
-                value={updateLanguage}
-                onChange={handleLanguageChange}
-              >
-                <option value="" disabled hidden>
-                  Select a language
+          <Input
+            name="name"
+            type="text"
+            label="Username"
+            placeholder="Enter your username"
+            id="name"
+            value={formInput.name}
+            onChange={handleInputChange}
+            className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
+          />
+          <div className="mb-12 ">
+            <label
+              htmlFor={name}
+              className="block text-[14px] font-medium  mb-4 text-[#606060]"
+            >
+              Language
+            </label>
+            <select
+              className="p-4    w-full bg-[#F5F5F5] rounded-[10px] text-[#606060] focus:outline-none outline-none"
+              value={updateLanguage}
+              onChange={handleLanguageChange}
+            >
+              <option value="" disabled hidden>
+                Select a language
+              </option>
+              {languagesArray?.map(({ code, language }) => (
+                <option key={code} value={code}>
+                  {language}
                 </option>
-                {languagesArray?.map(({ code, language }) => (
-                  <option key={code} value={code}>
-                    {language}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex justify-end">
-              <button className="bg-[#25282C] w-auto text-white py-4 px-[3rem] rounded-[10px]">
-                Update Profile
-              </button>
-            </div>
-          </form>
-          <div
-            className="flex justify-center mt-5 gap-4 cursor-pointer"
-            onClick={() => handleLogout()}
-          >
-            <a href="">
-              <img src="./assets/img/signout.png" alt="logout-icon" />
-            </a>
-            <span className="text-[#DD0000] font-semibold text-[17px]">
-              Log Out
-            </span>
+              ))}
+            </select>
           </div>
-          {/* delete account zone danger */}
-          <div className="border border-black-500 shadow-xl mt-2">
-            <div className="flex px-3 flex-col mt-5 gap-4 cursor-pointer">
-              <h3 className="text-body-bold text-red-500">Danger</h3>
-              <div className="flex justify-between px-4 py-2">
-                <div>
-                  <h4 className="text-body-medium text-red-400">Delete Account</h4>
-                  <p className="opacity-90">Delete your account and all its associated data</p>
-                </div>
-                <button onClick={handleDeleteAccount} className="rounded-md text-[#fafafa] bg-red-600  p-2 font-semibold text-[17px]">
-                  DELETE ACCOUNT
-                </button>
+          <div className="flex justify-end">
+            <button className="bg-[#25282C] w-auto text-white py-4 px-[3rem] rounded-[10px]">
+              Update Profile
+            </button>
+          </div>
+        </form>
+        <div
+          className="flex justify-center p-2 gap-4 cursor-pointer"
+          onClick={() => handleLogout()}
+        >
+          <a href="">
+            <img src="./assets/img/signout.png" alt="logout-icon" />
+          </a>
+          <span className={`${isDarkMode ? "text-white" : "text-[#DD0000]" } font-semibold text-[17px]`}>
+            Log Out
+          </span>
+        </div>
+        {/* delete account zone danger */}
+        <div className={`border border-black-500 shadow-xl pt-2 bg-white rounded-lg ${ isDarkMode ? "z-50" : "" }`}>
+          <div className="flex px-3 flex-col mt-5 gap-4 cursor-pointer">
+            <h3 className="text-body-bold text-red-500">Danger</h3>
+            <div className="flex justify-between px-4 py-2">
+              <div>
+                <h4 className="text-body-medium text-red-600" >Delete Account</h4>
+                <p className="opacity-90 text-gray-500">
+                  Delete your account and all its associated data
+                </p>
               </div>
+              <button
+                onClick={handleDeleteAccount}
+                className="rounded-md text-white bg-red-500 p-2 font-semibold text-[17px] border border-red-600"
+              >
+                DELETE ACCOUNT
+              </button>
             </div>
           </div>
         </div>
+
       </div>
+    </div>
   );
 };
 
