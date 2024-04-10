@@ -272,7 +272,10 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           onClick={() => handleLogout()}
         >
           <a href="">
-            <img src="./assets/img/signout.png" alt="logout-icon" />
+            {
+              isDarkMode ? <img className="w-6 h-6" src="./assets/img/signoutW.png" alt="logout-icon" /> :
+              <img className="w-6 h-6"src="./assets/img/signoutR.png" alt="logout-icon" />
+            }
           </a>
           <span className={`${isDarkMode ? "text-white" : "text-[#DD0000]" } font-semibold text-[17px]`}>
             Log Out
