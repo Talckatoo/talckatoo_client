@@ -1,11 +1,17 @@
-import React from "react";
+import { useContext } from "react";
+import { UserContext } from "../../context/user-context";
 
 const Footer = () => {
+  const { isDarkMode } = useContext(UserContext);
   return (
     <footer className="flex items-center max-md:p-5 px-[2.5rem] justify-between container mt-[2rem] max-md:mt-0 max-md:items-center text-center gap-3 max-sm:flex-col-reverse">
       <p className="">
         Made with love by
-        <span className=" text-black"> Talckatoo</span>. All rights reserved © 2023-2024.
+        <span className={isDarkMode ? "text-white" : "text-black"}>
+          {" "}
+          Talckatoo
+        </span>
+        . All rights reserved © 2023-2024.
       </p>
 
       <div className="flex items-center gap-4 res">

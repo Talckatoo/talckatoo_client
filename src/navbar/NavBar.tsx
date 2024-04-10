@@ -39,7 +39,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
     if (l.code === language?.toLowerCase()) return l.language;
   });
 
-  const { isDarkMode, setIsDarkMode } = useContext(UserContext);
+  const { isDarkMode, toggleDarkMode } = useContext(UserContext);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClicks);
@@ -103,13 +103,21 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
   };
 
   return (
-    <nav className="relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm ">
+    <nav 
+    className={`relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center   shadow-sm ${
+      isDarkMode
+        ? "bg-[#181818] border border-[#000] border-opacity-20 "
+        : "bg-white  border-b border-opacity-20"
+    }`}
+    >
       <div className="flex w-[80%] gap-2 md:gap-8">
         <div className="flex items-center ml-2 gap-2 md:gap-4 ">
           {user && (
             <>
               <IoChevronBack
-                className="text-black max-md:hidden min-w-[24px] text-[24px] md:text-[28px] md:min-w-[28px] cursor-pointer"
+                 className={`max-md:hidden min-w-[24px] text-[24px] md:text-[28px] md:min-w-[28px] cursor-pointer ${
+                  isDarkMode ? "text-white" : "text-black"
+                }`}
                 onClick={handleBack}
               />
 
@@ -128,7 +136,12 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
 
               <div className="flex flex-col  hover:text-gray-300   mr-2 focus:outline-none sm:block">
                 {user && user?.userName ? (
-                  <p className="max-md:text-[16px] md: text-[16px] text-bold text-[#25282C]">
+                  <p 
+                  className={` max-md:text-[16px] md: text-[16px] text-bold text-[#25282C] ${
+                    isDarkMode ? "text-white" : "text-black"
+                  }`}
+                >
+                  
                     {recipient}
                   </p>
                 ) : (
@@ -136,7 +149,13 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
                 )}
               </div>
 
-              <div className="bg-[#25282C] py-2 flex items-center text-white px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ">
+              <div 
+                className={`py-2 flex items-center  px-4 rounded-bl-[0px] rounded-br-[20px] rounded-t-[20px] ${
+                  isDarkMode
+                    ? "bg-[#F5F5F5] text-black"
+                    : "bg-[#25282C] text-white"
+                }`}
+              >
                 <span className="max-md:text-[12px] md:text-[14px] ">
                   {fullLanguage}
                 </span>
@@ -156,7 +175,10 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
       </div>
 
       <div className="flex gap-6 items-center max-md:gap-2 ">
-        <button className="text-black" onClick={handleVideoCall}>
+        <button 
+  className={isDarkMode ? "text-white " : "text-black"}
+        onClick={handleVideoCall}
+        >
           <PiVideoCameraThin size={34} />
         </button>
         {/* 

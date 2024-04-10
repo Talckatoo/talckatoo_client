@@ -10,6 +10,10 @@ import App from "./App";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import "animate.css";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faSpinner, fas } from '@fortawesome/free-solid-svg-icons'
+library.add(fas, faSpinner);
+
 // CALL IT ONCE IN YOUR APP
 injectStyle();
 

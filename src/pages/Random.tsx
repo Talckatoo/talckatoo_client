@@ -163,8 +163,9 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   };
   return (
     <div
-      className={`flex flex-1 flex-grow w-full h-full ${isDarkMode ? "bg-slate-950" : ""
-    }`}
+      className={`flex flex-1 flex-grow w-full h-full ${
+        isDarkMode ? "bg-[#181818]" : ""
+      }`}
     >
       {/*Left sidebar */}
       <LeftSideBar
@@ -200,6 +201,24 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
             <div className="flex justify-center items-center h-full ">
               <div className="flex flex-col justify-center items-center">
                 <img
+                  src={`${
+                    isDarkMode
+                      ? "/assets/img/Shapesde.png"
+                      : "/assets/img/Shapes.png"
+                  }`}
+                  alt="shape"
+                  className="fixed left-24 bottom-[-9rem] w-[40%] z-[1] "
+                />
+                <img
+                  src={`${
+                    isDarkMode
+                      ? "/assets/img/Shapesd.png"
+                      : "/assets/img/Shapes.png"
+                  }`}
+                  alt="shape"
+                  className="fixed right-[2rem] top-16 w-[23%] z-[1] "
+                />
+                <img
                   className="m-auto"
                   src="/assets/img/people.svg"
                   alt="People"
@@ -218,8 +237,8 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
           </div>
         )
       )}
-
-      {random.isChatOpen && (
+      
+ {random.isChatOpen && (
         <div className=" w-full h-full flex flex-col ">
           <NavBarRandom leaveRandomChat={leaveRandomChat} />
           <RandomChat

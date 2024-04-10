@@ -7,6 +7,11 @@
     "@emotion/styled": "^11.11.0",
     "@ffmpeg/core": "^0.11.0",
     "@ffmpeg/ffmpeg": "^0.11.6",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@heroicons/react": "^2.0.18",
     "@mui/material": "^5.15.5",
     "@reduxjs/toolkit": "^2.0.1",
@@ -69,6 +74,7 @@
     ]
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/simple-peer": "^9.11.8",

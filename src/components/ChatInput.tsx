@@ -30,7 +30,7 @@ interface ChatInputProps {
   onHandleSendMessage: (message: string) => void;
   onHandleSendAIMessage: (messageAI: string) => void;
   onHandleTranslateText: (voiceMessage: string) => void;
-  onHandleSendFile: (fileId: string, media: any) => void;
+  onHandleSendFile: (imageData:{file:any,type:"string",altText:"string"}) => void;
 }
 const ChatInput = ({
   socket,
@@ -51,7 +51,6 @@ const ChatInput = ({
 
   const [uploadFile] = useUploadFileMutation();
   const refToggleBox = useRef(null);
-
   useEffect(() => {
     const handleClickOutisde = (event: MouseEvent) => {
       if (
@@ -103,24 +102,12 @@ const ChatInput = ({
 
   const handleUpload = async (e: any) => {
     e.preventDefault();
-    let response: any = null;
-    let formData = new FormData();
-    formData = new FormData();
-    formData.append("file", e.target.files[0]);
-    formData.append("type", e.target.files[0].type.split("/")[0]);
-    formData.append("altText", e.target.files[0].name);
-
-    response = await uploadFile(formData);
-
-    if ("data" in response) {
-      if (response.data && !response.data.error) {
-        onHandleSendFile(response.data.media._id, response.data.media);
-      } else {
-        console.log("error", response.data.error);
-      }
-    } else {
-      console.log("error", response.error);
-    }
+    const imageData = {
+      file: e.target.files[0],
+      type: e.target.files[0].type.split("/")[0],
+      altText: e.target.files[0].name
+    };
+    onHandleSendFile(imageData);
   };
 
   const handleSendMessageKeyDown = (e: ChangeEvent<HTMLFormElement>) => {
@@ -185,7 +172,8 @@ const ChatInput = ({
             onKeyDown={handleSendMessageKeyDown as any}
             id=""
             placeholder="Type your message or type @birdie to call AI Assistant"
-            className={`mb-0 rounded-t-[20px]   border border-[#0E131D] 
+            className={`mb-0 rounded-t-[20px]   border  
+            ${isDarkMode ? "bg-[#282828] border-[#141414] text-white" : "bg-white border-[#0E131D]"}
             ${
               messageText.startsWith(AIcall)
                 ? "text-gray-700 italic font-semibold"
@@ -193,13 +181,17 @@ const ChatInput = ({
             }`}
           />
 
-          <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2">
+          <div
+          className={`flex justify-between items-center relative bottom-[2rem] py-3 border rounded-b-[20px] px-2 ${
+            isDarkMode ? "bg-[#181818] border-[#141414]" : "bg-[#25282C] "
+          }`}
+          >
             <form onSubmit={handleSendMessage} className="absolute right-4 ">
               <button type="submit">
                 <IoSend className="text-white text-[20px]" />
               </button>
             </form>
-            <div className="w-[200px] flex items-center">
+            <div className="w-[200px] flex items-center ">
               <div className="flex">
                 <VoiceMessage
                   socket={socket}

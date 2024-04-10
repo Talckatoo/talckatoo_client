@@ -16,12 +16,14 @@ import {
   useSearchuserMutation,
 } from "../../redux/services/UserApi";
 import { PiChatTextFill } from "react-icons/pi";
-import { RiSettings5Fill } from "react-icons/ri";
+import { RiLoader4Fill, RiSettings5Fill } from "react-icons/ri";
 import FriendRequest from "./FriendRequest";
 import { setRequest } from "../../redux/features/user/requestSlice";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import LeftSideBar from "./LeftSideBar";
-import { setMessages } from "../../redux/features/messages/messageSlice";
+import { FaUserXmark } from "react-icons/fa6";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const SideBar = ({
   socket,
@@ -50,6 +52,8 @@ const SideBar = ({
   const conversationId = conversationState?.conversation?.conversationId;
 
   const [searchuser] = useSearchuserMutation();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   // get all requests
   const { data: requestsData, refetch: refetchFriendsRequest } =
     useFetchAllRequestsQuery(null) as any;
@@ -69,6 +73,9 @@ const SideBar = ({
   useEffect(() => {
     if (users) {
       setAllUser(users?.contactedUsers?.concat(users?.uncontactedUsers));
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
     }
   }, [users]);
 
@@ -77,9 +84,21 @@ const SideBar = ({
   const SearchForUser = async () => {
     try {
       const response = await searchuser({ identifier: search }).unwrap();
-      if ("seachedUser" in response) setSearchData([response.seachedUser]);
-      else alert("User not found");
+      if ("seachedUser" in response) {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+        setSearchData([response.seachedUser]);
+      } else {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+        alert("User not found");
+      }
     } catch (error) {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
       console.log(error);
       setSearchData([]);
     }
@@ -88,8 +107,12 @@ const SideBar = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (search.length > 0) SearchForUser();
-    else setSearchData([]);
+    if (search.length > 0) {
+      setIsLoading(true);
+      SearchForUser();
+    } else {
+      setSearchData([]);
+    }
   }, [search]);
 
   const handleSelectContact = (u: any) => {
@@ -113,13 +136,19 @@ const SideBar = ({
   };
 
   useEffect(() => {
-    setUsersData(searchData.length > 0 ? searchData : users?.contactedUsers);
+    setUsersData(
+      (searchData.length && search.length) > 0
+        ? searchData
+        : !searchData.length && !search.length
+        ? users?.contactedUsers
+        : []
+    );
   }, [searchData, users]);
 
   return (
     <div
       className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${
-        isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
+        isDarkMode ? "bg-[#181818]" : "bg-white"
       }`}
     >
       {/*First column */}
@@ -130,7 +159,7 @@ const SideBar = ({
         showRandom={false}
       />
       {/*Second column */}
-      <div className="w-4/5 overflow-y-auto ">
+      <div className="w-full overflow-y-auto ">
         <div
           className={`my-4 ml-4 font-extrabold text-[20px] ${
             isDarkMode ? "text-white" : "text-black"
@@ -145,13 +174,13 @@ const SideBar = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className={`${
-              isDarkMode ? "bg-input-bg-dark" : "bg-secondary-500"
+              isDarkMode ? "bg-[#282828]" : "bg-secondary-500"
             } pl-12 text-white rounded-xl focus:outline-none focus:border-0 focus:ring-[3px] focus:ring-blue border-0 placeholder-white::placeholder`}
             placeholder="Search"
           />
           <IoSearch
             className={`absolute left-3 top-3 ${
-              isDarkMode ? "text-sidebar-dark-500" : "text-white"
+              isDarkMode ? "text-white" : "text-white"
             }`}
             size={24}
           />
@@ -159,20 +188,42 @@ const SideBar = ({
 
         {!showRequest ? (
           <div>
-            {usersData
-              ? usersData?.map((user: any) => (
-                  <div key={user._id} onClick={() => handleSelectContact(user)}>
-                    <Friend
-                      key={user.id}
-                      user={user}
-                      isDarkMode={isDarkMode}
-                      selected={selectedId === user._id}
-                      socket={socket}
-                      search={search}
-                    />
-                  </div>
-                ))
-              : null}
+            {isLoading ? (
+              <div className="h-full w-full flex flex-col items-center justify-center py-4 px-4 ">
+                <FontAwesomeIcon
+                  className="h-auto w-1/12"
+                  icon={faSpinner}
+                  spin
+                />
+                <p className="w-full font-extrabold text-[20px] text-center flex justify-center">
+                  Loading
+                </p>
+              </div>
+            ) : usersData.length > 0 ? (
+              usersData?.map((user: any) => (
+                <div key={user._id} onClick={() => handleSelectContact(user)}>
+                  <Friend
+                    key={user.id}
+                    user={user}
+                    isDarkMode={isDarkMode}
+                    selected={selectedId === user._id}
+                    socket={socket}
+                    search={search}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="h-full w-full flex flex-col items-center justify-center py-4 px-4 ">
+                <FaUserXmark className="w-1/12 h-auto text-secondary-500 animate__animated animate__headShake" />
+                <p className="w-full font-extrabold text-[20px] text-center flex justify-center animate__animated animate__headShake">
+                  We didn't find any results
+                </p>
+                <p className="w-full text-center flex justify-center animate__animated animate__headShake">
+                  Make sure everything is spelled correctly or try different
+                  keywords
+                </p>
+              </div>
+            )}
           </div>
         ) : (
           <div>

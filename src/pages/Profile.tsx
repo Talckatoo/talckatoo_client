@@ -175,47 +175,62 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   return (
-      <div
-        className={`flex flex-1 flex-grow justify-center w-full h-full ${isDarkMode ? "bg-slate-950" : ""
-          }`}
-      >
-        {/*First column */}
-        <LeftSideBar
-          showSetting={true}
-          showRequest={false}
-          setButtonSelected={handleSetButtonSelected}
-          showRandom={false}
-        />
+    <div
+      className={`flex flex-1 flex-grow justify-center w-full h-full ${
+        isDarkMode ? "bg-[#181818]" : ""
+      }`}
+    >
+      {/*First column */}
+      <LeftSideBar
+        showSetting={true}
+        showRequest={false}
+        setButtonSelected={handleSetButtonSelected}
+        showRandom={false}
+      />
 
-        <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
-          <form
-            className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px]"
-            onSubmit={handleSubmit}
-            style={{
-              boxShadow: "6px 6px 54px 0px rgba(0, 0, 0, 0.03)",
-            }}
-          >
-            <div className="mb-8  flex items-center justify-center gap-4 cursor-pointer relative">
-              {image ? (
-                <img
-                  src={URL.createObjectURL(image)}
-                  alt="User"
-                  className=" object-cover h-[85px] w-[85px] rounded-full"
-                />
-              ) : (
-                <img
-                  src={user?.profileImage?.url}
-                  className="h-[85px] w-[85px] rounded-full"
-                />
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                onChange={handleUpload}
+      <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
+        <img
+          src={`${
+            isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
+          }`}
+          alt="shape"
+          className="fixed left-24  bottom-[-9rem] w-[40%] z-[1] "
+        />
+        <img
+          src={`${
+            isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"
+          }`}
+          alt="shape"
+          className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
+        />
+        <form
+          className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px]"
+          onSubmit={handleSubmit}
+          style={{
+            boxShadow: "6px 6px 54px 0px rgba(0, 0, 0, 0.03)",
+          }}
+        >
+          <div className="mb-8  flex items-center justify-center gap-4 cursor-pointer relative">
+            {image ? (
+              <img
+                src={URL.createObjectURL(image)}
+                alt="User"
+                className=" object-cover h-[85px] w-[85px] rounded-full"
               />
-              <span className=" text-[#606060]">Upload Photo</span>
-            </div>
+            ) : (
+              <img
+                src={user?.profileImage?.url}
+                className="h-[85px] w-[85px] rounded-full"
+              />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              className="absolute inset-0 opacity-0 cursor-pointer"
+              onChange={handleUpload}
+            />
+            <span className=" text-[#606060]">Upload Photo</span>
+          </div>
 
             <Input
               name="name"
