@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { MdOutlineSecurity } from "react-icons/md";
 import { UserContext } from "../context/user-context";
+import CryptoJS from "crypto-js";
 
 interface FormData {
   email: string;
@@ -40,11 +41,18 @@ const SignUpVerification = () => {
         }
       );
       if (response) {
-        const { verificationCode } = response.data;
+        const { encryptedVerificationCode } = response.data;
         toast.success(
           "Verification code sent to your email. Please check your email."
         );
-        setVerificationCode(verificationCode);
+
+        const secretKey = import.meta.env.VITE_ENCRYPTION_KEY as string;
+        const decryptedVerificationCode = CryptoJS.AES.decrypt(
+          encryptedVerificationCode,
+          secretKey
+        ).toString();
+
+        setVerificationCode(decryptedVerificationCode);
         setSendEmail(true);
       }
     } catch (error) {
