@@ -22,6 +22,7 @@
     "animate.css": "^4.1.1",
     "axios": "^1.4.0",
     "base64-js": "^1.5.1",
+    "crypto-js": "^4.2.0",
     "dotenv": "^16.3.1",
     "emoji-picker-react": "^4.4.9",
     "ffmpeg-static": "^5.1.0",
