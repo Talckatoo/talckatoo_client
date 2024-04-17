@@ -41,7 +41,7 @@ const SignUpVerification = () => {
       );
 
       if (response) {
-        const {verificationCode} = response.data;
+        const { verificationCode } = response.data;
         toast.success(
           "Verification code sent to your email. Please check your email."
         );
@@ -133,9 +133,8 @@ const SignUpVerification = () => {
       {/* End of Nav bar section */}
       <div className="justify-center align-center text-center">
         <h1
-          className={`head-text text-center mt-[6rem] mb-6  ${
-            isDarkMode ? "text-white" : "text-black"
-          }`}
+          className={`head-text text-center mt-[6rem] mb-6  ${isDarkMode ? "text-white" : "text-black"
+            }`}
         >
           Let's get started!
         </h1>
@@ -150,9 +149,8 @@ const SignUpVerification = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className={`bg-transparent border-[#33363A] z-[1] rounded-lg  ${
-                  isDarkMode ? "text-white" : "text-black"
-                }`}
+                className={`bg-transparent border-[#33363A] z-[1] rounded-lg  ${isDarkMode ? "text-white" : "text-black"
+                  }`}
                 label={""}
                 id={""}
               />
@@ -168,30 +166,32 @@ const SignUpVerification = () => {
         ) : (
           <>
             <span
-              className={`mt-4 z-[1] text-center ${
-                isDarkMode ? "text-white" : "text-black"
-              }`}
+              className={`mt-4 z-[1] text-center ${isDarkMode ? "text-white" : "text-black"
+                }`}
             >
               Please enter the code we sent to your email
             </span>
-            <div
-              className="w-[10%] flex mx-auto my-6 justify-between space-x-2 h-12"
-              onPaste={handlePaste}
-            >
-              {Array.from({ length: 4 }, (_, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  maxLength={1}
-                  className={`w-12 h-12 text-center border rounded-md ${
-                    error ? "border-red-500" : "border-gray-300"
-                  }`}
-                  value={confirmationCode[index]}
-                  onChange={(e) => handleInputChange(e, index)}
-                  ref={(el) => el && (refs.current[index] = el)}
-                />
-              ))}
-            </div>
+          
+                
+              <div
+                className="w-[10%] flex justify-center  mx-auto my-6 space-x-2 h-12"
+                onPaste={handlePaste}
+              >
+                {Array.from({ length: 4 }, (_, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    maxLength={1}
+                    className={`w-12 h-12 text-center border rounded-md ${error ? "border-red-500" : "border-gray-300"
+                      }`}
+                    value={confirmationCode[index]}
+                    onChange={(e) => handleInputChange(e, index)}
+                    ref={(el) => el && (refs.current[index] = el)}
+                  />
+                ))}
+              </div>
+            
+
             <Button
               type="submit"
               className="bg-black text-white text-center justify-center h-[48px] z-[1] rounded-lg mt-2"
@@ -202,15 +202,13 @@ const SignUpVerification = () => {
           </>
         )}
         <p
-          className={`mt-4 z-[1] text-center ${
-            isDarkMode ? "text-white" : "text-black"
-          }`}
+          className={`mt-4 z-[1] text-center ${isDarkMode ? "text-white" : "text-black"
+            }`}
         >
           Already have an account?{" "}
           <Link
-            className={`cursor-pointer rounded-lg underline font-semibold ${
-              isDarkMode ? "text-white" : "text-black"
-            }`}
+            className={`cursor-pointer rounded-lg underline font-semibold ${isDarkMode ? "text-white" : "text-black"
+              }`}
             to="/sign-in"
           >
             Sign In
