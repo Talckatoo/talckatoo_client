@@ -5,7 +5,6 @@ import Button from "../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
 import { MdOutlineSecurity } from "react-icons/md";
 import { UserContext } from "../context/user-context";
 import CryptoJS from "crypto-js";
@@ -23,7 +22,7 @@ const SignUpVerification = () => {
 
   const [confirmationCode, setConfirmationCode] = useState(Array(4).fill(""));
   const refs = useRef<Array<HTMLInputElement>>([]);
-  const [verificationCode, setVerificationCode] = React.useState("");
+  const [verificationCodeString, setVerificationCodeString] = React.useState("");
   const [sendEmail, setSendEmail] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { isDarkMode } = useContext(UserContext);
@@ -40,22 +39,26 @@ const SignUpVerification = () => {
           email: formData.email,
         }
       );
+
       if (response) {
-        const { encryptedVerificationCode } = response.data;
+        const {verificationCode} = response.data;
         toast.success(
           "Verification code sent to your email. Please check your email."
         );
 
         const secretKey = import.meta.env.VITE_ENCRYPTION_KEY as string;
-        const decryptedVerificationCode = CryptoJS.AES.decrypt(
-          encryptedVerificationCode,
-          secretKey
-        ).toString();
+        const iv = import.meta.env.VITE_ENCRYPTION_IV;
 
-        setVerificationCode(decryptedVerificationCode);
+        const decryptedVerificationCode = CryptoJS.AES.decrypt(
+          verificationCode,
+          secretKey,
+          { iv: iv }
+        );
+
+        setVerificationCodeString(decryptedVerificationCode.toString(CryptoJS.enc.Utf8));
         setSendEmail(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.response.data.message === "The email is already in use") {
         toast.error(
           "The email is already in use. Please use another email or sign in"
@@ -111,7 +114,7 @@ const SignUpVerification = () => {
   };
   const handleContinue = () => {
     const code = confirmationCode.join("");
-    if (code !== verificationCode || code === "") {
+    if (code !== verificationCodeString || code === "") {
       setError("Verification code does not match");
       return;
     }
