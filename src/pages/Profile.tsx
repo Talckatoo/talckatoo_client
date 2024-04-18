@@ -36,17 +36,19 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleDeleteAccount = async () => {
     if (window.confirm('Are you sure you want to delete your account? There is no going back after this point.'))
       try {
-        const result = await deleteAccount(user?.email);
+        
+        const result = await deleteAccount({email: user?.email});
+
         if ("data" in result) {
           toast.success("Account deleted successfully!");
           localStorage.clear();
           setTimeout(() => {
-            window.location.reload();
+            navigate("/");
           }, 2000);
         }
 
       } catch (error) {
-        console.log(error);
+        console.log(error, "error");
       }
   }
 
