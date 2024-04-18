@@ -11,7 +11,6 @@ import { useUploadFileMutation } from "../redux/services/MediaApi";
 import Input from "../UI/Input";
 import { useDeleteAccountMutation } from "../redux/services/AuthApi";
 import LeftSideBar from "../components/shared/LeftSideBar";
-// import UserProfile from "../components/UserProfile";
 
 interface Socket {
   current: any;
@@ -48,7 +47,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
         }
 
       } catch (error) {
-        console.log(error, "error");
+        console.log(error)
       }
   }
 
@@ -70,13 +69,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("persist:root");
-    localStorage.removeItem("conversationId");
-    localStorage.removeItem("selectedId");
-    localStorage.removeItem("language");
-
+    localStorage.clear()
     navigate("/");
   };
 
@@ -127,7 +120,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             welcome: result?.data?.user?.welcome,
           })
         );
-        console.log("conversation id from profile");
 
         dispatch(
           setConversation({
