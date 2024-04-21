@@ -3,6 +3,7 @@ import {
   ChangeEvent,
   useEffect,
   useContext,
+  useRef,
   VoidFunctionComponent,
 } from "react";
 import EmojiPicker from "emoji-picker-react";
@@ -31,7 +32,7 @@ interface ChatInputProps {
   onHandleSendMessage: (message: string) => void;
   onHandleSendAIMessage: (messageAI: string) => void;
   onHandleTranslateText: (voiceMessage: string) => void;
-  onHandleSendFile: (fileId: string, media: any) => void;
+  onHandleSendFile: (imageData:{file:any,type:"string",altText:"string"}) => void;
 }
 const ChatInput = ({
   socket,
@@ -51,6 +52,24 @@ const ChatInput = ({
   const selectedId = conversationState?.conversation?.selectedId;
 
   const [uploadFile] = useUploadFileMutation();
+  const refToggleBox = useRef(null);
+  useEffect(() => {
+    const handleClickOutisde = (event: MouseEvent) => {
+      if (
+        refToggleBox.current &&
+        !refToggleBox.current.contains(event.target as Node)
+      ) {
+        // Clicked outside of the toggle box, so close
+        setShowEmoji(false);
+      }
+    };
+    // Attach event listener when the component mounts
+    document.addEventListener("mousedown", handleClickOutisde);
+    //clean up yhe event listeners
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutisde);
+    };
+  }, []);
 
   const handleShowEmoji = () => {
     setShowEmoji(!showEmoji);
@@ -84,32 +103,21 @@ const ChatInput = ({
   };
 
   const handleUpload = async (e: any) => {
-    let response: any = null;
-    let formData = new FormData();
-    formData = new FormData();
-    formData.append("file", e.target.files[0]);
-    formData.append("type", e.target.files[0].type.split("/")[0]);
-    formData.append("altText", e.target.files[0].name);
-
-    response = await uploadFile(formData);
-
-    if ("data" in response) {
-      if (response.data && !response.data.error) {
-        onHandleSendFile(response.data.media._id, response.data.media);
-      } else {
-        console.log("error", response.data.error);
-      }
-    } else {
-      console.log("error", response.error);
-    }
+    e.preventDefault();
+    const imageData = {
+      file: e.target.files[0],
+      type: e.target.files[0].type.split("/")[0],
+      altText: e.target.files[0].name
+    };
+    onHandleSendFile(imageData);
   };
 
-  const handleSendMessage = (e: ChangeEvent<HTMLFormElement>) => {
+  const handleSendMessageKeyDown = (e: ChangeEvent<HTMLFormElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
       if (messageText.trim() === "") {
         return;
       }
+      e.preventDefault();
 
       if (messageText.substring(0, 7) === AIcall) {
         onHandleSendAIMessage(messageText);
@@ -124,10 +132,39 @@ const ChatInput = ({
       setMessageText("");
     }
   };
+
+  const handleSendMessage = (e: ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (messageText.trim() === "") {
+      return;
+    }
+
+    if (messageText.substring(0, 7) === AIcall) {
+      onHandleSendAIMessage(messageText);
+      toast.loading("Please wait", {
+        position: toast.POSITION.TOP_CENTER,
+        progressClassName: "success-progress-bar",
+        toastId: 2,
+      });
+    } else {
+      onHandleSendMessage(messageText);
+    }
+    setMessageText("");
+  };
   const { t } = useTranslation();
+
   return (
     <>
-      <div className="w-full  relative z-10 pt-2">
+      <div className="w-full  relative z-10 pt-2" ref={refToggleBox}>
+        {showEmoji && (
+          <div
+            className={`cursor-pointer emoji-container relative top-2  ${
+              showEmoji ? "open" : ""
+            }`}
+          >
+            <EmojiPicker width="100%" onEmojiClick={handleEmojiClick} />
+          </div>
+        )}
         <div className=" flex flex-col max-md:w-[80%] md:w-[80%] mx-auto  ">
           <TextArea
             label=""
@@ -135,20 +172,29 @@ const ChatInput = ({
             type="text"
             value={messageText}
             onChange={handleTyping as any}
-            onKeyDown={handleSendMessage as any}
+            onKeyDown={handleSendMessageKeyDown as any}
             id=""
             placeholder={t("Type your message or type @birdie to call AI Assistant")}
-            className={`mb-0 rounded-t-[20px]   border border-[#0E131D] 
-             ${messageText.startsWith(AIcall) ? "text-black" : ""}`}
+            className={`mb-0 rounded-t-[20px]   border  
+            ${isDarkMode ? "bg-[#282828] border-[#141414] text-white" : "bg-white border-[#0E131D]"}
+            ${
+              messageText.startsWith(AIcall)
+                ? "text-gray-700 italic font-semibold"
+                : ""
+            }`}
           />
 
-          <div className="flex justify-between items-center relative bottom-[2rem] bg-[#25282C] py-3 rounded-b-[20px] px-2">
+          <div
+          className={`flex justify-between items-center relative bottom-[2rem] py-3 border rounded-b-[20px] px-2 ${
+            isDarkMode ? "bg-[#181818] border-[#141414]" : "bg-[#25282C] "
+          }`}
+          >
             <form onSubmit={handleSendMessage} className="absolute right-4 ">
-              <button>
+              <button type="submit">
                 <IoSend className="text-white text-[20px]" />
               </button>
             </form>
-            <div className="w-[200px] flex items-center">
+            <div className="w-[200px] flex items-center ">
               <div className="flex">
                 <VoiceMessage
                   socket={socket}
@@ -158,7 +204,10 @@ const ChatInput = ({
 
               <div className="flex items-center gap-2">
                 <img src="./assets/img/line.png" className="i" />
-                <FaFaceSmile className="text-white text-[20px]" />
+                <FaFaceSmile
+                  className="text-white text-[20px]"
+                  onClick={handleShowEmoji}
+                />
 
                 <label className="cursor-pointer">
                   <MdOutlineAttachFile className="text-white text-[20px]" />

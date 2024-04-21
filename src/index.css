@@ -104,6 +104,16 @@ body {
   min-width: 100%;
   font-family: "inter", sans-serif;
   /* font-size: 16px; */
+  background-color: white;
+}
+
+.App {
+  background-color: #fff ;
+  color: #000
+}
+
+.dark-mode {
+  background-color: #181818 ;
 }
 
 .res img {
@@ -128,6 +138,9 @@ textarea {
   margin-bottom: 20px;
   transition: 0.3s;
 }
+.news {
+  text-shadow: 2px 2px #000 ;
+}
 
 /* input:focus,
 textarea:focus {
@@ -150,18 +163,34 @@ textarea:focus {
   width: fit-content;
 }
 
+
+.emoji-container {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease-in-out;
+  margin: 0 1em;
+}
+
+.emoji-container.open {
+  height: fit-content; /* Adjust the desired height */
+}
+
 @layer components {
   /* main */
   .main-container {
     @apply flex  flex-1 flex-col items-center px-6 pb-10  max-md:pb-32 sm:px-10 mt-[1.5rem];
   }
 
+  .tooltip {
+    @apply absolute -top-9 -left-14 bg-black text-white text-[12px] rounded h-5 w-[150px] px-2 flex items-center justify-center opacity-0 transition-opacity duration-200 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto;
+  }
+  
   .container {
     @apply w-full max-w-[1284px] m-auto;
   }
   /* Head Text */
   .head-text {
-    @apply text-title-500 text-[38px] max-lg:text-[25px]  font-extrabold;
+    @apply text-[38px] max-lg:text-[25px]  font-extrabold;
   }
 
   .title-text {
@@ -339,4 +368,26 @@ textarea:focus {
     rgba(74, 134, 247, 0.28) 0%,
     rgba(74, 134, 247, 0) 100%
   );
+}
+
+@keyframes countdown {
+  0% {
+    width: 0%;
+    left: 0%;
+  }
+  50% {
+    left: 0%;
+  }
+  100% {
+    width: 100%;
+    left: 0%;
+  }
+}
+
+.countdown-bar {
+  height: 4px;
+  background-color: rgb(0, 0, 0);
+  position: absolute;
+  bottom: 0;
+  animation: countdown 4s linear forwards;
 }

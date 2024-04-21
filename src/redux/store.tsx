@@ -26,7 +26,7 @@ import { MessagesApi } from "./services/MessagesApi";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "user", "conversation", "messages", "call"],
+  whitelist: ["auth"],
 };
 
 export interface RootState extends PersistPartial {
@@ -40,6 +40,7 @@ export interface RootState extends PersistPartial {
   [UserApi.reducerPath]: any;
   [AuthApi.reducerPath]: any;
   [MessagesApi.reducerPath]: any;
+  [MediaApi.reducerPath]: any;
 }
 
 const persistedReducer = persistReducer(

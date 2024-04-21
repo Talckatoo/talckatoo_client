@@ -12,9 +12,17 @@ interface FriendProps {
   isDarkMode: boolean;
   selected: boolean;
   socket: any;
+  search: string;
 }
 
-const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
+const Friend = ({
+  user,
+  key,
+  isDarkMode,
+  selected,
+  socket,
+  search,
+}: FriendProps) => {
   const { onlineFriends } = useAppSelector((state) => state.socket);
   const conversationState = useAppSelector((state) => state.conversation);
   const { user: userData } = useAppSelector((state) => state.auth);
@@ -28,7 +36,6 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
   const HandleSendFriendRequest = async (friendId: string) => {
     try {
       const response = await addFriend({ identifier: friendId }).unwrap();
-      console.log(response);
       if ("message" in response) {
         if (response.message === "Friend request sent successfully") {
           socket.current.emit("sendFriendRequest", {
@@ -54,14 +61,18 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
       {selected && (
         <div
           className={`absolute top-0 left-0 h-full w-2 ${
-            isDarkMode ? "bg-primary-500" : "bg-secondary-500"
+            isDarkMode ? "bg-white" : "bg-secondary-500"
           } p-1`}
         ></div>
       )}
 
       <div
         className={`h-full flex items-center py-4 px-4
-      ${selected ? "bg-[#F5F5F5] pl-8" : "bg-transparent"}
+      ${
+        selected
+          ? ` ${isDarkMode ? "bg-[#282828] pl-8" : "bg-[#F5F5F5] pl-8"}`
+          : "bg-transparent"
+      }
       `}
       >
         <div className="relative">
@@ -91,7 +102,11 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
           <div className="relative">
             {user?.conversation?.unread?.includes(userData?._id) &&
               user?._id !== selectedId && (
-                <div className="min-w-5 absolute right-1 top-[-0.5rem] w-5 min-h-5 h-5 rounded-full bg-red-500 flex justify-center items-center text-white text-xs animate-pulse" />
+                <div
+                  className={`min-w-5 absolute right-1 top-[-0.5rem] w-5 min-h-5 h-5 rounded-full bg-red-500 flex justify-center items-center text-xs animate-pulse ${
+                    isDarkMode ? "text-white" : "text-white "
+                  }`}
+                />
               )}
           </div>
 
@@ -107,37 +122,27 @@ const Friend = ({ user, key, isDarkMode, selected, socket }: FriendProps) => {
             } `}
           ></div>
         </div>
-        {!userData?.friends
-          ?.map((friend: any) => friend._id)
-          .includes(user?._id) &&
-          (!userData?.friendRequests?.includes(user?._id) ? (
-            <FaPlusCircle
-              className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark "
-              onClick={() => HandleSendFriendRequest(user?._id)}
-            />
-          ) : (
-            // pending friend request
-            <MdPending className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark " />
-          ))}
+        {search?.length > 0
+          ? !userData?.friends
+              ?.map((friend: any) => friend._id)
+              .includes(user?._id) &&
+            (!userData?.friendRequests?.includes(user?._id) ? (
+              <FaPlusCircle
+                className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark "
+                onClick={() => HandleSendFriendRequest(user?._id)}
+              />
+            ) : (
+              // pending friend request
+              <MdPending className="absolute right-8 top-[1.2rem] text-[28px] text-selected-friend-dark " />
+            ))
+          : null}
       </div>
-      {/* {!userData?.friendsRequest?.includes(user?._id) && (
-        <div className="flex items-center justify-around mb-4">
-          <div className="flex items-center  gap-2 font-semibold">
-            <FaCheckCircle className="text-green-500 text-[22px]" />
-            Accept
-          </div>
-          <div className="flex items-center  gap-2 font-semibold">
-            <IoMdCloseCircle className="text-red-500 text-[22px]" />
-            Decline
-          </div>
-        </div>
-      )} */}
 
       {/* Line Divider */}
       <div
         className={`absolute bottom-0 left-4 border-t ${
           isDarkMode
-            ? "border-primary-500 border-opacity-20"
+            ? "border-[#979797] border-opacity-20"
             : "border-black opacity-50"
         } w-[90%]`}
       ></div>

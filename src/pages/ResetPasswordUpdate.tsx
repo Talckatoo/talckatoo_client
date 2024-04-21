@@ -4,10 +4,11 @@ import { usePasswordResetConfirmMutation } from "../redux/services/UserApi";
 import Button from "../UI/Button";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import NavBar from "../components/shared/NavBar";
 import { useTranslation } from 'react-i18next';
 
 
-const ResetPaaswordUpdate = () => {
+const ResetPasswordUpdate = () => {
   const { t } = useTranslation();
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
@@ -50,9 +51,7 @@ const ResetPaaswordUpdate = () => {
         setTimeout(() => {
           navigate("/sign-in");
         }, 3000);
-      } else {
-        console.log(response.error);
-      }
+      } 
     } catch (error) {
       // Password reset failed, handle accordingly
       toast.error(`${t("your password has not been changed")}`);
@@ -107,4 +106,4 @@ const ResetPaaswordUpdate = () => {
   );
 };
 
-export default ResetPaaswordUpdate;
+export default ResetPasswordUpdate;

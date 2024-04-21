@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaMicrophone, FaStop, FaPlay, FaPaperPlane } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -8,6 +8,10 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { addMessage } from "../redux/features/messages/messageSlice";
 import { Socket } from "socket.io-client";
 import { useSendAudioMutation } from "../redux/services/MessagesApi";
+import { useUploadFileMutation } from "../redux/services/MediaApi";
+import { HiTranslate } from "react-icons/hi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from 'react-i18next';
 
 interface VoiceMessageProps {
@@ -19,10 +23,13 @@ interface voiceCode {
   voiceCode: string | undefined;
 }
 
-const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
-  const { t } = useTranslation();
+const VoiceMessage = ({
+  socket,
+  onHandleTranslateText,
+}: VoiceMessageProps) => {
   const WHISPER_TRANSCRIPTION_URL = import.meta.env
     .VITE_WHISPER_TRANSCRIPTION_URL;
+    const { t } = useTranslation();
 
   const { user } = useAppSelector((state) => state.auth);
   const { messages } = useAppSelector((state) => state.messages);
@@ -32,6 +39,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   const conversationId = conversationState?.conversation?.conversationId;
 
   const [sendAudio, { isLoading: isSendingAudio }] = useSendAudioMutation();
+  const [uploadFile, { isLoading }] = useUploadFileMutation();
 
   const dispatch = useAppDispatch();
 
@@ -39,7 +47,8 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
-
+  const [audioURL, setAudioURL] = useState<string | null>(null);
+  const [isTranslationLoading, setIsTranslationLoading] = useState<boolean>(false);
   const startRecording = () => {
     setIsRecording(true);
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -61,6 +70,28 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
     });
   };
 
+  const handleUpload = async (file: any) => {
+    let response: any = null;
+    let formData = new FormData();
+    formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", file.type.split("/")[0]);
+    formData.append("altText", file.name);
+
+    response = await uploadFile(formData);
+
+    if ("data" in response) {
+      if (response.data && !response.data.error) {
+        setAudioURL(response.data.media.url);
+        return response.data.media.url;
+      } else {
+        console.log("error", response.data.error);
+      }
+    } else {
+      console.log("error", response.error);
+    }
+  };
+
   const stopRecording = () => {
     if (recorder) {
       recorder.stopRecording(async () => {
@@ -71,6 +102,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
         });
 
         setRecordedAudio(file);
+
         setIsRecording(false);
         setIsReadyToSend(true); // Set the audio ready to be sent
       });
@@ -90,11 +122,13 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
 
   const handleSendAudio = async () => {
     if (recordedAudio) {
+      const audioResponse = await handleUpload(recordedAudio);
+
       const formData = new FormData();
 
-      formData.append("audio", recordedAudio);
+      if (audioResponse) formData.append("url", audioResponse);
       formData.append("from", user?._id);
-      formData.append("to", selectedId);
+      if (selectedId) formData.append("to", selectedId);
 
       try {
         const response = await sendAudio(formData).unwrap();
@@ -140,6 +174,7 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
   };
 
   const handleTranslateAudio = async () => {
+    setIsTranslationLoading(true);
     const formData = new FormData();
 
     if (recordedAudio) {
@@ -162,17 +197,17 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
       });
       const data = await response.json();
       onHandleTranslateText(data);
+      setIsTranslationLoading(false);
+      setRecordedAudio(null);
     } catch (err) {
       console.log(err);
     }
   };
 
-  // URL.revokeObjectURL(audioURL);
-
   return (
     <>
       <div className="">
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-4 relative">
           <button
             title={t("Voice message")}
             onClick={startRecording}
@@ -180,43 +215,67 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
           >
             <FaMicrophone className="text-white text-[20px]" />
           </button>
-          {recordedAudio ? (
+          {recordedAudio && !isRecording ? (
             <>
               <button
                 onClick={playAudio}
-                className="bg-slate-300 hover:bg-slate-400 rounded-full  px-2.5"
                 disabled={!isReadyToSend}
+                className=" hover:text-slate-400   px-2.5  items-center justify-center"
               >
-                <FaPlay />
+                <FaPlay className="text-white text-[20px]" />
               </button>
               <button
                 onClick={removeAudio}
-                className="bg-slate-300 hover:bg-red-300 rounded-full px-2.5"
+                className=" hover:text-slate-400   px-2.5  items-center justify-center"
                 disabled={!isReadyToSend}
               >
-                <MdDelete />
+                <MdDelete className="text-white text-[20px]" />
               </button>
               <button
                 onClick={handleSendAudio}
-                className="bg-slate-300 hover:bg-green-300 rounded-full  px-2.5"
                 disabled={!isReadyToSend}
+                className="hover:text-slate-400 mr-3 relative px-2.5 items-center justify-center group"
               >
-                <FaPaperPlane />
+                {isSendingAudio ? (
+                  <FontAwesomeIcon
+                    className="text-white"
+                    icon={faSpinner}
+                    spin
+                  />
+                ) : (
+                  <>
+                    <FaPaperPlane className="text-white text-[20px]" />
+                    <span className="tooltip">
+                      {isSendingAudio ? "Sending..." : "Send Your Audio"}
+                    </span>
+                  </>
+                )}
               </button>
               <button
                 onClick={handleTranslateAudio}
-                className="bg-slate-300 hover:bg-green-300 rounded-full  px-2.5"
+                className="hover:text-slate-400 mr-3 relative px-2.5 items-center justify-center group"
                 disabled={!isReadyToSend}
               >
-                Translate
+                {isTranslationLoading ? (
+                  <FontAwesomeIcon
+                    className="text-white"
+                    icon={faSpinner}
+                    spin
+                  />
+                ) : (
+                  <>
+                    <HiTranslate className="text-white text-[20px]" />
+                    <span className="tooltip">Translate Your Audio</span>
+                  </>
+                )}
               </button>
             </>
           ) : null}
 
           {isRecording ? (
             <>
-              <div className="w-1/5">
-                <div className="flex items-center justify-center">
+              <div className="w-1/4 h-8">
+                <div className="flex items-center justify-center  mx-5">
                   <div id="bars">
                     <div className="bar"></div>
                     <div className="bar"></div>
@@ -231,11 +290,8 @@ const VoiceMessage = ({ socket, onHandleTranslateText }: VoiceMessageProps) => {
                   </div>
                 </div>
               </div>
-              <button
-                onClick={stopRecording}
-                className="bg-slate-300 hover:bg-red-300 rounded-md h-9 px-2.5"
-              >
-                <FaStop />
+              <button onClick={stopRecording}>
+                <FaStop className="text-white text-[20px] ml-3" />
               </button>
             </>
           ) : null}

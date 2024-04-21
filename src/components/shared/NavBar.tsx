@@ -1,8 +1,8 @@
-import React, { FC, useContext, useEffect, useState,useRef } from "react";
+import { FC, useEffect, useState, useContext, useRef } from "react";
 import Button from "../../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/user-context";
-
+import { MdDarkMode } from "react-icons/md";
 import { useTranslation } from 'react-i18next'; //TRANSLATION languages
 import { FaGlobe } from 'react-icons/fa';
 
@@ -13,6 +13,7 @@ interface NavBarProps {
 }
 
 const NavBar: FC<NavBarProps> = ({}) => {
+
   const languageRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(); //TRANSLATION languages
   const { i18n } = useTranslation();
@@ -24,7 +25,8 @@ const NavBar: FC<NavBarProps> = ({}) => {
   };
 
   const [showLanguages, setShowLanguages] = useState<boolean>(false);
-  const { isDarkMode } = useContext(UserContext);
+  // const { isDarkMode } = useContext(UserContext);
+  const { isDarkMode, toggleDarkMode } = useContext(UserContext);
 
   const handleLanguageClick = () => {
     setShowLanguages((prev) => !prev);
@@ -35,10 +37,10 @@ const NavBar: FC<NavBarProps> = ({}) => {
     setSelectedLanguage(lng); // Update selected language in UserContext
     setShowLanguages(false); // Close the dropdown
   };
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
+
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
-
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const handleSignInClick = () => {
     // Check if token exists in local storage
@@ -52,7 +54,8 @@ const NavBar: FC<NavBarProps> = ({}) => {
       navigate("/sign-in");
     }
   };
-  // scrool event 
+
+  // scrool event
 
   useEffect(() => {
     const handleClickOutside = (event: { target: any; }) => {
@@ -74,29 +77,64 @@ const NavBar: FC<NavBarProps> = ({}) => {
     };
 
     // Attach the scroll event listener when the component mounts.
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     // Clean up the event listener when the component unmounts.
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []); // Empty dependency array means this effect runs once when the component mounts.
 
   return (
-      <header className="w-full py-4 fixed top-0 z-50"
+    <header
+      className={
+        isDarkMode
+          ? "w-full py-4 fixed top-0 z-50 bg-black"
+          : "bg-withe w-full py-4 fixed top-0 z-50"
+      }
+      // style={{isDarkMode ?
+      //   { backgroundColor: scrolled ? "rgba(255, 255, 255, 0.9)" : "transparent",
+      //   backdropFilter: scrolled ? "blur(8px)" : "none" }
+      // }}
       style={{
-        backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(8px)' : 'none',
+        backgroundColor: isDarkMode
+          ? "transparent"
+          : scrolled
+          ? "rgba(255, 255, 255, 0.9)"
+          : "transparent",
+        backdropFilter: isDarkMode ? "none" : scrolled ? "blur(8px)" : "none",
       }}
-      >
-        <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
-        {/* logo section */}
-        <Link to="/" className="font-jakarta text-[20px] font-bold">
-          <span>TALCKATOO</span>
+    >
+      <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
+        <Link
+          to="/"
+          className="font-jakarta text-[20px] font-bold flex items-center justify-left"
+        >
+          <img
+            className="w-[40px] w-min-[45px] mr-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
+            src="/assets/img/logo.svg"
+          />
+
+          <span
+            className={`hidden sm:inline ${
+              isDarkMode ? "text-white" : "text-black"
+            }`}
+          >
+            TALCKATOO
+          </span>
         </Link>
+
         {/* sign up and sign in button */}
-        <div className="flex items-center gap-4">
-        <div className={`${isDarkMode ? "" : " "}${
+        <div className="flex items-center gap-4  max-[430px]:flex max-[430px]:justify-center">
+        <MdDarkMode
+            className={
+              isDarkMode
+                ? "text-[25px] text-white cursor-pointer"
+                : "text-[25px] cursor-pointer"
+            }
+            onClick={toggleDarkMode}
+          />
+          <div className={`${isDarkMode ? "" : " "}${
             !isButtonClicked
             ? " border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
             : " border-[1px] border-secondary-500 hover:bg-black"
@@ -131,18 +169,23 @@ const NavBar: FC<NavBarProps> = ({}) => {
             </div>
             )} 
           </div>
+      
+            {/* sign up button */}
           <Button
             type="button"
-            className="max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000]"
+            className={`max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000] ${
+              isDarkMode ? "border border-[#F5F5F5] text-white" : "border border-[#000] text-black"
+            }`}
             onClick={handleSignInClick}
-          >
-            {t("Sign In")}
+          >  {t("Sign In")}
           </Button>
           <Button
             type="button"
-            className="bg-black rounded-[3px] max-md:px-4 max-md:py-2 text-white px-7 py-2"
+            className={` rounded-[3px] max-md:px-4 max-md:py-2 px-7 py-2 ${
+              isDarkMode ? "bg-[#F5F5F5] border border-[#F5F5F5] text-black" : "text-white bg-black"
+            }`}
             onClick={() => {
-              navigate("/sign-up");
+              navigate("/sign-up/verification");
             }}
           >
             {t("Sign Up")}

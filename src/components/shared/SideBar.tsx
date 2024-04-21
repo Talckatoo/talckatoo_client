@@ -16,36 +16,26 @@ import {
   useSearchuserMutation,
 } from "../../redux/services/UserApi";
 import { PiChatTextFill } from "react-icons/pi";
-import { RiSettings5Fill } from "react-icons/ri";
+import { RiLoader4Fill, RiSettings5Fill } from "react-icons/ri";
 import FriendRequest from "./FriendRequest";
 import { setRequest } from "../../redux/features/user/requestSlice";
-
+import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
+import LeftSideBar from "./LeftSideBar";
+import { FaUserXmark } from "react-icons/fa6";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from 'react-i18next'; //TRANSLATION languages
-import { FaGlobe } from 'react-icons/fa';
 
-
-const SideBar = ({ socket, refetch }: { socket: any; refetch: any }) => {
-
+const SideBar = ({
+  socket,
+  refetch,
+  buttonSelected,
+}: {
+  socket: any;
+  refetch: any;
+  buttonSelected: string;
+}) => {
   const { t } = useTranslation(); //TRANSLATION languages
-
-  const { i18n } = useTranslation();
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
-
-const [showLanguages, setShowLanguages] = useState(false);
-
-  const handleLanguageClick = () => {
-    setShowLanguages(!showLanguages);
-  };
-
-  const handleLanguageChange = (lng) => {
-    changeLanguage(lng);
-    setShowLanguages(false);
-    setSelectedLanguage(lng);
-  };
-
 
   const [search, setSearch] = useState("");
   const { isDarkMode } = useContext(UserContext);
@@ -55,9 +45,9 @@ const [showLanguages, setShowLanguages] = useState(false);
   const [usersData, setUsersData] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
-  const [showRequest, setShowRequest] = useState(false);
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('en'); // Default to English
+  const [showRequest, setShowRequest] = useState(
+    buttonSelected === "friends" ? true : false
+  );
   const { requests } = useAppSelector((state) => state.user);
   const [allUser, setAllUser] = useState<any[]>([]);
 
@@ -65,6 +55,8 @@ const [showLanguages, setShowLanguages] = useState(false);
   const conversationId = conversationState?.conversation?.conversationId;
 
   const [searchuser] = useSearchuserMutation();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   // get all requests
   const { data: requestsData, refetch: refetchFriendsRequest } =
     useFetchAllRequestsQuery(null) as any;
@@ -76,8 +68,17 @@ const [showLanguages, setShowLanguages] = useState(false);
   }, [requestsData]);
 
   useEffect(() => {
+    socket?.current?.on("getAcceptFriendRequest", (data: any) => {
+      setSearch("");
+    });
+  }, [socket.current]);
+
+  useEffect(() => {
     if (users) {
       setAllUser(users?.contactedUsers?.concat(users?.uncontactedUsers));
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
     }
   }, [users]);
 
@@ -86,10 +87,21 @@ const [showLanguages, setShowLanguages] = useState(false);
   const SearchForUser = async () => {
     try {
       const response = await searchuser({ identifier: search }).unwrap();
-      console.log(response);
-      if ("seachedUser" in response) setSearchData([response.seachedUser]);
-      else alert("User not found");
+      if ("seachedUser" in response) {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+        setSearchData([response.seachedUser]);
+      } else {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+        alert("User not found");
+      }
     } catch (error) {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
       console.log(error);
       setSearchData([]);
     }
@@ -98,16 +110,16 @@ const [showLanguages, setShowLanguages] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (search.length > 0) SearchForUser();
-    else setSearchData([]);
+    if (search.length > 0) {
+      setIsLoading(true);
+      SearchForUser();
+    } else {
+      setSearchData([]);
+    }
   }, [search]);
 
-  const handleSettingClick = () => {
-    navigate("/profile");
-  };
   const handleSelectContact = (u: any) => {
     if (searchData.length > 0) return;
-    console.log(u, "selected user");
     setSelectedUser(u);
     dispatch(setRecipientProfileImage(u?.profileImage?.url as any));
     dispatch(
@@ -117,130 +129,41 @@ const [showLanguages, setShowLanguages] = useState(false);
         language: u?.language,
       })
     );
+
+    // set the conversation id and selected id and language in local storage
+    localStorage.setItem("conversationId", u?.conversation?._id);
+    localStorage.setItem("selectedId", u?._id);
+    localStorage.setItem("language", u?.language);
+
     dispatch(setRecipient(u?.userName as any));
   };
 
   useEffect(() => {
-    dispatch(
-      setConversation({
-        conversationId: selectedUser?.conversation?._id ?? "",
-        selectedId: selectedUser?._id,
-        language: selectedUser?.language,
-      })
+    setUsersData(
+      (searchData.length && search.length) > 0
+        ? searchData
+        : !searchData.length && !search.length
+        ? users?.contactedUsers
+        : []
     );
-
-    dispatch(setRecipient(selectedUser?.userName as any));
-  }, [selectedUser]);
-
-  useEffect(() => {
-    setUsersData(searchData.length > 0 ? searchData : users?.contactedUsers);
   }, [searchData, users]);
 
   
   return (
     <div
       className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${
-        isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
+        isDarkMode ? "bg-[#181818]" : "bg-white"
       }`}
     >
       {/*First column */}
-      <div className="w-[80px] min-w-[80px] border-r pt-5 border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
-        <div className="flex flex-col  gap-3 w-full">
-          <div
-            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
-              showRequest
-                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
-              transition duration-300 ease-in-out 
-            `}
-            onClick={() => setShowRequest(!showRequest)}
-          >
-            <PiChatTextFill
-              className={`${
-                showRequest ? "text-secondary-500" : "text-white"
-              } z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-          <div
-            className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
-              !showRequest
-                ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-                : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
-              transition duration-300 ease-in-out 
-            `}
-            onClick={() => setShowRequest(!showRequest)}
-          >
-            <IoPersonSharp
-              className={`${
-                !showRequest ? "text-secondary-500" : "text-white"
-              } z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-        
-
-          <div className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
-            !isButtonClicked
-            ? "bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-            : "bg-secondary-500 border-[1px] border-secondary-500 hover:bg-black"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
-            transition duration-300 ease-in-out relative
-            `} onClick={handleLanguageClick}>
-            <FaGlobe
-               className={`${
-                !isButtonClicked ? "text-secondary-500" : "text-white"
-                } z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-            {showLanguages && (
-            <div className="overflow-hidden absolute z-50 bottom-[-60px] left-10 bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">          
-            <button
-            onClick={() => handleLanguageChange('en')}
-            className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'en' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}>
-                English
-              </button>
-              <button
-                onClick={() => handleLanguageChange('es')}
-                className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'es' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`} 
-              >
-                Español
-              </button>
-              <button
-                onClick={() => handleLanguageChange('ar')}
-                className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'ar' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}
-              >
-                Arabic
-              </button>
-              {/* Add more buttons for additional languages */}
-            </div>
-            )} 
-          </div>
-        </div>
-
-        <div className="flex flex-col  gap-3 w-full">
-          <div
-            className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
-            onClick={handleSettingClick}
-          >
-            <RiSettings5Fill
-              className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-          <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">
-            <img
-              src={user?.profileImage?.url || "/assets/icons/user.png"}
-              // src={`${user?.profileImage?.url}`}
-              className="h-14 w-14 object-cover rounded-full"
-              alt="Profile-picture"
-            />
-          </div>
-        </div>
-      </div>
-
+      <LeftSideBar
+        showSetting={false}
+        showRequest={showRequest}
+        setShowRequest={setShowRequest}
+        showRandom={false}
+      />
       {/*Second column */}
-      <div className="w-4/5 overflow-y-auto ">
+      <div className="w-full overflow-y-auto ">
         <div
           className={`my-4 ml-4 font-extrabold text-[20px] ${
             isDarkMode ? "text-white" : "text-black"
@@ -264,13 +187,13 @@ const [showLanguages, setShowLanguages] = useState(false);
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className={`${
-              isDarkMode ? "bg-input-bg-dark" : "bg-secondary-500"
+              isDarkMode ? "bg-[#282828]" : "bg-secondary-500"
             } pl-12 text-white rounded-xl focus:outline-none focus:border-0 focus:ring-[3px] focus:ring-blue border-0 placeholder-white::placeholder`}
             placeholder={t('Search')}
           />
           <IoSearch
             className={`absolute left-3 top-3 ${
-              isDarkMode ? "text-sidebar-dark-500" : "text-white"
+              isDarkMode ? "text-white" : "text-white"
             }`}
             size={24}
           />
@@ -278,19 +201,42 @@ const [showLanguages, setShowLanguages] = useState(false);
 
         {!showRequest ? (
           <div>
-            {usersData
-              ? usersData?.map((user: any) => (
-                  <div key={user._id} onClick={() => handleSelectContact(user)}>
-                    <Friend
-                      key={user.id}
-                      user={user}
-                      isDarkMode={isDarkMode}
-                      selected={selectedId === user._id}
-                      socket={socket}
-                    />
-                  </div>
-                ))
-              : null}
+            {isLoading ? (
+              <div className="h-full w-full flex flex-col items-center justify-center py-4 px-4 ">
+                <FontAwesomeIcon
+                  className="h-auto w-1/12"
+                  icon={faSpinner}
+                  spin
+                />
+                <p className="w-full font-extrabold text-[20px] text-center flex justify-center">
+                  Loading
+                </p>
+              </div>
+            ) : usersData.length > 0 ? (
+              usersData?.map((user: any) => (
+                <div key={user._id} onClick={() => handleSelectContact(user)}>
+                  <Friend
+                    key={user.id}
+                    user={user}
+                    isDarkMode={isDarkMode}
+                    selected={selectedId === user._id}
+                    socket={socket}
+                    search={search}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="h-full w-full flex flex-col items-center justify-center py-4 px-4 ">
+                <FaUserXmark className="w-1/12 h-auto text-secondary-500 animate__animated animate__headShake" />
+                <p className="w-full font-extrabold text-[20px] text-center flex justify-center animate__animated animate__headShake">
+                  We didn't find any results
+                </p>
+                <p className="w-full text-center flex justify-center animate__animated animate__headShake">
+                  Make sure everything is spelled correctly or try different
+                  keywords
+                </p>
+              </div>
+            )}
           </div>
         ) : (
           <div>
@@ -332,6 +278,7 @@ const [showLanguages, setShowLanguages] = useState(false);
                       isDarkMode={isDarkMode}
                       selected={selectedId === user._id}
                       socket={socket}
+                      search={search}
                     />
                   </div>
                 ))

@@ -21,6 +21,8 @@ import { setRequest } from "../redux/features/user/requestSlice";
 import { IoPersonSharp } from "react-icons/io5";
 import { PiChatTextFill } from "react-icons/pi";
 import { RiSettings5Fill } from "react-icons/ri";
+import LeftSideBar from "../components/shared/LeftSideBar";
+
 import { useTranslation } from 'react-i18next';
 
 // import UserProfile from "../components/UserProfile";
@@ -60,26 +62,20 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setformInput((prev) => ({ ...prev, [name]: value }));
-    console.log(formInput.name);
   };
 
   const handleLanguageChange = (e: any) => {
     setUpdateLanguage(e.target.value);
-    console.log(updateLanguage);
   };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     toast.success(`${t("User signed out")}`);
-    // clear persit root from local storage
+    localStorage.removeItem("userId");
     localStorage.removeItem("persist:root");
-    dispatch(setAuth(null));
-    dispatch(setUser(null));
-    dispatch(setUsers([]));
-    dispatch(setRecipient(null));
-    dispatch(setMessages([]));
-    dispatch(setRequest(null));
-    dispatch(setRequests([]));
+    localStorage.removeItem("conversationId");
+    localStorage.removeItem("selectedId");
+    localStorage.removeItem("language");
 
     navigate("/");
   };
@@ -131,6 +127,8 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             welcome: result?.data?.user?.welcome,
           })
         );
+        console.log("conversation id from profile");
+
         dispatch(
           setConversation({
             language: updateLanguage,
@@ -174,50 +172,38 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
+  const handleSetButtonSelected = (buttonSelected: string) => {
+    navigate("/chat", { state: { buttonSelected } });
+  };
   return (
     <div
-      className={`flex flex-1 justify-center items-center  w-full h-full ${
-        isDarkMode ? "bg-slate-950" : ""
+      className={`flex flex-1 flex-grow justify-center w-full h-full ${
+        isDarkMode ? "bg-[#181818]" : ""
       }`}
     >
       {/*First column */}
-      <div className="w-[80px] pt-[2rem] min-w-[80px] border-r  border-opacity-20 grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem]">
-        <div className="flex flex-col  gap-3 w-full">
-          <div
-            className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500 "
-            }${"bg-white border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"} mx-2 rounded-[12px]  flex items-center justify-center flex-col
-              transition duration-300 ease-in-out 
-            `}
-            onClick={() => navigateChat()}
-          >
-            <PiChatTextFill
-              className={`${"text-secondary-500"} z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-        </div>
+      <LeftSideBar
+        showSetting={true}
+        showRequest={false}
+        setButtonSelected={handleSetButtonSelected}
+        showRandom={false}
+      />
 
-        <div className="flex flex-col  gap-4 w-full">
-          <div
-            className={`${
-              isDarkMode ? "bg-primary-500" : "bg-secondary-500"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
-          >
-            <RiSettings5Fill
-              className={`text-white z-4 object-contain py-1 w-[29px] text-[32px]`}
-            />
-          </div>
-          <div className="mx-2 pt-1 flex items-center justify-center flex-col rounded-full overflow-hidden">
-            <img
-              src={`${user?.profileImage?.url}`}
-              className="h-14 w-14 object-cover rounded-full"
-              alt="Profile-picture"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="   mx-auto flex flex-col md:text-[14px]">
+      <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
+        <img
+          src={`${
+            isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
+          }`}
+          alt="shape"
+          className="fixed left-24  bottom-[-9rem] w-[40%] z-[1] "
+        />
+        <img
+          src={`${
+            isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"
+          }`}
+          alt="shape"
+          className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
+        />
         <form
           className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px]"
           onSubmit={handleSubmit}
@@ -287,7 +273,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
         </form>
         <div
           className="flex justify-center mt-5 gap-4 cursor-pointer"
-          onClick={handleLogout}
+          onClick={() => handleLogout()}
         >
           <a href="">
             <img src="./assets/img/signout.png" alt="logout-icon" />

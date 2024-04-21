@@ -1,15 +1,22 @@
+import { useContext } from "react";
 import NavBar from "../components/shared/NavBar";
 import Hero from "../components/LandingPage/Hero";
 import Features from "../components/LandingPage/Features";
 import About from "../components/LandingPage/About";
 import Testimonials from "../components/LandingPage/Testimonials";
-import Contact from "../components/LandingPage/Contact";
+import Newsletter from "../components/LandingPage/Newsletter";
+import { UserContext } from "../context/user-context";
 import Footer from "../components/shared/Footer";
 
 const Home = () => {
+  const { isDarkMode } = useContext(UserContext);
+
   return (
     <div
-       className="relative bg-white h-full w-full font-inter z-[5]  ">
+      className={`relative h-full w-full font-inter z-[5] ${
+        isDarkMode ? "text-white" : ""
+      }`}
+    >
       <img
         src="/assets/img/world.png"
         alt="shape"
@@ -35,7 +42,7 @@ const Home = () => {
       <Testimonials />
       {/* End testimonials section */}
       <div className="container p-0 max-md:p-5">
-        <Contact />
+        <Newsletter />
       </div>
       <Footer />
       <br />

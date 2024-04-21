@@ -12,7 +12,6 @@ mic.continuous = true;
 mic.interimResults = true;
 mic.lang = "en-US";
 
-
 interface SpeechTextProps {
   setMessageText: (newMessageText: string) => void;
 }
@@ -28,7 +27,6 @@ export default function SpeechToText({ setMessageText }: SpeechTextProps) {
   const handleClickListen = () => {
     setIsListening((prevState) => !prevState);
     setIsClick((prevState) => !prevState);
-
   };
 
   const handleListen = () => {
@@ -41,8 +39,7 @@ export default function SpeechToText({ setMessageText }: SpeechTextProps) {
       mic.stop();
       mic.onend = () => {};
     }
-    mic.onstart = () => {
-    };
+    mic.onstart = () => {};
 
     mic.onresult = (event: any) => {
       const transcript = Array.from(
@@ -59,18 +56,12 @@ export default function SpeechToText({ setMessageText }: SpeechTextProps) {
   };
 
   const Transcribe = (
-    <img
-      src={Wave}
-      alt="Transcribe"
-      width="50"
-      height="50"
-      className="p-1"
-    />
+    <img src={Wave} alt="Transcribe" width="50" height="50" className="p-1" />
   );
   return (
     <>
       <button
-      title="Speech to Text"
+        title="Speech to Text"
         className={`bg-slate-300 hover:bg-slate-400 rounded-full m-2 h-9 w-9 ${
           isListening ? "hover:bg-red-300" : ""
         }`}

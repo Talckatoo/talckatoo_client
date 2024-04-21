@@ -10,6 +10,9 @@ import App from "./App";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import "animate.css";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faSpinner, fas } from '@fortawesome/free-solid-svg-icons'
+library.add(fas, faSpinner);
 
 import { initReactI18next } from 'react-i18next';
 import i18n from 'i18next';
@@ -39,6 +42,7 @@ i18n
 injectStyle();
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
+
 // Dispatch clearCall action when the application is loaded
 
 root.render(

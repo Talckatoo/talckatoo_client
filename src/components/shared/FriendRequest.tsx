@@ -39,7 +39,8 @@ const FriendRequest = ({
   const { users } = useAppSelector((state) => state.user);
   const [addFriend, { isLoading }] = useAddFriendMutation();
   const { requests } = useAppSelector((state) => state.user);
-  const [actionFriend] = useActionFriendMutation();
+  const [actionFriend, { isLoading: AcceptIsLoading }] =
+    useActionFriendMutation();
 
   const dispatch = useAppDispatch();
 
@@ -47,13 +48,13 @@ const FriendRequest = ({
   const conversationId = conversationState?.conversation?.conversationId;
 
   const HandleActionFriend = async (action: string) => {
+    if (AcceptIsLoading) return;
     try {
       const response = await actionFriend({
         userId: userData?._id,
         friendRequestId: user?._id,
         action: action,
       }).unwrap();
-      console.log(response);
       if ("message" in response) {
         if (
           response.message === "Friend request accepted successfully" ||
@@ -66,11 +67,22 @@ const FriendRequest = ({
           dispatch(setRequests(newRequests));
 
           if (action === "accept") {
+            const conversationId = response?.from?.conversations?.find(
+              (conversation: any) =>
+                response?.to?.conversations?.includes(conversation)
+            );
             socket.current.emit("acceptFriendRequest", {
               from: userData?._id,
               to: user?.from?._id,
-              Userfrom: response.from,
-              Userto: response.to,
+              Userfrom: {
+                ...response?.from,
+                // find the conversation id between response?.from.conversations and response?.to.conversations
+                conversationId: conversationId,
+              },
+              Userto: {
+                ...response?.to,
+                conversationId: conversationId,
+              },
             });
 
             dispatch(
@@ -82,6 +94,9 @@ const FriendRequest = ({
                     _id: user?.from?._id,
                     userName: user?.userName,
                     profileImage: user?.profileImage,
+                    conversation: {
+                      _id: conversationId,
+                    },
                     status: "accepted",
                   },
                 ],
@@ -98,10 +113,15 @@ const FriendRequest = ({
                     userName: response?.from?.userName,
                     profileImage: response?.from?.profileImage,
                     language: response?.from?.language,
+                    conversation: {
+                      _id: conversationId,
+                    },
                   },
                 ],
               })
             );
+            // reload
+            window.location.reload();
           }
         }
       }
@@ -160,7 +180,7 @@ const FriendRequest = ({
                 isDarkMode ? "text-white" : "text-black"
               } line-clamp-1`}
             >
-              {user.from.userName}
+              {user?.from?.userName}
             </p>
           </div>
           <div className="relative">
@@ -198,19 +218,27 @@ const FriendRequest = ({
       </div>
       {!userData?.friendsRequest?.includes(user?._id) && (
         <div className="flex items-center justify-around mb-4">
-          <div
-            className="flex items-center  gap-2 font-semibold"
-            onClick={() => HandleActionFriend("accept")}
-          >
-            <FaCheckCircle className="text-green-500 text-[22px]" />
-            Accept
-          </div>
+          {AcceptIsLoading ? (
+            <div className="flex items-center gap-2 font-semibold">
+              <PiBirdFill className="text-primary-500 text-[22px] animate-spin" />
+              Loading...
+            </div>
+          ) : (
+            <div
+              className="flex items-center  gap-2 font-semibold"
+              onClick={() => HandleActionFriend("accept")}
+            >
+              <FaCheckCircle className="text-green-500 text-[22px]" />
+              Accept
+            </div>
+          )}
+
           <div
             className="flex items-center  gap-2 font-semibold"
             onClick={() => HandleActionFriend("reject")}
           >
             <IoMdCloseCircle className="text-red-500 text-[22px]" />
-            Decline
+            <span className={isDarkMode ? "text-white" : ""}>Decline</span>
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -7,10 +7,11 @@ import { useLoginAuthMutation } from "../redux/services/AuthApi";
 import { useFetchUserByIdQuery } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks";
+import { UserContext } from "../context/user-context";
 import { setAuth } from "../redux/features/user/authSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { MdOutlineSecurity } from "react-icons/md";
 import { useTranslation } from 'react-i18next';
-
 
 interface FormData {
   email: string;
@@ -34,6 +35,7 @@ const SignIn = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
   const userId = urlParams.get("userId");
+  const { isDarkMode } = useContext(UserContext);
 
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -73,8 +75,14 @@ const SignIn = () => {
         if ("data" in response) {
           const token = response.data.token;
           localStorage.setItem("token", token as string);
+          localStorage.removeItem("persist:root");
+          localStorage.removeItem("userId");
+          localStorage.removeItem("persist:root");
+          localStorage.removeItem("conversationId");
+          localStorage.removeItem("selectedId");
+          localStorage.removeItem("language");
           dispatch(setAuth(response.data.user));
-          navigate("/chat");
+          navigate("/random");
           toast.success(`${t("User signed up")}`);
           setLoading(false);
         } else {
@@ -95,9 +103,17 @@ const SignIn = () => {
     window.open(`${import.meta.env.VITE_GOOGLE_URL}`, "_self");
   };
 
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", userId as string);
+      navigate("/chat");
+    }
+  }, [token, userId]);
+
   return (
-    <section className="relative bg-white h-full w-full font-inter">
-      <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
+    <section className="relative h-full w-full font-inter">
+      <div className="fixed top-0 left-0 w-full h-full -z-20"></div>
       <img
         src="/assets/img/wave.svg"
         alt="shape"
@@ -112,8 +128,12 @@ const SignIn = () => {
       <NavBar showSign={false} />
       {/* End of Nav bar section */}
       <div className="container">
-        <h2 className="head-text text-center mt-[5rem] mb-10 text-black">
-          {t("Welcome back")}
+        <h2
+          className={`head-text text-center mt-[5rem] mb-1 ${
+            isDarkMode ? "text-white" : " text-black"
+          }`}
+        >
+           {t("Welcome back")}
         </h2>
         {/* Sign up form  */}
         <form
@@ -140,8 +160,12 @@ const SignIn = () => {
 
           <div className="flex items-center gap-4 w-full my-[2rem]">
             <div className="w-full h-[2px] bg-[#33363A]"></div>
-            <p className="text-black whitespace-nowrap">
-              {t("Or, sign in with your email")}
+            <p
+              className={`text-black whitespace-nowrap ${
+                isDarkMode ? "text-white" : " text-black"
+              }`}
+            >
+             {t("Or, sign in with your email")}
             </p>
             <div className="w-full h-[2px] bg-[#33363A]"></div>
           </div>
@@ -156,7 +180,7 @@ const SignIn = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="bg-transparent border-[#33363A] rounded-lg text-black"
+            className={`bg-transparent border-[#33363A] rounded-lg  ${isDarkMode ? " text-white": "text-black"}`}
             error={formErrors.email}
           />
 
@@ -170,7 +194,7 @@ const SignIn = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="bg-transparent border-[#33363A] rounded-lg text-black"
+            className={`bg-transparent border-[#33363A] rounded-lg  ${isDarkMode ? " text-white": "text-black"}`}
             error={formErrors.password}
           />
           <Button
@@ -178,30 +202,59 @@ const SignIn = () => {
             onClick={() => {
               navigate(`/reset-password`);
             }}
-            className="text-black"
+            className={isDarkMode ? "text-white" : " text-black"}
           >
             {t("Forgot password?")}
           </Button>
 
           <Button
             type="submit"
-            className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1]"
+            className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1] rounded-lg"
           >
             {loading ? `${t("Loading...")}` : `${t("Log in")}`}
           </Button>
 
-          <p className="text-black mt-4 z-[1] ">
+          <p
+            className={` mt-4 z-[1] ${
+              isDarkMode ? "text-white" : " text-black"
+            }`}
+          >
             {t("Don't have an account?")}{" "}
             <span
-              className="text-black cursor-pointer z-[1] underline font-semibold"
+              className={`text-black cursor-pointer z-[1] underline font-semibold ${
+                isDarkMode ? "text-white" : " text-black"
+              }`}
               onClick={() => {
-                navigate("/sign-up");
+                navigate("/sign-up/verification");
               }}
             >
               {t("Sign Up")}
             </span>
           </p>
         </form>
+        <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
+          <div className="flex gap-1 items-center">
+          <MdOutlineSecurity className={isDarkMode ? "text-white" : ""} />
+          <span className={isDarkMode ? "text-white" : ""}>
+              your data is safe with us
+            </span>
+          </div>
+          <div className="flex gap-2">
+            <p
+              className="text-[blue] cursor-pointer"
+              onClick={() => navigate("/terms")}
+            >
+              terms &{" "}
+            </p>
+            <p
+              className="text-[blue] cursor-pointer"
+              onClick={() => navigate("/privacy")}
+            >
+              {" "}
+              privacy
+            </p>
+          </div>
+        </div>
       </div>
       {/* End of Sign up form  */}
       <br />
@@ -212,6 +265,4 @@ const SignIn = () => {
 };
 
 export default SignIn;
-function jwt_decode(token: string): { id: string } {
-  throw new Error("Function not implemented.");
-}
+
