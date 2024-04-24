@@ -111,7 +111,7 @@ const NavBar: FC<NavBarProps> = ({}) => {
           className="font-jakarta text-[20px] font-bold flex items-center justify-left"
         >
           <img
-            className="w-[40px] w-min-[45px] mr-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
+            className="w-[40px] w-min-[45px] mr-2 ml-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
             src="/assets/img/logo.svg"
           />
 
