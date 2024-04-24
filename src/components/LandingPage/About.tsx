@@ -14,8 +14,7 @@ const About = () => {
           {t("One Chat Platform, Unlimited Opportunities")}
           </h2>
           <p className="text-center md:text-start mt-4  text-[18px] max-md:text-[16px] max-w-[964px] z-[1]">
-            From casual conversations to professional meetings, make every word
-            understood, every emotion felt.
+         
             {t("There are no limits to the extent")}
           </p>
         </div>
@@ -71,9 +70,7 @@ const About = () => {
               {t("Connect Beyond Boundaries")}
               </h2>
               <p className= {isDarkMode ? "text-[18px] max-md:text-[16px]  text-white" : "text-[18px] max-md:text-[16px]  text-black"}>
-                With Talckatoo, experience a chat platform that defies limits.
-                Whether it's a project discussion or a casual chat, our advanced
-                features ensure that distance and language are never barriers.
+              
                 {t("With a one-of-a-kind design")}
               </p>
               <ul className=" mt-[1rem] flex items-start gap-2 flex-col max-md:text-[16px] text-[18px]">
