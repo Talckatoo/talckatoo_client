@@ -93,7 +93,20 @@
   "Enter your message":"Enter your message",
   "Send":"Send",
   "Made with love by":"Made with love by",
-  "All rights reserved.":"All rights reserved © 2023-2024."
+  "All rights reserved.":"All rights reserved © 2023-2024.",
+  "TALCKATOO": "TALCKATOO",
+  "Subscribe to our newsletter": "Subscribe to our newsletter",
+  "Enter your email": "Enter your email",
+  "Stay up to date with the roadmap progress, announcements and exclusive discounts feel free to sign up with your email.": "Stay up to date with the roadmap progress, announcements and exclusive discounts feel free to sign up with your email.",
+  "Subscribe": "Subscribe",
+  "We care about the protection of your data. Read our": "We care about the protection of your data. Read our",
+  "Privacy Policy": "Privacy Policy",
+  "Email is required": "Email is required",
+  "Please enter a valid email": "Please enter a valid email",
+  "Your email is already subscribed": "Your email is already subscribed",
+  "Subscribed successfully": "Subscribed successfully"
+  
+  
   
 
 }

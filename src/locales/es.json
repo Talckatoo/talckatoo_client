@@ -95,6 +95,18 @@
   "Enter your message":"Escriba su mensaje",
   "Send":"Enviar",
   "Made with love by":"Hecho con amor por",
-  "All rights reserved.":"Todos los derechos reservados."
-
+  "All rights reserved.":"Todos los derechos reservados.",
+  "TALCKATOO": "TALCKATOO",
+  "Subscribe to our newsletter": "Suscríbete a nuestro boletín",
+  "Enter your email": "Ingresa tu correo electrónico",
+  "Stay up to date with the roadmap progress, announcements and exclusive discounts feel free to sign up with your email.": "Mantente al día con el progreso del plan, anuncios y descuentos exclusivos. Siéntete libre de registrarte con tu correo electrónico.",
+  "Subscribe": "Suscribirse",
+  "We care about the protection of your data. Read our": "Nos preocupamos por la protección de tus datos. Lee nuestra",
+  "Privacy Policy": "Política de privacidad",
+  "Email is required": "El correo electrónico es obligatorio",
+  "Please enter a valid email": "Por favor, ingresa un correo electrónico válido",
+  "Your email is already subscribed": "Tu correo electrónico ya está suscrito",
+  "Subscribed successfully": "Suscrito exitosamente"
+  
+  
 } 
