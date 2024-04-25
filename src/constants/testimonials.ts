@@ -1,5 +1,5 @@
-export const testimonials = [
-  {
+
+export const testimonials = [ {
     image: "/assets/img/ana.png",
     name: "Anastasia Dan",
     title: "Product Developer at Webflow",
