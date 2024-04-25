@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import { UserContext } from "../../context/user-context";
 
 const RandomChat = ({
-  randomData,
   conversationRandomId,
   socket,
 }: {
@@ -65,15 +64,6 @@ const RandomChat = ({
       language: UserData.language,
     };
     socket.current.emit("sendRandomMessage", data);
-
-    // setMessages((prev: any) => [
-    //   ...prev,
-    //   {
-    //     message,
-    //     createdAt: new Date(),
-    //     sender: user?._id,
-    //   },
-    // ]);
   };
 
   const sendAIMessage = (message: string) => {
@@ -84,15 +74,6 @@ const RandomChat = ({
       socketId: socketId,
     };
     socket.current.emit("sendRandomMessage", data);
-
-    // setMessages((prev: any) => [
-    //   ...prev,
-    //   {
-    //     message,
-    //     createdAt: new Date(),
-    //     sender: import.meta.env.VITE_AI_ASSISTANT_ID,
-    //   },
-    // ]);
   };
 
   const onHandleTranslateText = (text: string, targetLanguage: string) => {
@@ -103,7 +84,7 @@ const RandomChat = ({
     socket.current.emit("translateText", data);
   };
 
-  const onHandleSendFile = async (fileId: string, media: any) => {
+  const onHandleSendFile = async (media: any) => {
     try {
       socket.current.emit("sendRandomMessage", {
         createdAt: new Date(),
@@ -118,19 +99,6 @@ const RandomChat = ({
         status: false,
         socketId: socketId,
       });
-
-      // setMessages((prev: any) => [
-      //   ...prev,
-      //   {
-      //     media: {
-      //       url: media.url,
-      //       type: media.type,
-      //       altText: media.altText,
-      //     },
-      //     createdAt: new Date(),
-      //     sender: user?._id,
-      //   },
-      // ]);
     } catch (err) {
       toast.error("Error sending messages, please try again");
     }
@@ -209,7 +177,7 @@ const RandomChat = ({
                               msg.message.includes("\n") ? (
                                 msg.message
                                   .split("\n")
-                                  .map((line, index, lines) => {
+                                  .map((line: any, index: any, lines: any) => {
                                     const prevLine =
                                       index > 0 ? lines[index - 1] : null;
                                     const isFirstLine =
@@ -320,27 +288,6 @@ const RandomChat = ({
                                 />
                               </div>
                             </div>
-
-                            {/* {msg.voiceNote && (
-                <audio className="w-60 h-15" controls>
-                  <source
-                    src={msg.voiceNote?.url}
-                    type="audio/mpeg"
-                  />
-                </audio>
-              )} */}
-
-                            {/* {msg.sender !==
-                import.meta.env.VITE_AI_ASSISTANT_ID && (
-                <img
-                  src={
-                    msg.sender === user?._id
-                      ? `${user?.profileImage.url}`
-                      : `${recipientPi}`
-                  }
-                  className=" w-[36px] h-[36px] rounded-full border border-[#E9E9EF]"
-                />
-              )} */}
                             <div ref={scrollRefBottom}></div>
                           </div>
                         </div>

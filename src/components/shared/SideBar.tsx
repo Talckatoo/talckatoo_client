@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { IoPersonSharp, IoSearch } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { IoSearch } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 import Friend from "./Friend";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setConversation } from "../../redux/features/conversation/conversationSlice";
@@ -8,18 +8,13 @@ import {
   setRecipient,
   setRecipientProfileImage,
   setRequests,
-  setUsers,
 } from "../../redux/features/user/userSlice";
 import { UserContext } from "../../context/user-context";
 import {
   useFetchAllRequestsQuery,
   useSearchuserMutation,
 } from "../../redux/services/UserApi";
-import { PiChatTextFill } from "react-icons/pi";
-import { RiLoader4Fill, RiSettings5Fill } from "react-icons/ri";
 import FriendRequest from "./FriendRequest";
-import { setRequest } from "../../redux/features/user/requestSlice";
-import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import LeftSideBar from "./LeftSideBar";
 import { FaUserXmark } from "react-icons/fa6";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -43,7 +38,7 @@ const SideBar = ({
   const { user } = useAppSelector((state) => state.auth);
   const [searchData, setSearchData] = useState<any[]>([]);
   const [usersData, setUsersData] = useState<any[]>([]);
-  const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  const [setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
   const [showRequest, setShowRequest] = useState(
     buttonSelected === "friends" ? true : false
@@ -52,7 +47,6 @@ const SideBar = ({
   const [allUser, setAllUser] = useState<any[]>([]);
 
   const selectedId = conversationState?.conversation?.selectedId;
-  const conversationId = conversationState?.conversation?.conversationId;
 
   const [searchuser] = useSearchuserMutation();
 
@@ -68,7 +62,7 @@ const SideBar = ({
   }, [requestsData]);
 
   useEffect(() => {
-    socket?.current?.on("getAcceptFriendRequest", (data: any) => {
+    socket?.current?.on("getAcceptFriendRequest", () => {
       setSearch("");
     });
   }, [socket.current]);
@@ -106,8 +100,6 @@ const SideBar = ({
       setSearchData([]);
     }
   };
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (search.length > 0) {
@@ -170,15 +162,6 @@ const SideBar = ({
           }`}
         >
           {t('chats')}
-          {/*<div>
-            <button onClick={() => changeLanguage('en')}>English</button>
-            <button onClick={() => changeLanguage('es')}>Español</button>
-            <div>
-              
-              <h1>{t('welcome')}</h1>
-              <p>{t('greet', { name: 'John' })}</p>
-            </div>
-          </div>*/}
         </div>
 
         <div className="relative flex mx-4">
