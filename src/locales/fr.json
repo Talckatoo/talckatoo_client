@@ -108,6 +108,16 @@
     "danger": "Danger",
     "deleteAccount": "Supprimer le compte",
     "descriptionDeleteAccount": "Supprimez votre compte et toutes ses données associées",
-    "deleteAccountButton": "SUPPRIMER LE COMPTE"
+    "deleteAccountButton": "SUPPRIMER LE COMPTE",
+    "SaftyData": "Vos données sont en sécurité avec nous.",
+    "JoinUs": "Rejoignez-nous aujourd'hui!",
+    "SelectLanguage": "Sélectionnez votre langue",
+    "SignUp": "S'inscrire",
+    "AlreadyIn": "Vous avez déjà un compte?",
+    "SignIn": "Se connecter",
+    "AgreeWithR&p": "En vous inscrivant, vous acceptez notre",
+    "VerificationCode": "Veuillez entrer le code que nous avons envoyé à votre adresse e-mail",
+    "SendVerification": "Envoyer le code de vérification",
+    "GetStarted": "Commençons !"
   }
   

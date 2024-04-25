@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -46,7 +46,6 @@ export const SignUp = () => {
   const dispatch = useDispatch();
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
   const [error, setError] = useState<string | null>(null);
-  const refs = useRef<Array<HTMLInputElement>>([]);
   const { isDarkMode } = useContext(UserContext);
 
 
@@ -127,13 +126,15 @@ export const SignUp = () => {
         alt="shape"
         className="fixed top-[-5rem] right-0 max-lg:w-[350px]"
       />
-      <NavBar showSign={false} />
+      <NavBar showSign={false} setSelectedLanguage={function (): void {
+        throw new Error("Function not implemented.");
+      } } selectedLanguage={""} />
       {/* End of Nav bar section */}
 
       <h1    className={`head-text text-center mt-[6rem] mb-6 ${
             isDarkMode ? "text-white" : "text-black"
           }`}>
-        Join Talckatoo Today!
+        {t("JoinUs")}
       </h1>
       {/* Sign up form  */}
       <form
@@ -200,7 +201,7 @@ export const SignUp = () => {
           onChange={(e) => setSelectedLanguage(e.target.value)}
         >
  <option value="" disabled hidden className="text-black">
-            Select Your Language
+           {t("SelectLanguage")}
           </option>
           {languagesArray?.map(({ code, language }) => (
    <option key={code} value={code} 
@@ -221,16 +222,16 @@ export const SignUp = () => {
           className="bg-black text-white w-full h-[48px] mt-[2rem] z-[1] rounded-lg"
           onClick={() => {}}
         >
-          Sign Up
+          {t("SignUp")}
         </Button>
 
         <p className={` ${isDarkMode ? "text-white" : ""} mt-4 z-[1]`}>
-          Already have an account?{" "}
+          {t("AlreadyIn")}{" "}
           <Link
 className=" cursor-pointer rounded-lg underline font-semibold"
             to="/sign-in"
           >
-            Sign In
+            {t("SignIn")}
           </Link>
         </p>
       </form>
@@ -239,7 +240,7 @@ className=" cursor-pointer rounded-lg underline font-semibold"
         <MdOutlineSecurity className={isDarkMode ? "text-white" : ""} />
           <span
       className={isDarkMode ? "text-white" : ""}
-          >By signing up, you agree to our</span>
+          >{t("AgreeWithR&p")}</span>
         </div>
         <div className="flex gap-2">
           <p

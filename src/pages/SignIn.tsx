@@ -1,15 +1,13 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
 import { useLoginAuthMutation } from "../redux/services/AuthApi";
-import { useFetchUserByIdQuery } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks";
 import { UserContext } from "../context/user-context";
 import { setAuth } from "../redux/features/user/authSlice";
-import { skipToken } from "@reduxjs/toolkit/query";
 import { MdOutlineSecurity } from "react-icons/md";
 import { useTranslation } from 'react-i18next';
 
@@ -119,13 +117,10 @@ const SignIn = () => {
         alt="shape"
         className="fixed top-[-5rem] right-0 max-lg:w-[350px]"
       />
-      {/* <img
-        src="/assets/img/wave.svg"
-        alt="shape"
-        className="fixed  left-0  bottom-[-50px] max-lg:w-[200px]"
-      /> */}
       {/* Nav bar section */}
-      <NavBar showSign={false} />
+      <NavBar showSign={false} setSelectedLanguage={function (): void {
+        throw new Error("Function not implemented.");
+      } } selectedLanguage={""} />
       {/* End of Nav bar section */}
       <div className="container">
         <h2
@@ -236,7 +231,7 @@ const SignIn = () => {
           <div className="flex gap-1 items-center">
           <MdOutlineSecurity className={isDarkMode ? "text-white" : ""} />
           <span className={isDarkMode ? "text-white" : ""}>
-              your data is safe with us
+              {t("SaftyData")}
             </span>
           </div>
           <div className="flex gap-2">

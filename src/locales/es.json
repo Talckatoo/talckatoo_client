@@ -26,9 +26,7 @@
   "User signed up":"Suscríbete al usuario",
   "Email or password is incorrect":"Correo electrónico o la contraseña son incorrectos",
   "Please enter valid entries":"Por favor ingrese entradas válidas",
-  "User signed up":"Suscríbete al usuario",
   "Error signing up":"Error de registro",
-  "Please enter valid entries":"Por favor ingrese entradas válidas",
   "Error checking token. Please try again.":"Un error al verificar el símbolo distintivo. Por favor, intente nuevamente",
   "Error sending messages, please try again form handleSendMessage1":"Error al enviar mensajes, intente nuevamente handleSendMessage1",
   "Error sending messages, please try again form handleSendMessage2":"Error al enviar mensajes, intente nuevamente handleSendMessage2",
@@ -50,6 +48,7 @@
   "English":"Inglés",
   "Spanish":"Español",
   "Arabic":"Árabe",
+  "French":"Francés",
   "Bridging Conversations Across Languages":"Unir conversaciones a través de las lenguas",
   "Seamlessly chat with individuals across language barriers":"Comunícate con amigos de todo el mundo sin barreras lingüísticas. Ponemos fin al tedioso mecanismo de copiar y pegar ofreciendo traducciones en el chat.",
   "Best translation chat app in market":"¡La mejor aplicación de chat de traducción del mercado!",
@@ -111,7 +110,16 @@
   "danger": "Peligro",
   "deleteAccount": "Eliminar cuenta",
   "descriptionDeleteAccount": "Elimina tu cuenta y todos sus datos asociados",
-  "deleteAccountButton": "ELIMINAR CUENTA"
-  
+  "deleteAccountButton": "ELIMINAR CUENTA",
+  "SaftyData": "Tus datos están seguros con nosotros.",
+  "JoinUs": "¡Únete a nosotros hoy!",
+  "SelectLanguage": "Selecciona tu idioma",
+  "SignUp": "Regístrate",
+  "AlreadyIn": "¿Ya tienes una cuenta?",
+  "SignIn": "Iniciar sesión",
+  "AgreeWithR&p": "Al registrarte, aceptas nuestro",
+  "VerificationCode": "Por favor, ingresa el código que enviamos a tu correo electrónico",
+  "SendVerification": "Enviar código de verificación",
+  "GetStarted": "¡Empecemos!"
   
 } 

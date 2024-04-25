@@ -25,9 +25,7 @@
   "User signed up":"اشترك المستخدم",
   "Email or password is incorrect":"البريد الالكتروني او كلمة المرور غير صحيحة",
   "Please enter valid entries":"الرجاء إدخال إدخالات صالحة",
-  "User signed up":"اشترك المستخدم",
   "Error signing up":"خطأ التسجيل",
-  "Please enter valid entries":"الرجاء إدخال إدخالات صالحة",
   "Error checking token. Please try again.":"خطأ في التحقق من الرمز المميز. يرجى المحاولة مرة أخرى.",
   "Error sending messages, please try again form handleSendMessage1":"خطأ إرسال الرسائل ، يرجى المحاولة مرة أخرى handleSendMessage1",
   "Error sending messages, please try again form handleSendMessage2":"خطأ إرسال الرسائل ، يرجى المحاولة مرة أخرى handleSendMessage2",
@@ -49,6 +47,7 @@
   "English":"الإنجليزية",
   "Spanish":"الأسبانية",
   "Arabic":"العربية",
+  "French":"الفرنسية",
   "Bridging Conversations Across Languages":"مد جسور الحوار عبر اللغات",
   "Seamlessly chat with individuals across language barriers":"تواصل بسلاسة مع الأصدقاء من جميع أنحاء العالم دون عوائق لغوية. لقد وضعنا حداً لآلية النسخ واللصق المملة من خلال توفير ترجمات داخل المحادثة.",
   "Best translation chat app in market":"أفضل تطبيق دردشة مترجم في السوق!",
@@ -110,6 +109,17 @@
   "danger": "خطر",
   "deleteAccount": "حذف الحساب",
   "descriptionDeleteAccount": "احذف حسابك وجميع البيانات المرتبطة به",
-  "deleteAccountButton": "حذف الحساب"
+  "deleteAccountButton": "حذف الحساب",
+  "SaftyData": "بياناتك آمنة معنا",
+  "JoinUs": "انضم إلينا اليوم!",
+  "SelectLanguage": "اختر لغتك",
+  "SignUp": "سجّل",
+  "AlreadyIn": "هل لديك حساب بالفعل؟",
+  "SignIn": "تسجيل الدخول",
+  "AgreeWithR&p": "بالتسجيل، أنت توافق على",
+  "VerificationCode": "الرجاء إدخال الرمز الذي أرسلناه إلى بريدك الإلكتروني",
+  "SendVerification": "إرسال رمز التحقق",
+  "GetStarted": "لنبدأ!"
+
           
 }

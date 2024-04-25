@@ -25,9 +25,7 @@
   "User signed up":"User signed up",
   "Email or password is incorrect":"Email or password is incorrect",
   "Please enter valid entries":"Please enter valid entries",
-  "User signed up":"User signed up",
   "Error signing up":"Error signing up",
-  "Please enter valid entries":"Please enter valid entries",
   "Error checking token. Please try again.":"Error checking token. Please try again.",
   "Error sending messages, please try again form handleSendMessage1":"Error sending messages, please try again form handleSendMessage1",
   "Error sending messages, please try again form handleSendMessage2":"Error sending messages, please try again form handleSendMessage2",
@@ -110,7 +108,15 @@
   "danger": "Danger",
   "deleteAccount": "Delete Account",
   "descriptionDeleteAccount": "delete your account and all its associated data",
-  "deleteAccountButton": "DELETE ACCOUNT"
-  
-
+  "deleteAccountButton": "DELETE ACCOUNT",
+  "SaftyData": " your data is safe with us",
+  "JoinUs": "Join Talckatoo Today!",
+  "SelectLanguage": " Select Your Language",
+  "SignUp": "Sign Up",
+  "AlreadyIn": " Already have an account?",
+  "SignIn": "Sign In",
+  "AgreeWithR&p": "By signing up, you agree to our",
+  "VerificationCode": "Please enter the code we sent to your email",
+  "SendVeridfication": "Send verification code",
+  "GetStarted": "Let's get started!"
 }
