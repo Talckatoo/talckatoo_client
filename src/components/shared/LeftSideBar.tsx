@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { UserContext } from "../../context/user-context";
 import { PiChatTextFill } from "react-icons/pi";
 import { IoPersonSharp } from "react-icons/io5";
@@ -7,6 +7,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { RiSettings5Fill } from "react-icons/ri";
 import { MdDarkMode } from "react-icons/md";
 import { useAppSelector } from "../../redux/hooks";
+// translation button
+import { useTranslation } from 'react-i18next'; //TRANSLATION languages
+import { FaGlobe } from 'react-icons/fa';
 
 const LeftSideBar = ({
   showSetting,
@@ -22,13 +25,52 @@ const LeftSideBar = ({
   setButtonSelected?: (buttonSelected: string) => void;
 }) => {
   const navigate = useNavigate();
-  const { isDarkMode, toggleDarkMode } = useContext(UserContext);
   const { user } = useAppSelector((state) => state.auth);
   const location = useLocation();
   const { pathname } = location;
   const handleSettingClick = () => {
     navigate("/profile");
   };
+
+// Language change
+const languageRef = useRef<HTMLDivElement>(null);
+const { t } = useTranslation(); //TRANSLATION languages
+const { i18n } = useTranslation();
+const { setSelectedLanguage, selectedLanguage } = useContext(UserContext); // Access setSelectedLanguage and selectedLanguage from UserContext
+const [isButtonClicked] = useState(false);
+
+const changeLanguage = (lng: string) => {
+  i18n.changeLanguage(lng);
+  setSelectedLanguage(lng); // Update selected language in state
+};
+
+const [showLanguages, setShowLanguages] = useState<boolean>(false);
+// const { isDarkMode } = useContext(UserContext);
+const { isDarkMode, toggleDarkMode } = useContext(UserContext);
+
+const handleLanguageClick = () => {
+  setShowLanguages((prev) => !prev);
+};
+
+const handleLanguageChange = (lng: string) => {
+  changeLanguage(lng);
+  setSelectedLanguage(lng); // Update selected language in UserContext
+  setShowLanguages(false); // Close the dropdown
+};
+  useEffect(() => {
+    const handleClickOutside = (event: { target: any; }) => {
+    if (languageRef.current && !languageRef.current.contains(event.target)) {
+      // Clicked outside the language dropdown, close it
+      setShowLanguages(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  })
+
   return (
     <div
       className={`w-[80px] min-w-[80px]  grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] ${
@@ -126,6 +168,44 @@ const LeftSideBar = ({
             onClick={toggleDarkMode}
           />
         </div>
+            {/* change language button */}
+            <div className={`${isDarkMode ? "" : " "}${
+            !isButtonClicked
+            ? "  hover:cursor-pointer hover:border-gray-200"
+            : "  hover:bg-black"
+            }  rounded-[3px] max-md:px-1 max-md:py-1 flex items-center justify-center flex-col
+            transition duration-300 ease-in-out relative
+            `} onClick={handleLanguageClick}>
+            <FaGlobe
+               className={`${
+                !isButtonClicked ? "text-secondary-500" : "text-white"
+                } z-4 object-contain py-1 w-[29px] text-[32px]
+                ${ isDarkMode ? "text-white" : "text-[#25282C]"}`}
+            />
+            {showLanguages && (
+            <div ref={languageRef} className="overflow-hidden absolute z-50 bottom-[-100px] left-10 bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">          
+            <button
+            onClick={() => handleLanguageChange('en')}
+            className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'en' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}>
+                {t("English")}
+              </button>
+              <button
+                onClick={() => handleLanguageChange('es')}
+                className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'es' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`} 
+              >
+                {t("Spanish")}
+              </button>
+              <button
+                onClick={() => handleLanguageChange('ar')}
+                className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'ar' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}
+              >
+                {t("Arabic")}
+              </button>
+              {/* Add more buttons for additional languages */}
+            </div>
+            )} 
+          </div>
+            {/* end */}
 
         <div
           className={`${

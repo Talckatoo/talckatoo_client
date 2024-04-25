@@ -37,9 +37,9 @@ const NavBar: FC<NavBarProps> = ({}) => {
     setSelectedLanguage(lng); // Update selected language in UserContext
     setShowLanguages(false); // Close the dropdown
   };
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [isButtonClicked] = useState(false);
 
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled] = useState(false);
   const navigate = useNavigate();
 
   const handleSignInClick = () => {
@@ -69,41 +69,23 @@ const NavBar: FC<NavBarProps> = ({}) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-
-    const handleScroll = () => {
-      // Check if the page has been scrolled, e.g., if the vertical scroll position is greater than 0.
-      const isScrolled = window.scrollY > 10;
-      setScrolled(isScrolled);
-    };
-
-    // Attach the scroll event listener when the component mounts.
-    window.addEventListener("scroll", handleScroll);
-
-    // Clean up the event listener when the component unmounts.
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
   }, []); // Empty dependency array means this effect runs once when the component mounts.
 
   return (
     <header
-      className={
-        isDarkMode
-          ? "w-full py-4 fixed top-0 z-50 bg-black"
-          : "bg-withe w-full py-4 fixed top-0 z-50"
-      }
-      // style={{isDarkMode ?
-      //   { backgroundColor: scrolled ? "rgba(255, 255, 255, 0.9)" : "transparent",
-      //   backdropFilter: scrolled ? "blur(8px)" : "none" }
-      // }}
-      style={{
-        backgroundColor: isDarkMode
-          ? "transparent"
-          : scrolled
-          ? "rgba(255, 255, 255, 0.9)"
-          : "transparent",
-        backdropFilter: isDarkMode ? "none" : scrolled ? "blur(8px)" : "none",
-      }}
+    className={` ${isDarkMode
+      ? "w-full py-4 fixed top-0 z-50 bg-gray-900 bg-opacity-70 backdrop-blur-xl"
+      : "bg-white w-full py-4 fixed top-0 z-50 backdrop-blur-xl"}`
+    }
+    style={{
+      backgroundColor: isDarkMode
+        ? "rgba(0, 0, 0, 0.7)"
+        : scrolled
+        ? "rgba(0, 0, 0, 0.7)"
+        : "rgba(255, 255, 255, 0.9)",
+      backdropFilter: isDarkMode || scrolled ? "none" : "blur(8px)",
+    }}
+    
     >
       <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
         <Link
@@ -126,25 +108,27 @@ const NavBar: FC<NavBarProps> = ({}) => {
 
         {/* sign up and sign in button */}
         <div className="flex items-center gap-4  max-[430px]:flex max-[430px]:justify-center">
-        <MdDarkMode
-            className={
-              isDarkMode
-                ? "text-[25px] text-white cursor-pointer"
-                : "text-[25px] cursor-pointer"
-            }
-            onClick={toggleDarkMode}
+     
+          <MdDarkMode
+              className={`${isDarkMode ?  "text-white" : "text-secondary-500" }${!isButtonClicked
+                  ? " border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
+                  : " border-[1px] border-secondary-500 hover:bg-black"
+              } py-2 px-2 w-12 h-12 rounded-[3px] max-md:px-1 max-md:py-1 flex items-center justify-center flex-col transition duration-300 ease-in-out relative text-[25px] cursor-pointer`}
+              onClick={toggleDarkMode}
           />
-          <div className={`${isDarkMode ? "" : " "}${
+
+
+          <div className={`${isDarkMode ?  "text-white" : "text-secondary-500"}${
             !isButtonClicked
             ? " border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
             : " border-[1px] border-secondary-500 hover:bg-black"
-            } py-2 px-2 rounded-[3px] max-md:px-1 max-md:py-1 rounded-[12px]  flex items-center justify-center flex-col
+            } py-2 px-2 rounded-[3px] max-md:px-1 max-md:py-1 flex items-center justify-center flex-col
             transition duration-300 ease-in-out relative
             `} onClick={handleLanguageClick}>
             <FaGlobe
                className={`${
                 !isButtonClicked ? "text-secondary-500" : "text-white"
-                } z-4 object-contain py-1 w-[29px] text-[32px]`}
+                } ${isDarkMode ?  "text-white" : "text-secondary-500" }  z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
             {showLanguages && (
             <div ref={languageRef} className="overflow-hidden absolute z-50 bottom-[-100px] left-10 bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">          

@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, SetStateAction } from 'react';
 import { UserContext } from './../../context/user-context';
 import Notify from '../../UI/Notify';
 
@@ -7,11 +7,11 @@ const Newsletter = () => {
   const [email, setEmail] = useState('');
   const { isDarkMode } = useContext(UserContext);
 
-  const handleEmailChange = (e) => {
+  const handleEmailChange = (e: { target: { value: SetStateAction<string>; }; }) => {
     setEmail(e.target.value);
   };
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string) => {
     const re = /\S+@\S+\.\S+/;
     if (email === '') {
       setNotification({ type: 'warning', message: 'Email is required' });
@@ -57,7 +57,7 @@ const Newsletter = () => {
   return (
     <>
       <section
-        className={`md:mx-10 md:mt-[5rem]  p-16 max-sm:p-6 z-[1] font-inter relative border rounded-xl cursor-pointer ${
+        className={`md:mx-10 md:mt-[5rem]  p-14 max-sm:p-6 z-[1] font-inter relative border rounded-xl cursor-pointer ${
           isDarkMode ? " bg-[#0e131d6f]" : ""
         }`}
       >
@@ -84,7 +84,7 @@ const Newsletter = () => {
           />
 
           <button
-            className="md:w-44 h-[46px] bg-black text-white rounded-r-lg hover:text-orange-500"
+            className="md:w-44 p-2 h-[46px] bg-black text-white rounded-r-lg hover:text-orange-500"
             onClick={handleSubscribe}
             type="submit"
           >
