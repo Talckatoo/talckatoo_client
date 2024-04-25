@@ -163,7 +163,7 @@ const SignUpVerification = () => {
                 className="w-full bg-black justify-center text-center text-white h-[48px] z-[1] rounded-lg "
                 onClick={sendVerificationCode}
               >
-                {t("SendVeridfication")}
+                {t("SendVerification")}
               </Button>
             </div>
           </>
