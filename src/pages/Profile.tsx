@@ -281,19 +281,20 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
         {/* delete account zone danger */}
         <div className={`border border-black-500 shadow-xl pt-2 bg-white rounded-lg ${ isDarkMode ? "z-50" : "" }`}>
           <div className="flex px-3 flex-col mt-5 gap-4 cursor-pointer">
-            <h3 className="text-body-bold text-red-500">Danger</h3>
+            <h3 className="text-body-bold text-red-500">{t("danger")}
+               </h3>
             <div className="flex justify-between px-4 py-2">
               <div>
-                <h4 className="text-body-medium text-red-600" >Delete Account</h4>
+                <h4 className="text-body-medium text-red-600" >{t("deleteAccount")}</h4>
                 <p className="opacity-90 text-gray-500">
-                  Delete your account and all its associated data
+                  {t("descriptionDeleteAccount")}
                 </p>
               </div>
               <button
                 onClick={handleDeleteAccount}
                 className="rounded-md text-white bg-red-500 p-2 font-semibold text-[17px] border border-red-600"
               >
-                DELETE ACCOUNT
+                {t("deleteAccountButton")}
               </button>
             </div>
           </div>

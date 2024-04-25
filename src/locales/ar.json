@@ -106,7 +106,10 @@
   "Please enter a valid email": "الرجاء إدخال بريد إلكتروني صالح",
   "Your email is already subscribed": "تم الاشتراك بالفعل ببريدك الإلكتروني",
   "Subscribed successfully": "تم الاشتراك بنجاح",
-  "Join Random Chat": "لانضمام إلى المحادثة العشوائية"
-      
+  "Join Random Chat": "لانضمام إلى المحادثة العشوائية",
+  "danger": "خطر",
+  "deleteAccount": "حذف الحساب",
+  "descriptionDeleteAccount": "احذف حسابك وجميع البيانات المرتبطة به",
+  "deleteAccountButton": "حذف الحساب"
           
 }

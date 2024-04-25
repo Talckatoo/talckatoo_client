@@ -106,8 +106,11 @@
   "Please enter a valid email": "Please enter a valid email",
   "Your email is already subscribed": "Your email is already subscribed",
   "Subscribed successfully": "Subscribed successfully",
-  "Join Random Chat": "Join Random Chat"
-  
+  "Join Random Chat": "Join Random Chat",
+  "danger": "Danger",
+  "deleteAccount": "Delete Account",
+  "descriptionDeleteAccount": "delete your account and all its associated data",
+  "deleteAccountButton": "DELETE ACCOUNT"
   
 
 }

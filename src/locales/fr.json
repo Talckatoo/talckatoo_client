@@ -104,6 +104,10 @@
     "Please enter a valid email": "Veuillez saisir une adresse e-mail valide",
     "Your email is already subscribed": "Votre e-mail est déjà abonné",
     "Subscribed successfully": "Abonné avec succès",
-    "Join Random Chat": "Rejoindre un chat aléatoire"
+    "Join Random Chat": "Rejoindre un chat aléatoire",
+    "danger": "Danger",
+    "deleteAccount": "Supprimer le compte",
+    "descriptionDeleteAccount": "Supprimez votre compte et toutes ses données associées",
+    "deleteAccountButton": "SUPPRIMER LE COMPTE"
   }
   
