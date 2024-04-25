@@ -1,7 +1,6 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user-context";
-import { FaArrowLeft, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useUpdateUserMutation } from "../redux/services/UserApi";
 import languagesArray from "../util/languages";
@@ -10,20 +9,8 @@ import { setAuth } from "../redux/features/user/authSlice";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
 import Input from "../UI/Input";
-import {
-  setRecipient,
-  setRequests,
-  setUser,
-  setUsers,
-} from "../redux/features/user/userSlice";
-import { setMessages } from "../redux/features/messages/messageSlice";
-import { setRequest } from "../redux/features/user/requestSlice";
-import { IoPersonSharp } from "react-icons/io5";
-import { PiChatTextFill } from "react-icons/pi";
-import { RiSettings5Fill } from "react-icons/ri";
+import { useDeleteAccountMutation } from "../redux/services/AuthApi";
 import LeftSideBar from "../components/shared/LeftSideBar";
-
-// import UserProfile from "../components/UserProfile";
 
 interface Socket {
   current: any;
@@ -42,11 +29,27 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const [updateUser] = useUpdateUserMutation();
   const { onlineFriends } = useAppSelector((state) => state.socket);
   const [uploadFile] = useUploadFileMutation();
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const [deleteAccount] = useDeleteAccountMutation();
 
-  const navigateChat = () => {
-    navigate("/chat");
-  };
+  // Delete account function
+  const handleDeleteAccount = async () => {
+    if (window.confirm('Are you sure you want to delete your account? There is no going back after this point.'))
+      try {
+        
+        const result = await deleteAccount({email: user?.email});
+
+        if ("data" in result) {
+          toast.success("Account deleted successfully!");
+          localStorage.clear();
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+  }
 
   interface FormInput {
     name: string;
@@ -66,13 +69,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("persist:root");
-    localStorage.removeItem("conversationId");
-    localStorage.removeItem("selectedId");
-    localStorage.removeItem("language");
-
+    localStorage.clear()
     navigate("/");
   };
 
@@ -123,7 +120,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             welcome: result?.data?.user?.welcome,
           })
         );
-        console.log("conversation id from profile");
 
         dispatch(
           setConversation({
@@ -171,11 +167,11 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleSetButtonSelected = (buttonSelected: string) => {
     navigate("/chat", { state: { buttonSelected } });
   };
+
   return (
     <div
-      className={`flex flex-1 flex-grow justify-center w-full h-full ${
-        isDarkMode ? "bg-[#181818]" : ""
-      }`}
+      className={`flex flex-1 flex-grow justify-center w-full h-full ${isDarkMode ? "bg-[#181818]" : ""
+        }`}
     >
       {/*First column */}
       <LeftSideBar
@@ -187,16 +183,14 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
       <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
         <img
-          src={`${
-            isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
-          }`}
+          src={`${isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
+            }`}
           alt="shape"
           className="fixed left-24  bottom-[-9rem] w-[40%] z-[1] "
         />
         <img
-          src={`${
-            isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"
-          }`}
+          src={`${isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"
+            }`}
           alt="shape"
           className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
         />
@@ -268,16 +262,40 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           </div>
         </form>
         <div
-          className="flex justify-center mt-5 gap-4 cursor-pointer"
+          className="flex justify-center p-2 gap-4 cursor-pointer"
           onClick={() => handleLogout()}
         >
           <a href="">
-            <img src="./assets/img/signout.png" alt="logout-icon" />
+            {
+              isDarkMode ? <img className="w-6 h-6" src="./assets/img/signoutW.png" alt="logout-icon" /> :
+              <img className="w-6 h-6"src="./assets/img/signoutR.png" alt="logout-icon" />
+            }
           </a>
-          <span className="text-[#DD0000] font-semibold text-[17px]">
+          <span className={`${isDarkMode ? "text-white" : "text-[#DD0000]" } font-semibold text-[17px]`}>
             Log Out
           </span>
         </div>
+        {/* delete account zone danger */}
+        <div className={`border border-black-500 shadow-xl pt-2 bg-white rounded-lg ${ isDarkMode ? "z-50" : "" }`}>
+          <div className="flex px-3 flex-col mt-5 gap-4 cursor-pointer">
+            <h3 className="text-body-bold text-red-500">Danger</h3>
+            <div className="flex justify-between px-4 py-2">
+              <div>
+                <h4 className="text-body-medium text-red-600" >Delete Account</h4>
+                <p className="opacity-90 text-gray-500">
+                  Delete your account and all its associated data
+                </p>
+              </div>
+              <button
+                onClick={handleDeleteAccount}
+                className="rounded-md text-white bg-red-500 p-2 font-semibold text-[17px] border border-red-600"
+              >
+                DELETE ACCOUNT
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

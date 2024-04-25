@@ -5,7 +5,6 @@ import Button from "../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
 import { MdOutlineSecurity } from "react-icons/md";
 import { UserContext } from "../context/user-context";
 import CryptoJS from "crypto-js";
@@ -23,7 +22,7 @@ const SignUpVerification = () => {
 
   const [confirmationCode, setConfirmationCode] = useState(Array(4).fill(""));
   const refs = useRef<Array<HTMLInputElement>>([]);
-  const [verificationCode, setVerificationCode] = React.useState("");
+  const [verificationCodeString, setVerificationCodeString] = React.useState("");
   const [sendEmail, setSendEmail] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { isDarkMode } = useContext(UserContext);
@@ -40,22 +39,26 @@ const SignUpVerification = () => {
           email: formData.email,
         }
       );
+
       if (response) {
-        const { encryptedVerificationCode } = response.data;
+        const { verificationCode } = response.data;
         toast.success(
           "Verification code sent to your email. Please check your email."
         );
 
         const secretKey = import.meta.env.VITE_ENCRYPTION_KEY as string;
-        const decryptedVerificationCode = CryptoJS.AES.decrypt(
-          encryptedVerificationCode,
-          secretKey
-        ).toString();
+        const iv = import.meta.env.VITE_ENCRYPTION_IV;
 
-        setVerificationCode(decryptedVerificationCode);
+        const decryptedVerificationCode = CryptoJS.AES.decrypt(
+          verificationCode,
+          secretKey,
+          { iv: iv }
+        );
+
+        setVerificationCodeString(decryptedVerificationCode.toString(CryptoJS.enc.Utf8));
         setSendEmail(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.response.data.message === "The email is already in use") {
         toast.error(
           "The email is already in use. Please use another email or sign in"
@@ -111,7 +114,7 @@ const SignUpVerification = () => {
   };
   const handleContinue = () => {
     const code = confirmationCode.join("");
-    if (code !== verificationCode || code === "") {
+    if (code !== verificationCodeString || code === "") {
       setError("Verification code does not match");
       return;
     }
@@ -130,9 +133,8 @@ const SignUpVerification = () => {
       {/* End of Nav bar section */}
       <div className="justify-center align-center text-center">
         <h1
-          className={`head-text text-center mt-[6rem] mb-6  ${
-            isDarkMode ? "text-white" : "text-black"
-          }`}
+          className={`head-text text-center mt-[6rem] mb-6  ${isDarkMode ? "text-white" : "text-black"
+            }`}
         >
           Let's get started!
         </h1>
@@ -147,9 +149,8 @@ const SignUpVerification = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className={`bg-transparent border-[#33363A] z-[1] rounded-lg  ${
-                  isDarkMode ? "text-white" : "text-black"
-                }`}
+                className={`bg-transparent border-[#33363A] z-[1] rounded-lg  ${isDarkMode ? "text-white" : "text-black"
+                  }`}
                 label={""}
                 id={""}
               />
@@ -165,30 +166,32 @@ const SignUpVerification = () => {
         ) : (
           <>
             <span
-              className={`mt-4 z-[1] text-center ${
-                isDarkMode ? "text-white" : "text-black"
-              }`}
+              className={`mt-4 z-[1] text-center ${isDarkMode ? "text-white" : "text-black"
+                }`}
             >
               Please enter the code we sent to your email
             </span>
-            <div
-              className="w-[10%] flex mx-auto my-6 justify-between space-x-2 h-12"
-              onPaste={handlePaste}
-            >
-              {Array.from({ length: 4 }, (_, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  maxLength={1}
-                  className={`w-12 h-12 text-center border rounded-md ${
-                    error ? "border-red-500" : "border-gray-300"
-                  }`}
-                  value={confirmationCode[index]}
-                  onChange={(e) => handleInputChange(e, index)}
-                  ref={(el) => el && (refs.current[index] = el)}
-                />
-              ))}
-            </div>
+          
+                
+              <div
+                className="w-[10%] flex justify-center  mx-auto my-6 space-x-2 h-12"
+                onPaste={handlePaste}
+              >
+                {Array.from({ length: 4 }, (_, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    maxLength={1}
+                    className={`w-12 h-12 text-center border rounded-md ${error ? "border-red-500" : "border-gray-300"
+                      }`}
+                    value={confirmationCode[index]}
+                    onChange={(e) => handleInputChange(e, index)}
+                    ref={(el) => el && (refs.current[index] = el)}
+                  />
+                ))}
+              </div>
+            
+
             <Button
               type="submit"
               className="bg-black text-white text-center justify-center h-[48px] z-[1] rounded-lg mt-2"
@@ -199,15 +202,13 @@ const SignUpVerification = () => {
           </>
         )}
         <p
-          className={`mt-4 z-[1] text-center ${
-            isDarkMode ? "text-white" : "text-black"
-          }`}
+          className={`mt-4 z-[1] text-center ${isDarkMode ? "text-white" : "text-black"
+            }`}
         >
           Already have an account?{" "}
           <Link
-            className={`cursor-pointer rounded-lg underline font-semibold ${
-              isDarkMode ? "text-white" : "text-black"
-            }`}
+            className={`cursor-pointer rounded-lg underline font-semibold ${isDarkMode ? "text-white" : "text-black"
+              }`}
             to="/sign-in"
           >
             Sign In
