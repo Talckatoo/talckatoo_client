@@ -40,7 +40,6 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const toggleDarkMode = () => {
     setIsDarkMode(prevMode => !prevMode);
-    console.log('toggle dark mode');
   };
 
   const [selectedLanguage, setSelectedLanguage] = useState('en');

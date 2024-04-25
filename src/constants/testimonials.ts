@@ -13,14 +13,14 @@ export const testimonials = [
   },
   {
     image: "",
-    name:  "",
-    title: "",
-    text: "",
+    name: "Emma Harris",
+    title: "Software Engineer at Google",
+    text: "I've tried other translation tools, but Talckatoo is by far the best. The translations are accurate, and the voice-to-text feature is a game-changer. I can't imagine working without it now!",
   },
   {
     image: "/assets/img/mike.png",
     name:  "Mike Warren",
     title: "Product Manager at Zapier",
     text: "Our projects used to get delayed due to miscommunication. With Talckatoo, everyone's on the same page, literally. The intuitive design means even our less tech-savvy team members can use it with ease.",
-  },
+  }
 ];

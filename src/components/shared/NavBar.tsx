@@ -5,6 +5,7 @@ import { UserContext } from "../../context/user-context";
 import { MdDarkMode } from "react-icons/md";
 import { useTranslation } from 'react-i18next'; //TRANSLATION languages
 import { FaGlobe } from 'react-icons/fa';
+import LanguagesArray from './../../constants/languages';
 
 interface NavBarProps {
   showSign?: boolean;
@@ -23,7 +24,7 @@ const NavBar: FC<NavBarProps> = ({}) => {
     i18n.changeLanguage(lng);
     setSelectedLanguage(lng); // Update selected language in state
   };
-
+  const languages = LanguagesArray(); // Get languages object
   const [showLanguages, setShowLanguages] = useState<boolean>(false);
   // const { isDarkMode } = useContext(UserContext);
   const { isDarkMode, toggleDarkMode } = useContext(UserContext);
@@ -131,24 +132,17 @@ const NavBar: FC<NavBarProps> = ({}) => {
                 } ${isDarkMode ?  "text-white" : "text-secondary-500" }  z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
             {showLanguages && (
-            <div ref={languageRef} className="overflow-hidden absolute z-50 bottom-[-100px] left-10 bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">          
-            <button
-            onClick={() => handleLanguageChange('en')}
-            className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'en' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}>
-                {t("English")}
-              </button>
-              <button
-                onClick={() => handleLanguageChange('es')}
-                className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'es' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`} 
-              >
-                {t("Spanish")}
-              </button>
-              <button
-                onClick={() => handleLanguageChange('ar')}
-                className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === 'ar' ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}
-              >
-                {t("Arabic")}
-              </button>
+            <div ref={languageRef} className="overflow-hidden absolute z-50 bottom-[-170px] bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">          
+            {/* map languages */}
+            {Object.entries(languages).map(([languageName, languageCode]) => (
+                <button
+                  key={languageCode}
+                  onClick={() => handleLanguageChange(languageCode)}
+                  className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === languageCode ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}
+                >
+                  {t(languageName)}
+                </button>
+              ))}
               {/* Add more buttons for additional languages */}
             </div>
             )} 

@@ -21,6 +21,7 @@ import i18n from 'i18next';
 import enTranslations from './locales/en.json';
 import esTranslations from './locales/es.json';
 import arTranslations from './locales/ar.json';
+import frTranslations from './locales/fr.json';
 
 i18n
   .use(initReactI18next)
@@ -28,7 +29,8 @@ i18n
     resources: {
       en: { translation: enTranslations },
       es: { translation: esTranslations },
-      ar: { translation: arTranslations }
+      ar: { translation: arTranslations },
+      fr: { translation: frTranslations }
       // Add more languages as needed
     },
     lng: 'en', // Set default language
