@@ -38,7 +38,7 @@ const SideBar = ({
   const { user } = useAppSelector((state) => state.auth);
   const [searchData, setSearchData] = useState<any[]>([]);
   const [usersData, setUsersData] = useState<any[]>([]);
-  const [setSelectedUser] = useState<any | null>(null);
+  const [selectedUser,setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
   const [showRequest, setShowRequest] = useState(
     buttonSelected === "friends" ? true : false
