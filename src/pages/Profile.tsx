@@ -53,10 +53,12 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   interface FormInput {
     name: string;
+    email: string;
   }
 
   const [formInput, setformInput] = useState<FormInput>({
     name: user?.userName,
+    email: user?.email
   });
 
   const handleInputChange = (e: any) => {
@@ -233,6 +235,18 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             onChange={handleInputChange}
             className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
           />
+
+          <Input
+            name="email"
+            type="text"
+            label="E-mail"
+            placeholder="Enter your e-mail"
+            id="name"
+            value={formInput.email}
+            onChange={handleInputChange}
+            className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
+          />
+
           <div className="mb-12 ">
             <label
               htmlFor={name}
