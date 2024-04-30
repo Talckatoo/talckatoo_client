@@ -85,7 +85,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
       const formData = new FormData();
       if (user) {
         formData.append("userName", formInput.name || user?.userName);
-
+        formData.append("email", formInput.email || user?.email)
         formData.append(
           "fileUrl",
           response?.data?.media?.url || user?.profileImage?.url
@@ -93,14 +93,15 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
         formData.append("language", updateLanguage || user?.language);
       }
-
       const result = (await updateUser({
         id: user?._id,
         data: formData,
       })) as any;
+      console.log(result);
 
       socket.current.emit("updateProfile", {
         userName: formInput.name || user.userName,
+        email: formInput.email || user.email,
         image: response?.data?.media?.url
           ? response?.data?.media?.url
           : user?.profileImage?.url,
@@ -117,6 +118,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           setAuth({
             ...user,
             userName: updatedUser.userName,
+            email: updatedUser.email,
             profileImage: result?.data?.user?.profileImage,
             language: updatedUser.language,
             welcome: result?.data?.user?.welcome,
@@ -129,9 +131,9 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
         toast.success("Profile updated successfully!");
-        setTimeout(() => {
+       /*setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 2000);*/
       }
     } catch (error) {
       console.log(error);
@@ -241,7 +243,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             type="text"
             label="E-mail"
             placeholder="Enter your e-mail"
-            id="name"
+            id="email"
             value={formInput.email}
             onChange={handleInputChange}
             className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
