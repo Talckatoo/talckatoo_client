@@ -1,6 +1,7 @@
 import React, { FC, ChangeEvent } from "react";
 
 interface InputProps {
+  disabled?: boolean;
   label: string;
   type: string;
   name: string;
@@ -13,6 +14,7 @@ interface InputProps {
 }
 
 const Input: FC<InputProps> = ({
+  disabled=false,
   label,
   type,
   name,
@@ -31,6 +33,7 @@ const Input: FC<InputProps> = ({
         {label}
       </label>
       <input
+        disabled={disabled}
         type={type}
         name={name}
         placeholder={placeholder}
