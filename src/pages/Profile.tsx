@@ -53,10 +53,12 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   interface FormInput {
     name: string;
+    email: string;
   }
 
   const [formInput, setformInput] = useState<FormInput>({
     name: user?.userName,
+    email: user?.email
   });
 
   const handleInputChange = (e: any) => {
