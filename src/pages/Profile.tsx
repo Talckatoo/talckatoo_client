@@ -53,10 +53,12 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   interface FormInput {
     name: string;
+    email: string;
   }
 
   const [formInput, setformInput] = useState<FormInput>({
     name: user?.userName,
+    email: user?.email
   });
 
   const handleInputChange = (e: any) => {
@@ -83,7 +85,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
       const formData = new FormData();
       if (user) {
         formData.append("userName", formInput.name || user?.userName);
-
         formData.append(
           "fileUrl",
           response?.data?.media?.url || user?.profileImage?.url
@@ -91,7 +92,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
         formData.append("language", updateLanguage || user?.language);
       }
-
       const result = (await updateUser({
         id: user?._id,
         data: formData,
@@ -127,7 +127,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
         toast.success("Profile updated successfully!");
-        setTimeout(() => {
+       setTimeout(() => {
           window.location.reload();
         }, 2000);
       }
@@ -233,6 +233,19 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             onChange={handleInputChange}
             className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
           />
+
+          <Input
+            disabled={true}
+            name="email"
+            type="text"
+            label="E-mail"
+            placeholder="Enter your e-mail"
+            id="email"
+            value={formInput.email}
+            onChange={handleInputChange}
+            className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
+          />
+
           <div className="mb-12 ">
             <label
               htmlFor={name}
