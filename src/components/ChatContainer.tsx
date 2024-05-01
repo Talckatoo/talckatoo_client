@@ -334,12 +334,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       } catch (err) {
         console.log("error from error", err);
         toast.error(
-          `${t("Error sending messages, please try again form handleSendMessage1")}`
+          `${t("Error sending messages, please try again")}`
         );
       }
     } else if (selectedId && conversationId === "") {
-      // setMessages([]);
-      // dispatch(setMessages([]));
       try {
         const response = await sendMessage({
           from: user?._id,
@@ -384,7 +382,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
       } catch (err) {
         toast.error(
-          `${t("Error sending messages, please try again form handleSendMessage2")}`
+          `${t("Error sending messages, please try again")}`
         );
       }
     }

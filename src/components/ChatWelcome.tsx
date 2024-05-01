@@ -29,10 +29,6 @@ export default function ChatWelcome() {
             {t("Join Random Chat")}
           </Button>
         </div>
-        {/* {t('chatWelcome')} 
-        
-      <p className="text-center max-md:px-4  max-w-[768px] text-black">{t('chatWelcome')}</p> /}
-      */}
       </div>
     </div>
   );

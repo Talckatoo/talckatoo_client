@@ -161,7 +161,7 @@ const SideBar = ({
             isDarkMode ? "text-white" : "text-black"
           }`}
         >
-          {t('chats')}
+          {t('Chats')}
         </div>
 
         <div className="relative flex mx-4">
