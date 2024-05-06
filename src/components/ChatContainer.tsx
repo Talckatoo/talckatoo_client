@@ -159,7 +159,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-}, [messages, openSendImageDialog]);
+  }, [messages, openSendImageDialog]);
 
   useEffect(() => {
     if (selectedId || conversationId) {
@@ -272,6 +272,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       message: messageAI,
       from: user?._id,
       to: selectedId,
+      type: "ai",
       createdAt: Date.now(),
     });
     dispatch(
@@ -530,7 +531,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-
   const onHandleSendFile = (imageData: {
     file: any;
     type: "string";
@@ -548,7 +548,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
     /**/
   };
-
 
   useEffect(() => {
     if (socket.current) {
@@ -594,6 +593,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             createdAt: data.messageReply.createdAt,
             message: data.messageReply.message,
             sender: data.from,
+            type: "ai",
             _id: uuidv4(),
           });
         }
@@ -687,9 +687,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   return (
     <div
-    className={`w-full h-full flex flex-col ${
-      isDarkMode ? "bg-[#181818]" : "bg-white"
-    }`}
+      className={`w-full h-full flex flex-col ${
+        isDarkMode ? "bg-[#181818]" : "bg-white"
+      }`}
     >
       <Dialog
         open={open}
@@ -710,7 +710,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       </Dialog>
 
       <div className="relative h-full">
-      {openSendImageDialog ? (
+        {openSendImageDialog ? (
           <div className="overflow-y-auto overflow-x-hidden w-full h-full flex gap-8 flex-col justify-center items-center bg-secondary-500/75	">
             <div className="relative bg-white w-1/2 h-2/3 rounded-lg flex flex-col justify-center items-center h-1/2">
               <div
@@ -742,227 +742,239 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             </div>
           </div>
         ) : (
-        <div   className={`flex flex-col shadow-sm  h-full ${
-          isDarkMode
-            ? "border-l border-[#000] border-opacity-20"
-            : "border-l border-opacity-20"
-        }`}>
-          <div className="w-full flex flex-col h-full">
-            <img
-          src={`${
-            isDarkMode
-              ? "/assets/img/Shapesde.png"
-              : "/assets/img/Shapes.png"
-          }`}
-              alt="shape"
-              className="fixed left-24  -bottom-14 w-[40%] z-[1] "
-            />
-            <img
-        src={`${
-          isDarkMode
-            ? "/assets/img/Shapesd.png"
-            : "/assets/img/Shapes.png"
-        }`}
-              alt="shape"
-              className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
-            />
-            <div className="relative h-full z-[5] ">
-              <div
-                ref={scrollRef}
-                className="overflow-y-auto overflow-x-hidden w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
-              >
-                {selectedId ? (
-                  <div className="m-2 p-2 ">
-                    {messages
-                      ? messages.map((msg) => (
-                          <div
-                            className={
-                              "" +
-                              (msg.sender === user?._id ? " mb-6" : "") +
-                              (msg.sender ==
-                              import.meta.env.VITE_AI_ASSISTANT_ID
-                                ? "text-center "
-                                : "")
-                            }
-                            key={msg._id}
-                          >
+          <div
+            className={`flex flex-col shadow-sm  h-full ${
+              isDarkMode
+                ? "border-l border-[#000] border-opacity-20"
+                : "border-l border-opacity-20"
+            }`}
+          >
+            <div className="w-full flex flex-col h-full">
+              <img
+                src={`${
+                  isDarkMode
+                    ? "/assets/img/Shapesde.png"
+                    : "/assets/img/Shapes.png"
+                }`}
+                alt="shape"
+                className="fixed left-24  -bottom-14 w-[40%] z-[1] "
+              />
+              <img
+                src={`${
+                  isDarkMode
+                    ? "/assets/img/Shapesd.png"
+                    : "/assets/img/Shapes.png"
+                }`}
+                alt="shape"
+                className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
+              />
+              <div className="relative h-full z-[5] ">
+                <div
+                  ref={scrollRef}
+                  className="overflow-y-auto overflow-x-hidden w-full absolute top-0 left-0 right-0 bottom-0  m-auto"
+                >
+                  {selectedId ? (
+                    <div className="m-2 p-2 ">
+                      {messages
+                        ? messages.map((msg) => (
                             <div
                               className={
-                                "flex items-end" +
-                                (msg.sender === user?._id
-                                  ? " flex text-right w-full justify-end items-end"
+                                "" +
+                                (msg.sender === user?._id ? " mb-6" : "") +
+                                (msg.sender ==
+                                  import.meta.env.VITE_AI_ASSISTANT_ID ||
+                                msg.type === "ai"
+                                  ? "text-center "
                                   : "")
                               }
+                              key={msg._id}
                             >
                               <div
                                 className={
-                                  "w-auto max-w-[50%] inline-block m-2 p-4 " +
-                                  (msg.sender === user?._id &&
-                                  msg.sender !==
-                                    import.meta.env.VITE_AI_ASSISTANT_ID
-                                    ? `h-full text-right text-[#000] rounded-t-[20px] rounded-bl-[20px] ${
-                                      isDarkMode
-                                        ? "bg-[#D9E3EA]"
-                                        : "bg-[#F5F5F5]"
-                                    }`
-                                    : msg.sender !==
-                                      import.meta.env.VITE_AI_ASSISTANT_ID
-                                    ? "bg-[#25282C] text-left text-white  rounded-t-[20px] rounded-br-[20px]"
-                                    : "bg-[#FEF3C7] text-center mx-auto rounded-[20px]")
+                                  "flex items-end" +
+                                  (msg.sender === user?._id
+                                    ? " flex text-right w-full justify-end items-end"
+                                    : "")
                                 }
                               >
-                                {msg.sender !==
-                                  import.meta.env.VITE_AI_ASSISTANT_ID &&
-                                msg.message &&
-                                msg.message.includes("\n") ? (
-                                  msg.message
-                                    .split("\n")
-                                    .map((line, index, lines) => {
-                                      const prevLine =
-                                        index > 0 ? lines[index - 1] : null;
-                                      const isFirstLine =
-                                        index === 0 || line !== prevLine;
+                                <div
+                                  className={
+                                    "w-auto max-w-[50%] inline-block m-2 p-4 " +
+                                    (msg.sender === user?._id &&
+                                    msg.sender !==
+                                      import.meta.env.VITE_AI_ASSISTANT_ID &&
+                                    msg.type !== "ai"
+                                      ? `h-full text-right text-[#000] rounded-t-[20px] rounded-bl-[20px] ${
+                                          isDarkMode
+                                            ? "bg-[#D9E3EA]"
+                                            : "bg-[#F5F5F5]"
+                                        }`
+                                      : msg.sender !==
+                                          import.meta.env
+                                            .VITE_AI_ASSISTANT_ID &&
+                                        msg.type !== "ai"
+                                      ? "bg-[#25282C] text-left text-white  rounded-t-[20px] rounded-br-[20px]"
+                                      : "bg-[#FEF3C7] text-center mx-auto rounded-[20px]")
+                                  }
+                                >
+                                  {msg.sender !==
+                                    import.meta.env.VITE_AI_ASSISTANT_ID &&
+                                  msg.type !== "ai" &&
+                                  msg.message &&
+                                  msg.message.includes("\n") ? (
+                                    msg.message
+                                      .split("\n")
+                                      .map((line, index, lines) => {
+                                        const prevLine =
+                                          index > 0 ? lines[index - 1] : null;
+                                        const isFirstLine =
+                                          index === 0 || line !== prevLine;
 
-                                      return (
-                                        <React.Fragment key={index}>
-                                          {isFirstLine && line}
-                                          {isFirstLine &&
-                                            index !== lines.length - 1 &&
-                                            line !== lines[index + 1] && (
-                                              <>
-                                                <br className=" mx-auto" />
-                                                <div className="h-1 border-b border-gray-600 my-1"></div>
-                                              </>
-                                            )}
-                                        </React.Fragment>
-                                      );
-                                    })
-                                ) : (
-                                  <>{msg.message}</>
-                                )}
+                                        return (
+                                          <React.Fragment key={index}>
+                                            {isFirstLine && line}
+                                            {isFirstLine &&
+                                              index !== lines.length - 1 &&
+                                              line !== lines[index + 1] && (
+                                                <>
+                                                  <br className=" mx-auto" />
+                                                  <div className="h-1 border-b border-gray-600 my-1"></div>
+                                                </>
+                                              )}
+                                          </React.Fragment>
+                                        );
+                                      })
+                                  ) : (
+                                    <>{msg.message}</>
+                                  )}
 
-                                {msg.voiceNote && (
-                                  <audio className="w-[150px] h-15" b- controls>
-                                    <source
-                                      src={msg.voiceNote?.url}
-                                      type="audio/mpeg"
-                                    />
-                                  </audio>
-                                )}
-                                {msg.media &&
-                                  (msg.media.type === "image" ? (
-                                    <div className="relative">
-                                      <img
-                                        src={msg.media.url}
-                                        alt="media"
-                                        className="w-60 h-60 object-contain"
-                                      />
-                                      <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
-                                        <Link to={msg.media.url} download>
-                                          <MdDownload className="text-[24px] text-black" />
-                                        </Link>
-                                      </div>
-                                    </div>
-                                  ) : msg.media.type === "video" ? (
-                                    <div className="relative">
-                                      <video
-                                        src={msg.media.url}
-                                        className="w-60 h-60"
-                                        controls
-                                      />
-                                      <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
-                                        <Link to={msg.media.url} download>
-                                          <MdDownload className="text-[24px] text-black" />
-                                        </Link>
-                                      </div>
-                                    </div>
-                                  ) : msg.media.type === "audio" ? (
-                                    <audio className="w-60 h-15 " controls>
+                                  {msg.voiceNote && (
+                                    <audio
+                                      className="w-[150px] h-15"
+                                      b-
+                                      controls
+                                    >
                                       <source
-                                        src={msg.media.url}
+                                        src={msg.voiceNote?.url}
                                         type="audio/mpeg"
                                       />
                                     </audio>
-                                  ) : (
-                                    <div className=" flex items-center w-[240px]">
-                                      <Link
-                                        to={msg.media.url}
-                                        download
-                                        className="flex w-full items-center justify-between"
-                                      >
-                                        <div className="flex items-center gap-3 minw-w-[25px]">
-                                          <FaFile className="text-[25px]" />
-                                          <p className="text-xs">
-                                            {msg.media.altText}
-                                          </p>
+                                  )}
+                                  {msg.media &&
+                                    (msg.media.type === "image" ? (
+                                      <div className="relative">
+                                        <img
+                                          src={msg.media.url}
+                                          alt="media"
+                                          className="w-60 h-60 object-contain"
+                                        />
+                                        <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                          <Link to={msg.media.url} download>
+                                            <MdDownload className="text-[24px] text-black" />
+                                          </Link>
                                         </div>
+                                      </div>
+                                    ) : msg.media.type === "video" ? (
+                                      <div className="relative">
+                                        <video
+                                          src={msg.media.url}
+                                          className="w-60 h-60"
+                                          controls
+                                        />
+                                        <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                          <Link to={msg.media.url} download>
+                                            <MdDownload className="text-[24px] text-black" />
+                                          </Link>
+                                        </div>
+                                      </div>
+                                    ) : msg.media.type === "audio" ? (
+                                      <audio className="w-60 h-15 " controls>
+                                        <source
+                                          src={msg.media.url}
+                                          type="audio/mpeg"
+                                        />
+                                      </audio>
+                                    ) : (
+                                      <div className=" flex items-center w-[240px]">
+                                        <Link
+                                          to={msg.media.url}
+                                          download
+                                          className="flex w-full items-center justify-between"
+                                        >
+                                          <div className="flex items-center gap-3 minw-w-[25px]">
+                                            <FaFile className="text-[25px]" />
+                                            <p className="text-xs">
+                                              {msg.media.altText}
+                                            </p>
+                                          </div>
 
-                                        <MdDownload className="text-[35px] min-w-[35px] text-black bg-white p-2 rounded-full shadow-md" />
-                                      </Link>
-                                    </div>
-                                  ))}
-                                <div className="flex justify-between items-center relative pt-4">
-                                  <div
-                                    className={
-                                      "  items-end" +
-                                      (msg.sender === user?._id &&
-                                      msg.sender !==
-                                        import.meta.env.VITE_AI_ASSISTANT_ID
-                                        ? "text-black text-[10px]"
-                                        : msg.sender !==
+                                          <MdDownload className="text-[35px] min-w-[35px] text-black bg-white p-2 rounded-full shadow-md" />
+                                        </Link>
+                                      </div>
+                                    ))}
+                                  <div className="flex justify-between items-center relative pt-4">
+                                    <div
+                                      className={
+                                        "  items-end" +
+                                        (msg.sender === user?._id &&
+                                        msg.sender !==
                                           import.meta.env.VITE_AI_ASSISTANT_ID
-                                        ? "text-white text-[10px]"
-                                        : "text-black text-[10px]")
-                                    }
-                                  >
-                                    {getTime(msg.createdAt)}
-                                  </div>
+                                          ? "text-black text-[10px]"
+                                          : msg.sender !==
+                                            import.meta.env.VITE_AI_ASSISTANT_ID
+                                          ? "text-white text-[10px]"
+                                          : "text-black text-[10px]")
+                                      }
+                                    >
+                                      {getTime(msg.createdAt)}
+                                    </div>
 
-                                  <TextToSpeech
-                                    convertedText={msg.message}
-                                    me={msg.sender === user?._id}
-                                    ai={
-                                      msg.sender ===
-                                      import.meta.env.VITE_AI_ASSISTANT_ID
-                                    }
-                                  />
+                                    <TextToSpeech
+                                      convertedText={msg.message}
+                                      me={msg.sender === user?._id}
+                                      ai={
+                                        msg.sender ===
+                                        import.meta.env.VITE_AI_ASSISTANT_ID
+                                      }
+                                    />
+                                  </div>
                                 </div>
+                                <div ref={scrollRefBottom}></div>
                               </div>
-                              <div ref={scrollRefBottom}></div>
                             </div>
-                          </div>
-                        ))
-                      : null}
-                  </div>
-                ) : (
-                  <ChatWelcome />
-                )}
+                          ))
+                        : null}
+                    </div>
+                  ) : (
+                    <ChatWelcome />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          {selectedTyping?.to === user?._id &&
-          selectedTyping?.from === selectedId &&
-          isTyping ? (
-            <JumpingDotsAnimation />
-          ) : null}
-          <div className="w-full py-2 relative z-5">
-            {selectedId ? (
-              <>
-                <ChatInput
-                  onHandleSendMessage={handleSendMessage}
-                  onHandleSendAIMessage={sendAIMessage}
-                  socket={socket}
-                  typing={typing}
-                  setTyping={setTyping}
-                  isTyping={isTyping}
-                  setIsTyping={setIsTyping}
-                  onHandleTranslateText={onHandleTranslateText}
-                  onHandleSendFile={onHandleSendFile}
-                />
-              </>
+            {selectedTyping?.to === user?._id &&
+            selectedTyping?.from === selectedId &&
+            isTyping ? (
+              <JumpingDotsAnimation />
             ) : null}
+            <div className="w-full py-2 relative z-5">
+              {selectedId ? (
+                <>
+                  <ChatInput
+                    onHandleSendMessage={handleSendMessage}
+                    onHandleSendAIMessage={sendAIMessage}
+                    socket={socket}
+                    typing={typing}
+                    setTyping={setTyping}
+                    isTyping={isTyping}
+                    setIsTyping={setIsTyping}
+                    onHandleTranslateText={onHandleTranslateText}
+                    onHandleSendFile={onHandleSendFile}
+                  />
+                </>
+              ) : null}
+            </div>
           </div>
-        </div> )}
+        )}
       </div>
     </div>
   );
