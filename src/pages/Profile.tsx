@@ -33,10 +33,13 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // Delete account function
   const handleDeleteAccount = async () => {
-    if (window.confirm('Are you sure you want to delete your account? There is no going back after this point.'))
+    if (
+      window.confirm(
+        "Are you sure you want to delete your account? There is no going back after this point."
+      )
+    )
       try {
-        
-        const result = await deleteAccount({email: user?.email});
+        const result = await deleteAccount({ email: user?.email });
 
         if ("data" in result) {
           toast.success("Account deleted successfully!");
@@ -45,11 +48,10 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             navigate("/");
           }, 2000);
         }
-
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-  }
+  };
 
   interface FormInput {
     name: string;
@@ -58,7 +60,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const [formInput, setformInput] = useState<FormInput>({
     name: user?.userName,
-    email: user?.email
+    email: user?.email,
   });
 
   const handleInputChange = (e: any) => {
@@ -71,7 +73,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   const handleLogout = () => {
-    localStorage.clear()
+    localStorage.clear();
     navigate("/");
   };
 
@@ -127,7 +129,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
         toast.success("Profile updated successfully!");
-       setTimeout(() => {
+        setTimeout(() => {
           window.location.reload();
         }, 2000);
       }
@@ -170,8 +172,9 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   return (
     <div
-      className={`flex flex-1 flex-grow justify-center w-full h-full ${isDarkMode ? "bg-[#181818]" : ""
-        }`}
+      className={`flex flex-1 flex-grow justify-center w-full h-full ${
+        isDarkMode ? "bg-[#181818]" : ""
+      }`}
     >
       {/*First column */}
       <LeftSideBar
@@ -183,14 +186,16 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
       <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
         <img
-          src={`${isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
-            }`}
+          src={`${
+            isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
+          }`}
           alt="shape"
           className="fixed left-24  bottom-[-9rem] w-[40%] z-[1] "
         />
         <img
-          src={`${isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"
-            }`}
+          src={`${
+            isDarkMode ? "/assets/img/Shapesd.png" : "/assets/img/Shapes.png"
+          }`}
           alt="shape"
           className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
         />
@@ -279,26 +284,32 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           onClick={() => handleLogout()}
         >
           <a href="">
-            {
-              isDarkMode ? <img className="w-6 h-6" src="./assets/img/signoutW.png" alt="logout-icon" /> :
-              <img className="w-6 h-6"src="./assets/img/signoutR.png" alt="logout-icon" />
-            }
+            {isDarkMode ? (
+              <img
+                className="w-6 h-6"
+                src="./assets/img/signoutW.png"
+                alt="logout-icon"
+              />
+            ) : (
+              <img
+                className="w-6 h-6"
+                src="./assets/img/signoutR.png"
+                alt="logout-icon"
+              />
+            )}
           </a>
-          <span className={`${isDarkMode ? "text-white" : "text-[#DD0000]" } font-semibold text-[17px]`}>
+          <span
+            className={`${
+              isDarkMode ? "text-white" : "text-[#DD0000]"
+            } font-semibold text-[17px]`}
+          >
             Log Out
           </span>
         </div>
         {/* delete account zone danger */}
-        <div className={`border border-black-500 shadow-xl pt-2 bg-white rounded-lg ${ isDarkMode ? "z-50" : "" }`}>
+        <div className={`${isDarkMode ? "z-50" : ""}`}>
           <div className="flex px-3 flex-col mt-5 gap-4 cursor-pointer">
-            <h3 className="text-body-bold text-red-500">Danger</h3>
-            <div className="flex justify-between px-4 py-2">
-              <div>
-                <h4 className="text-body-medium text-red-600" >Delete Account</h4>
-                <p className="opacity-90 text-gray-500">
-                  Delete your account and all its associated data
-                </p>
-              </div>
+            <div className="flex justify-between ">
               <button
                 onClick={handleDeleteAccount}
                 className="rounded-md text-white bg-red-500 p-2 font-semibold text-[17px] border border-red-600"
@@ -308,7 +319,6 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
