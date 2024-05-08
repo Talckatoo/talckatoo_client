@@ -57,7 +57,7 @@ const Friend = ({
   };
 
   return (
-    <div className="relative overflow-hidden bg" key={key}>
+    <div className="relative overflow-hidden" key={key}>
       {selected && (
         <div
           className={`absolute top-0 left-0 h-full w-2 ${

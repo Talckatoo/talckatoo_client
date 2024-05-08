@@ -1,4 +1,6 @@
 import React, { createContext, useState, ReactNode, useEffect } from "react";
+import { useTranslation, I18nextProvider } from 'react-i18next';
+import i18n from 'i18next'; // Import i18n from i18next
 
 interface UserContextProviderProps {
   isDarkMode: boolean;
@@ -10,6 +12,8 @@ interface UserContextProviderProps {
   setNotification: React.Dispatch<React.SetStateAction<Notification | null>>; // Add the 'setNotification' property
   userEmail: string; 
   setUserEmail: React.Dispatch<React.SetStateAction<string>>;
+  selectedLanguage: any;
+  setSelectedLanguage: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const UserContext = createContext<UserContextProviderProps>({
@@ -22,7 +26,8 @@ export const UserContext = createContext<UserContextProviderProps>({
   setNotification: () => {},
   userEmail: "", // Initialize userEmail state
   setUserEmail: () => {}, // Initialize setUserEmail function
-
+  selectedLanguage: 'en',
+  setSelectedLanguage: () => {},
 });
 
 export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
@@ -35,8 +40,12 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const toggleDarkMode = () => {
     setIsDarkMode(prevMode => !prevMode);
-    console.log('toggle dark mode');
   };
+
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
+
+  // Initialize i18n
+  useTranslation(); // Call useTranslation hook to initialize i18n
 
   useEffect(() => {
     if (isDarkMode) {
@@ -47,7 +56,25 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
   }, [isDarkMode]);
 
 
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    setSelectedLanguage(lng); // Update selected language in state
+  };
+
+  useEffect(() => {
+    // Check if the selected language is Arabic
+    if (selectedLanguage === 'ar') {
+      // Set the direction of the whole app to RTL
+      document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+      // Set the direction of the whole app to LTR
+      document.documentElement.setAttribute('dir', 'ltr');
+    }
+  }, [selectedLanguage]); // Run this effect whenever the selected language changes
+
+
   return (
+    <I18nextProvider i18n={i18n}> {/* Wrap the children with I18nextProvider */}
     <UserContext.Provider
       value={{
         isDarkMode,
@@ -59,9 +86,12 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
         setNotification,
         userEmail, 
         setUserEmail,
+        selectedLanguage,
+        setSelectedLanguage: changeLanguage, // Update setSelectedLanguage to call changeLanguage function
       }}
     >
       {children}
     </UserContext.Provider>
+    </I18nextProvider>
   );
 };

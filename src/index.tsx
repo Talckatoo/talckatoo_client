@@ -14,6 +14,32 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSpinner, fas } from '@fortawesome/free-solid-svg-icons'
 library.add(fas, faSpinner);
 
+import { initReactI18next } from 'react-i18next';
+import i18n from 'i18next';
+
+// Import translations
+import enTranslations from './locales/en.json';
+import esTranslations from './locales/es.json';
+import arTranslations from './locales/ar.json';
+import frTranslations from './locales/fr.json';
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: { translation: enTranslations },
+      es: { translation: esTranslations },
+      ar: { translation: arTranslations },
+      fr: { translation: frTranslations }
+      // Add more languages as needed
+    },
+    lng: 'en', // Set default language
+    interpolation: {
+      escapeValue: false // React already escapes strings
+    }
+  });
+
+
 // CALL IT ONCE IN YOUR APP
 injectStyle();
 

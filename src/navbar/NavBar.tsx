@@ -19,11 +19,14 @@ import languagesArray from "../util/languages";
 import { PiVideoCameraThin } from "react-icons/pi";
 import { PiPhoneCallLight } from "react-icons/pi";
 import { IoChevronBack } from "react-icons/io5";
+import { useTranslation } from 'react-i18next';
+
 
 interface NavBarProps {
   onHandleCall: () => void;
 }
 const Navbar = ({ onHandleCall }: NavBarProps) => {
+  const { t } = useTranslation();
   //Reference for dropdown menu
   const dropdownRef = useRef<HTMLDivElement>(null);
   //States
@@ -75,7 +78,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    toast.success("User signed out");
+    toast.success(`${t("User signed out")}`);
     // clear persisted state
     localStorage.removeItem("persist:root");
 

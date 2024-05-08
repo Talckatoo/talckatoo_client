@@ -8,12 +8,14 @@ import { toast } from "react-toastify";
 import { MdOutlineSecurity } from "react-icons/md";
 import { UserContext } from "../context/user-context";
 import CryptoJS from "crypto-js";
+import { useTranslation } from 'react-i18next';
 
 interface FormData {
   email: string;
 }
 
 const SignUpVerification = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { setUserEmail } = useContext(UserContext);
   const [formData, setFormData] = React.useState<FormData>({
@@ -129,14 +131,16 @@ const SignUpVerification = () => {
         alt="shape"
         className="fixed top-[-5rem] right-0 max-lg:w-[350px]"
       />
-      <NavBar showSign={false} />
+      <NavBar showSign={false} setSelectedLanguage={function (): void {
+        throw new Error("Function not implemented.");
+      } } selectedLanguage={""} />
       {/* End of Nav bar section */}
       <div className="justify-center align-center text-center">
         <h1
           className={`head-text text-center mt-[6rem] mb-6  ${isDarkMode ? "text-white" : "text-black"
             }`}
         >
-          Let's get started!
+          {t("GetStarted")}
         </h1>
         {!sendEmail ? (
           <>
@@ -159,7 +163,7 @@ const SignUpVerification = () => {
                 className="w-full bg-black justify-center text-center text-white h-[48px] z-[1] rounded-lg "
                 onClick={sendVerificationCode}
               >
-                Send verification code
+                {t("SendVerification")}
               </Button>
             </div>
           </>
@@ -169,7 +173,7 @@ const SignUpVerification = () => {
               className={`mt-4 z-[1] text-center ${isDarkMode ? "text-white" : "text-black"
                 }`}
             >
-              Please enter the code we sent to your email
+              {t("VerificationCode")}
             </span>
           
                 
@@ -205,13 +209,13 @@ const SignUpVerification = () => {
           className={`mt-4 z-[1] text-center ${isDarkMode ? "text-white" : "text-black"
             }`}
         >
-          Already have an account?{" "}
+          {t("AlreadyIn")}{" "}
           <Link
             className={`cursor-pointer rounded-lg underline font-semibold ${isDarkMode ? "text-white" : "text-black"
               }`}
             to="/sign-in"
           >
-            Sign In
+            {t("SignIn")}
           </Link>
         </p>
         <div className="flex justify-center items-center mt-6 py-4 text-[#696868] gap-1">
@@ -220,7 +224,7 @@ const SignUpVerification = () => {
               className={`${isDarkMode ? "text-white" : ""}`}
             />
             <span className={`${isDarkMode ? "text-white" : ""}`}>
-              By signing up, you agree to our
+              {t("AgreeWithR&p")}
             </span>
           </div>
           <div className="flex gap-2">
