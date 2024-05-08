@@ -43,7 +43,7 @@ import { withStyles } from "@material-ui/core/styles";
 import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { IoSend } from "react-icons/io5";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -334,9 +334,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         );
       } catch (err) {
         console.log("error from error", err);
-        toast.error(
-          `${t("Error sending messages, please try again")}`
-        );
+        toast.error(`${t("Error sending messages, please try again")}`);
       }
     } else if (selectedId && conversationId === "") {
       try {
@@ -382,9 +380,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           })
         );
       } catch (err) {
-        toast.error(
-          `${t("Error sending messages, please try again")}`
-        );
+        toast.error(`${t("Error sending messages, please try again")}`);
       }
     }
   };
@@ -933,8 +929,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                       convertedText={msg.message}
                                       me={msg.sender === user?._id}
                                       ai={
-                                        msg.sender ===
-                                        import.meta.env.VITE_AI_ASSISTANT_ID
+                                        msg.sender ==
+                                          import.meta.env
+                                            .VITE_AI_ASSISTANT_ID ||
+                                        msg.type === "ai"
                                       }
                                     />
                                   </div>
