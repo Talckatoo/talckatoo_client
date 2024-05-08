@@ -26,7 +26,6 @@ const NavBar: FC<NavBarProps> = ({}) => {
   };
   const languages = LanguagesArray(); // Get languages object
   const [showLanguages, setShowLanguages] = useState<boolean>(false);
-  // const { isDarkMode } = useContext(UserContext);
   const { isDarkMode, toggleDarkMode } = useContext(UserContext);
 
   const handleLanguageClick = () => {
@@ -80,7 +79,7 @@ const NavBar: FC<NavBarProps> = ({}) => {
     }
     style={{
       backgroundColor: isDarkMode
-        ? "rgba(0, 0, 0, 0.7)"
+        ? "#181818"
         : scrolled
         ? "rgba(0, 0, 0, 0.7)"
         : "rgba(255, 255, 255, 0.9)",
