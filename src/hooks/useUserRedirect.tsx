@@ -2,6 +2,8 @@ import { useEffect, useContext } from "react";
 import { createBrowserHistory } from "history";
 import { UserContext } from ".././context/user-context";
 import { toast } from "react-toastify";
+import { useTranslation } from 'react-i18next';
+
 
 const allowedRoutes = [
   "/",
@@ -14,6 +16,7 @@ const allowedRoutes = [
 const history = createBrowserHistory();
 
 const useUserRedirect = () => {
+  const { t } = useTranslation();
   const { setIsLoading } = useContext(UserContext);
 
   useEffect(() => {
@@ -47,7 +50,7 @@ const useUserRedirect = () => {
       } catch (error) {
         // Handle error (e.g., show a toast notification)
         console.error("Error checking token:", error);
-        toast.error("Error checking token. Please try again.");
+        toast.error(`${t("Error checking token. Please try again.")}`);
       } finally {
         setIsLoading(false);
       }

@@ -1,16 +1,15 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import NavBar from "../components/shared/NavBar";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
 import { useLoginAuthMutation } from "../redux/services/AuthApi";
-import { useFetchUserByIdQuery } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks";
 import { UserContext } from "../context/user-context";
 import { setAuth } from "../redux/features/user/authSlice";
-import { skipToken } from "@reduxjs/toolkit/query";
 import { MdOutlineSecurity } from "react-icons/md";
+import { useTranslation } from 'react-i18next';
 
 interface FormData {
   email: string;
@@ -23,6 +22,7 @@ interface FormErrors {
 }
 
 const SignIn = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [formData, setFormData] = React.useState<FormData>({
     email: "",
@@ -81,18 +81,18 @@ const SignIn = () => {
           localStorage.removeItem("language");
           dispatch(setAuth(response.data.user));
           navigate("/random");
-          toast.success("User signed up");
+          toast.success(`${t("User signed up")}`);
           setLoading(false);
         } else {
-          toast.error("Email or password is incorrect");
+          toast.error(`${t("Email or password is incorrect")}`);
           setLoading(false);
         }
       } catch (error) {
-        toast.error("Email or password is incorrect");
+        toast.error(`${t("Email or password is incorrect")}`);
         setLoading(false);
       }
     } else {
-      toast.warn("Please enter valid entries");
+      toast.warn(`${t("Please enter valid entries")}`);
       setLoading(false);
     }
   };
@@ -117,13 +117,10 @@ const SignIn = () => {
         alt="shape"
         className="fixed top-[-5rem] right-0 max-lg:w-[350px]"
       />
-      {/* <img
-        src="/assets/img/wave.svg"
-        alt="shape"
-        className="fixed  left-0  bottom-[-50px] max-lg:w-[200px]"
-      /> */}
       {/* Nav bar section */}
-      <NavBar showSign={false} />
+      <NavBar showSign={false} setSelectedLanguage={function (): void {
+        throw new Error("Function not implemented.");
+      } } selectedLanguage={""} />
       {/* End of Nav bar section */}
       <div className="container">
         <h2
@@ -131,7 +128,7 @@ const SignIn = () => {
             isDarkMode ? "text-white" : " text-black"
           }`}
         >
-          Welcome back
+           {t("Welcome back")}
         </h2>
         {/* Sign up form  */}
         <form
@@ -151,7 +148,7 @@ const SignIn = () => {
                 className="w-8 h-8"
               />
 
-              <span className="text-black">Sign In with Google</span>
+              <span className="text-black">{t("Sign In with Google")}</span>
             </Button>
           </div>
           {/* End of Google button red */}
@@ -163,7 +160,7 @@ const SignIn = () => {
                 isDarkMode ? "text-white" : " text-black"
               }`}
             >
-              Or, sign in with your email
+             {t("Or, sign in with your email")}
             </p>
             <div className="w-full h-[2px] bg-[#33363A]"></div>
           </div>
@@ -173,7 +170,7 @@ const SignIn = () => {
             type="text"
             name="email"
             id="email"
-            placeholder="Email"
+            placeholder={t("Email")}
             value={formData.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
@@ -187,7 +184,7 @@ const SignIn = () => {
             id="password"
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder={t("Password")}
             value={formData.password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
@@ -202,14 +199,14 @@ const SignIn = () => {
             }}
             className={isDarkMode ? "text-white" : " text-black"}
           >
-            Forgot password?
+            {t("Forgot password?")}
           </Button>
 
           <Button
             type="submit"
             className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1] rounded-lg"
           >
-            {loading ? "Loading..." : "Log in"}
+            {loading ? `${t("Loading...")}` : `${t("Log in")}`}
           </Button>
 
           <p
@@ -217,7 +214,7 @@ const SignIn = () => {
               isDarkMode ? "text-white" : " text-black"
             }`}
           >
-            Don't have an account?{" "}
+            {t("Don't have an account?")}{" "}
             <span
               className={`text-black cursor-pointer z-[1] underline font-semibold ${
                 isDarkMode ? "text-white" : " text-black"
@@ -226,7 +223,7 @@ const SignIn = () => {
                 navigate("/sign-up/verification");
               }}
             >
-              Sign Up
+              {t("Sign Up")}
             </span>
           </p>
         </form>
@@ -234,7 +231,7 @@ const SignIn = () => {
           <div className="flex gap-1 items-center">
           <MdOutlineSecurity className={isDarkMode ? "text-white" : ""} />
           <span className={isDarkMode ? "text-white" : ""}>
-              your data is safe with us
+              {t("SaftyData")}
             </span>
           </div>
           <div className="flex gap-2">

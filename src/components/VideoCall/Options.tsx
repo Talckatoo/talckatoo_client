@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { PiMicrophoneLight } from "react-icons/pi";
 import { PiPhoneDisconnectLight } from "react-icons/pi";
 import { PiEyeLight } from "react-icons/pi";
+import { useTranslation } from 'react-i18next';
+
 export default function Options({
   callAccepted,
   callEnded,
@@ -12,18 +14,18 @@ export default function Options({
   userData,
 }) {
   const { user } = useAppSelector((state) => state.auth);
-
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center h-full w-full gap-2">
       <button className="flex flex-col items-center rounded-md px-4 py-3 text-white">
         <PiMicrophoneLight size={20} />
-        <span>Microphone</span>
+        <span>{t("Microphone")}</span>
       </button>
 
       {/* Button 3 */}
       <button className="flex flex-col items-center rounded-md px-4 py-3 text-white">
         <PiEyeLight size={22} />
-        <span>Camera</span>
+        <span>{t("Camera")}</span>
       </button>
 
       {/* Button 4 */}

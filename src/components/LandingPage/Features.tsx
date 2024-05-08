@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { MdGTranslate } from "react-icons/md";
 import { UserContext } from "../../context/user-context";
+import { useTranslation } from 'react-i18next';
 
 const Features = () => {
   const { isDarkMode } = useContext(UserContext);
+  const { t } = useTranslation(); 
   return (
     <section className=" container md:mt-[8rem] mt-[5rem] ">
       <div className="flex flex-col md:flex-row gap-5 w-full">
@@ -12,11 +14,10 @@ const Features = () => {
             <h2
               className={`head-text text-center  md:text-start max-w-[983px] z-[1]`}
             >
-              Why Choose Talckatoo?
+              {t("Why Choose Talckatoo")}
             </h2>
             <p className="mt-4 max-w-[533px] md-max:text-[16px] text-[18px] z-[1] text-center md:text-start">
-              Many chat platforms restrict you within language barriers. But
-              with us, the world is truly at your fingertips.
+            {t("Many chat platforms restrict you within language barriers")}
             </p>
           </div>
           <div className="mt-[5rem] grid sm:grid-cols-2 md:grid-rows-2 gap-4 sm:justify-center ">
@@ -34,7 +35,7 @@ const Features = () => {
                     isDarkMode ? "text-black" : "text-black"
                   }`}
                 >
-                  Text-to-Text Translation
+                 {t("Text-to-Text Translation")}
                 </span>
               </div>
             </div>
@@ -48,7 +49,7 @@ const Features = () => {
               </div>
               <div className="w-3/4 flex justify-center">
                 <span className="text-center max-sm:text-[18px]  text-[20px]">
-                  Voice-to-Voice Translation
+                {t("Voice-to-Voice Translation")}
                 </span>
               </div>
             </div>
@@ -62,7 +63,7 @@ const Features = () => {
               </div>
               <div className="w-3/4 flex justify-center">
                 <span className="text-center text-[20px]">
-                  Friend Matching{" "}
+                {t("Friend Matching")}{" "}
                 </span>
               </div>
             </div>
@@ -75,7 +76,7 @@ const Features = () => {
                 />
               </div>
               <div className="w-3/4 flex justify-center">
-                <span className="text-center text-[20px]">AI Assistance</span>
+                <span className="text-center text-[20px]">{t("AI Assistance")}</span>
               </div>
             </div>
           </div>
@@ -99,7 +100,7 @@ const Features = () => {
             <div className="w-3/4 flex justify-center">
               <span className={`text-center max-sm:text-[18px] text-[20px] ${
                     isDarkMode ? "text-black" : "text-black"
-                  }`}>Friend Matching </span>
+                  }`}>{t("Friend Matching")} </span>
             </div>
           </div>
           <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] flex-col md:hidden">
@@ -113,7 +114,7 @@ const Features = () => {
             <div className="w-3/4 flex justify-center">
               <span className={`text-center max-sm:text-[18px] text-[20px] ${
                     isDarkMode ? "text-black" : "text-black"
-                  }`}>AI Assistance</span>
+                  }`}>{t("AI Assistance")}</span>
             </div>
           </div>
         </div>

@@ -5,8 +5,11 @@ import Button from "../UI/Button";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/shared/NavBar";
+import { useTranslation } from 'react-i18next';
+
 
 const ResetPasswordUpdate = () => {
+  const { t } = useTranslation();
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -44,14 +47,14 @@ const ResetPasswordUpdate = () => {
       });
       if ("data" in response) {
         // Password reset successful, handle accordingly
-        toast.success("your password has been changed");
+        toast.success(`${t("your password has been changed")}`);
         setTimeout(() => {
           navigate("/sign-in");
         }, 3000);
       } 
     } catch (error) {
       // Password reset failed, handle accordingly
-      toast.error("your password has not been changed");
+      toast.error(`${t("your password has not been changed")}`);
     }
     setLoading(false);
   };

@@ -50,7 +50,7 @@ export default function SpeechToText({ setMessageText }: SpeechTextProps) {
         .join("");
       setMessageText(transcript);
       mic.onerror = (event: any) => {
-        toast.error("Error, please try again");
+        toast.error(`${t("Error, please try again")}`);
       };
     };
   };

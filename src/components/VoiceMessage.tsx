@@ -12,6 +12,7 @@ import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { HiTranslate } from "react-icons/hi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from 'react-i18next';
 
 interface VoiceMessageProps {
   socket: Socket;
@@ -28,6 +29,7 @@ const VoiceMessage = ({
 }: VoiceMessageProps) => {
   const WHISPER_TRANSCRIPTION_URL = import.meta.env
     .VITE_WHISPER_TRANSCRIPTION_URL;
+    const { t } = useTranslation();
 
   const { user } = useAppSelector((state) => state.auth);
   const { messages } = useAppSelector((state) => state.messages);
@@ -154,7 +156,7 @@ const VoiceMessage = ({
         });
         setRecordedAudio(null);
       } catch (err) {
-        toast.error("Error sending messages, please try again");
+        toast.error(`${t("Error sending messages, please try again")}`);
       }
     }
   };
@@ -180,7 +182,7 @@ const VoiceMessage = ({
       formData.append("model", "whisper-1");
       formData.append("language", "en");
       if (recordedAudio.size > 25 * 1024 * 1024) {
-        toast.error("Please upload an audio file less than 25MB");
+        toast.error(`${t("Please upload an audio file less than 25MB")}`);
         return;
       }
     }
@@ -207,7 +209,7 @@ const VoiceMessage = ({
       <div className="">
         <div className="flex flex-row gap-4 relative">
           <button
-            title="Voice message"
+            title={t("Voice message")}
             onClick={startRecording}
             className=" hover:text-slate-400   px-2.5  items-center justify-center"
           >

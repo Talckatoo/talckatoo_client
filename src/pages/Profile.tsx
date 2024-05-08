@@ -11,12 +11,14 @@ import { useUploadFileMutation } from "../redux/services/MediaApi";
 import Input from "../UI/Input";
 import { useDeleteAccountMutation } from "../redux/services/AuthApi";
 import LeftSideBar from "../components/shared/LeftSideBar";
+import { useTranslation } from 'react-i18next';
 
 interface Socket {
   current: any;
 }
 
 const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
+  const { t } = useTranslation();
   const { isDarkMode } = useContext(UserContext);
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
@@ -74,6 +76,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
 
   const handleLogout = () => {
     localStorage.clear();
+    toast.success(`${t("User signed out")}`);
     navigate("/");
   };
 
@@ -128,7 +131,8 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             language: updateLanguage,
           })
         );
-        toast.success("Profile updated successfully!");
+        
+        toast.success(`${t("Profile updated successfully!")}`);
         setTimeout(() => {
           window.location.reload();
         }, 2000);
@@ -225,14 +229,14 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               className="absolute inset-0 opacity-0 cursor-pointer"
               onChange={handleUpload}
             />
-            <span className=" text-[#606060]">Upload Photo</span>
+            <span className=" text-[#606060]">{t('Upload Photo')}</span>
           </div>
 
           <Input
             name="name"
             type="text"
-            label="Username"
-            placeholder="Enter your username"
+            label={t("Username")}
+            placeholder={t("Enter your username")}
             id="name"
             value={formInput.name}
             onChange={handleInputChange}
@@ -256,7 +260,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               htmlFor={name}
               className="block text-[14px] font-medium  mb-4 text-[#606060]"
             >
-              Language
+              {t("Language")}
             </label>
             <select
               className="p-4    w-full bg-[#F5F5F5] rounded-[10px] text-[#606060] focus:outline-none outline-none"
@@ -264,7 +268,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               onChange={handleLanguageChange}
             >
               <option value="" disabled hidden>
-                Select a language
+                {t("Select a language")}
               </option>
               {languagesArray?.map(({ code, language }) => (
                 <option key={code} value={code}>
@@ -275,7 +279,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           </div>
           <div className="flex justify-end">
             <button className="bg-[#25282C] w-auto text-white py-4 px-[3rem] rounded-[10px]">
-              Update Profile
+              {t("Update Profile")}
             </button>
           </div>
         </form>
@@ -298,23 +302,27 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               />
             )}
           </a>
-          <span
-            className={`${
-              isDarkMode ? "text-white" : "text-[#DD0000]"
-            } font-semibold text-[17px]`}
-          >
-            Log Out
+          <span className={`${isDarkMode ? "text-white" : "text-[#DD0000]" } font-semibold text-[17px]`}>
+          {t("Log Out")}
           </span>
         </div>
         {/* delete account zone danger */}
         <div className={`${isDarkMode ? "z-50" : ""}`}>
           <div className="flex px-3 flex-col mt-5 gap-4 cursor-pointer">
-            <div className="flex justify-between ">
+            <h3 className="text-body-bold text-red-500">{t("danger")}
+               </h3>
+            <div className="flex justify-between px-4 py-2">
+              <div>
+                <h4 className="text-body-medium text-red-600" >{t("deleteAccount")}</h4>
+                <p className="opacity-90 text-gray-500">
+                  {t("descriptionDeleteAccount")}
+                </p>
+              </div>
               <button
                 onClick={handleDeleteAccount}
                 className="rounded-md text-white bg-red-500 p-2 font-semibold text-[17px] border border-red-600"
               >
-                DELETE ACCOUNT
+                {t("deleteAccountButton")}
               </button>
             </div>
           </div>
