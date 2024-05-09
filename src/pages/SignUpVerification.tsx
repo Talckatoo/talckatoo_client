@@ -58,6 +58,7 @@ const SignUpVerification = () => {
         );
 
         setVerificationCodeString(decryptedVerificationCode.toString(CryptoJS.enc.Utf8));
+        console.log(verificationCodeString);
         setSendEmail(true);
       }
     } catch (error: any) {
