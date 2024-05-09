@@ -24,7 +24,7 @@ const Features = () => {
             <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] w-100 md:flex-row flex-col">
               <div className="w-1/4 flex justify-center items-center">
                 <img
-                  src="/assets/icons/traduction.png"
+                  src="/assets/new/translate.png"
                   alt="translate"
                   className=" w-[42px] h-[42px]"
                 />{" "}
@@ -42,9 +42,9 @@ const Features = () => {
             <div className="bg-light-bg  text-black shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] w-100 md:flex-row flex-col">
               <div className="w-1/4 flex justify-center items-center">
                 <img
-                  src="/assets/icons/voice.png"
+                  src="/assets/new/online-translator.png"
                   alt="translate"
-                  className=" w-[42px] h-[42px]"
+                  className=" w-[48px] h-[48px]"
                 />
               </div>
               <div className="w-3/4 flex justify-center">
@@ -56,7 +56,7 @@ const Features = () => {
             <div className="md:bg-light-bg md:shadow-lg text-black md:border md:gap-1 md:max-sm:gap-4 md:border-[#EFF0F6] md:p-4 md:flex md:justify-around md:items-center md:rounded-[25px] md:flex-row hidden flex-col">
               <div className="w-1/4 flex justify-center items-center">
                 <img
-                  src="/assets/icons/friend.png"
+                  src="/assets/new/link.png"
                   alt="translate"
                   className=" w-[42px] h-[42px]"
                 />
@@ -70,7 +70,7 @@ const Features = () => {
             <div className="md:bg-light-bg md:shadow-lg md:border text-black md:gap-1 md:max-sm:gap-4 md:border-[#EFF0F6] md:p-4 md:flex md:justify-around md:items-center md:rounded-[25px] md:flex-row hidden flex-col">
               <div className="w-1/4 flex justify-center items-center">
                 <img
-                  src="/assets/icons/tool.png"
+                  src="/assets/new/ai.png"
                   alt="translate"
                   className=" w-[42px] h-[42px]"
                 />
