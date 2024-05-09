@@ -29,7 +29,7 @@ const Hero = () => {
                 navigate("/sign-up/verification");
               }}
             >
-              Explore now
+            {t("ExploreNow")}
             </Button>
           </div>
 
