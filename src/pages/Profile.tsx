@@ -278,7 +278,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             </select>
           </div>
           <div className="flex justify-end">
-            <button className="bg-[#25282C] w-auto text-white py-4 px-[3rem] rounded-[10px]">
+            <button className="bg-[#25282C] text-white px-4 py-2 font-semibold text-[16px] rounded-[10px]">
               {t("Update Profile")}
             </button>
           </div>
@@ -307,8 +307,8 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           </span>
         </div>
         {/* delete account zone danger */}
-        <div className={`${isDarkMode ? "z-50" : "z-50"} border border-[#b9b9b9ab] rounded-[14px] shadow-xl bg-white `}>
-            <div className="flex bg-white justify-between px-4 py-2">
+        <div className={`${isDarkMode ? "z-50" : "z-50"} border   border-[#b9b9b9ab] rounded-[14px] shadow-xl bg-white `}>
+            <div className="flex bg-white  justify-between px-4 py-6">
               <div>
                 <h4 className="text-body-medium font-bold text-red-600" >{t("deleteAccount")}</h4>
                 <p className="opacity-90 text-body-normal text-gray-500">
@@ -317,7 +317,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               </div>
               <button
                 onClick={handleDeleteAccount}
-                className="rounded-[10px] text-white bg-red-500 p-2 font-semibold text-[12px] border border-red-600"
+                className="rounded-[10px] text-white bg-red-500 px-4 py-2 font-semibold text-[16px] "
               >
                 {t("deleteAccountButton")}
               </button>
