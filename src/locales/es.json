@@ -121,5 +121,8 @@
   "VerificationCode": "Por favor, ingresa el código que enviamos a tu correo electrónico",
   "SendVerification": "Enviar código de verificación",
   "GetStarted": "¡Empecemos!",
-  "Explore now": "Explora ahora"
+  "Explore now": "Explora ahora",
+  "We didn't find any results": "No encontramos ningún resultado",
+  "Make sure everything is spelled correctly or try different keywords": "Asegúrese de que todo está bien escrito o pruebe con diferentes palabras clave",
+  "Friend Requests": "Solicitudes de amistad"
 }

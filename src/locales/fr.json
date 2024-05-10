@@ -119,5 +119,8 @@
   "VerificationCode": "Veuillez entrer le code que nous avons envoyé à votre adresse e-mail",
   "SendVerification": "Envoyer le code de vérification",
   "GetStarted": "Commençons !",
-  "Explore now": "Explorer maintenant"
+  "Explore now": "Explorer maintenant",
+  "We didn't find any results": "Nous n'avons trouvé aucun résultat",
+  "Make sure everything is spelled correctly or try different keywords": "Assurez-vous que tout est bien orthographié ou essayez d'autres mots-clés",
+  "Friend Requests": "Demandes d'amis"
 }

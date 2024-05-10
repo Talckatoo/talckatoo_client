@@ -120,5 +120,8 @@
   "VerificationCode": "الرجاء إدخال الرمز الذي أرسلناه إلى بريدك الإلكتروني",
   "SendVerification": "إرسال رمز التحقق",
   "GetStarted": "لنبدأ!",
-  "Explore now": "استكشف الآن"
+  "Explore now": "استكشف الآن",
+  "We didn't find any results": "لم نعثر على أي نتائج",
+  "Make sure everything is spelled correctly or try different keywords": "تأكد من كتابة كل شيء بشكل صحيح أو جرّب كلمات رئيسية مختلفة",
+  "Friend Requests": "طلبات الصداقة"
 }
