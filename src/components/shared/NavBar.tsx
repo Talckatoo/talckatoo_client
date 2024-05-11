@@ -144,11 +144,11 @@ const NavBar: FC<NavBarProps> = ({}) => {
                     <button
                       key={languageCode}
                       onClick={() => handleLanguageChange(languageCode)}
-                      className={`hover:bg-gray-300 px-5 py-2 w-full 
+                      className={` px-5 py-2 w-full 
                       ${
                         selectedLanguage === languageCode
                           ? "bg-secondary-500 py-3 font-bold text-white"
-                          : "bg-white-100 text-black bg-[#F5F5F5]"
+                          : "hover:bg-gray-300 bg-white-100 text-black bg-[#F5F5F5]"
                       }`}
                     >
                       {t(languageName)}
