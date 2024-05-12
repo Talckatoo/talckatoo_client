@@ -52,8 +52,8 @@
   "Seamlessly chat with individuals across language barriers":"تواصل بسلاسة مع الأصدقاء من جميع أنحاء العالم دون عوائق لغوية. لقد وضعنا حداً لآلية النسخ واللصق المملة من خلال توفير ترجمات داخل المحادثة.",
   "Best translation chat app in market":"أفضل تطبيق دردشة مترجم في السوق!",
   "Talckatoo has revolutionized how our team communicates":"لقد أحدث Talckatoo ثورة في طريقة تواصل فريقنا. فميزة الترجمة الفورية تعني أنه يمكننا العمل بسلاسة مع الشركاء الدوليين دون أن يفوتنا أي شيء!",
-  "Why Choose Talckatoo":"لماذا Talckatoo؟",
-  "Many chat platforms restrict you within language barriers":"في ظل وجود العديد من تطبيقات الدردشة التي تركز على لغة معينة، يساعد Talckatoo المستخدمين على التواصل بدون حواجز لغوية. نحن نقدم:",
+  "Why Choose Talckatoo":"لماذا تختار Talckatoo؟",
+  "Many chat platforms restrict you within language barriers":"العديد من منصات الدردشة تقيّدك داخل حدود اللغة. ولكن معنا، العالم حقًا في متناول يديك.",
   "Text-to-Text Translation":"ترجمة نصية",
   "Friend Matching":"تعرف على أصدقاء",
   "Voice-to-Voice Translation": "الترجمة الصوتية إلى صوتية",
@@ -99,7 +99,7 @@
   "Enter your email": "ادخل بريدك الإلكتروني",
   "Stay up to date with the roadmap progress, announcements and exclusive discounts feel free to sign up with your email.": "ابق على اطلاع بتقدم الخريطة الطريقية والإعلانات والخصومات الحصرية. لا تتردد في التسجيل ببريدك الإلكتروني.",
   "Subscribe": "اشتراك",
-  "We care about the protection of your data. Read our": "نحن نهتم بحماية بياناتك. اقرأ ما",
+  "We care about the protection of your data. Read our": "نحن نهتم بحماية بياناتك. اقرأ ",
   "Privacy Policy": "سياسة الخصوصية",
   "Email is required": "البريد الإلكتروني مطلوب",
   "Please enter a valid email": "الرجاء إدخال بريد إلكتروني صالح",
@@ -119,7 +119,6 @@
   "AgreeWithR&p": "بالتسجيل، أنت توافق على",
   "VerificationCode": "الرجاء إدخال الرمز الذي أرسلناه إلى بريدك الإلكتروني",
   "SendVerification": "إرسال رمز التحقق",
-  "GetStarted": "لنبدأ!"
-
-          
+  "GetStarted": "لنبدأ!",
+  "ExploreNow": "استكشف الآن"         
 }

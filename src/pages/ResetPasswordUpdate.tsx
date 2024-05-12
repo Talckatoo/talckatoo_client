@@ -64,7 +64,7 @@ const ResetPasswordUpdate = () => {
       <NavBar showSign={false} />
 
       <div className="bg-white z-50 h-full w-full font-inter flex justify-center items-center absolute">
-        <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-4 border rounded-2xl w-[600px] p-12 m-auto shadow-sm shadow-slate-800 ">
+        <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-4 border rounded-2xl w-[600px] p-12 m-auto shadow-blur shadow-slate-800 ">
           <h2 className="text-black text-heading1-bold">
             Change Your Password
           </h2>
