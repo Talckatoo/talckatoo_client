@@ -4,7 +4,7 @@ import Notify from '../../UI/Notify';
 import { useTranslation } from 'react-i18next';
 
 const Newsletter = () => {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
   const { notification, setNotification } = useContext(UserContext);
   const [email, setEmail] = useState('');
   const { isDarkMode } = useContext(UserContext);
@@ -59,18 +59,16 @@ const Newsletter = () => {
   return (
     <>
       <section
-        className={`md:mx-10 md:mt-[5rem]  p-14 max-sm:p-6 z-[1] font-inter relative border rounded-xl cursor-pointer ${
-          isDarkMode ? " bg-[#0e131d6f]" : ""
-        }`}
+        className={`md:mx-10 md:mt-[5rem] shadow-blur p-14 max-sm:p-6 z-[1] font-inter relative  backdrop-filter backdrop-blur-[20px]  rounded-xl cursor-pointer ${isDarkMode ? "backdrop:bg-background-500" : " backdrop:bg-white "
+          }`}
       >
         <h2 className="text-[28px] font-bold text-center mb-5">{t('TALCKATOO')}</h2>
         <h2 className="text-[20px] font-bold text-center">
           {t('Subscribe to our newsletter')}
         </h2>
         <p
-          className={`text-center text-[15px]  mb-4 ${
-            isDarkMode ? "text-[#E6F7E6] news" : "text-gray-500"
-          }`}
+          className={`text-center text-[15px]  mb-4 ${isDarkMode ? "text-[#E6F7E6] news" : "text-gray-500"
+            }`}
         >
           {t('Stay up to date with the roadmap progress, announcements and exclusive discounts feel free to sign up with your email.')}
         </p>
@@ -85,7 +83,7 @@ const Newsletter = () => {
           />
 
           <button
-            className="md:w-44 p-2 h-[46px] rtl:rounded-l-lg bg-black text-white ltr:rounded-r-lg hover:text-orange-500"
+            className="md:w-44 p-2 h-[46px] rtl:rounded-l-lg bg-black text-white ltr:rounded-r-lg"
             onClick={handleSubscribe}
             type="submit"
           >
@@ -94,9 +92,8 @@ const Newsletter = () => {
         </div>
       </section>
       <div
-        className={`flex justify-center items-center  mt-4 ${
-          isDarkMode ? "news" : ""
-        }`}
+        className={`flex justify-center items-center  mt-4 ${isDarkMode ? "news" : ""
+          }`}
       >
         {t('We care about the protection of your data. Read our')}  &nbsp;
         <a
@@ -106,7 +103,7 @@ const Newsletter = () => {
           {t('Privacy Policy')}
         </a>
       </div>
-      {notification && <Notify type={notification.type} message={notification.message} dismissNotification={dismissNotification} />} 
+      {notification && <Notify type={notification.type} message={notification.message} dismissNotification={dismissNotification} />}
     </>
   );
 };

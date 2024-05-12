@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UserContext } from "./../../context/user-context";
+import { UserContext } from "../../context/user-context";
 
 import { useTranslation } from 'react-i18next';
 import { testimonials as untranslatedTestimonials } from "../../constants/testimonials";
@@ -44,9 +44,9 @@ const Testimonials = () => {
           {testimonials.map((item) => (
             <div
               key={item?.name}
-              className={`p-16  bg-black border shadow-lg  rounded-[20px] card ${
+              className={`p-16 border shadow-blur rounded-[20px] card ${
                 isDarkMode
-                  ? "bg-[#282828] text-white border-[#575757]"
+                  ? " text-white bg-[#282828] border-[#575757b0]"
                   : " bg-light-bg border-[#EFF0F6] text-black"
               }`}
             >

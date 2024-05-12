@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { useTranslation } from 'react-i18next';
 import { MdDone } from "react-icons/md";
 import { UserContext } from "../../context/user-context";
@@ -19,9 +19,9 @@ const About = () => {
           </p>
         </div>
 
-        <div className="flex flex-col gap-5 justify-center items-center	 justify-center mt-[4rem] z-[1] w-full ">
+        <div className="flex flex-col gap-5 justify-center items-center mt-[4rem] z-[1] w-full ">
           <div className="flex flex-col justify-center items-center md:flex-row md:items-center w-full gap-[4rem]">
-            <div className={`flex flex-col md:w-1/2 w-full items-start gap-2 shadow-lg max-w-[565px]  md:h-full  py-8 px-12 rounded-[25px] border ${isDarkMode ? " bg-[#282828] border-[#575757]" : "bg-light-bg  border-[#EFF0F6]"}`}>
+            <div className={`flex flex-col md:w-1/2 w-full items-start gap-2 max-w-[565px]  md:h-full shadow-blur  py-8 px-12 rounded-[25px] border ${isDarkMode ? " bg-[#282828] border-[#575757]" : "bg-light-bg  border-[#EFF0F6]"}`}>
               <span className="text-primary-500 max-md:text-[16px] text-[20px] font-archetic">
               {t("Efficient and Cost-Effective")}
               </span>
@@ -46,7 +46,7 @@ const About = () => {
                 </li>
               </ul>
             </div>
-            <div className="flex justify-center md:w-1/2 w-full items-center box-border">
+            <div className="flex justify-center md:w-1/2 w-full shadow-blur items-center box-border">
               <img
                 src="/assets/img/about1.png"
                 alt="hero"
@@ -55,14 +55,14 @@ const About = () => {
             </div>
           </div>
           <div className="flex flex-col justify-center items-center md:flex-row md:items-center w-full gap-[4rem]">
-            <div className="flex order-1 md:order-none justify-center md:w-1/2 w-full items-center box-border">
+            <div className="flex order-1 shadow-blur md:order-none justify-center md:w-1/2 w-full items-center box-border">
               <img
                 src="/assets/img/about2.png"
                 alt="hero"
                 className="w-full max-h-[400px] object-cover rounded-[50px] py-5 px-5"
               />
             </div>
-            <div className={`flex flex-col md:w-1/2 w-full items-start gap-2 shadow-lg max-w-[565px]  md:h-full py-8 px-12 rounded-[25px] border ${isDarkMode ? "bg-[#282828] border-[#575757]" : "border-[#EFF0F6]  bg-light-bg "}`}>
+            <div className={`flex flex-col md:w-1/2 w-full items-start gap-2 shadow-blur max-w-[565px] md:h-full py-8 px-12 rounded-[25px] border ${isDarkMode ? "bg-[#282828] border-[#575757]" : "border-[#EFF0F6]  bg-light-bg "}`}>
               <span className="text-primary-500 max-md:text-[16px] text-[20px] font-archetic">
               {t("Simple, Yet Powerful")}
               </span>

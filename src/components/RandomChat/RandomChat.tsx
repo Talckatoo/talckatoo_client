@@ -120,7 +120,7 @@ const RandomChat = ({
       }`}
     >
       <div className="relative h-full">
-        <div className="flex flex-col shadow-sm border-l border-opacity-20 h-full ">
+        <div className="flex flex-col shadow-blur border-l border-opacity-20 h-full ">
           <div className="w-full flex flex-col h-full">
             <img
               src="/assets/img/Shapes.png"
@@ -217,7 +217,7 @@ const RandomChat = ({
                                       alt="media"
                                       className="w-60 h-60 object-contain"
                                     />
-                                    <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                    <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-blur">
                                       <Link to={msg.media.url} download>
                                         <MdDownload className="text-[24px] text-black" />
                                       </Link>
@@ -230,7 +230,7 @@ const RandomChat = ({
                                       className="w-60 h-60"
                                       controls
                                     />
-                                    <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                    <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-blur">
                                       <Link to={msg.media.url} download>
                                         <MdDownload className="text-[24px] text-black" />
                                       </Link>
@@ -257,7 +257,7 @@ const RandomChat = ({
                                         </p>
                                       </div>
 
-                                      <MdDownload className="text-[35px] min-w-[35px] text-black bg-white p-2 rounded-full shadow-md" />
+                                      <MdDownload className="text-[35px] min-w-[35px] text-black bg-white p-2 rounded-full shadow-blur" />
                                     </Link>
                                   </div>
                                 ))}

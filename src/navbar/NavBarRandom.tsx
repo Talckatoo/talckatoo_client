@@ -22,7 +22,7 @@ const NavBarRandom = ({ leaveRandomChat }) => {
   const handleRandomVideoCall = () => {};
 
   return (
-    <nav className="fixed   w-full z-10 max-md:px-2 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-sm ">
+    <nav className="fixed   w-full z-10 max-md:px-2 md:px-10 flex justify-between items-center border-b border-opacity-20  bg-[#fff] shadow-blur ">
       <div className="relative flex items-center justify-between w-[90%]">
         <div className="flex  w-[80%] md:gap-8">
           <div className="flex items-center md:gap-4 ">

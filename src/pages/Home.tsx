@@ -3,10 +3,10 @@ import NavBar from "../components/shared/NavBar";
 import Hero from "../components/LandingPage/Hero";
 import Features from "../components/LandingPage/Features";
 import About from "../components/LandingPage/About";
-import Testimonials from "../components/LandingPage/Testimonials";
 import Newsletter from "../components/LandingPage/Newsletter";
 import { UserContext } from "../context/user-context";
 import Footer from "../components/shared/Footer";
+import Testimonials from "../components/LandingPage/Testimonials";
 
 const Home = () => {
   const { isDarkMode } = useContext(UserContext);
@@ -17,11 +17,20 @@ const Home = () => {
         isDarkMode ? "text-white" : ""
       }`}
     >
-      <img
-        src="/assets/img/world.png"
-        alt="shape"
-        className="fixed  right-0  bottom-[8px] w-[60%] z-[-1] "
+      { /* shape  on dark mode*/}
+      {isDarkMode ? 
+      <img 
+      src="/assets/img/worlddarkmode.svg"
+      alt="shape"
+      className="fixed  right-0  bottom-[8px] w-[60%] z-[-1] "
       />
+      :
+      <img
+      src="/assets/img/world.png"
+      alt="shape"
+      className="fixed  right-0  bottom-[8px] w-[60%] z-[-1] "
+      />
+    }
       {/* nav bar section */}
       <NavBar />
       {/* End Navbar Section */}

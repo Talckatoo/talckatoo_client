@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { MdGTranslate } from "react-icons/md";
 import { UserContext } from "../../context/user-context";
 import { useTranslation } from 'react-i18next';
 
@@ -20,8 +19,8 @@ const Features = () => {
             {t("Many chat platforms restrict you within language barriers")}
             </p>
           </div>
-          <div className="mt-[5rem] grid sm:grid-cols-2 md:grid-rows-2 gap-4 sm:justify-center ">
-            <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] w-100 md:flex-row flex-col">
+          <div className="mt-[5rem] grid sm:grid-cols-2 md:grid-rows-2 gap-8 sm:justify-center ">
+            <div className={` ${ isDarkMode ? "bg-[#282828] border-[#575757b0]" : "bg-light-bg border-[#EFF0F6]" } shadow-blur border gap-1 max-sm:gap-4 px-8 py-4 flex justify-around items-center rounded-[25px] w-100 md:flex-row flex-col`}>
               <div className="w-1/4 flex justify-center items-center">
                 <img
                   src="/assets/new/translate.png"
@@ -32,14 +31,14 @@ const Features = () => {
               <div className="w-3/4 flex justify-center">
                 <span
                   className={`text-center max-sm:text-[18px] text-[20px] ${
-                    isDarkMode ? "text-black" : "text-black"
+                    isDarkMode ? "text-[#F5F5F5]" : "text-black"
                   }`}
                 >
                  {t("Text-to-Text Translation")}
                 </span>
               </div>
             </div>
-            <div className="bg-light-bg  text-black shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] w-100 md:flex-row flex-col">
+            <div className={` ${ isDarkMode ? "bg-[#282828] border-[#575757b0]" : "bg-light-bg border-[#EFF0F6]" } shadow-blur border gap-1 max-sm:gap-4 px-8 py-4 flex justify-around items-center rounded-[25px] w-100 md:flex-row flex-col`}>
               <div className="w-1/4 flex justify-center items-center">
                 <img
                   src="/assets/new/online-translator.png"
@@ -53,7 +52,7 @@ const Features = () => {
                 </span>
               </div>
             </div>
-            <div className="md:bg-light-bg md:shadow-lg text-black md:border md:gap-1 md:max-sm:gap-4 md:border-[#EFF0F6] md:p-4 md:flex md:justify-around md:items-center md:rounded-[25px] md:flex-row hidden flex-col">
+            <div className={` ${ isDarkMode ? "bg-[#282828] border-[#575757b0]" : "bg-light-bg border-[#EFF0F6]" } shadow-blur border gap-1 max-sm:gap-4 px-8 py-4 flex justify-around items-center rounded-[25px] w-100 md:flex-row flex-col`}>
               <div className="w-1/4 flex justify-center items-center">
                 <img
                   src="/assets/new/link.png"
@@ -67,7 +66,7 @@ const Features = () => {
                 </span>
               </div>
             </div>
-            <div className="md:bg-light-bg md:shadow-lg md:border text-black md:gap-1 md:max-sm:gap-4 md:border-[#EFF0F6] md:p-4 md:flex md:justify-around md:items-center md:rounded-[25px] md:flex-row hidden flex-col">
+            <div className={` ${ isDarkMode ? "bg-[#282828] border-[#575757b0]" : "bg-light-bg border-[#EFF0F6]" } shadow-blur border gap-1 max-sm:gap-4 px-8 py-4 flex justify-around items-center rounded-[25px] w-100 md:flex-row flex-col`}>
               <div className="w-1/4 flex justify-center items-center">
                 <img
                   src="/assets/new/ai.png"
@@ -83,13 +82,13 @@ const Features = () => {
         </div>
         <div className="md:w-[50%] flex p-4 md:p-0 justify-center">
           <img
-            src={isDarkMode ? "/assets/img/iPhonePro.png" : "/assets/img/iPhone.png"}
+            src="/assets/img/iPhonePro.png"
             alt="iPhone"
             className="md:max-w-[50%] h-full object-contain"
           />
         </div>
         <div className="grid sm:grid-cols-2 gap-4 sm:justify-center ">
-          <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] flex-col md:hidden">
+          <div className="bg-light-bg shadow-blur border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] flex-col md:hidden">
             <div className="w-1/4 flex justify-center items-center">
               <img
                 src="/assets/icons/friend.png"
@@ -103,7 +102,7 @@ const Features = () => {
                   }`}>{t("Friend Matching")} </span>
             </div>
           </div>
-          <div className="bg-light-bg shadow-lg border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] flex-col md:hidden">
+          <div className="bg-light-bg shadow-blur border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] flex-col md:hidden">
             <div className="w-1/4 flex justify-center items-center">
               <img
                 src="/assets/icons/tool.png"
