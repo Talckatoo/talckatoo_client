@@ -107,8 +107,8 @@
   "Join Random Chat": "Join Random Chat",
   "danger": "Danger",
   "deleteAccount": "Delete Account",
-  "descriptionDeleteAccount": "delete your account and all its associated data",
-  "deleteAccountButton": "DELETE ACCOUNT",
+  "descriptionDeleteAccount": "Delete your account and all its associated data.",
+  "deleteAccountButton": "Delete Account",
   "SaftyData": " your data is safe with us",
   "JoinUs": "Join Talckatoo Today!",
   "SelectLanguage": " Select Your Language",
@@ -118,5 +118,6 @@
   "AgreeWithR&p": "By signing up, you agree to our",
   "VerificationCode": "Please enter the code we sent to your email",
   "SendVerification": "Send verification code",
-  "GetStarted": "Let's get started!"
+  "GetStarted": "Let's get started!",
+  "ExploreNow": "Explore now"
 }

@@ -61,7 +61,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
       <NavBar showSign={false} />
 
       <div className="bg-white h-full w-full font-inter flex justify-center items-center ">
-        <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-2 border rounded-2xl w-[600px] p-6 m-auto shadow-sm shadow-slate-800 ">
+        <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-2 border rounded-2xl w-[600px] p-6 m-auto shadow-blur shadow-slate-800 ">
           <h2 className="text-black text-heading1-bold">Reset Your Password</h2>
           <Input
             label=""

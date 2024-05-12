@@ -76,9 +76,9 @@ const LeftSideBar = ({
 
   return (
     <div
-      className={`w-[80px] min-w-[80px]  grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] ${isDarkMode
-        ? "border-r pt-5 border-[#000] border-opacity-20"
-        : "border-r pt-5 border-opacity-20"
+      className={`w-[80px] min-w-[80px] border-r pt-5  grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] ${isDarkMode
+        ? " border-[#000] border-opacity-20"
+        : " border-opacity-20"
         }`}
     >
       <div className="flex flex-col  gap-3 w-full">
@@ -171,13 +171,13 @@ const LeftSideBar = ({
                 ${isDarkMode ? "text-white" : "text-[#25282C]"}`}
           />
           {showLanguages && (
-            <div ref={languageRef} className="overflow-hidden absolute z-50 bottom-[80px] bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">
+            <div ref={languageRef} className="overflow-hidden absolute z-50 bottom-[80px] bg-white border-[1px] border-gray-200 rounded-lg shadow-blur flex flex-col items-center">
               {/* map languages */}
               {Object.entries(languages).map(([languageName, languageCode]) => (
                 <button
                   key={languageCode}
                   onClick={() => handleLanguageChange(languageCode)}
-                  className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === languageCode ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}
+                  className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === languageCode ? 'bg-secondary-500 py-3 font-bold text-white' : 'text-black'}`}
                 >
                   {t(languageName)}
                 </button>

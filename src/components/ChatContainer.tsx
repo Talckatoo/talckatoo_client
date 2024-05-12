@@ -739,7 +739,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           </div>
         ) : (
           <div
-            className={`flex flex-col shadow-sm  h-full ${
+            className={`flex flex-col shadow-blur  h-full ${
               isDarkMode
                 ? "border-l border-[#000] border-opacity-20"
                 : "border-l border-opacity-20"
@@ -864,7 +864,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                           alt="media"
                                           className="w-60 h-60 object-contain"
                                         />
-                                        <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                        <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-blur">
                                           <Link to={msg.media.url} download>
                                             <MdDownload className="text-[24px] text-black" />
                                           </Link>
@@ -877,7 +877,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                           className="w-60 h-60"
                                           controls
                                         />
-                                        <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                        <div className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-blur">
                                           <Link to={msg.media.url} download>
                                             <MdDownload className="text-[24px] text-black" />
                                           </Link>
@@ -904,7 +904,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                                             </p>
                                           </div>
 
-                                          <MdDownload className="text-[35px] min-w-[35px] text-black bg-white p-2 rounded-full shadow-md" />
+                                          <MdDownload className="text-[35px] min-w-[35px] text-black bg-white p-2 rounded-full shadow-blur" />
                                         </Link>
                                       </div>
                                     ))}
