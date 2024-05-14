@@ -30,6 +30,7 @@ const Hero = () => {
               }}
             >
               {t("Explore now")}
+
             </Button>
           </div>
 

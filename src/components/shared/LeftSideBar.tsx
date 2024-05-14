@@ -81,6 +81,7 @@ const LeftSideBar = ({
           ? "border-r pt-5 border-[#000] border-opacity-20"
           : "border-r pt-5 border-opacity-20"
       }`}
+
     >
       <div className="flex flex-col  gap-3 w-full">
         <div
@@ -195,6 +196,7 @@ const LeftSideBar = ({
                 selectedLanguage === "ar" ? "right-[60px]" : "left-[60px]"
               } bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center`}
             >
+
               {/* map languages */}
               {Object.entries(languages).map(([languageName, languageCode]) => (
                 <button

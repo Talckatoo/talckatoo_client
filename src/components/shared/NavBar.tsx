@@ -72,19 +72,29 @@ const NavBar: FC<NavBarProps> = ({}) => {
 
   return (
     <header
-      className={` backdrop-filter backdrop-blur-[10px] w-full py-3 sticky top-0 z-50 ${
-        isDarkMode ? "backdrop:bg-background-500" : " backdrop:bg-white "
-      }`}
+
+    className={` backdrop-filter backdrop-blur-[10px] w-full py-3 sticky top-0 z-50 ${isDarkMode
+      ? "backdrop:bg-background-500"
+      : " backdrop:bg-white "}`
+    }
+
     >
       <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
         <Link
           to="/"
           className="font-jakarta text-[20px] font-bold flex items-center justify-left"
         >
+          {isDarkMode ?
           <img
-            className="w-[40px] w-min-[45px] mr-2 ml-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
-            src="/assets/img/logo.svg"
+          className="w-[40px] w-min-[45px] mr-2 ml-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
+          src="/assets/img/logodarkmode.svg"
+/>
+          :
+          <img
+          className="w-[40px] w-min-[45px] mr-2 ml-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
+          src="/assets/img/logo.svg"
           />
+        }
 
           <span
             className={`hidden sm:inline ${
@@ -97,28 +107,22 @@ const NavBar: FC<NavBarProps> = ({}) => {
 
         {/* sign up and sign in button */}
         <div className="flex items-center gap-4  max-[430px]:flex max-[430px]:justify-center">
+
+            {/* dark mode button */}
           <MdDarkMode
-            className={`${isDarkMode ? "text-white" : "text-secondary-500"}${
-              !isButtonClicked
-                ? " border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-                : " border-[1px] border-secondary-500 hover:bg-black"
-            } py-2 px-2 w-12 h-12 rounded-[3px] max-md:px-1 max-md:py-1 flex items-center justify-center flex-col transition duration-300 ease-in-out relative text-[25px] cursor-pointer`}
-            onClick={toggleDarkMode}
+              className={` ${isDarkMode ?  "text-white" : "text-secondary-500" } py-2 px-2 w-12 h-12 rounded-[3px] max-md:px-1 max-md:py-1 flex items-center justify-center flex-col transition duration-300 ease-in-out relative text-[25px] cursor-pointer`}
+              onClick={toggleDarkMode}
           />
 
-          <div
-            className={`${isDarkMode ? "text-white" : "text-secondary-500"}${
-              !isButtonClicked
-                ? " border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-                : " border-[1px] border-secondary-500 hover:bg-black"
-            } py-2 px-2 rounded-[3px] max-md:px-1 max-md:py-1 flex items-center justify-center flex-col
-            transition duration-300 ease-in-out relative
-            `}
-            onClick={handleLanguageClick}
-          >
+            {/* chnage language button */}
+          <div className={`${isDarkMode ?  "text-white" : "text-secondary-500"}
+           py-2 px-2 rounded-[3px]  flex items-center justify-center flex-col
+             relative cursor-pointer
+            `} onClick={handleLanguageClick}>
             <FaGlobe
               className={`${
                 !isButtonClicked ? "text-secondary-500" : "text-white"
+
               } ${
                 isDarkMode ? "text-white" : "text-secondary-500"
               }  z-4 object-contain py-1 w-[29px] text-[32px]`}
@@ -148,6 +152,7 @@ const NavBar: FC<NavBarProps> = ({}) => {
                 {/* Add more buttons for additional languages */}
               </div>
             )}
+
           </div>
 
           {/* sign up button */}

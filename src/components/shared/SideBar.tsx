@@ -142,7 +142,7 @@ const SideBar = ({
 
   return (
     <div
-      className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${
+      className={`w-2/6 min-w-[350px] h-full flex shadow-blur z-10 ${
         isDarkMode ? "bg-[#181818]" : "bg-white"
       }`}
     >

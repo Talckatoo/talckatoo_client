@@ -139,7 +139,7 @@ const SignIn = () => {
           <div className="w-full max-w-[400px] h-[44px]">
             <Button
               type="button"
-              className="bg-[#fafafa] text-black w-full h-full flex justify-center items-center border-[0.5px] border-[#33363A] rounded-lg shadow-sm-2xl "
+              className="bg-[#fafafa] text-black w-full h-full flex justify-center items-center border-[0.5px] border-[#33363A] rounded-lg shadow-blur-2xl "
               onClick={() => redirectTogoogle()}
             >
               <img

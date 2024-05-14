@@ -107,7 +107,7 @@ const Navbar = ({ onHandleCall }: NavBarProps) => {
 
   return (
     <nav 
-    className={`relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center   shadow-sm ${
+    className={`relative z-10 max-md:px-2  py-2 md:px-10 flex justify-between items-center   shadow-blur ${
       isDarkMode
         ? "bg-[#181818] border border-[#000] border-opacity-20 "
         : "bg-white  border-b border-opacity-20"
