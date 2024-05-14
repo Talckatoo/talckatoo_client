@@ -190,7 +190,7 @@ const SideBar = ({
                   icon={faSpinner}
                   spin
                 />
-                <p className="w-full font-extrabold text-[20px] text-center flex justify-center">
+                <p className={`w-full font-extrabold text-[20px] text-center flex justify-center ${ isDarkMode ?  "text-white" :  "text-secondary-500"} `}>
                   {t("Loading...")}
                 </p>
               </div>
@@ -209,11 +209,11 @@ const SideBar = ({
               ))
             ) : (
               <div className="h-full w-full flex flex-col items-center justify-center py-4 px-4 ">
-                <FaUserXmark className="w-1/12 h-auto text-secondary-500 animate__animated animate__headShake" />
-                <p className="w-full font-extrabold text-[20px] text-center flex justify-center animate__animated animate__headShake">
+                <FaUserXmark className={`w-1/12 h-auto text-secondary-500 animate__animated animate__headShake ${ isDarkMode ?  "text-white" :  "text-secondary-500"} `} />
+                <p className={`w-full font-extrabold text-[20px] text-center ${ isDarkMode ?  "text-white" :  "text-secondary-500"} flex justify-center animate__animated animate__headShake`}>
                   {t("We didn't find any results")}
                 </p>
-                <p className="w-full text-center flex justify-center animate__animated animate__headShake">
+                <p className={`w-full text-center flex justify-center animate__animated animate__headShake ${ isDarkMode ?  "text-white" :  "text-secondary-500"} `}>
                   {t(
                     "Make sure everything is spelled correctly or try different keywords"
                   )}
@@ -226,7 +226,7 @@ const SideBar = ({
             {requests?.filter(
               (r: any) => r.status === "pending" && r.to._id === user._id
             ).length > 0 && (
-              <div className="flex items-center justify-center text-2xl font-bold text-gray-600">
+              <div className={`flex items-center justify-center text-2xl font-bold ${ isDarkMode ?  "text-white" :  "text-secondary-500"} `}>
                 {t("Friend Requests")}
               </div>
             )}
@@ -249,7 +249,7 @@ const SideBar = ({
                 </div>
               ))}
 
-            <div className="flex items-center justify-center text-2xl font-bold text-gray-600 mt-8">
+            <div className={`flex items-center justify-center text-2xl font-bold ${ isDarkMode ?  "text-white" :  "text-secondary-500"} `}>
               {t("Friends")}
             </div>
             {allUser
