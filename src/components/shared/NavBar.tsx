@@ -72,19 +72,9 @@ const NavBar: FC<NavBarProps> = ({}) => {
 
   return (
     <header
-      className={` ${
-        isDarkMode
-          ? "w-full py-4 fixed top-0 z-50 bg-gray-900 bg-opacity-70 backdrop-blur-xl"
-          : "bg-white w-full py-4 fixed top-0 z-50 backdrop-blur-xl"
+      className={` backdrop-filter backdrop-blur-[10px] w-full py-3 sticky top-0 z-50 ${
+        isDarkMode ? "backdrop:bg-background-500" : " backdrop:bg-white "
       }`}
-      style={{
-        backgroundColor: isDarkMode
-          ? "#181818"
-          : scrolled
-          ? "rgba(0, 0, 0, 0.7)"
-          : "rgba(255, 255, 255, 0.9)",
-        backdropFilter: isDarkMode || scrolled ? "none" : "blur(8px)",
-      }}
     >
       <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
         <Link
