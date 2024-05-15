@@ -39,6 +39,7 @@ const Friend = ({
       if ("message" in response) {
         if (response.message === "Friend request sent successfully") {
           socket.current.emit("sendFriendRequest", {
+            profileImage: userData?.profileImage?.url,
             from: userData?._id,
             to: friendId,
             friendRequest: response.friendRequest,
