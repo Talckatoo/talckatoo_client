@@ -126,5 +126,14 @@
   "Make sure everything is spelled correctly or try different keywords": "Asegúrese de que todo está bien escrito o pruebe con diferentes palabras clave",
   "Friend Requests": "Solicitudes de amistad",
   "Looking for a random chat": "Buscando chat al azar",
-  "Cancel": "Cancelar"
+  "Cancel": "Cancelar",
+  "Reset Your Password": "Restablecer tu contraseña",
+  "Reseting": "Restableciendo...",
+  "Send Reset Link": "Enviar enlace de restablecimiento",
+  "Change Your Password": "Cambiar tu contraseña",
+  "Enter your email address and we will send you a link to reset your password": "Ingresa tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña",
+  "New Password": "Nueva contraseña",
+  "Confirm New Password": "Confirmar nueva contraseña",
+  "Changing": "Cambiando...",
+  "Change Password": "Cambiar contraseña"
 }

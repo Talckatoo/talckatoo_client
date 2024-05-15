@@ -160,7 +160,7 @@ const SignUpVerification = () => {
               />
               <Button
                 type="submit"
-                className="w-full bg-black justify-center text-center text-white h-[48px] z-[1] rounded-lg "
+                className={`w-full justify-center text-center th-[48px] z-[1] rounded-lg ${ isDarkMode ?  "bg-white text-black" : "bg-black text-white"} `}
                 onClick={sendVerificationCode}
               >
                 {t("SendVerification")}
@@ -198,7 +198,7 @@ const SignUpVerification = () => {
 
             <Button
               type="submit"
-              className="bg-black text-white text-center justify-center h-[48px] z-[1] rounded-lg mt-2"
+              className={` ${ isDarkMode ?  "bg-white text-black" : "bg-black text-white"} text-center justify-center h-[48px] z-[1] rounded-lg mt-2`}
               onClick={handleContinue}
             >
               Continue
@@ -229,13 +229,13 @@ const SignUpVerification = () => {
           </div>
           <div className="flex gap-2">
             <p
-              className="text-[blue] cursor-pointer"
+              className={`${ isDarkMode ? "text-blue" : "text-[blue]" }  cursor-pointer`}
               onClick={() => navigate("/terms")}
             >
               Terms of Service &{" "}
             </p>
             <p
-              className="text-[blue] cursor-pointer"
+              className={`${ isDarkMode ? "text-blue" : "text-[blue]" }  cursor-pointer`}
               onClick={() => navigate("/privacy")}
             >
               {" "}

@@ -125,6 +125,15 @@
   "Make sure everything is spelled correctly or try different keywords": "تأكد من كتابة كل شيء بشكل صحيح أو جرّب كلمات رئيسية مختلفة",
   "Friend Requests": "طلبات الصداقة",
   "Looking for a random chat": "جاري البحث عن دردشة عشوائية",
-  "Cancel": "إلغاء"
+  "Cancel": "إلغاء",
+  "Reset Your Password": "إعادة تعيين كلمة المرور الخاصة بك",
+  "Reseting": "جاري إعادة التعيين...",
+  "Send Reset Link": "إرسال رابط إعادة التعيين",
+  "Change Your Password": "تغيير كلمة المرور الخاصة بك",
+  "Enter your email address and we will send you a link to reset your password": "أدخل عنوان بريدك الإلكتروني وسنرسل لك رابطًا لإعادة تعيين كلمة المرور",
+  "New Password": "كلمة المرور الجديدة",
+  "Confirm New Password": "تأكيد كلمة المرور الجديدة",
+  "Changing": "جاري التغيير...",
+  "Change Password": "تغيير كلمة المرور"
 }
 

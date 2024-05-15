@@ -21,7 +21,7 @@ interface FormData {
   confirmPassword: string;
   verificationCode: string;
 }
-
+  
 interface FormErrors {
   name?: string;
   password?: string;
@@ -119,8 +119,7 @@ export const SignUp = () => {
   };
 
   return (
-    <section className="relative bg-white h-full w-full font-inter">
-      <div className="bg-white fixed top-0 left-0 w-full h-full -z-20"></div>
+    <section className={`  ${ isDarkMode ?  "" : "bg-white"} h-full w-full font-inter`}>
       <img
         src="/assets/img/wave.svg"
         alt="shape"
@@ -219,7 +218,7 @@ export const SignUp = () => {
 
         <Button
           type="submit"
-          className="bg-black text-white w-full h-[48px] mt-[2rem] z-[1] rounded-lg"
+          className={`w-full h-[48px] mt-[2rem] z-[1] rounded-lg ${ isDarkMode ?  "bg-white text-black" : "bg-black text-white"}`}
           onClick={() => {}}
         >
           {t("SignUp")}
@@ -244,14 +243,14 @@ className=" cursor-pointer rounded-lg underline font-semibold"
         </div>
         <div className="flex gap-2">
           <p
-            className="text-[blue] cursor-pointer"
-            onClick={() => navigate("/terms")}
+              className={`${ isDarkMode ? "text-blue" : "text-[blue]" }  cursor-pointer`}
+              onClick={() => navigate("/terms")}
           >
             Terms of Service &{" "}
           </p>
           <p
-            className="text-[blue] cursor-pointer"
-            onClick={() => navigate("/privacy")}
+              className={`${ isDarkMode ? "text-blue" : "text-[blue]" }  cursor-pointer`}
+              onClick={() => navigate("/privacy")}
           >
             {" "}
             Privacy

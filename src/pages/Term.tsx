@@ -1,9 +1,12 @@
+import { UserContext } from "../context/user-context";
+import { useContext } from "react";
 
 const Term = () => {
+    const { isDarkMode } = useContext(UserContext);
 
     return (
         <>
-            <div className="container p-11">
+            <div className={`container p-11  ${isDarkMode ? "text-white " : "text-black "}  font-mono `}>
                 <h1 className="text-center text-[#C11B23] text-[30px] font-bold mb-8">
                     Terms Of Service
                 </h1>

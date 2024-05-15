@@ -124,6 +124,15 @@
     "Make sure everything is spelled correctly or try different keywords": "Assurez-vous que tout est bien orthographié ou essayez d'autres mots-clés",
     "Friend Requests": "Demandes d'amis",
     "Looking for a random chat": "Recherche d'un chat aléatoire",
-    "Cancel": "Annuler"
+    "Cancel": "Annuler",
+    "Reset Your Password": "Réinitialiser votre mot de passe",
+    "Reseting": "Réinitialisation...",
+    "Send Reset Link": "Envoyer le lien de réinitialisation",
+    "Change Your Password": "Changer votre mot de passe",
+    "Enter your email address and we will send you a link to reset your password": "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe",
+    "New Password": "Nouveau mot de passe",
+    "Confirm New Password": "Confirmer le nouveau mot de passe",
+    "Changing": "Changement...",
+    "Change Password": "Changer le mot de passe"
   }
 

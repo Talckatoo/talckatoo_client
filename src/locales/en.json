@@ -124,5 +124,15 @@
   "Make sure everything is spelled correctly or try different keywords": "Make sure everything is spelled correctly or try different keywords",
   "Friend Requests": "Friend Requests",
   "Looking for a random chat": "Looking for a random chat",
-  "Cancel": "Cancel"
+  "Cancel": "Cancel",
+  "Reset Your Password": "Reset Your Password",
+  "Reseting": "Reseting...",
+  "Send Reset Link": "Send Reset Link",
+  "Change Your Password": "Change Your Password",
+  "Enter your email address and we will send you a link to reset your password": "Enter your email address and we will send you a link to reset your password",
+  "New Password": "New Password",
+  "Confirm New Password": "Confirm New Password",
+  "Changing" : "Changing...",
+  "Change Password": "Change Password"
+
 }
