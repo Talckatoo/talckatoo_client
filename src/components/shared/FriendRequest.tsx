@@ -149,12 +149,12 @@ const FriendRequest = ({
           <div
             className="w-10 h-10 rounded-full shadow-xl flex items-center justify-center"
             style={{
-              backgroundImage: `url("https://ik.imagekit.io/demo/medium_cafe_B1iTdD0C.jpg")`,
+              backgroundImage: `url(${user?.from?.profileImage?.url})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
           >
-            {!user.profileImage && (
+            {!user?.from?.profileImage?.url && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
