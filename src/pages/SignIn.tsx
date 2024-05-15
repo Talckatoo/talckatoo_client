@@ -175,7 +175,7 @@ const SignIn = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className={`bg-transparent border-[#33363A] rounded-lg mb-[-10px] ${isDarkMode ? " text-white": "text-black"}`}
+            className={`bg-transparent border-[#33363A]  rounded-lg mb-[-10px] ${isDarkMode ? " text-white": "text-black"}`}
             error={formErrors.email}
           />
 

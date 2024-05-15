@@ -75,7 +75,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
             type="email"
             name="email"  
             id="email"
-            className="border rounded-xl"
+            className="bg-transparent border-[#33363A]  rounded-lg mb-[-10px]"
             placeholder={t("Enter your email")}
             value={email}
             error={error}

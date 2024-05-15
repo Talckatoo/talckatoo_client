@@ -40,6 +40,7 @@ const ResetPasswordUpdate = () => {
     setLoading(true);
     validationPassword();
     try {
+      // check if token is valid
       const response = await passwordResetConfirm({
         token: token as string,
         data: {
@@ -73,7 +74,7 @@ const ResetPasswordUpdate = () => {
           <form className="flex justify-center  items-center flex-col" onSubmit={handleResetPassword}>
             <Input
               type="text"
-              className="border rounded-xl mb-[-20px]"
+              className="bg-transparent border-[#33363A]  rounded-lg mb-[-10px]"
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder={t("New Password")}
               label=""
@@ -84,7 +85,7 @@ const ResetPasswordUpdate = () => {
             />
             <Input
               type="text"
-              className="border rounded-xl"
+              className="bg-transparent border-[#33363A]  rounded-lg mb-[-10px]"
               onChange={(e) => setConfirmNewPassword(e.target.value)}
               placeholder={t("Confirm New Password")}
               label=""
