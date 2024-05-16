@@ -16,7 +16,7 @@ const Button = ({
   return (
     <button
       type={type}
-      className={` font-semibold py-3 px-5  ${className}
+      className={`font-semibold py-3 px-5  ${className}
           disabled:opacity-50 disabled:cursor-not-allowed
         `}
       onClick={onClick}

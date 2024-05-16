@@ -11,12 +11,14 @@ import LeftSideBar from "../components/shared/LeftSideBar";
 import Button from "../UI/Button";
 import NavBarRandom from "../navbar/NavBarRandom";
 import { setRandom } from "../redux/features/socket/socketSlice";
+import { useTranslation } from "react-i18next";
 
 interface Socket {
   current: any;
 }
 
 const Random = ({ socket }: { socket: Socket }): JSX.Element => {
+  const { t } = useTranslation();
   const { isDarkMode } = useContext(UserContext);
   const { user } = useAppSelector((state) => state.auth);
 
@@ -26,7 +28,6 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   const handleSetButtonSelected = (buttonSelected: string) => {
     navigate("/chat", { state: { buttonSelected } });
   };
-
 
   const navigate = useNavigate();
 
@@ -41,7 +42,6 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       conversationId: random.randomData?._id,
       socketId: socket.current.id,
     });
-
   };
 
   const joinRandomChat = () => {
@@ -88,7 +88,7 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       const timeoutId = setTimeout(() => {
         handleCancel();
         alert("No one is available to chat right now");
-      }, 1000*60*5);
+      }, 1000 * 60 * 5);
       return () => clearTimeout(timeoutId);
     }
   }, [random.randomData, random.islooking]);
@@ -151,7 +151,6 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
     socket?.current?.emit("leaveRandomChat", {
       randomData: random.randomData,
     });
-
   };
 
   const handleJoinRandomChat = () => {
@@ -184,14 +183,14 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
               style={{ width: 500, height: 500 }}
             />
             <p className="text-center text-[35px] font-bold max-md:px-4  max-w-[768px] text-black">
-              Looking for a random chat
+              {t("Looking for a random chat")}
             </p>
             <Button
               type="button"
               onClick={() => handleCancel()}
               className="bg-secondary-500 hover:bg-primary-600 text-white font-bold py-2 px-8 rounded-xl"
             >
-              Cancel
+              {t("Cancel")}
             </Button>
           </div>
         </div>
@@ -230,15 +229,15 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
                   onClick={handleJoinRandomChat}
                   className="bg-secondary-500 hover:bg-primary-600 text-white font-bold py-2 px-8 rounded-xl"
                 >
-                  Join Random Chat
+                  {t("Join Random Chat")}
                 </Button>
               </div>
             </div>
           </div>
         )
       )}
-      
- {random.isChatOpen && (
+
+      {random.isChatOpen && (
         <div className=" w-full h-full flex flex-col ">
           <NavBarRandom leaveRandomChat={leaveRandomChat} />
           <RandomChat

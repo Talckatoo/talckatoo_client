@@ -8,16 +8,16 @@ import { RiSettings5Fill } from "react-icons/ri";
 import { MdDarkMode } from "react-icons/md";
 import { useAppSelector } from "../../redux/hooks";
 // translation button
-import { useTranslation } from 'react-i18next'; //TRANSLATION languages
-import { FaGlobe } from 'react-icons/fa';
-import LanguagesArray from './../../constants/languages';
+import { useTranslation } from "react-i18next"; //TRANSLATION languages
+import { FaGlobe } from "react-icons/fa";
+import LanguagesArray from "./../../constants/languages";
 
 const LeftSideBar = ({
   showSetting,
   showRequest,
   showRandom,
-  setShowRequest = () => { },
-  setButtonSelected = () => { },
+  setShowRequest = () => {},
+  setButtonSelected = () => {},
 }: {
   showSetting?: boolean;
   showRequest: boolean;
@@ -61,7 +61,7 @@ const LeftSideBar = ({
     setShowLanguages(false); // Close the dropdown
   };
   useEffect(() => {
-    const handleClickOutside = (event: { target: any; }) => {
+    const handleClickOutside = (event: { target: any }) => {
       if (languageRef.current && !languageRef.current.contains(event.target)) {
         // Clicked outside the language dropdown, close it
         setShowLanguages(false);
@@ -72,23 +72,28 @@ const LeftSideBar = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  })
+  });
 
   return (
     <div
-      className={`w-[80px] min-w-[80px] border-r pt-5  grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] ${isDarkMode
-        ? " border-[#000] border-opacity-20"
-        : " border-opacity-20"
-        }`}
+      className={`w-[80px] min-w-[80px]  grid grid-cols-1 gap-1 content-between h-full p-1 mb-[2rem] ${
+        isDarkMode
+          ? "border-r pt-5 border-[#000] border-opacity-20"
+          : "border-r pt-5 border-opacity-20"
+      }`}
+
     >
       <div className="flex flex-col  gap-3 w-full">
         <div
-          className={`${isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500 "}${showRequest || showRandom || showSetting
-            ? `bg-white border-[1px]  hover:bg-gray-200 hover:border-gray-200 ${isDarkMode ? "border-white" : "border-black"
-            }`
-            : ` border-[1px] border-secondary-500 hover:bg-black ${isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500"
-            }`
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
+          className={`${isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500 "}${
+            showRequest || showRandom || showSetting
+              ? `bg-white border-[1px]  hover:bg-gray-200 hover:border-gray-200 ${
+                  isDarkMode ? "border-white" : "border-black"
+                }`
+              : ` border-[1px] border-secondary-500 hover:bg-black ${
+                  isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500"
+                }`
+          } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
           onClick={
@@ -98,19 +103,23 @@ const LeftSideBar = ({
           }
         >
           <PiChatTextFill
-            className={`${showRequest || showRandom || showSetting
-              ? `${isDarkMode ? "text-white " : "text-secondary-500"}`
-              : `${isDarkMode ? "text-black" : "text-white"}`
-              } z-4 object-contain py-1 w-[29px] text-[32px]`}
+            className={`${
+              showRequest || showRandom || showSetting
+                ? `${isDarkMode ? "text-white " : "text-secondary-500"}`
+                : `${isDarkMode ? "text-black" : "text-white"}`
+            } z-4 object-contain py-1 w-[29px] text-[32px]`}
           />
         </div>
         <div
-          className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${!showRequest
-            ? `bg-white border-[1px]  hover:bg-gray-200 hover:border-gray-200 ${isDarkMode ? "border-white" : "border-black"
-            }`
-            : `bg-secondary-500 border-[1px]  hover:bg-black ${isDarkMode ? "bg-[#E9E9EF]" : "border-secondary-500"
-            }`
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
+          className={`${isDarkMode ? "bg-primary-500" : "bg-secondary-500 "}${
+            !showRequest
+              ? `bg-white border-[1px]  hover:bg-gray-200 hover:border-gray-200 ${
+                  isDarkMode ? "border-white" : "border-black"
+                }`
+              : `bg-secondary-500 border-[1px]  hover:bg-black ${
+                  isDarkMode ? "bg-[#E9E9EF]" : "border-secondary-500"
+                }`
+          } mx-2 rounded-[12px]  flex items-center justify-center flex-col
               transition duration-300 ease-in-out 
             `}
           onClick={
@@ -120,29 +129,34 @@ const LeftSideBar = ({
           }
         >
           <IoPersonSharp
-            className={`${!showRequest
-              ? `${isDarkMode ? "text-white " : "text-secondary-500"}`
-              : `${isDarkMode ? "text-black" : "text-white"}`
-              } z-4 object-contain py-1 w-[29px] text-[32px]`}
+            className={`${
+              !showRequest
+                ? `${isDarkMode ? "text-white " : "text-secondary-500"}`
+                : `${isDarkMode ? "text-black" : "text-white"}`
+            } z-4 object-contain py-1 w-[29px] text-[32px]`}
           />
         </div>
         {/* random chat icons */}
         <Link to="/random">
           <div
-            className={`${isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500 "}${!showRandom
-              ? `bg-white border-[1px]  hover:bg-gray-200 hover:border-gray-200 ${isDarkMode ? "border-white" : "border-black"
-              }`
-              : `bg-secondary-500 border-[1px]  hover:bg-black ${isDarkMode ? "bg-[#E9E9EF]" : "border-secondary-500"
-              }`
-              } mx-2 rounded-[12px]  flex items-center justify-center flex-col
+            className={`${isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500 "}${
+              !showRandom
+                ? `bg-white border-[1px]  hover:bg-gray-200 hover:border-gray-200 ${
+                    isDarkMode ? "border-white" : "border-black"
+                  }`
+                : `bg-secondary-500 border-[1px]  hover:bg-black ${
+                    isDarkMode ? "bg-[#E9E9EF]" : "border-secondary-500"
+                  }`
+            } mx-2 rounded-[12px]  flex items-center justify-center flex-col
       transition duration-300 ease-in-out 
     `}
           >
             <GiPerspectiveDiceSixFacesRandom
-              className={`${!showRandom
-                ? `${isDarkMode ? "text-white" : "text-secondary-500"}`
-                : `${isDarkMode ? "text-black" : "text-white"}`
-                } z-4 object-contain py-1 w-[29px] text-[32px]`}
+              className={`${
+                !showRandom
+                  ? `${isDarkMode ? "text-white" : "text-secondary-500"}`
+                  : `${isDarkMode ? "text-black" : "text-white"}`
+              } z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
           </div>
         </Link>
@@ -159,25 +173,40 @@ const LeftSideBar = ({
           />
         </div>
         {/* change language button */}
-        <div className={`${isDarkMode ? "" : " "}${!isButtonClicked
-          ? "  hover:cursor-pointer hover:border-gray-200"
-          : "  hover:bg-black"
+        <div
+          className={`${isDarkMode ? "" : " "}${
+            !isButtonClicked
+              ? "  hover:cursor-pointer hover:border-gray-200"
+              : "  hover:bg-black"
           }  rounded-[3px] max-md:px-1 max-md:py-1 flex items-center justify-center flex-col
             transition duration-300 ease-in-out relative
-            `} onClick={handleLanguageClick}>
+            `}
+          onClick={handleLanguageClick}
+        >
           <FaGlobe
-            className={`${!isButtonClicked ? "text-secondary-500" : "text-white"
-              } z-4 object-contain py-1 w-[29px] text-[32px]
+            className={`${
+              !isButtonClicked ? "text-secondary-500" : "text-white"
+            } z-4 object-contain py-1 w-[29px] text-[32px]
                 ${isDarkMode ? "text-white" : "text-[#25282C]"}`}
           />
           {showLanguages && (
-            <div ref={languageRef} className="overflow-hidden absolute z-50 bottom-[80px] bg-white border-[1px] border-gray-200 rounded-lg shadow-blur flex flex-col items-center">
+            <div
+              ref={languageRef}
+              className={`overflow-hidden absolute z-50 bottom-[30px] ${
+                selectedLanguage === "ar" ? "right-[60px]" : "left-[60px]"
+              } bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center`}
+            >
+
               {/* map languages */}
               {Object.entries(languages).map(([languageName, languageCode]) => (
                 <button
                   key={languageCode}
                   onClick={() => handleLanguageChange(languageCode)}
-                  className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === languageCode ? 'bg-secondary-500 py-3 font-bold text-white' : 'text-black'}`}
+                  className={` px-5 py-2 w-full ${
+                    selectedLanguage === languageCode
+                      ? "bg-secondary-500 py-3 font-bold text-white"
+                      : "hover:bg-gray-300"
+                  }`}
                 >
                   {t(languageName)}
                 </button>
@@ -189,13 +218,15 @@ const LeftSideBar = ({
         {/* end */}
 
         <div
-          className={`${isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500"
-            } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
+          className={`${
+            isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500"
+          } mx-2 rounded-[12px]  flex items-center justify-center flex-col`}
           onClick={handleSettingClick}
         >
           <RiSettings5Fill
-            className={`z-4 object-contain py-1 w-[29px] text-[32px] ${isDarkMode ? "text-[#25282C]" : "text-white"
-              } `}
+            className={`z-4 object-contain py-1 w-[29px] text-[32px] ${
+              isDarkMode ? "text-[#25282C]" : "text-white"
+            } `}
           />
         </div>
         <div className="mx-2 pb-2 mb-[1rem] flex items-center justify-center flex-col rounded-full overflow-hidden">

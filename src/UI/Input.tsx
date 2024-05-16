@@ -39,7 +39,7 @@ const Input: FC<InputProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`  p-3 w-full border text-black relative text-[16px] focus:outline-none outline-none ${
+        className={`  p-3 w-full  border-2 text-black relative text-[16px] focus:outline-none outline-none ${
           error ? "border-red-500" : ""
         } ${className}`}
       />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Input from "../UI/Input";
 import { usePasswordResetConfirmMutation } from "../redux/services/UserApi";
 import Button from "../UI/Button";
@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/shared/NavBar";
 import { useTranslation } from 'react-i18next';
-
+import { UserContext } from "../context/user-context";
 
 const ResetPasswordUpdate = () => {
   const { t } = useTranslation();
@@ -18,6 +18,7 @@ const ResetPasswordUpdate = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { token } = useParams();
+  const { isDarkMode } = useContext(UserContext);
 
   const validationPassword = () => {
     if (newPassword.length < 8) {
@@ -39,6 +40,7 @@ const ResetPasswordUpdate = () => {
     setLoading(true);
     validationPassword();
     try {
+      // check if token is valid
       const response = await passwordResetConfirm({
         token: token as string,
         data: {
@@ -61,21 +63,21 @@ const ResetPasswordUpdate = () => {
 
   return (
     <>
-      <NavBar showSign={false} />
+      {/* <NavBar showSign={false} /> */}
 
-      <div className="bg-white z-50 h-full w-full font-inter flex justify-center items-center absolute">
-        <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-4 border rounded-2xl w-[600px] p-12 m-auto shadow-blur shadow-slate-800 ">
-          <h2 className="text-black text-heading1-bold">
-            Change Your Password
+      <div className={` flex justify-center items-center h-full`}  >
+      <div className={` ${isDarkMode ? "bg-[#282828] border-[#575757b0]" : "bg-[#fafafa]"} flex flex-col border rounded-2xl p-10 w-[510px] shadow-blur `}>
+          <h2 className={`${isDarkMode ? "text-white" : "text-black"} text-heading2-semibold mb-5`}>
+            {t("Change Your Password")}
           </h2>
           {/* reset with form newPassword and confirm newPasword   */}
-          <form className="w-full h-full" onSubmit={handleResetPassword}>
+          <form className="flex justify-center  items-center flex-col" onSubmit={handleResetPassword}>
             <Input
               type="text"
-              className="border rounded-xl  text-black placeholder-slate-950"
+              className="bg-transparent border-[#33363A]  rounded-lg mb-[-10px]"
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="New Password"
-              label="New Password"
+              placeholder={t("New Password")}
+              label=""
               name="password"
               id="password"
               error={passwordError}
@@ -83,10 +85,10 @@ const ResetPasswordUpdate = () => {
             />
             <Input
               type="text"
-              className="border rounded-xl  text-black placeholder-slate-950"
+              className="bg-transparent border-[#33363A]  rounded-lg mb-[-10px]"
               onChange={(e) => setConfirmNewPassword(e.target.value)}
-              placeholder="Confirm New Password"
-              label="Confirm New Password"
+              placeholder={t("Confirm New Password")}
+              label=""
               name="password"
               id="password"
               error={error}
@@ -94,10 +96,10 @@ const ResetPasswordUpdate = () => {
             />
             <Button
               type="submit"
-              className="bg-green-500 text-white w-full h-full flex items-center justify-center gap-2 border rounded-xl"
+              className={` ${ isDarkMode ?  "text-black bg-white" : "text-white bg-black "}  w-full border rounded-2xl`}
               disabled={loading}
             >
-              {loading ? "Changing..." : "Password Changed"}
+              {loading ? t("Changing...") : t("Change Password")}
             </Button>
           </form>
         </div>

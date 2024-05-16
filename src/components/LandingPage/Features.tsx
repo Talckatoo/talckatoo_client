@@ -87,36 +87,6 @@ const Features = () => {
             className="md:max-w-[50%] h-full object-contain"
           />
         </div>
-        <div className="grid sm:grid-cols-2 gap-4 sm:justify-center ">
-          <div className="bg-light-bg shadow-blur border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] flex-col md:hidden">
-            <div className="w-1/4 flex justify-center items-center">
-              <img
-                src="/assets/icons/friend.png"
-                alt="translate"
-                className=" w-[42px] h-[42px]"
-              />
-            </div>
-            <div className="w-3/4 flex justify-center">
-              <span className={`text-center max-sm:text-[18px] text-[20px] ${
-                    isDarkMode ? "text-black" : "text-black"
-                  }`}>{t("Friend Matching")} </span>
-            </div>
-          </div>
-          <div className="bg-light-bg shadow-blur border gap-1 max-sm:gap-4 border-[#EFF0F6] p-4 flex justify-around items-center rounded-[25px] flex-col md:hidden">
-            <div className="w-1/4 flex justify-center items-center">
-              <img
-                src="/assets/icons/tool.png"
-                alt="translate"
-                className=" w-[42px] h-[42px]"
-              />
-            </div>
-            <div className="w-3/4 flex justify-center">
-              <span className={`text-center max-sm:text-[18px] text-[20px] ${
-                    isDarkMode ? "text-black" : "text-black"
-                  }`}>{t("AI Assistance")}</span>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
