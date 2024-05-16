@@ -6,21 +6,7 @@ import { testimonials as untranslatedTestimonials } from "../../constants/testim
 
 const Testimonials = () => {
   const { isDarkMode } = useContext(UserContext);
-
   const { t } = useTranslation();
-  // const testimonials = untranslatedTestimonials.map((testimonial, index) => {
-  //   try {
-  //     return {
-  //       ...testimonial,
-  //       text: t(testimonial.text),
-  //       name: t(testimonial.name),
-  //       title: t(testimonial.title)
-  //     };
-  //   } catch (error) {
-  //     console.error(`Error processing testimonial ${index + 1}:`, error);
-  //     return null;
-  //   }
-  // });
 
   return (
     <section className=" max-md:p-5 container mt-[8rem] ">
