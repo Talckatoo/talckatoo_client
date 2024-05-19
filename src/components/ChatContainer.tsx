@@ -48,6 +48,7 @@ import { IoSend } from "react-icons/io5";
 import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import notificationSound from "/notification.wav";
 
 interface Socket {
   current: any;
@@ -60,6 +61,36 @@ interface ReceivedCallState {
 }
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
+  const [notificationPermission, setNotificationPermission] = useState(false);
+
+  useEffect(() => {
+    // Check if the browser supports notifications
+    if (!("Notification" in window)) {
+      console.log("This browser does not support desktop notification");
+    } else {
+      // Request permission for notification
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          setNotificationPermission(true);
+        }
+      });
+    }
+  }, []);
+
+  const showNotification = (message) => {
+    if (notificationPermission) {
+      const audio = new Audio(notificationSound);
+      audio.play();
+      new Notification("New Message", {
+        body: message,
+      });
+    }
+  };
+
+  const handleTestNotification = () => {
+    showNotification("This is a test notification");
+  };
+
   const { t } = useTranslation();
   // const ColoredDialog = withStyles({
   //   root: {
@@ -550,6 +581,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       updateConversation();
       socket.current.on("getMessage", (data: any) => {
         if (data.message) {
+          showNotification(`${data.from}: ${data.message}`);
           setArrivalMessages({
             createdAt: data.createdAt,
             message: data.message,
@@ -557,6 +589,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             _id: uuidv4(),
           });
         } else if (data.voiceNote) {
+          showNotification(`${data.from}: ► Voice message`);
           setArrivalMessages({
             createdAt: data.createdAt,
             voiceNote: {
@@ -566,6 +599,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             _id: uuidv4(),
           });
         } else if (data.media) {
+          showNotification(`${data.from}: Media message`);
           setArrivalMessages({
             createdAt: data.createdAt,
             media: {
@@ -577,6 +611,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             _id: uuidv4(),
           });
         } else if (data.messageReply) {
+          showNotification(`${data.from}: Reply message`);
           toast.update(2, {
             render: "done",
             type: "success",
