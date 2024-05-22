@@ -11,6 +11,7 @@ import { BsEmojiSmile } from "react-icons/bs";
 import { MdOutlineAttachFile, MdOutlineClose } from "react-icons/md";
 import VoiceMessage from "./VoiceMessage";
 import SpeechToText from "./SpeechToText";
+// import TextToSpeech from "./TextToSpeech";
 import { UserContext } from "../context/user-context";
 import { toast } from "react-toastify";
 import { useAppSelector } from "../redux/hooks";
@@ -74,6 +75,9 @@ const ChatInput = ({
   const handleShowEmoji = () => {
     setShowEmoji(!showEmoji);
   };
+  const handleSpeechToText = () => {
+      console.log('Speech to text';)
+  }
 
   const handleEmojiClick = (event: any) =>
     setMessageText(`${messageText} ${event.emoji}`);
@@ -194,13 +198,19 @@ const ChatInput = ({
                 <IoSend className="text-white text-[20px]" />
               </button>
             </form>
-            <div className="w-[200px] flex items-center ">
-              <div className="flex">
+            <div className="w-[200px] flex items-center gap-2">
+              <div className="flex gap">
                 <VoiceMessage
                   socket={socket}
                   onHandleTranslateText={onHandleTranslateText}
                 />
+                <div onClick={handleSpeechToText}>
+                <img src="./assets/icons/subtract.svg" alt="voiceicon" className="text-white text-[20px]"  />
+                <SpeechToText />
+                </div>
+                
               </div>
+              
 
               <div className="flex items-center gap-2">
                 <img src="./assets/img/line.png" className="i" />
