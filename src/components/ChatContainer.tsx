@@ -343,6 +343,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
         socket.current.emit("sendMessage", {
           createdAt: message?.createdAt,
+          userName: user?.userName,
           from: user?._id,
           to: selectedId,
           targetLanguage: language,
@@ -580,8 +581,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     if (socket.current) {
       updateConversation();
       socket.current.on("getMessage", (data: any) => {
+        console.log(data);
         if (data.message) {
-          showNotification(`${data.from}: ${data.message}`);
+          showNotification(`${data.userName}: ${data.message}`);
           setArrivalMessages({
             createdAt: data.createdAt,
             message: data.message,
