@@ -204,7 +204,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
         />
         <form
-          className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px]"
+          className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px] arm"
           onSubmit={handleSubmit}
           style={{
             boxShadow: "6px 6px 54px 0px rgba(0, 0, 0, 0.03)",
