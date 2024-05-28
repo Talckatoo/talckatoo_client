@@ -75,9 +75,9 @@ const ChatInput = ({
   const handleShowEmoji = () => {
     setShowEmoji(!showEmoji);
   };
-  const handleSpeechToText = () => {
-      console.log('Speech to text';)
-  }
+  // const handleSpeechToText = () => {
+  //     console.log('Speech to text';)
+  // }
 
   const handleEmojiClick = (event: any) =>
     setMessageText(`${messageText} ${event.emoji}`);
@@ -204,9 +204,9 @@ const ChatInput = ({
                   socket={socket}
                   onHandleTranslateText={onHandleTranslateText}
                 />
-                <div onClick={handleSpeechToText}>
-                <img src="./assets/icons/subtract.svg" alt="voiceicon" className="text-white text-[20px]"  />
-                <SpeechToText />
+                <div onClick={() =>SpeechToText(setMessageText(messageText))}>
+                <img src="./assets/icons/subtract.svg" alt="voiceicon" className="text-blue text-[20px]"  />
+               
                 </div>
                 
               </div>
