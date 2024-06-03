@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
+import { Buffer } from "buffer";
 import { toast } from "react-toastify";
 import axios from "axios";
 import ChatInput from "../components/ChatInput";
@@ -49,6 +50,15 @@ import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import notificationSound from "/notification.wav";
+
+import {
+  SessionBuilder,
+  SessionCipher,
+  SignalProtocolAddress,
+} from "@privacyresearch/libsignal-protocol-typescript";
+
+import { SignalProtocolStore } from "../util/signalStorageType";
+import { SignalDirectory } from "../util/signalDirectory";
 
 interface Socket {
   current: any;
@@ -117,6 +127,9 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     caller: "",
     roomId: "",
   });
+
+  const [store] = useState(new SignalProtocolStore());
+  const [directory] = useState(new SignalDirectory());
 
   // *******************CALL******************
   const [open, setOpen] = useState(false);
@@ -324,10 +337,133 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     );
   };
 
+  // const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
+  //   const binaryString = atob(base64);
+  //   const len = binaryString.length;
+  //   const bytes = new Uint8Array(len);
+  //   for (let i = 0; i < len; i++) {
+  //     bytes[i] = binaryString.charCodeAt(i);
+  //   }
+  //   return bytes.buffer;
+  // };
+
+  const bufferToArrayBuffer = (buffer: Buffer): ArrayBuffer => {
+    return buffer.buffer.slice(
+      buffer.byteOffset,
+      buffer.byteOffset + buffer.byteLength
+    );
+  };
+
+  const fetchUserKeys = async (userId: string) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/keys/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      let identityPubKey = Buffer.from(
+        response.data.data.userKey.identityKeyPair.data
+      );
+      let signedPreKey = {
+        keyId: response.data.data.userKey.signedPreKey.keyId,
+        publicKey: Buffer.from(
+          response.data.data.userKey.signedPreKey.publicKey.data
+        ),
+        signature: Buffer.from(
+          response.data.data.userKey.signedPreKey.signature.data
+        ),
+      };
+      let oneTimePreKeys = {
+        keyId: response.data.data.userKey.oneTimePreKeys[0].keyId,
+        publicKey: Buffer.from(
+          response.data.data.userKey.oneTimePreKeys[0].publicKey.data
+        ),
+      };
+
+      const keyBundle = {
+        registrationId: response.data.data.userKey.registrationId,
+        identityPubKey: identityPubKey,
+        signedPreKey: signedPreKey,
+        oneTimePreKeys: [oneTimePreKeys],
+      };
+      // const keyBundle = {
+      //   registrationId: response.data.data.userKey.registrationId,
+      //   identityPubKey: base64ToArrayBuffer(
+      //     response.data.data.userKey.identityKeyPair.pubKey
+      //   ),
+      //   signedPreKey: {
+      //     keyId: response.data.data.userKey.signedPreKey.keyId,
+      //     publicKey: base64ToArrayBuffer(
+      //       response.data.data.userKey.signedPreKey.publicKey
+      //     ),
+      //     signature: base64ToArrayBuffer(
+      //       response.data.data.userKey.signedPreKey.signature
+      //     ),
+      //   },
+      //   oneTimePreKeys: [
+      //     {
+      //       keyId: response.data.data.userKey.preKey.keyId,
+      //       publicKey: base64ToArrayBuffer(
+      //         response.data.data.userKey.preKey.publicKey
+      //       ),
+      //     },
+      //   ],
+      // };
+      return keyBundle;
+    } catch (error) {
+      console.error("Failed to fetch user keys", error);
+      throw error;
+    }
+  };
+
+  // const establishSessionWithUser = async (
+  //   store: SignalProtocolStore,
+  //   recipientId: string,
+  //   recipientKeys: any
+  // ) => {
+  //   const recipientAddress = new SignalProtocolAddress(recipientId, 1);
+  //   const sessionBuilder = new SessionBuilder(store, recipientAddress);
+  //   const keyBundle = {
+  //     registrationId: base64ToArrayBuffer(recipientKeys.registrationId),
+  //     identityKey: base64ToArrayBuffer(recipientKeys.identityKeyPair),
+  //     signedPreKey: base64ToArrayBuffer(recipientKeys.signedPreKey),
+  //     oneTimePreKeys: [base64ToArrayBuffer(recipientKeys.preKey)],
+  //   };
+  //   await sessionBuilder.processPreKey(keyBundle);
+  // };
+
   const handleSendMessage = async (messageText: any) => {
     socket.current.emit("stopTyping", selectedId);
     if (selectedId && conversationId !== "") {
       try {
+        // fetch recipient keys
+        const keyBundle = await fetchUserKeys(selectedId);
+
+        directory.storeKeyBundle(selectedId, keyBundle);
+
+        // // get recipient keys from directory
+        const recipientKeyBundle = directory.getPreKeyBundle(selectedId);
+
+        const recipientAddress = new SignalProtocolAddress(selectedId, 1);
+
+        // // Instantiate a SessionBuilder for a remote recipientId + deviceId tuple.
+
+        const sessionBuilder = new SessionBuilder(store, recipientAddress);
+
+        if (recipientKeyBundle) {
+          await sessionBuilder.processPreKey(recipientKeyBundle);
+        }
+
+        // const sessionCipher = new SessionCipher(store, recipientAddress);
+        // const ciphertext = await sessionCipher.encrypt(messageText);
+
+        console.log(recipientKeyBundle);
+        console.log(recipientAddress);
+
         const response = await sendMessage({
           from: user?._id,
           to: selectedId,
