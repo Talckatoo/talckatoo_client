@@ -11,7 +11,7 @@ import { useUploadFileMutation } from "../redux/services/MediaApi";
 import Input from "../UI/Input";
 import { useDeleteAccountMutation } from "../redux/services/AuthApi";
 import LeftSideBar from "../components/shared/LeftSideBar";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 interface Socket {
   current: any;
@@ -131,7 +131,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             language: updateLanguage,
           })
         );
-        
+
         toast.success(`${t("Profile updated successfully!")}`);
         setTimeout(() => {
           window.location.reload();
@@ -229,7 +229,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               className="absolute inset-0 opacity-0 cursor-pointer"
               onChange={handleUpload}
             />
-            <span className=" text-[#606060]">{t('Upload Photo')}</span>
+            <span className=" text-[#606060]">{t("Upload Photo")}</span>
           </div>
 
           <Input
@@ -278,7 +278,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
             </select>
           </div>
           <div className="flex justify-end">
-            <button className="bg-[#25282C] w-auto text-white py-4 px-[3rem] rounded-[10px]">
+            <button className="bg-[#25282C] text-white px-4 py-2 font-semibold text-[16px] rounded-[10px]">
               {t("Update Profile")}
             </button>
           </div>
@@ -302,30 +302,34 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               />
             )}
           </a>
-          <span className={`${isDarkMode ? "text-white" : "text-[#DD0000]" } font-semibold text-[17px]`}>
-          {t("Log Out")}
+          <span
+            className={`${
+              isDarkMode ? "text-white" : "text-[#DD0000]"
+            } font-semibold text-[17px]`}
+          >
+            {t("Log Out")}
           </span>
         </div>
         {/* delete account zone danger */}
-        <div className={`${isDarkMode ? "z-50" : ""}`}>
-          <div className="flex px-3 flex-col mt-5 gap-4 cursor-pointer">
-            <h3 className="text-body-bold text-red-500">{t("danger")}
-               </h3>
-            <div className="flex justify-between px-4 py-2">
-              <div>
-                <h4 className="text-body-medium text-red-600" >{t("deleteAccount")}</h4>
-                <p className="opacity-90 text-gray-500">
-                  {t("descriptionDeleteAccount")}
-                </p>
-              </div>
-              <button
-                onClick={handleDeleteAccount}
-                className="rounded-md text-white bg-red-500 p-2 font-semibold text-[17px] border border-red-600"
-              >
-                {t("deleteAccountButton")}
-              </button>
-            </div>
+        <div
+          className={` flex justify-between px-4 py-6 ${
+            isDarkMode ? "z-50" : "z-50"
+          } border   border-[#b9b9b9ab] rounded-[14px] shadow-blur bg-white `}
+        >
+          <div>
+            <h4 className="text-body-medium font-bold text-red-600">
+              {t("deleteAccount")}
+            </h4>
+            <p className="opacity-90 text-body-normal text-gray-500">
+              {t("descriptionDeleteAccount")}
+            </p>
           </div>
+          <button
+            onClick={handleDeleteAccount}
+            className="rounded-[10px] text-white bg-red-500 px-4 py-2 font-semibold text-[16px] "
+          >
+            {t("deleteAccountButton")}
+          </button>
         </div>
       </div>
     </div>

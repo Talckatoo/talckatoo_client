@@ -3,9 +3,9 @@ import Button from "../../UI/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/user-context";
 import { MdDarkMode } from "react-icons/md";
-import { useTranslation } from 'react-i18next'; //TRANSLATION languages
-import { FaGlobe } from 'react-icons/fa';
-import LanguagesArray from './../../constants/languages';
+import { useTranslation } from "react-i18next"; //TRANSLATION languages
+import { FaGlobe } from "react-icons/fa";
+import LanguagesArray from "./../../constants/languages";
 
 interface NavBarProps {
   showSign?: boolean;
@@ -14,7 +14,6 @@ interface NavBarProps {
 }
 
 const NavBar: FC<NavBarProps> = ({}) => {
-
   const languageRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(); //TRANSLATION languages
   const { i18n } = useTranslation();
@@ -58,10 +57,10 @@ const NavBar: FC<NavBarProps> = ({}) => {
   // scrool event
 
   useEffect(() => {
-    const handleClickOutside = (event: { target: any; }) => {
-    if (languageRef.current && !languageRef.current.contains(event.target)) {
-      // Clicked outside the language dropdown, close it
-      setShowLanguages(false);
+    const handleClickOutside = (event: { target: any }) => {
+      if (languageRef.current && !languageRef.current.contains(event.target)) {
+        // Clicked outside the language dropdown, close it
+        setShowLanguages(false);
       }
     };
 
@@ -73,29 +72,29 @@ const NavBar: FC<NavBarProps> = ({}) => {
 
   return (
     <header
-    className={` ${isDarkMode
-      ? "w-full py-4 fixed top-0 z-50 bg-gray-900 bg-opacity-70 backdrop-blur-xl"
-      : "bg-white w-full py-4 fixed top-0 z-50 backdrop-blur-xl"}`
+
+    className={` backdrop-filter backdrop-blur-[10px] w-full py-3 sticky top-0 z-50 ${isDarkMode
+      ? "backdrop:bg-background-500"
+      : " backdrop:bg-white "}`
     }
-    style={{
-      backgroundColor: isDarkMode
-        ? "#181818"
-        : scrolled
-        ? "rgba(0, 0, 0, 0.7)"
-        : "rgba(255, 255, 255, 0.9)",
-      backdropFilter: isDarkMode || scrolled ? "none" : "blur(8px)",
-    }}
-    
+
     >
       <div className="w-full flex items-center justify-between max-w-[95%] m-auto">
         <Link
           to="/"
           className="font-jakarta text-[20px] font-bold flex items-center justify-left"
         >
+          {isDarkMode ?
           <img
-            className="w-[40px] w-min-[45px] mr-2 ml-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
-            src="/assets/img/logo.svg"
+          className="w-[40px] w-min-[45px] mr-2 ml-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
+          src="/assets/img/logodarkmode.svg"
+/>
+          :
+          <img
+          className="w-[40px] w-min-[45px] mr-2 ml-2 h-auto transition m ease-in-out duration-300 scale-100 hover:scale-105"
+          src="/assets/img/logo.svg"
           />
+        }
 
           <span
             className={`hidden sm:inline ${
@@ -108,58 +107,73 @@ const NavBar: FC<NavBarProps> = ({}) => {
 
         {/* sign up and sign in button */}
         <div className="flex items-center gap-4  max-[430px]:flex max-[430px]:justify-center">
-     
+
+            {/* dark mode button */}
           <MdDarkMode
-              className={`${isDarkMode ?  "text-white" : "text-secondary-500" }${!isButtonClicked
-                  ? " border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-                  : " border-[1px] border-secondary-500 hover:bg-black"
-              } py-2 px-2 w-12 h-12 rounded-[3px] max-md:px-1 max-md:py-1 flex items-center justify-center flex-col transition duration-300 ease-in-out relative text-[25px] cursor-pointer`}
+              className={` ${isDarkMode ?  "text-white" : "text-secondary-500" } py-2 px-2 w-12 h-12 rounded-[3px] max-md:px-1 max-md:py-1 flex items-center justify-center flex-col transition duration-300 ease-in-out relative text-[25px] cursor-pointer`}
               onClick={toggleDarkMode}
           />
 
-
-          <div className={`${isDarkMode ?  "text-white" : "text-secondary-500"}${
-            !isButtonClicked
-            ? " border-[1px] border-black hover:bg-gray-200 hover:border-gray-200"
-            : " border-[1px] border-secondary-500 hover:bg-black"
-            } py-2 px-2 rounded-[3px] max-md:px-1 max-md:py-1 flex items-center justify-center flex-col
-            transition duration-300 ease-in-out relative
+            {/* chnage language button */}
+          <div className={`${isDarkMode ?  "text-white" : "text-secondary-500"}
+           py-2 px-2 rounded-[3px]  flex items-center justify-center flex-col
+             relative cursor-pointer
             `} onClick={handleLanguageClick}>
             <FaGlobe
-               className={`${
+              className={`${
                 !isButtonClicked ? "text-secondary-500" : "text-white"
-                } ${isDarkMode ?  "text-white" : "text-secondary-500" }  z-4 object-contain py-1 w-[29px] text-[32px]`}
+
+              } ${
+                isDarkMode ? "text-white" : "text-secondary-500"
+              }  z-4 object-contain py-1 w-[29px] text-[32px]`}
             />
             {showLanguages && (
-            <div ref={languageRef} className="overflow-hidden absolute z-50 bottom-[-170px] bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center">          
-            {/* map languages */}
-            {Object.entries(languages).map(([languageName, languageCode]) => (
-                <button
-                  key={languageCode}
-                  onClick={() => handleLanguageChange(languageCode)}
-                  className={`hover:bg-gray-300 px-5 py-2 w-full ${selectedLanguage === languageCode ? 'bg-secondary-500 py-3 font-bold text-white' : ''}`}
-                >
-                  {t(languageName)}
-                </button>
-              ))}
-              {/* Add more buttons for additional languages */}
-            </div>
-            )} 
+              <div
+                ref={languageRef}
+                className="overflow-hidden absolute z-50 bottom-[-170px] bg-white border-[1px] border-gray-200 rounded-lg shadow-md flex flex-col items-center"
+              >
+                {/* map languages */}
+                {Object.entries(languages).map(
+                  ([languageName, languageCode]) => (
+                    <button
+                      key={languageCode}
+                      onClick={() => handleLanguageChange(languageCode)}
+                      className={` px-5 py-2 w-full 
+                      ${
+                        selectedLanguage === languageCode
+                          ? "bg-secondary-500 py-3 font-bold text-white"
+                          : "hover:bg-gray-300 bg-white-100 text-black bg-[#F5F5F5]"
+                      }`}
+                    >
+                      {t(languageName)}
+                    </button>
+                  )
+                )}
+                {/* Add more buttons for additional languages */}
+              </div>
+            )}
+
           </div>
-      
-            {/* sign up button */}
+
+          {/* sign up button */}
           <Button
             type="button"
             className={`max-md:px-4 max-md:py-2 md:mr-4 px-7 py-2 rounded-[3px] text-black border border-[#000] ${
-              isDarkMode ? "border border-[#F5F5F5] text-white" : "border border-[#000] text-black"
+              isDarkMode
+                ? "border border-[#F5F5F5] text-white"
+                : "border border-[#000] text-black"
             }`}
             onClick={handleSignInClick}
-          >  {t("Sign In")}
+          >
+            {" "}
+            {t("Sign In")}
           </Button>
           <Button
             type="button"
             className={` rounded-[3px] max-md:px-4 max-md:py-2 px-7 py-2 ${
-              isDarkMode ? "bg-[#F5F5F5] border border-[#F5F5F5] text-black" : "text-white bg-black"
+              isDarkMode
+                ? "bg-[#F5F5F5] border border-[#F5F5F5] text-black"
+                : "text-white bg-black"
             }`}
             onClick={() => {
               navigate("/sign-up/verification");
@@ -167,7 +181,6 @@ const NavBar: FC<NavBarProps> = ({}) => {
           >
             {t("Sign Up")}
           </Button>
-
         </div>
       </div>
     </header>

@@ -6,7 +6,8 @@ import { usePasswordResetMutation } from "../redux/services/UserApi";
 import { toast } from "react-toastify";
 import NavBar from "../components/shared/NavBar";
 import { useTranslation } from 'react-i18next';
-
+import { useContext } from "react";
+import { UserContext } from "../context/user-context";
 
 interface ResetPasswordProps {
   // Define your props here
@@ -19,6 +20,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [resetPassword] = usePasswordResetMutation();
   const [error, setError] = useState<string>("");
+  const { isDarkMode } = useContext(UserContext);
   const validateEmail = () => {
     const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
@@ -58,18 +60,23 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
 
   return (
     <>
-      <NavBar showSign={false} />
+      {/* <NavBar showSign={false} setSelectedLanguage={function (): void {
+        throw new Error("Function not implemented.");
+      }} selectedLanguage={""} /> */}
 
-      <div className="bg-white h-full w-full font-inter flex justify-center items-center ">
-        <div className=" bg-[#fafafa] flex flex-col items-center justify-center gap-2 border rounded-2xl w-[600px] p-6 m-auto shadow-sm shadow-slate-800 ">
-          <h2 className="text-black text-heading1-bold">Reset Your Password</h2>
+      <div className={`flex justify-center items-center h-full`}  >
+        <div className={` ${isDarkMode ? "bg-[#282828] border-[#575757b0]" : "bg-[#fafafa]"} flex flex-col border rounded-2xl p-10 w-[510px] shadow-blur `}>
+          <h2 className={`${isDarkMode ? "text-white" : "text-black"} text-heading2-semibold mb-2`}>{t("Reset Your Password")}</h2>
+          <p className={`${isDarkMode ? "text-white" : "text-black"} text-body2 mb-5`}>
+            {t("Enter your email address and we will send you a link to reset your password")}
+          </p>
           <Input
             label=""
             type="email"
-            name="email"
+            name="email"  
             id="email"
-            className="border rounded-xl mt-4"
-            placeholder="Enter your email"
+            className="bg-transparent border-[#33363A]  rounded-lg mb-[-10px]"
+            placeholder={t("Enter your email")}
             value={email}
             error={error}
             onChange={(e) => setEmail(e.target.value)}
@@ -78,9 +85,9 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
             type="button"
             onClick={handleSendResetLink}
             disabled={loading}
-            className="bg-black text-white h-full flex items-center justify-center gap-2 border rounded-xl"
+            className={`${ isDarkMode ? "bg-white text-black": "bg-[#282828] text-white" } rounded-2xl`}
           >
-            {loading ? "Resetting..." : "Reset Password"}
+            {loading ? t("Reseting") : t("Send Reset Link")}
           </Button>
         </div>
       </div>

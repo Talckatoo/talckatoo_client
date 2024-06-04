@@ -1,26 +1,12 @@
 import { useContext } from "react";
-import { UserContext } from "./../../context/user-context";
+import { UserContext } from "../../context/user-context";
 
 import { useTranslation } from 'react-i18next';
 import { testimonials as untranslatedTestimonials } from "../../constants/testimonials";
 
 const Testimonials = () => {
   const { isDarkMode } = useContext(UserContext);
-
   const { t } = useTranslation();
-  const testimonials = untranslatedTestimonials.map((testimonial, index) => {
-    try {
-      return {
-        ...testimonial,
-        text: t(testimonial.text),
-        name: t(testimonial.name),
-        title: t(testimonial.title)
-      };
-    } catch (error) {
-      console.error(`Error processing testimonial ${index + 1}:`, error);
-      return null;
-    }
-  });
 
   return (
     <section className=" max-md:p-5 container mt-[8rem] ">
@@ -41,12 +27,12 @@ const Testimonials = () => {
         </div>
 
         <div className="grid  gap-10 md:grid-cols-2  max-sm:grid-cols-1  sm:mx-auto items-center mt-[4rem] w-full z-[1]   justify-between p-card">
-          {testimonials.map((item) => (
+          {untranslatedTestimonials.map((item) => (
             <div
               key={item?.name}
-              className={`p-16  bg-black border shadow-lg  rounded-[20px] card ${
+              className={`p-16 border shadow-blur rounded-[20px] card ${
                 isDarkMode
-                  ? "bg-[#282828] text-white border-[#575757]"
+                  ? " text-white bg-[#282828] border-[#575757b0]"
                   : " bg-light-bg border-[#EFF0F6] text-black"
               }`}
             >

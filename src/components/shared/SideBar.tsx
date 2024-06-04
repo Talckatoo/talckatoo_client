@@ -19,7 +19,7 @@ import LeftSideBar from "./LeftSideBar";
 import { FaUserXmark } from "react-icons/fa6";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { useTranslation } from 'react-i18next'; //TRANSLATION languages
+import { useTranslation } from "react-i18next"; //TRANSLATION languages
 
 const SideBar = ({
   socket,
@@ -38,7 +38,7 @@ const SideBar = ({
   const { user } = useAppSelector((state) => state.auth);
   const [searchData, setSearchData] = useState<any[]>([]);
   const [usersData, setUsersData] = useState<any[]>([]);
-  const [selectedUser,setSelectedUser] = useState<any | null>(null);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const conversationState = useAppSelector((state) => state.conversation);
   const [showRequest, setShowRequest] = useState(
     buttonSelected === "friends" ? true : false
@@ -140,10 +140,9 @@ const SideBar = ({
     );
   }, [searchData, users]);
 
-  
   return (
     <div
-      className={`w-2/6 min-w-[350px] h-full flex shadow-sm z-10 ${
+      className={`w-2/6 min-w-[350px] h-full flex shadow-blur z-10 ${
         isDarkMode ? "bg-[#181818]" : "bg-white"
       }`}
     >
@@ -161,7 +160,7 @@ const SideBar = ({
             isDarkMode ? "text-white" : "text-black"
           }`}
         >
-          {t('Chats')}
+          {t("chats")}
         </div>
 
         <div className="relative flex mx-4">
@@ -172,7 +171,7 @@ const SideBar = ({
             className={`${
               isDarkMode ? "bg-[#282828]" : "bg-secondary-500"
             } pl-12 text-white rounded-xl focus:outline-none focus:border-0 focus:ring-[3px] focus:ring-blue border-0 placeholder-white::placeholder`}
-            placeholder={t('Search')}
+            placeholder={t("Search")}
           />
           <IoSearch
             className={`absolute left-3 top-3 ${
@@ -191,8 +190,8 @@ const SideBar = ({
                   icon={faSpinner}
                   spin
                 />
-                <p className="w-full font-extrabold text-[20px] text-center flex justify-center">
-                  Loading
+                <p className={`w-full font-extrabold text-[20px] text-center flex justify-center ${ isDarkMode ?  "text-white" :  "text-secondary-500"} `}>
+                  {t("Loading...")}
                 </p>
               </div>
             ) : usersData.length > 0 ? (
@@ -210,13 +209,14 @@ const SideBar = ({
               ))
             ) : (
               <div className="h-full w-full flex flex-col items-center justify-center py-4 px-4 ">
-                <FaUserXmark className="w-1/12 h-auto text-secondary-500 animate__animated animate__headShake" />
-                <p className="w-full font-extrabold text-[20px] text-center flex justify-center animate__animated animate__headShake">
-                  We didn't find any results
+                <FaUserXmark className={`w-1/12 h-auto text-secondary-500 animate__animated animate__headShake ${ isDarkMode ?  "text-white" :  "text-secondary-500"} `} />
+                <p className={`w-full font-extrabold text-[20px] text-center ${ isDarkMode ?  "text-white" :  "text-secondary-500"} flex justify-center animate__animated animate__headShake`}>
+                  {t("We didn't find any results")}
                 </p>
-                <p className="w-full text-center flex justify-center animate__animated animate__headShake">
-                  Make sure everything is spelled correctly or try different
-                  keywords
+                <p className={`w-full text-center flex justify-center animate__animated animate__headShake ${ isDarkMode ?  "text-white" :  "text-secondary-500"} `}>
+                  {t(
+                    "Make sure everything is spelled correctly or try different keywords"
+                  )}
                 </p>
               </div>
             )}
@@ -226,8 +226,8 @@ const SideBar = ({
             {requests?.filter(
               (r: any) => r.status === "pending" && r.to._id === user._id
             ).length > 0 && (
-              <div className="flex items-center justify-center text-2xl font-bold text-gray-600">
-                Friend Requests
+              <div className={`flex items-center justify-center text-2xl font-bold ${ isDarkMode ?  "text-white" :  "text-secondary-500"} `}>
+                {t("Friend Requests")}
               </div>
             )}
 
@@ -249,8 +249,8 @@ const SideBar = ({
                 </div>
               ))}
 
-            <div className="flex items-center justify-center text-2xl font-bold text-gray-600 mt-8">
-              {t('Friends')}
+            <div className={`flex items-center justify-center text-2xl font-bold ${ isDarkMode ?  "text-white" :  "text-secondary-500"} `}>
+              {t("Friends")}
             </div>
             {allUser
               ? allUser?.map((user: any) => (

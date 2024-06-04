@@ -139,7 +139,7 @@ const SignIn = () => {
           <div className="w-full max-w-[400px] h-[44px]">
             <Button
               type="button"
-              className="bg-[#fafafa] text-black w-full h-full flex justify-center items-center border-[0.5px] border-[#33363A] rounded-lg shadow-sm-2xl "
+              className="bg-[#fafafa] text-black w-full h-full flex justify-center items-center border-[0.5px] border-[#33363A] rounded-lg shadow-blur-2xl "
               onClick={() => redirectTogoogle()}
             >
               <img
@@ -153,7 +153,7 @@ const SignIn = () => {
           </div>
           {/* End of Google button red */}
 
-          <div className="flex items-center gap-4 w-full my-[2rem]">
+          <div className="flex items-center gap-2 w-full my-[2rem]">
             <div className="w-full h-[2px] bg-[#33363A]"></div>
             <p
               className={`text-black whitespace-nowrap ${
@@ -175,7 +175,7 @@ const SignIn = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className={`bg-transparent border-[#33363A] rounded-lg  ${isDarkMode ? " text-white": "text-black"}`}
+            className={`bg-transparent border-[#33363A]  rounded-lg mb-[-10px] ${isDarkMode ? " text-white": "text-black"}`}
             error={formErrors.email}
           />
 
@@ -189,7 +189,7 @@ const SignIn = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className={`bg-transparent border-[#33363A] rounded-lg  ${isDarkMode ? " text-white": "text-black"}`}
+            className={`bg-transparent border-[#33363A] rounded-lg mb-[-10px]   ${isDarkMode ? " text-white": "text-black"}`}
             error={formErrors.password}
           />
           <Button
@@ -204,7 +204,7 @@ const SignIn = () => {
 
           <Button
             type="submit"
-            className="bg-black text-white w-full h-[48px] mt-[1rem] z-[1] rounded-lg"
+            className={`${ isDarkMode ?  "bg-white text-black" : "bg-black text-white"} w-full h-[48px] mt-[1rem] z-[1] rounded-lg`}
           >
             {loading ? `${t("Loading...")}` : `${t("Log in")}`}
           </Button>
@@ -236,13 +236,13 @@ const SignIn = () => {
           </div>
           <div className="flex gap-2">
             <p
-              className="text-[blue] cursor-pointer"
+              className={`${ isDarkMode ? "text-blue" : "text-[blue]" }  cursor-pointer`}
               onClick={() => navigate("/terms")}
             >
               terms &{" "}
             </p>
             <p
-              className="text-[blue] cursor-pointer"
+              className={`${ isDarkMode ? "text-blue" : "text-[blue]" }  cursor-pointer`}
               onClick={() => navigate("/privacy")}
             >
               {" "}
