@@ -175,20 +175,20 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       />
 
       {random.islooking === true ? (
-        <div className="flex flex-1 h-[100vh] w-full  overflow-hidden flex-grow bg-white">
+        <div className={`flex flex-1 h-full w-full  overflow-hidden flex-grow ${ isDarkMode ? "bg-[#181818]" : ""}`}>
           <div className="flex flex-col justify-center w-full items-center">
             <Lottie
               animationData={animationData}
               loop={true}
               style={{ width: 500, height: 500 }}
             />
-            <p className="text-center text-[35px] font-bold max-md:px-4  max-w-[768px] text-black">
+            <p className={`text-center text-[35px] font-bold max-md:px-4  max-w-[768px] ${ isDarkMode ? "text-white" : "text-black"} `}>
               {t("Looking for a random chat")}
             </p>
             <Button
               type="button"
               onClick={() => handleCancel()}
-              className="bg-secondary-500 hover:bg-primary-600 text-white font-bold py-2 px-8 rounded-xl"
+              className={`bg-secondary-500 hover:bg-primary-600 ${ isDarkMode ? "bg-white text-black" : "bg-black text-white"} font-bold py-2 px-8 rounded-xl`}
             >
               {t("Cancel")}
             </Button>

@@ -115,12 +115,12 @@ const RandomChat = ({
 
   return (
     <div
-      className={`w-full h-full flex flex-col ${
-        isDarkMode ? "bg-sidebar-dark-500" : "bg-white"
+      className={`w-full  flex flex-col ${
+        isDarkMode ? "bg-[#202020]" : "bg-white"
       }`}
     >
-      <div className="relative h-full">
-        <div className="flex flex-col shadow-blur border-l border-opacity-20 h-full ">
+      <div className="relative ">
+        <div className="flex flex-col h-full ">
           <div className="w-full flex flex-col h-full">
             <img
               src="/assets/img/Shapes.png"
@@ -132,12 +132,12 @@ const RandomChat = ({
               alt="shape"
               className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
             />
-            <div className="relative min-h-[80vh]   z-[5] ">
+            <div className="relative min-h-[76vh]   z-[5] ">
               <div
                 ref={scrollRef}
                 className="overflow-y-auto overflow-x-hidden w-full   absolute top-0 left-0 right-0 bottom-0  m-auto"
               >
-                <div className="m-2 p-2 ">
+                <div className="p-4">
                   {messages
                     ? messages.map((msg: any, index:any) => (
                         <div
@@ -297,7 +297,7 @@ const RandomChat = ({
               </div>
             </div>
           </div>
-          <div className="w-full py-2 bg-white relative z-5">
+          <div className={` ${isDarkMode ? "bg-[#181818]" : "bg-white" }`}>
             <ChatInput
               onHandleSendMessage={handleSendMessage}
               onHandleSendAIMessage={sendAIMessage}
