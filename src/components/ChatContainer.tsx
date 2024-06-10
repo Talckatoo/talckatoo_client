@@ -52,10 +52,17 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import notificationSound from "/notification.wav";
 
 import {
+  KeyHelper,
   SessionBuilder,
   SessionCipher,
   SignalProtocolAddress,
 } from "@privacyresearch/libsignal-protocol-typescript";
+
+import {
+  KeyPairType,
+  SignedPublicPreKeyType,
+  PreKeyType,
+} from "@privacyresearch/libsignal-protocol-typescript/lib/types";
 
 import { SignalProtocolStore } from "../util/signalStorageType";
 import { SignalDirectory } from "../util/signalDirectory";
@@ -337,21 +344,15 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     );
   };
 
-  // const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
-  //   const binaryString = atob(base64);
-  //   const len = binaryString.length;
-  //   const bytes = new Uint8Array(len);
-  //   for (let i = 0; i < len; i++) {
-  //     bytes[i] = binaryString.charCodeAt(i);
-  //   }
-  //   return bytes.buffer;
-  // };
+  const arrayToArrayBuffer = (arr) => {
+    const arrayBuffer = new ArrayBuffer(arr.length);
+    const view = new Uint8Array(arrayBuffer);
 
-  const bufferToArrayBuffer = (buffer: Buffer): ArrayBuffer => {
-    return buffer.buffer.slice(
-      buffer.byteOffset,
-      buffer.byteOffset + buffer.byteLength
-    );
+    for (let i = 0; i < arr.length; i++) {
+      view[i] = arr[i];
+    }
+
+    return arrayBuffer;
   };
 
   const fetchUserKeys = async (userId: string) => {
@@ -365,92 +366,71 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         }
       );
 
-      let identityPubKey = Buffer.from(
-        response.data.data.userKey.identityKeyPair.data
-      );
-      let signedPreKey = {
-        keyId: response.data.data.userKey.signedPreKey.keyId,
-        publicKey: Buffer.from(
-          response.data.data.userKey.signedPreKey.publicKey.data
+      let registrationId = response.data.data.userKey.registrationId;
+
+      let identityKeyPair = {
+        pubKey: arrayToArrayBuffer(
+          response.data.data.userKey.identityKeyPair.pubKey.data
         ),
-        signature: Buffer.from(
-          response.data.data.userKey.signedPreKey.signature.data
-        ),
-      };
-      let oneTimePreKeys = {
-        keyId: response.data.data.userKey.oneTimePreKeys[0].keyId,
-        publicKey: Buffer.from(
-          response.data.data.userKey.oneTimePreKeys[0].publicKey.data
+        privKey: arrayToArrayBuffer(
+          response.data.data.userKey.identityKeyPair.privKey.data
         ),
       };
 
-      const keyBundle = {
-        registrationId: response.data.data.userKey.registrationId,
-        identityPubKey: identityPubKey,
-        signedPreKey: signedPreKey,
-        oneTimePreKeys: [oneTimePreKeys],
-      };
-      // const keyBundle = {
-      //   registrationId: response.data.data.userKey.registrationId,
-      //   identityPubKey: base64ToArrayBuffer(
-      //     response.data.data.userKey.identityKeyPair.pubKey
-      //   ),
-      //   signedPreKey: {
-      //     keyId: response.data.data.userKey.signedPreKey.keyId,
-      //     publicKey: base64ToArrayBuffer(
-      //       response.data.data.userKey.signedPreKey.publicKey
-      //     ),
-      //     signature: base64ToArrayBuffer(
-      //       response.data.data.userKey.signedPreKey.signature
-      //     ),
-      //   },
-      //   oneTimePreKeys: [
-      //     {
-      //       keyId: response.data.data.userKey.preKey.keyId,
-      //       publicKey: base64ToArrayBuffer(
-      //         response.data.data.userKey.preKey.publicKey
-      //       ),
-      //     },
-      //   ],
-      // };
-      return keyBundle;
+      return { registrationId, identityKeyPair };
     } catch (error) {
       console.error("Failed to fetch user keys", error);
       throw error;
     }
   };
 
-  // const establishSessionWithUser = async (
-  //   store: SignalProtocolStore,
-  //   recipientId: string,
-  //   recipientKeys: any
-  // ) => {
-  //   const recipientAddress = new SignalProtocolAddress(recipientId, 1);
-  //   const sessionBuilder = new SessionBuilder(store, recipientAddress);
-  //   const keyBundle = {
-  //     registrationId: base64ToArrayBuffer(recipientKeys.registrationId),
-  //     identityKey: base64ToArrayBuffer(recipientKeys.identityKeyPair),
-  //     signedPreKey: base64ToArrayBuffer(recipientKeys.signedPreKey),
-  //     oneTimePreKeys: [base64ToArrayBuffer(recipientKeys.preKey)],
-  //   };
-  //   await sessionBuilder.processPreKey(keyBundle);
-  // };
+  const generateKeys = async () => {
+    const baseKeyId = Math.floor(10000 * Math.random());
+    const signedPreKeyId = Math.floor(10000 * Math.random());
+    const preKey = await KeyHelper.generatePreKey(baseKeyId);
+    store.storePreKey(`${baseKeyId}`, preKey.keyPair);
+
+    const { registrationId, identityKeyPair } = await fetchUserKeys(selectedId);
+
+    const signedPreKey = await KeyHelper.generateSignedPreKey(
+      identityKeyPair,
+      signedPreKeyId
+    );
+
+    store.storeSignedPreKey(signedPreKeyId, signedPreKey.keyPair);
+
+    const publicSignedPreKey: SignedPublicPreKeyType = {
+      keyId: signedPreKeyId,
+      publicKey: signedPreKey.keyPair.pubKey,
+      signature: signedPreKey.signature,
+    };
+
+    const publicPreKey: PreKeyType = {
+      keyId: preKey.keyId,
+      publicKey: preKey.keyPair.pubKey,
+    };
+
+    directory.storeKeyBundle(selectedId, {
+      registrationId,
+      identityPubKey: identityKeyPair.pubKey,
+      signedPreKey: publicSignedPreKey,
+      oneTimePreKeys: [publicPreKey],
+    });
+  };
 
   const handleSendMessage = async (messageText: any) => {
     socket.current.emit("stopTyping", selectedId);
     if (selectedId && conversationId !== "") {
       try {
-        // fetch recipient keys
-        const keyBundle = await fetchUserKeys(selectedId);
-
-        directory.storeKeyBundle(selectedId, keyBundle);
+        // fetch, generate, store recipient keys
+        await generateKeys();
 
         // // get recipient keys from directory
         const recipientKeyBundle = directory.getPreKeyBundle(selectedId);
 
         const recipientAddress = new SignalProtocolAddress(selectedId, 1);
 
-        // // Instantiate a SessionBuilder for a remote recipientId + deviceId tuple.
+        // Instantiate a SessionBuilder for a remote recipientId + deviceId tuple.
 
         const sessionBuilder = new SessionBuilder(store, recipientAddress);
 
@@ -458,11 +438,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           await sessionBuilder.processPreKey(recipientKeyBundle);
         }
 
-        // const sessionCipher = new SessionCipher(store, recipientAddress);
-        // const ciphertext = await sessionCipher.encrypt(messageText);
+        const sessionCipher = new SessionCipher(store, recipientAddress);
+        const ciphertext = await sessionCipher.encrypt(messageText);
 
-        console.log(recipientKeyBundle);
-        console.log(recipientAddress);
+        // log the ciphertext
+        console.log(ciphertext);
 
         const response = await sendMessage({
           from: user?._id,
