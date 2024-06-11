@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
+import JSEncrypt from "jsencrypt";
 import axios from "axios";
 import ChatInput from "../components/ChatInput";
 import { UserContext } from "../context/user-context";
@@ -169,6 +170,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   )?.voiceCode;
   const token = localStorage.getItem("token");
 
+  // crypto state
+  const [publicKeys, setPublicKeys] = useState({});
+  const [privateKey, setPrivateKey] = useState("");
+
   // TEST //  ------------------------------------------------
 
   // TEST //  ------------------------------------------------
@@ -324,15 +329,98 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     );
   };
 
+  // Fetch public keys
+  const handleFetchPubKeys = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/keys/public`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const keys = response.data.data.userKeys.reduce((acc, key) => {
+        acc[key.userId] = key.publicKey;
+        return acc;
+      }, {});
+      setPublicKeys(keys);
+    } catch (err) {
+      console.log(`Keys fetch error: ${err}`);
+      toast.error("Failed to fetch public keys");
+    }
+  };
+
+  // Fetch private key
+  const handleFetchPrivKey = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/keys/private/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPrivateKey(response.data.data.userKeys.privateKey);
+    } catch (err) {
+      console.log(`Keys fetch error: ${err}`);
+      toast.error("Failed to fetch private key");
+    }
+  };
+
+  // Encryption and Decryption functions
+  const encryptMessage = (message, recipientId) => {
+    const encryptor = new JSEncrypt();
+    encryptor.setPublicKey(publicKeys[recipientId]);
+    return encryptor.encrypt(message);
+  };
+
+  const decryptMessage = (encryptedMessage, privateKey) => {
+    const decrypt = new JSEncrypt();
+    decrypt.setPrivateKey(privateKey);
+    return decrypt.decrypt(encryptedMessage);
+  };
+
+  // Keys fetch useEffect
+  useEffect(() => {
+    if (user) {
+      try {
+        handleFetchPubKeys();
+        handleFetchPrivKey();
+      } catch (err) {
+        console.log(`Keys fetch error: ${err}`);
+        toast.error("Failed to fetch public keys");
+      }
+    }
+  }, [user]);
+
+  // Hook to decrypt messages
+  // useEffect(() => {
+  //   const msg = messages[0]?.message;
+  //   console.log(privateKey, messages);
+  //   if (privateKey && messages.length > 0) {
+  //     const decryptedMsgs = messages.map((msg) => {
+  //       return {
+  //         ...msg,
+  //         message: decryptMessage(msg.message, privateKey),
+  //       };
+  //     });
+  //   console.log(decryptedMsgs);
+  //   dispatch(setMessages(decryptedMsgs));
+  //   }
+  // }, [messages, privateKey]);
+
   const handleSendMessage = async (messageText: any) => {
     socket.current.emit("stopTyping", selectedId);
+    const sealed = encryptMessage(messageText, selectedId);
     if (selectedId && conversationId !== "") {
       try {
         const response = await sendMessage({
           from: user?._id,
           to: selectedId,
           targetLanguage: language,
-          message: messageText,
+          message: sealed,
           status: false,
           unread: selectedId,
         }).unwrap();
@@ -583,10 +671,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       socket.current.on("getMessage", (data: any) => {
         console.log(data);
         if (data.message) {
+          const unsealed = decryptMessage(data.message, privateKey);
           showNotification(`${data.userName}: ${data.message}`);
           setArrivalMessages({
             createdAt: data.createdAt,
-            message: data.message,
+            message: unsealed,
             sender: data.from,
             _id: uuidv4(),
           });
@@ -613,6 +702,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             _id: uuidv4(),
           });
         } else if (data.messageReply) {
+          const unsealed = decryptMessage(
+            data.messageReply.message,
+            privateKey
+          );
           showNotification(`${data.from}: Reply message`);
           toast.update(2, {
             render: "done",
@@ -624,7 +717,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
           setArrivalMessages({
             createdAt: data.messageReply.createdAt,
-            message: data.messageReply.message,
+            message: unsealed,
             sender: data.from,
             type: "ai",
             _id: uuidv4(),
