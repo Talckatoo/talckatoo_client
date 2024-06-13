@@ -17,7 +17,11 @@ const NavBarRandom = ({ leaveRandomChat }) => {
   const handleRandomVideoCall = () => {};
 
   return (
-    <nav className={`${isDarkMode ? "bg-[#181818]" : ""} `}>
+    <nav
+      className={`shadow-blur${
+        isDarkMode ? "bg-[#181818] border border-[#000] border-opacity-20 " : ""
+      } `}
+    >
       <div className="flex items-center justify-between p-1">
         <div>
           <div className="flex ">
@@ -29,19 +33,19 @@ const NavBarRandom = ({ leaveRandomChat }) => {
                 >
                   <BiLogOut color="red" size={28} />
                   <span className="text-[#ff1818e9] font-semibold">
-                  {t("Leave Chat")}
-
+                    {t("Leave Chat")}
                   </span>
                 </div>
-
-              
               </>
             )}
           </div>
         </div>
 
         <div className="m-2">
-          <button className={`${ isDarkMode ? "text-white" : "text-black"}`} onClick={handleRandomVideoCall}>
+          <button
+            className={`${isDarkMode ? "text-white" : "text-black"}`}
+            onClick={handleRandomVideoCall}
+          >
             <PiVideoCameraThin size={34} />
           </button>
         </div>

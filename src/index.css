@@ -47,7 +47,7 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: #ffffff;
+  background: #1f1f1f;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -448,4 +448,23 @@ textarea:focus {
   position: absolute;
   bottom: 0;
   animation: countdown 4s linear forwards;
+}
+/* For WebKit browsers */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #202020;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #2b2b2b;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2a57aa;
 }

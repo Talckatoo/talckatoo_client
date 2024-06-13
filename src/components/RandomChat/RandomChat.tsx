@@ -116,7 +116,7 @@ const RandomChat = ({
   return (
     <div
       className={`w-full  flex flex-col ${
-        isDarkMode ? "bg-[#202020]" : "bg-white"
+        isDarkMode ? "bg-[#181818]" : "bg-white"
       }`}
     >
       <div className="relative ">

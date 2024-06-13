@@ -12,6 +12,7 @@ import Button from "../UI/Button";
 import NavBarRandom from "../navbar/NavBarRandom";
 import { setRandom } from "../redux/features/socket/socketSlice";
 import { useTranslation } from "react-i18next";
+import { tab } from "../components/shared/SideBar";
 
 interface Socket {
   current: any;
@@ -23,6 +24,8 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
   const { user } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
+
+  const [selectedTab, setSelectedTab] = useState("");
 
   const { random } = useAppSelector((state) => state.socket);
   const handleSetButtonSelected = (buttonSelected: string) => {
@@ -167,28 +170,33 @@ const Random = ({ socket }: { socket: Socket }): JSX.Element => {
       }`}
     >
       {/*Left sidebar */}
-      <LeftSideBar
-        showSetting={false}
-        showRequest={false}
-        setButtonSelected={handleSetButtonSelected}
-        showRandom={true}
-      />
+      <LeftSideBar />
 
       {random.islooking === true ? (
-        <div className={`flex flex-1 h-full w-full  overflow-hidden flex-grow ${ isDarkMode ? "bg-[#181818]" : ""}`}>
+        <div
+          className={`flex flex-1 h-full w-full  overflow-hidden flex-grow ${
+            isDarkMode ? "bg-[#181818]" : ""
+          }`}
+        >
           <div className="flex flex-col justify-center w-full items-center">
             <Lottie
               animationData={animationData}
               loop={true}
               style={{ width: 500, height: 500 }}
             />
-            <p className={`text-center text-[35px] font-bold max-md:px-4  max-w-[768px] ${ isDarkMode ? "text-white" : "text-black"} `}>
+            <p
+              className={`text-center text-[35px] font-bold max-md:px-4  max-w-[768px] ${
+                isDarkMode ? "text-white" : "text-black"
+              } `}
+            >
               {t("Looking for a random chat")}
             </p>
             <Button
               type="button"
               onClick={() => handleCancel()}
-              className={`bg-secondary-500 hover:bg-primary-600 ${ isDarkMode ? "bg-white text-black" : "bg-black text-white"} font-bold py-2 px-8 rounded-xl`}
+              className={`bg-secondary-500 hover:bg-primary-600 ${
+                isDarkMode ? "bg-white text-black" : "bg-black text-white"
+              } font-bold py-2 px-8 rounded-xl`}
             >
               {t("Cancel")}
             </Button>
