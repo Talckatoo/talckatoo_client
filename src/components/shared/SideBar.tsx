@@ -108,8 +108,6 @@ const SideBar = ({
   }, [search]);
 
   const handleSelectContact = (user: any) => {
-    if (searchData.length > 0) return;
-
     setSelectedUser(user);
     dispatch(setRecipientProfileImage(user?.profileImage?.url));
     dispatch(
@@ -129,13 +127,17 @@ const SideBar = ({
 
   useEffect(() => {
     setUsersData(
-      searchData.length && search.length
+      searchData.length > 0 && search !== ""
         ? searchData
         : !searchData.length && !search.length
         ? users?.contactedUsers
         : []
     );
   }, [searchData, users, search]);
+
+  useEffect(() => {
+    console.log("usersData", usersData);
+  }, [usersData]);
 
   const handleSearchInChat = (e: any) => {
     setSearch(e.target.value);
@@ -204,7 +206,8 @@ const SideBar = ({
           </p>
         </div>
       )}
-      {usersData.length > 0 &&
+
+      {usersData &&
         usersData.map((user: any) => (
           <div key={user._id} onClick={() => handleSelectContact(user)}>
             <Friend
@@ -283,10 +286,9 @@ const SideBar = ({
             />
           </div>
         )}
-        {search.length === 0 &&
-          (selectedTab === tab.friends
-            ? renderChatUsers()
-            : renderFriendRequests())}
+        {selectedTab === tab.addFriends
+          ? renderChatUsers()
+          : renderFriendRequests()}
 
         {error && (
           <div className="flex items-start mt-[5rem] justify-center h-full w-full">
