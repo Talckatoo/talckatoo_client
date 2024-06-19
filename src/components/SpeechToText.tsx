@@ -56,25 +56,23 @@ export default function SpeechToText({ setMessageText }: SpeechTextProps) {
   };
 
   const Transcribe = (
-    <img src={Wave} alt="Transcribe" width="50" height="50" className="p-1" />
+    <img src={Wave} alt="Transcribe" className="p-[3px]"/>
   );
   return (
     <>
       <button
         title="Speech to Text"
-        className={`bg-slate-300 hover:bg-slate-400 rounded-full m-2 h-9 w-9 ${
-          isListening ? "hover:bg-red-300" : ""
-        }`}
+        className={` m-2 h-4 w-10 flex items-center justify-center  `}
         onClick={handleClickListen}
       >
         {isClick && isListening ? (
           <div className="">
-            <div className="flex items-center justify-center">
-              <div className="base">
+            <div className="">
+              <div className="base w-8 h-8 p-1">
                 <svg
                   width="14"
                   height="14"
-                  viewBox="0 0 16 16"
+                  viewBox="0 0 18 18"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >

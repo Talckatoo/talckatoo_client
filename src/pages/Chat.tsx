@@ -96,6 +96,8 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
   const conversationId = conversationState?.conversation?.conversationId;
   const language = conversationState?.conversation?.language;
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const FetchFriends = async () => {
     try {
       const result = (await axios.get(
@@ -108,6 +110,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
       )) as any;
       if (result) {
         dispatch(setUsers(result.data.users));
+        setIsLoading(false);
       }
     } catch (err) {
       console.log(err);
@@ -191,6 +194,7 @@ const Chat = ({ socket }: { socket: Socket }): JSX.Element => {
           socket={socket}
           refetch={refetch}
           buttonSelected={buttonSelected}
+          isLoading={isLoading}
         />
 
         <div className=" w-full h-full flex flex-col bg-white">

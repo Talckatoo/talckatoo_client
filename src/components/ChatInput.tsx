@@ -200,7 +200,9 @@ const ChatInput = ({
                   socket={socket}
                   onHandleTranslateText={onHandleTranslateText}
                 />
+
               </div>
+                <SpeechToText setMessageText={(newMessageText: string) => setMessageText(newMessageText)} />
 
               <div className="flex items-center gap-2">
                 <img src="./assets/img/line.png" className="i" />
