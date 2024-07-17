@@ -70,7 +70,7 @@ const SideBar = ({
     socket?.current?.on("getAcceptFriendRequest", () => {
       setSearch("");
     });
-  }, [socket]);
+  }, [socket.current]);
 
   useEffect(() => {
     if (users) {
@@ -135,9 +135,6 @@ const SideBar = ({
     );
   }, [searchData, users, search]);
 
-  useEffect(() => {
-    console.log("usersData", usersData);
-  }, [usersData]);
 
   const handleSearchInChat = (e: any) => {
     setSearch(e.target.value);

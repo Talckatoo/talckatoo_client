@@ -66,15 +66,17 @@ const LeftSideBar = () => {
   }, [pathname, selectedTab]);
 
   const tabButtonClass = (tab: string) =>
-    `${isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500"} ${
+    `${
       selectedTab !== tab
-        ? `bg-white border-[1px] hover:bg-gray-200 hover:border-gray-200 ${
-            isDarkMode ? "border-white" : "border-black"
+        ? `${
+            isDarkMode
+              ? "border-white hover:bg-gray-400 hover:border-gray-400 "
+              : "border-black hover:bg-gray-200 hover:border-gray-200 "
           }`
-        : `border-[1px] border-secondary-500 hover:bg-black ${
+        : `border-secondary-500  ${
             isDarkMode ? "bg-[#E9E9EF]" : "bg-secondary-500"
           }`
-    } mx-2 rounded-[12px] flex items-center justify-center flex-col transition duration-300 ease-in-out`;
+    } border-[1px] mx-2 rounded-[12px] flex items-center justify-center flex-col transition duration-300 ease-in-out`;
 
   const iconClass = (tab: string) =>
     `${
