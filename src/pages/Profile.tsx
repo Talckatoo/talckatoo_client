@@ -12,6 +12,7 @@ import Input from "../UI/Input";
 import { useDeleteAccountMutation } from "../redux/services/AuthApi";
 import LeftSideBar from "../components/shared/LeftSideBar";
 import { useTranslation } from "react-i18next";
+import { tab } from "../components/shared/SideBar";
 
 interface Socket {
   current: any;
@@ -181,12 +182,7 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
       }`}
     >
       {/*First column */}
-      <LeftSideBar
-        showSetting={true}
-        showRequest={false}
-        setButtonSelected={handleSetButtonSelected}
-        showRandom={false}
-      />
+      <LeftSideBar />
 
       <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
         <img

@@ -56,7 +56,6 @@ root.render(
         </PersistGate>
       </Provider>
     </UserContextProvider>
-    <NotificationPermission />
     <ToastContainer />
   </>
 );

@@ -13,6 +13,7 @@ import { HiTranslate } from "react-icons/hi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from 'react-i18next';
+import WaveformAnimation from "./../UI/Wave";
 
 interface VoiceMessageProps {
   socket: Socket;
@@ -274,35 +275,15 @@ const VoiceMessage = ({
 
           {isRecording ? (
             <>
-              <div className="w-1/4 h-8">
-                <div className="flex items-center justify-center  mx-5">
-                  <div id="bars">
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                  </div>
-                </div>
-              </div>
+              <WaveformAnimation />
               <button onClick={stopRecording}>
-                <FaStop className="text-white text-[20px] ml-3" />
+                <FaStop className="text-white text-[20px] mx-2" />
               </button>
             </>
           ) : null}
         </div>
       </div>
       <div>
-        {/* {audioURL && (
-        <audio ref={audioRef} controls>
-          <source src={audioURL} type="audio/mp3" />
-        </audio>
-      )} */}
       </div>
     </>
   );
