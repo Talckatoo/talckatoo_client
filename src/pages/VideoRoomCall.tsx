@@ -1,13 +1,8 @@
 import End from "../components/VideoCall/End";
 import VideoPlayer from "../components/VideoCall/VideoPlayer";
 import Options from "../components/VideoCall/Options";
-<<<<<<< HEAD
 import { useEffect, useState, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-=======
-import { useEffect, useState, useRef, useContext } from "react";
-import { useAppSelector } from "../redux/hooks";
->>>>>>> 5dfd430fc688a0f6a9a4a61c99de237c5fc36326
 import { useParams } from "react-router-dom";
 import CallUser from "../components/VideoCall/services/CallUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
