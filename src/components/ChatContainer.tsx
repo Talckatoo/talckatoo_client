@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import JSEncrypt from "jsencrypt";
+import elliptic from "elliptic";
+import CryptoJS from "crypto-js";
 import axios from "axios";
 import ChatInput from "../components/ChatInput";
 import { UserContext } from "../context/user-context";
@@ -369,17 +371,36 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   };
 
-  // Encryption and Decryption functions
-  const encryptMessage = (message, recipientId) => {
-    const encryptor = new JSEncrypt();
-    encryptor.setPublicKey(publicKeys[recipientId]);
-    return encryptor.encrypt(message);
+  const EC = elliptic.ec;
+  const ec = new EC("secp256k1");
+
+  // function for encrypting a message using ECDH key exchange methodology
+  // the encryption and decryption protocol currently being used is AES
+  const encryptMessage = (message, senderPrivateKey, recipientPublicKey) => {
+    const senderKey = ec.keyFromPrivate(senderPrivateKey, "hex");
+    const recipientKey = ec.keyFromPublic(recipientPublicKey, "hex");
+    const sharedSecret = senderKey
+      .derive(recipientKey.getPublic())
+      .toString(16);
+
+    const encryptedMessage = CryptoJS.AES.encrypt(
+      message,
+      sharedSecret
+    ).toString();
+    return encryptedMessage;
   };
 
-  const decryptMessage = (encryptedMessage, privateKey) => {
-    const decrypt = new JSEncrypt();
-    decrypt.setPrivateKey(privateKey);
-    return decrypt.decrypt(encryptedMessage);
+  // function for decrypting a message using ECDH key exchange methodology
+  const decryptMessage = (encryptedMessage, privateKey, publicKey) => {
+    const privateKeyObj = ec.keyFromPrivate(privateKey, "hex");
+    const publicKeyObj = ec.keyFromPublic(publicKey, "hex");
+    const sharedSecret = privateKeyObj
+      .derive(publicKeyObj.getPublic())
+      .toString(16);
+
+    const decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, sharedSecret);
+    const decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
+    return decryptedMessage;
   };
 
   // Keys fetch useEffect
@@ -395,32 +416,28 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, [user]);
 
-  // Hook to decrypt messages
-  // useEffect(() => {
-  //   const msg = messages[0]?.message;
-  //   console.log(privateKey, messages);
-  //   if (privateKey && messages.length > 0) {
-  //     const decryptedMsgs = messages.map((msg) => {
-  //       return {
-  //         ...msg,
-  //         message: decryptMessage(msg.message, privateKey),
-  //       };
-  //     });
-  //   console.log(decryptedMsgs);
-  //   dispatch(setMessages(decryptedMsgs));
-  //   }
-  // }, [messages, privateKey]);
-
   const handleSendMessage = async (messageText: any) => {
     socket.current.emit("stopTyping", selectedId);
-    const sealed = encryptMessage(messageText, selectedId);
+
+    const sealedMessage = encryptMessage(
+      messageText,
+      privateKey,
+      publicKeys[user?._id]
+    );
+
+    // temporary test through console logs
+    console.log("private key:", privateKey);
+    console.log("selected ID", selectedId);
+    console.log("user ID", user?._id);
+    console.log("sealed", sealedMessage);
+
     if (selectedId && conversationId !== "") {
       try {
         const response = await sendMessage({
           from: user?._id,
           to: selectedId,
           targetLanguage: language,
-          message: sealed,
+          message: messageText,
           status: false,
           unread: selectedId,
         }).unwrap();
@@ -435,7 +452,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           from: user?._id,
           to: selectedId,
           targetLanguage: language,
-          message: message?.message,
+          message: sealedMessage,
           status: false,
           unread: selectedId,
           conversationId: conversation?._id,

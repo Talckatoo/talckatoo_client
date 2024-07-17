@@ -24,6 +24,7 @@
     "base64-js": "^1.5.1",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.3.1",
+    "elliptic": "^6.5.5",
     "emoji-picker-react": "^4.4.9",
     "ffmpeg-static": "^5.1.0",
     "file-saver": "^2.0.5",
