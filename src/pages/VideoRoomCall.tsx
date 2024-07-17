@@ -131,7 +131,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
       socket.current.off("callAccepted");
       socket.current.off("leaveCall");
     };
-  }, [socket.current, roomId, decodedCallData]);
+  }, [socket.current, roomId, decodedCallData, video, audio]);
 
   useEffect(() => {
     socket?.current?.on("roomCreated", (data: { message: any }) => {});
@@ -170,6 +170,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
                   userVideo={userVideo}
                   callEnded={callEnded}
                   userData={userData}
+                  video={video}
                 />
               </div>
               <div className="flex h-1/6 bg-[#25282C]">

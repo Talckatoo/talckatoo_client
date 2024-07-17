@@ -25,6 +25,7 @@ export default function Options({
     dispatch(
       setHandleCall({
         audio: !audio,
+        video: video,
       })
     );
   };
@@ -33,6 +34,7 @@ export default function Options({
     dispatch(
       setHandleCall({
         video: !video,
+        audio: audio,
       })
     );
   };
