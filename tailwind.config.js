@@ -1,218 +1,218 @@
 /* eslint-disable import/no-anonymous-default-export */
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
 
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: '2rem',
       screens: {
-        "2xl": "1400px",
+        '2xl': '1400px',
       },
     },
     fontSize: {
-      "heading1-bold": [
-        "36px",
+      'heading1-bold': [
+        '36px',
         {
-          lineHeight: "140%",
-          fontWeight: "700",
+          lineHeight: '140%',
+          fontWeight: '700',
         },
       ],
-      "heading1-semibold": [
-        "36px",
+      'heading1-semibold': [
+        '36px',
         {
-          lineHeight: "140%",
-          fontWeight: "600",
+          lineHeight: '140%',
+          fontWeight: '600',
         },
       ],
-      "heading2-bold": [
-        "30px",
+      'heading2-bold': [
+        '30px',
         {
-          lineHeight: "140%",
-          fontWeight: "700",
+          lineHeight: '140%',
+          fontWeight: '700',
         },
       ],
-      "heading2-semibold": [
-        "30px",
+      'heading2-semibold': [
+        '30px',
         {
-          lineHeight: "140%",
-          fontWeight: "600",
+          lineHeight: '140%',
+          fontWeight: '600',
         },
       ],
-      "heading3-bold": [
-        "24px",
+      'heading3-bold': [
+        '24px',
         {
-          lineHeight: "140%",
-          fontWeight: "700",
+          lineHeight: '140%',
+          fontWeight: '700',
         },
       ],
-      "heading4-medium": [
-        "20px",
+      'heading4-medium': [
+        '20px',
         {
-          lineHeight: "140%",
-          fontWeight: "500",
+          lineHeight: '140%',
+          fontWeight: '500',
         },
       ],
-      "body-bold": [
-        "18px",
+      'body-bold': [
+        '18px',
         {
-          lineHeight: "140%",
-          fontWeight: "700",
+          lineHeight: '140%',
+          fontWeight: '700',
         },
       ],
-      "body-semibold": [
-        "18px",
+      'body-semibold': [
+        '18px',
         {
-          lineHeight: "140%",
-          fontWeight: "600",
+          lineHeight: '140%',
+          fontWeight: '600',
         },
       ],
-      "body-medium": [
-        "18px",
+      'body-medium': [
+        '18px',
         {
-          lineHeight: "140%",
-          fontWeight: "500",
+          lineHeight: '140%',
+          fontWeight: '500',
         },
       ],
-      "body-normal": [
-        "18px",
+      'body-normal': [
+        '18px',
         {
-          lineHeight: "140%",
-          fontWeight: "400",
+          lineHeight: '140%',
+          fontWeight: '400',
         },
       ],
-      "body1-bold": [
-        "18px",
+      'body1-bold': [
+        '18px',
         {
-          lineHeight: "140%",
-          fontWeight: "700",
+          lineHeight: '140%',
+          fontWeight: '700',
         },
       ],
-      "base-regular": [
-        "16px",
+      'base-regular': [
+        '16px',
         {
-          lineHeight: "140%",
-          fontWeight: "400",
+          lineHeight: '140%',
+          fontWeight: '400',
         },
       ],
-      "base-medium": [
-        "16px",
+      'base-medium': [
+        '16px',
         {
-          lineHeight: "140%",
-          fontWeight: "500",
+          lineHeight: '140%',
+          fontWeight: '500',
         },
       ],
-      "base-semibold": [
-        "16px",
+      'base-semibold': [
+        '16px',
         {
-          lineHeight: "140%",
-          fontWeight: "600",
+          lineHeight: '140%',
+          fontWeight: '600',
         },
       ],
-      "base1-semibold": [
-        "16px",
+      'base1-semibold': [
+        '16px',
         {
-          lineHeight: "140%",
-          fontWeight: "600",
+          lineHeight: '140%',
+          fontWeight: '600',
         },
       ],
-      "x-small-regular": [
-        "12px",
+      'x-small-regular': [
+        '12px',
         {
-          lineHeight: "130%",
-          fontWeight: "300",
+          lineHeight: '130%',
+          fontWeight: '300',
         },
       ],
-      "small-regular": [
-        "14px",
+      'small-regular': [
+        '14px',
         {
-          lineHeight: "140%",
-          fontWeight: "400",
+          lineHeight: '140%',
+          fontWeight: '400',
         },
       ],
-      "small-medium": [
-        "14px",
+      'small-medium': [
+        '14px',
         {
-          lineHeight: "140%",
-          fontWeight: "500",
+          lineHeight: '140%',
+          fontWeight: '500',
         },
       ],
-      "small-semibold": [
-        "14px",
+      'small-semibold': [
+        '14px',
         {
-          lineHeight: "140%",
-          fontWeight: "600",
+          lineHeight: '140%',
+          fontWeight: '600',
         },
       ],
-      "subtle-medium": [
-        "12px",
+      'subtle-medium': [
+        '12px',
         {
-          lineHeight: "16px",
-          fontWeight: "500",
+          lineHeight: '16px',
+          fontWeight: '500',
         },
       ],
-      "subtle-semibold": [
-        "12px",
+      'subtle-semibold': [
+        '12px',
         {
-          lineHeight: "16px",
-          fontWeight: "600",
+          lineHeight: '16px',
+          fontWeight: '600',
         },
       ],
-      "tiny-medium": [
-        "10px",
+      'tiny-medium': [
+        '10px',
         {
-          lineHeight: "140%",
-          fontWeight: "500",
+          lineHeight: '140%',
+          fontWeight: '500',
         },
       ],
-      "x-small-semibold": [
-        "7px",
+      'x-small-semibold': [
+        '7px',
         {
-          lineHeight: "9.318px",
-          fontWeight: "600",
+          lineHeight: '9.318px',
+          fontWeight: '600',
         },
       ],
     },
     extend: {
       colors: {
-        "sidebar-dark-500":"#0E131D",
-        "selected-friend-dark":"#141A27",
-        "selected-friend-light": "#F5F5F5",
-        "input-bg-dark": "#1D2638",
-        "primary-500": "#5D5DFF",
-        "secondary-500": "#25282C",
-        "title-500": "#D9E3EA",
-        "border-500": "#979797",
-        "background-500": "#151719",
-        "red-badge-500": "#DD0000",
-        blue: "#0095F6",
-        "logout-btn": "#FF5A5A",
-        "navbar-menu": "rgba(16, 16, 18, 0.6)",
-        "dark-1": "#000000",
-        "dark-2": "#121417",
-        "dark-3": "#101012",
-        "dark-4": "#1F1F22",
-        "light-1": "#FFFFFF",
-        "light-2": "#EFEFEF",
-        "light-3": "#7878A3",
-        "light-4": "#5C5C7B",
-        "gray-1": "#697C89",
-        "light-bg": "#FAFAFA",
-        "light-st": "EFF0F6",
-        glassmorphism: "rgba(16, 16, 18, 0.60)",
+        'sidebar-dark-500': '#0E131D',
+        'selected-friend-dark': '#141A27',
+        'selected-friend-light': '#F5F5F5',
+        'input-bg-dark': '#1D2638',
+        'primary-500': '#5D5DFF',
+        'secondary-500': '#25282C',
+        'title-500': '#D9E3EA',
+        'border-500': '#979797',
+        'background-500': '#151719',
+        'red-badge-500': '#DD0000',
+        blue: '#0095F6',
+        'logout-btn': '#FF5A5A',
+        'navbar-menu': 'rgba(16, 16, 18, 0.6)',
+        'dark-1': '#000000',
+        'dark-2': '#121417',
+        'dark-3': '#101012',
+        'dark-4': '#1F1F22',
+        'light-1': '#FFFFFF',
+        'light-2': '#EFEFEF',
+        'light-3': '#7878A3',
+        'light-4': '#5C5C7B',
+        'gray-1': '#697C89',
+        'light-bg': '#FAFAFA',
+        'light-st': 'EFF0F6',
+        glassmorphism: 'rgba(16, 16, 18, 0.60)',
       },
       boxShadow: {
-        blur: "6px 6px 54px 0px rgba(0, 0, 0, 0.05)",
-        "count-badge": "0px 0px 6px 2px rgba(219, 188, 159, 0.30)",
-        "groups-sidebar": "-30px 0px 60px 0px rgba(28, 28, 31, 0.50)",
+        blur: '6px 6px 54px 0px rgba(0, 0, 0, 0.05)',
+        'count-badge': '0px 0px 6px 2px rgba(219, 188, 159, 0.30)',
+        'groups-sidebar': '-30px 0px 60px 0px rgba(28, 28, 31, 0.50)',
       },
       screens: {
-        xs: "400px",
-        sm: "640px",
-        md: "868px",
-        lg: "1380px",
-        xl: "1580px",
+        xs: '400px',
+        sm: '640px',
+        md: '868px',
+        lg: '1380px',
+        xl: '1580px',
       },
     },
   },

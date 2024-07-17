@@ -26,6 +26,7 @@ Talckatoo offers the following features:
 - User authentication and authorization.
 - Display of active users in each chat room.
 - Typing indicators for live chat feedback.
+- End To End Encryption with security in mind of all aspect of transmiting messages
 
 ## Prerequisites
 

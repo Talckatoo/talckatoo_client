@@ -20,7 +20,7 @@
 @keyframes jump {
   0%,
   44% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
 
   28% {
