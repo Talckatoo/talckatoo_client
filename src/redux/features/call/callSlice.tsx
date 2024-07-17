@@ -10,12 +10,22 @@ export interface Call {
   signal: any;
 }
 
+interface HandleCall {
+  video?: boolean;
+  audio?: boolean;
+}
+
 interface CallState {
   call: Call | null;
+  handleCall: HandleCall;
 }
 
 const initialState: CallState = {
   call: null,
+  handleCall: {
+    video: true,
+    audio: true,
+  },
 };
 
 const callSlice = createSlice({
@@ -28,8 +38,11 @@ const callSlice = createSlice({
     clearCall: (state) => {
       state.call = null;
     },
+    setHandleCall: (state, action: PayloadAction<HandleCall>) => {
+      state.handleCall = action.payload;
+    },
   },
 });
 
-export const { setCall, clearCall } = callSlice.actions;
+export const { setCall, clearCall, setHandleCall } = callSlice.actions;
 export default callSlice.reducer;

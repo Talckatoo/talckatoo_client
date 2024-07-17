@@ -2,7 +2,7 @@ import End from "../components/VideoCall/End";
 import VideoPlayer from "../components/VideoCall/VideoPlayer";
 import Options from "../components/VideoCall/Options";
 import { useEffect, useState, useRef } from "react";
-import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { useParams } from "react-router-dom";
 import CallUser from "../components/VideoCall/services/CallUser";
 import AnswerCall from "../components/VideoCall/services/AnswerCall";
@@ -28,12 +28,17 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const userVideo = useRef();
   const connectionRef = useRef();
 
+  const dispatch = useAppDispatch();
+  const { handleCall } = useAppSelector((state) => state.call);
+
+  const { video, audio } = handleCall;
+
   useEffect(() => {
     const initializeMediaStream = async () => {
       try {
         const currentStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
+          video: video,
+          audio: audio,
         });
 
         setStream(currentStream);
@@ -100,7 +105,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
         // if (connectionRef.current) {
         //   connectionRef.current.destroy();
         // }
-        // }       
+        // }
       }
     };
 
@@ -127,7 +132,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   }, [socket.current, roomId, decodedCallData]);
 
   useEffect(() => {
-    socket?.current?.on("roomCreated", (data: { message: any }) => { });
+    socket?.current?.on("roomCreated", (data: { message: any }) => {});
 
     return () => {
       // Clean up event listeners on component unmount
@@ -174,7 +179,10 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
             </>
           ) : (
             <div className="flex items-center justify-center h-full">
-              <p className="text-red-500 font-bold">Failed to access camera or microphone. Please check your settings and try again.</p>
+              <p className="text-red-500 font-bold">
+                Failed to access camera or microphone. Please check your
+                settings and try again.
+              </p>
             </div>
           )}
         </div>

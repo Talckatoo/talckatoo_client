@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { PiMicrophoneLight } from "react-icons/pi";
 import { PiPhoneDisconnectLight } from "react-icons/pi";
 import { PiEyeLight } from "react-icons/pi";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import { setHandleCall } from "../../redux/features/call/callSlice";
 
 export default function Options({
   callAccepted,
@@ -15,17 +16,44 @@ export default function Options({
 }) {
   const { user } = useAppSelector((state) => state.auth);
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const { handleCall } = useAppSelector((state) => state.call);
+
+  const { video, audio } = handleCall;
+
+  const handleAudio = () => {
+    dispatch(
+      setHandleCall({
+        audio: !audio,
+      })
+    );
+  };
+
+  const handleVideo = () => {
+    dispatch(
+      setHandleCall({
+        video: !video,
+      })
+    );
+  };
+
   return (
     <div className="flex items-center justify-center h-full w-full gap-2">
-      <button className="flex flex-col items-center rounded-md px-4 py-3 text-white">
+      <button
+        className="flex flex-col items-center rounded-md px-4 py-3 text-white"
+        onClick={handleAudio}
+      >
         <PiMicrophoneLight size={20} />
-        <span>{t("Microphone")}</span>
+        {audio ? <span>{t("Mute")}</span> : <span>{t("Microphone")}</span>}
       </button>
 
       {/* Button 3 */}
-      <button className="flex flex-col items-center rounded-md px-4 py-3 text-white">
+      <button
+        className="flex flex-col items-center rounded-md px-4 py-3 text-white"
+        onClick={handleVideo}
+      >
         <PiEyeLight size={22} />
-        <span>{t("Camera")}</span>
+        {video ? <span>{t("Stop camera")}</span> : <span>{t("Camera")}</span>}
       </button>
 
       {/* Button 4 */}
