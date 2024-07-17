@@ -437,7 +437,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           from: user?._id,
           to: selectedId,
           targetLanguage: language,
-          message: messageText,
+          message: sealedMessage,
           status: false,
           unread: selectedId,
         }).unwrap();
