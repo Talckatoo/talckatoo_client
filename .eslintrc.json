@@ -22,7 +22,9 @@
     "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
     "react/react-in-jsx-scope": "off",
     "import/no-unresolved": "off",
-    "no-shadow": "off"
+    "no-shadow": "off",
+    "quotes": ["error", "single"],
+    "no-restricted-globals": "off"
   },
   "ignorePatterns": ["dist/", "build/"]
 }
