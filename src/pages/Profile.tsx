@@ -12,7 +12,6 @@ import Input from "../UI/Input";
 import { useDeleteAccountMutation } from "../redux/services/AuthApi";
 import LeftSideBar from "../components/shared/LeftSideBar";
 import { useTranslation } from "react-i18next";
-import { tab } from "../components/shared/SideBar";
 
 interface Socket {
   current: any;
@@ -176,15 +175,14 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   return (
-    <div
-      className={`flex flex-1 flex-grow justify-center w-full h-full ${
-        isDarkMode ? "bg-[#181818]" : ""
-      }`}
-    >
+    <div className={`flex flex-1 flex-grow justify-center w-full h-full `}>
       {/*First column */}
       <LeftSideBar />
 
-      <div className="mx-auto flex flex-col justify-center h-full md:text-[14px]">
+      <div
+        className={`mx-auto flex flex-col justify-center h-full md:text-[14px] mt-10  
+          ${isDarkMode ? "bg-[#181818]" : "bg-white"}`}
+      >
         <img
           src={`${
             isDarkMode ? "/assets/img/Shapesde.png" : "/assets/img/Shapes.png"
@@ -200,13 +198,17 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
           className="fixed right-[2rem]  -top-16 w-[23%] z-[1] "
         />
         <form
-          className=" px-[10rem] py-[4rem] flex flex-col bg-[#fff] border border-[#b9b9b9ab] rounded-[14px]"
+          className={`${
+            isDarkMode ? "bg-[#181818] text-white" : "bg-white"
+          } px-[10rem] py-[2rem] flex flex-col  border border-[#b9b9b9ab] rounded-[14px]`}
           onSubmit={handleSubmit}
           style={{
             boxShadow: "6px 6px 54px 0px rgba(0, 0, 0, 0.03)",
           }}
         >
-          <div className="mb-8  flex items-center justify-center gap-4 cursor-pointer relative">
+          <div
+            className={` mb-8  flex items-center justify-center gap-4 cursor-pointer relative`}
+          >
             {image ? (
               <img
                 src={URL.createObjectURL(image)}
@@ -225,41 +227,65 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
               className="absolute inset-0 opacity-0 cursor-pointer"
               onChange={handleUpload}
             />
-            <span className=" text-[#606060]">{t("Upload Photo")}</span>
+            <span className={`${isDarkMode ? "text-white" : "text-[#606060]"}`}>
+              {t("Upload Photo")}
+            </span>
           </div>
 
-          <Input
-            name="name"
-            type="text"
-            label={t("Username")}
-            placeholder={t("Enter your username")}
-            id="name"
-            value={formInput.name}
-            onChange={handleInputChange}
-            className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
-          />
+          <div>
+            <label
+              htmlFor="name"
+              className={`block mb-2 text-sm font-medium ${
+                isDarkMode ? "text-white" : "text-[#606060]"
+              }`}
+            >
+              {t("Username")}
+            </label>
+            <Input
+              name="name"
+              type="text"
+              placeholder={t("Enter your username")}
+              id="name"
+              value={formInput.name}
+              onChange={handleInputChange}
+              className="bg-[#F5F5F5] w-[410px] min-w-[410px] max-md:w-full"
+              label={""}
+            />
+          </div>
 
-          <Input
-            disabled={true}
-            name="email"
-            type="text"
-            label="E-mail"
-            placeholder="Enter your e-mail"
-            id="email"
-            value={formInput.email}
-            onChange={handleInputChange}
-            className="bg-[#F5F5F5]  w-[410px] min-w-[410px] max-md:w-full"
-          />
+          <div>
+            <label
+              htmlFor="email"
+              className={`block mb-2 text-sm font-medium ${
+                isDarkMode ? "text-white" : "text-[#606060]"
+              }`}
+            >
+              E-mail
+            </label>
+            <Input
+              disabled={true}
+              name="email"
+              type="text"
+              placeholder="Enter your e-mail"
+              id="email"
+              value={formInput.email}
+              onChange={handleInputChange}
+              className="bg-[#F5F5F5] w-[410px] min-w-[410px] max-md:w-full"
+              label={""}
+            />
+          </div>
 
-          <div className="mb-12 ">
+          <div className="mb-12">
             <label
               htmlFor={name}
-              className="block text-[14px] font-medium  mb-4 text-[#606060]"
+              className={`block text-[14px] font-medium mb-4 ${
+                isDarkMode ? "text-white" : "text-[#606060]"
+              }`}
             >
               {t("Language")}
             </label>
             <select
-              className="p-4    w-full bg-[#F5F5F5] rounded-[10px] text-[#606060] focus:outline-none outline-none"
+              className="p-4 w-full bg-[#F5F5F5] rounded-[10px] text-[#606060] focus:outline-none outline-none"
               value={updateLanguage}
               onChange={handleLanguageChange}
             >
@@ -309,14 +335,18 @@ const Profile = ({ socket }: { socket: Socket }): JSX.Element => {
         {/* delete account zone danger */}
         <div
           className={` flex justify-between px-4 py-6 ${
-            isDarkMode ? "z-50" : "z-50"
-          } border   border-[#b9b9b9ab] rounded-[14px] shadow-blur bg-white `}
+            isDarkMode ? "z-50 " : "z-50 "
+          } border   border-[#b9b9b9ab] rounded-[14px] shadow-blur mb-12  `}
         >
           <div>
             <h4 className="text-body-medium font-bold text-red-600">
               {t("deleteAccount")}
             </h4>
-            <p className="opacity-90 text-body-normal text-gray-500">
+            <p
+              className={`opacity-90 text-body-normal ${
+                isDarkMode ? "text-white" : "text-gray-500"
+              }`}
+            >
               {t("descriptionDeleteAccount")}
             </p>
           </div>

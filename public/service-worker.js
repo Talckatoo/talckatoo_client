@@ -1,4 +1,4 @@
-// public/service-worker.js
+// eslint-disable-next-line no-restricted-globals
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data.text(),
