@@ -364,7 +364,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           },
         }
       );
-      setPrivateKey(response.data.data.userKeys.privateKey);
+      const decryptedPrivateKey = CryptoJS.AES.decrypt(
+        response.data.data.userKeys.privateKey,
+        import.meta.env.VITE_KEK_SECRET
+      ).toString(CryptoJS.enc.Utf8);
+      setPrivateKey(decryptedPrivateKey);
     } catch (err) {
       console.log(`Keys fetch error: ${err}`);
       toast.error("Failed to fetch private key");
@@ -422,14 +426,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const sealedMessage = encryptMessage(
       messageText,
       privateKey,
-      publicKeys[user?._id]
+      publicKeys[selectedId]
     );
-
-    // temporary test through console logs
-    console.log("private key:", privateKey);
-    console.log("selected ID", selectedId);
-    console.log("user ID", user?._id);
-    console.log("sealed", sealedMessage);
 
     if (selectedId && conversationId !== "") {
       try {
