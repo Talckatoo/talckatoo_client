@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import JSEncrypt from "jsencrypt";
 import elliptic from "elliptic";
 import CryptoJS from "crypto-js";
 import axios from "axios";
