@@ -51,6 +51,7 @@ import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import notificationSound from "/notification.wav";
+import getTranslation from "../util/translator-api";
 
 interface Socket {
   current: any;
@@ -419,104 +420,223 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, [user]);
 
-  const handleSendMessage = async (messageText: any) => {
+  // const handleSendMessage = async (messageText: any) => {
+  //   socket.current.emit("stopTyping", selectedId);
+
+  //   const sealedMessage = encryptMessage(
+  //     messageText,
+  //     privateKey,
+  //     publicKeys[selectedId]
+  //   );
+
+  //   if (selectedId && conversationId !== "") {
+  //     try {
+  //       const response = await sendMessage({
+  //         from: user?._id,
+  //         to: selectedId,
+  //         targetLanguage: language,
+  //         message: sealedMessage,
+  //         status: false,
+  //         unread: selectedId,
+  //       }).unwrap();
+
+  //       const { message, conversation } = response;
+
+  //       // setIsFetchingMore(false);
+
+  //       socket.current.emit("sendMessage", {
+  //         createdAt: message?.createdAt,
+  //         userName: user?.userName,
+  //         from: user?._id,
+  //         to: selectedId,
+  //         targetLanguage: language,
+  //         message: sealedMessage,
+  //         status: false,
+  //         unread: selectedId,
+  //         conversationId: conversation?._id,
+  //       });
+
+  //       // modify the latest message   in the users redux
+
+  //       dispatch(
+  //         addMessage({
+  //           createdAt: message?.createdAt,
+  //           message: message?.message,
+  //           sender: user?._id,
+  //           _id: message?._id,
+  //           unread: selectedId,
+  //         })
+  //       );
+  //     } catch (err) {
+  //       console.log("error from error", err);
+  //       toast.error(`${t("Error sending messages, please try again")}`);
+  //     }
+  //   } else if (selectedId && conversationId === "") {
+  //     try {
+  //       const response = await sendMessage({
+  //         from: user?._id,
+  //         to: selectedId,
+  //         targetLanguage: language,
+  //         message: messageText,
+  //         status: false,
+  //         unread: selectedId,
+  //       }).unwrap();
+
+  //       setIsFetchingMore(false);
+  //       const { message, conversation } = response;
+
+  //       socket.current.emit("sendMessage", {
+  //         createdAt: message?.createdAt,
+  //         from: user?._id,
+  //         to: selectedId,
+  //         targetLanguage: language,
+  //         message: message?.message,
+  //         status: false,
+  //         unread: selectedId,
+  //         conversation: conversation._id,
+  //       });
+
+  //       // modify the latest message   in the users redux
+
+  //       dispatch(
+  //         addMessage({
+  //           createdAt: message?.createdAt,
+  //           message: message?.message,
+  //           sender: user?._id,
+  //           _id: message?._id,
+  //           unread: selectedId,
+  //         })
+  //       );
+  //       dispatch(
+  //         setConversation({
+  //           conversationId: conversation?._id,
+  //           selectedId: selectedId,
+  //           language: language,
+  //         })
+  //       );
+  //     } catch (err) {
+  //       toast.error(`${t("Error sending messages, please try again")}`);
+  //     }
+  //   }
+  // };
+
+  const handleSendMessage = async (messageText: string) => {
     socket.current.emit("stopTyping", selectedId);
 
-    const sealedMessage = encryptMessage(
-      messageText,
-      privateKey,
-      publicKeys[selectedId]
-    );
+    if (!selectedId) return;
 
-    if (selectedId && conversationId !== "") {
-      try {
-        const response = await sendMessage({
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          message: sealedMessage,
-          status: false,
-          unread: selectedId,
-        }).unwrap();
+    try {
+      // Translate the message
+      const translatedText = await translateMessage(language, messageText);
 
-        const { message, conversation } = response;
+      // Encrypt the message
+      const sealedMessage = encryptMessage(
+        translatedText,
+        privateKey,
+        publicKeys[selectedId]
+      );
 
-        // setIsFetchingMore(false);
+      console.log("sealedMessage", sealedMessage);
 
-        socket.current.emit("sendMessage", {
-          createdAt: message?.createdAt,
-          userName: user?.userName,
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          message: sealedMessage,
-          status: false,
-          unread: selectedId,
-          conversationId: conversation?._id,
-        });
+      // Send the message based on whether it's a new or existing conversation
+      const response = conversationId
+        ? await sendExistingMessage(sealedMessage)
+        : await sendNewMessage(sealedMessage);
 
-        // modify the latest message   in the users redux
+      const { message, conversation } = response;
 
-        dispatch(
-          addMessage({
-            createdAt: message?.createdAt,
-            message: message?.message,
-            sender: user?._id,
-            _id: message?._id,
-            unread: selectedId,
-          })
-        );
-      } catch (err) {
-        console.log("error from error", err);
-        toast.error(`${t("Error sending messages, please try again")}`);
+      // Emit the message through the socket
+      emitSocketMessage(sealedMessage, message?.createdAt, conversation?._id);
+
+      // Update Redux state with the new message
+      updateReduxState(message, conversation);
+
+      if (!conversationId) {
+        dispatchNewConversation(conversation?._id);
       }
-    } else if (selectedId && conversationId === "") {
-      try {
-        const response = await sendMessage({
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          message: messageText,
-          status: false,
-          unread: selectedId,
-        }).unwrap();
-
-        setIsFetchingMore(false);
-        const { message, conversation } = response;
-
-        socket.current.emit("sendMessage", {
-          createdAt: message?.createdAt,
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          message: message?.message,
-          status: false,
-          unread: selectedId,
-          conversation: conversation._id,
-        });
-
-        // modify the latest message   in the users redux
-
-        dispatch(
-          addMessage({
-            createdAt: message?.createdAt,
-            message: message?.message,
-            sender: user?._id,
-            _id: message?._id,
-            unread: selectedId,
-          })
-        );
-        dispatch(
-          setConversation({
-            conversationId: conversation?._id,
-            selectedId: selectedId,
-            language: language,
-          })
-        );
-      } catch (err) {
-        toast.error(`${t("Error sending messages, please try again")}`);
-      }
+    } catch (err) {
+      handleError(err);
     }
+  };
+
+  const translateMessage = async (language: string, messageText: string) => {
+    const result = await getTranslation(
+      language,
+      messageText,
+      process.env.VITE_AZURE_TRANSLATOR_KEY as string,
+      process.env.VITE_TRANSLATOR_ENDPOINT as string
+    );
+    return messageText + result[0]?.text;
+  };
+
+  const sendExistingMessage = async (sealedMessage: string) => {
+    return await sendMessage({
+      from: user?._id,
+      to: selectedId,
+      targetLanguage: language,
+      message: sealedMessage,
+      status: false,
+      unread: selectedId,
+    }).unwrap();
+  };
+
+  const sendNewMessage = async (sealedMessage: string) => {
+    const response = await sendMessage({
+      from: user?._id,
+      to: selectedId,
+      targetLanguage: language,
+      message: sealedMessage,
+      status: false,
+      unread: selectedId,
+    }).unwrap();
+
+    setIsFetchingMore(false); // Set fetching state if necessary
+    return response;
+  };
+
+  const emitSocketMessage = (
+    sealedMessage: string,
+    createdAt: string,
+    conversationId: string
+  ) => {
+    socket.current.emit("sendMessage", {
+      createdAt,
+      userName: user?.userName,
+      from: user?._id,
+      to: selectedId,
+      targetLanguage: language,
+      message: sealedMessage,
+      status: false,
+      unread: selectedId,
+      conversationId,
+    });
+  };
+
+  const updateReduxState = (message: any, conversation: any) => {
+    dispatch(
+      addMessage({
+        createdAt: message?.createdAt,
+        message: message?.message,
+        sender: user?._id,
+        _id: message?._id,
+        unread: selectedId,
+      })
+    );
+  };
+
+  const dispatchNewConversation = (conversationId: string) => {
+    dispatch(
+      setConversation({
+        conversationId,
+        selectedId,
+        language,
+      })
+    );
+  };
+
+  const handleError = (err: any) => {
+    console.log("Error:", err);
+    toast.error(`${t("Error sending messages, please try again")}`);
   };
 
   const onSendFile = async () => {
