@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef, useMemo } from "react";
 import { toast } from "react-toastify";
 import elliptic from "elliptic";
 import CryptoJS from "crypto-js";
@@ -536,8 +536,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         publicKeys[selectedId]
       );
 
-      console.log("sealedMessage", sealedMessage);
-
       // Send the message based on whether it's a new or existing conversation
       const response = conversationId
         ? await sendExistingMessage(sealedMessage)
@@ -563,8 +561,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     const result = await getTranslation(
       language,
       messageText,
-      process.env.VITE_AZURE_TRANSLATOR_KEY as string,
-      process.env.VITE_TRANSLATOR_ENDPOINT as string
+      import.meta.env.VITE_AZURE_TRANSLATOR_KEY as string,
+      import.meta.env.VITE_TRANSLATOR_ENDPOINT as string
     );
     return messageText + result[0]?.text;
   };
@@ -803,13 +801,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     if (socket.current) {
       updateConversation();
       socket.current.on("getMessage", (data: any) => {
-        console.log(data);
         if (data.message) {
-          const unsealed = decryptMessage(data.message, privateKey);
           showNotification(`${data.userName}: ${data.message}`);
           setArrivalMessages({
             createdAt: data.createdAt,
-            message: unsealed,
+            message: data.message,
             sender: data.from,
             _id: uuidv4(),
           });
@@ -836,10 +832,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
             _id: uuidv4(),
           });
         } else if (data.messageReply) {
-          const unsealed = decryptMessage(
-            data.messageReply.message,
-            privateKey
-          );
           showNotification(`${data.from}: Reply message`);
           toast.update(2, {
             render: "done",
@@ -851,7 +843,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
           setArrivalMessages({
             createdAt: data.messageReply.createdAt,
-            message: unsealed,
+            message: data.messageReply.message,
             sender: data.from,
             type: "ai",
             _id: uuidv4(),
@@ -945,6 +937,34 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // *************************** VIDEO CALL *****************************
 
+  // *************************** DECRYPTED MESSAGES *****************************
+
+  const decryptedMessages = useMemo(() => {
+    if (!privateKey || !publicKeys[selectedId]) {
+      return messages;
+    }
+
+    return messages.map((msg) => {
+      if (msg.message) {
+        try {
+          const decryptedMessage = decryptMessage(
+            msg.message,
+            privateKey,
+            publicKeys[selectedId]
+          );
+          return { ...msg, message: decryptedMessage };
+        } catch (error) {
+          console.error("Error decrypting message:", error);
+          return msg; // Return the original message if decryption fails
+        }
+      } else {
+        return msg;
+      }
+    });
+  }, [messages, privateKey, publicKeys, selectedId]);
+
+  // *************************** DECRYPTED MESSAGES *****************************
+
   return (
     <div
       className={`w-full h-full flex flex-col ${
@@ -1035,8 +1055,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 >
                   {selectedId ? (
                     <div className="m-2 p-2 ">
-                      {messages
-                        ? messages.map((msg) => (
+                      {decryptedMessages
+                        ? decryptedMessages.map((msg) => (
                             <div
                               className={
                                 "" +
