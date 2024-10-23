@@ -1,5 +1,7 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef, useMemo } from "react";
 import { toast } from "react-toastify";
+import elliptic from "elliptic";
+import CryptoJS from "crypto-js";
 import axios from "axios";
 import ChatInput from "../components/ChatInput";
 import { UserContext } from "../context/user-context";
@@ -49,6 +51,7 @@ import { useUploadFileMutation } from "../redux/services/MediaApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import notificationSound from "/notification.wav";
+import getTranslation from "../util/translator-api";
 
 interface Socket {
   current: any;
@@ -168,6 +171,10 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     (la) => la.code === language?.toLowerCase()
   )?.voiceCode;
   const token = localStorage.getItem("token");
+
+  // crypto state
+  const [publicKeys, setPublicKeys] = useState({});
+  const [privateKey, setPrivateKey] = useState("");
 
   // TEST //  ------------------------------------------------
 
@@ -324,97 +331,310 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     );
   };
 
-  const handleSendMessage = async (messageText: any) => {
-    socket.current.emit("stopTyping", selectedId);
-    if (selectedId && conversationId !== "") {
+  // Fetch public keys
+  const handleFetchPubKeys = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/keys/public`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const keys = response.data.data.userKeys.reduce((acc, key) => {
+        acc[key.userId] = key.publicKey;
+        return acc;
+      }, {});
+      setPublicKeys(keys);
+    } catch (err) {
+      console.log(`Keys fetch error: ${err}`);
+      toast.error("Failed to fetch public keys");
+    }
+  };
+
+  // Fetch private key
+  const handleFetchPrivKey = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/keys/private/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const decryptedPrivateKey = CryptoJS.AES.decrypt(
+        response.data.data.userKeys.privateKey,
+        import.meta.env.VITE_KEK_SECRET
+      ).toString(CryptoJS.enc.Utf8);
+      setPrivateKey(decryptedPrivateKey);
+    } catch (err) {
+      console.log(`Keys fetch error: ${err}`);
+      toast.error("Failed to fetch private key");
+    }
+  };
+
+  const EC = elliptic.ec;
+  const ec = new EC("secp256k1");
+
+  // function for encrypting a message using ECDH key exchange methodology
+  // the encryption and decryption protocol currently being used is AES
+  const encryptMessage = (message, senderPrivateKey, recipientPublicKey) => {
+    const senderKey = ec.keyFromPrivate(senderPrivateKey, "hex");
+    const recipientKey = ec.keyFromPublic(recipientPublicKey, "hex");
+    const sharedSecret = senderKey
+      .derive(recipientKey.getPublic())
+      .toString(16);
+
+    const encryptedMessage = CryptoJS.AES.encrypt(
+      message,
+      sharedSecret
+    ).toString();
+    return encryptedMessage;
+  };
+
+  // function for decrypting a message using ECDH key exchange methodology
+  const decryptMessage = (encryptedMessage, privateKey, publicKey) => {
+    const privateKeyObj = ec.keyFromPrivate(privateKey, "hex");
+    const publicKeyObj = ec.keyFromPublic(publicKey, "hex");
+    const sharedSecret = privateKeyObj
+      .derive(publicKeyObj.getPublic())
+      .toString(16);
+
+    const decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, sharedSecret);
+    const decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
+    return decryptedMessage;
+  };
+
+  // Keys fetch useEffect
+  useEffect(() => {
+    if (user) {
       try {
-        const response = await sendMessage({
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          message: messageText,
-          status: false,
-          unread: selectedId,
-        }).unwrap();
-
-        const { message, conversation } = response;
-
-        // setIsFetchingMore(false);
-
-        socket.current.emit("sendMessage", {
-          createdAt: message?.createdAt,
-          userName: user?.userName,
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          message: message?.message,
-          status: false,
-          unread: selectedId,
-          conversationId: conversation?._id,
-        });
-
-        // modify the latest message   in the users redux
-
-        dispatch(
-          addMessage({
-            createdAt: message?.createdAt,
-            message: message?.message,
-            sender: user?._id,
-            _id: message?._id,
-            unread: selectedId,
-          })
-        );
+        handleFetchPubKeys();
+        handleFetchPrivKey();
       } catch (err) {
-        console.log("error from error", err);
-        toast.error(`${t("Error sending messages, please try again")}`);
-      }
-    } else if (selectedId && conversationId === "") {
-      try {
-        const response = await sendMessage({
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          message: messageText,
-          status: false,
-          unread: selectedId,
-        }).unwrap();
-
-        setIsFetchingMore(false);
-        const { message, conversation } = response;
-
-        socket.current.emit("sendMessage", {
-          createdAt: message?.createdAt,
-          from: user?._id,
-          to: selectedId,
-          targetLanguage: language,
-          message: message?.message,
-          status: false,
-          unread: selectedId,
-          conversation: conversation._id,
-        });
-
-        // modify the latest message   in the users redux
-
-        dispatch(
-          addMessage({
-            createdAt: message?.createdAt,
-            message: message?.message,
-            sender: user?._id,
-            _id: message?._id,
-            unread: selectedId,
-          })
-        );
-        dispatch(
-          setConversation({
-            conversationId: conversation?._id,
-            selectedId: selectedId,
-            language: language,
-          })
-        );
-      } catch (err) {
-        toast.error(`${t("Error sending messages, please try again")}`);
+        console.log(`Keys fetch error: ${err}`);
+        toast.error("Failed to fetch public keys");
       }
     }
+  }, [user]);
+
+  // const handleSendMessage = async (messageText: any) => {
+  //   socket.current.emit("stopTyping", selectedId);
+
+  //   const sealedMessage = encryptMessage(
+  //     messageText,
+  //     privateKey,
+  //     publicKeys[selectedId]
+  //   );
+
+  //   if (selectedId && conversationId !== "") {
+  //     try {
+  //       const response = await sendMessage({
+  //         from: user?._id,
+  //         to: selectedId,
+  //         targetLanguage: language,
+  //         message: sealedMessage,
+  //         status: false,
+  //         unread: selectedId,
+  //       }).unwrap();
+
+  //       const { message, conversation } = response;
+
+  //       // setIsFetchingMore(false);
+
+  //       socket.current.emit("sendMessage", {
+  //         createdAt: message?.createdAt,
+  //         userName: user?.userName,
+  //         from: user?._id,
+  //         to: selectedId,
+  //         targetLanguage: language,
+  //         message: sealedMessage,
+  //         status: false,
+  //         unread: selectedId,
+  //         conversationId: conversation?._id,
+  //       });
+
+  //       // modify the latest message   in the users redux
+
+  //       dispatch(
+  //         addMessage({
+  //           createdAt: message?.createdAt,
+  //           message: message?.message,
+  //           sender: user?._id,
+  //           _id: message?._id,
+  //           unread: selectedId,
+  //         })
+  //       );
+  //     } catch (err) {
+  //       console.log("error from error", err);
+  //       toast.error(`${t("Error sending messages, please try again")}`);
+  //     }
+  //   } else if (selectedId && conversationId === "") {
+  //     try {
+  //       const response = await sendMessage({
+  //         from: user?._id,
+  //         to: selectedId,
+  //         targetLanguage: language,
+  //         message: messageText,
+  //         status: false,
+  //         unread: selectedId,
+  //       }).unwrap();
+
+  //       setIsFetchingMore(false);
+  //       const { message, conversation } = response;
+
+  //       socket.current.emit("sendMessage", {
+  //         createdAt: message?.createdAt,
+  //         from: user?._id,
+  //         to: selectedId,
+  //         targetLanguage: language,
+  //         message: message?.message,
+  //         status: false,
+  //         unread: selectedId,
+  //         conversation: conversation._id,
+  //       });
+
+  //       // modify the latest message   in the users redux
+
+  //       dispatch(
+  //         addMessage({
+  //           createdAt: message?.createdAt,
+  //           message: message?.message,
+  //           sender: user?._id,
+  //           _id: message?._id,
+  //           unread: selectedId,
+  //         })
+  //       );
+  //       dispatch(
+  //         setConversation({
+  //           conversationId: conversation?._id,
+  //           selectedId: selectedId,
+  //           language: language,
+  //         })
+  //       );
+  //     } catch (err) {
+  //       toast.error(`${t("Error sending messages, please try again")}`);
+  //     }
+  //   }
+  // };
+
+  const handleSendMessage = async (messageText: string) => {
+    socket.current.emit("stopTyping", selectedId);
+
+    if (!selectedId) return;
+
+    try {
+      // Translate the message
+      const translatedText = await translateMessage(language, messageText);
+
+      // Encrypt the message
+      const sealedMessage = encryptMessage(
+        translatedText,
+        privateKey,
+        publicKeys[selectedId]
+      );
+
+      // Send the message based on whether it's a new or existing conversation
+      const response = conversationId
+        ? await sendExistingMessage(sealedMessage)
+        : await sendNewMessage(sealedMessage);
+
+      const { message, conversation } = response;
+
+      // Emit the message through the socket
+      emitSocketMessage(sealedMessage, message?.createdAt, conversation?._id);
+
+      // Update Redux state with the new message
+      updateReduxState(message, conversation);
+
+      if (!conversationId) {
+        dispatchNewConversation(conversation?._id);
+      }
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
+  const translateMessage = async (language: string, messageText: string) => {
+    const result = await getTranslation(
+      language,
+      messageText,
+      import.meta.env.VITE_AZURE_TRANSLATOR_KEY as string,
+      import.meta.env.VITE_TRANSLATOR_ENDPOINT as string
+    );
+    return messageText + result[0]?.text;
+  };
+
+  const sendExistingMessage = async (sealedMessage: string) => {
+    return await sendMessage({
+      from: user?._id,
+      to: selectedId,
+      targetLanguage: language,
+      message: sealedMessage,
+      status: false,
+      unread: selectedId,
+    }).unwrap();
+  };
+
+  const sendNewMessage = async (sealedMessage: string) => {
+    const response = await sendMessage({
+      from: user?._id,
+      to: selectedId,
+      targetLanguage: language,
+      message: sealedMessage,
+      status: false,
+      unread: selectedId,
+    }).unwrap();
+
+    setIsFetchingMore(false); // Set fetching state if necessary
+    return response;
+  };
+
+  const emitSocketMessage = (
+    sealedMessage: string,
+    createdAt: string,
+    conversationId: string
+  ) => {
+    socket.current.emit("sendMessage", {
+      createdAt,
+      userName: user?.userName,
+      from: user?._id,
+      to: selectedId,
+      targetLanguage: language,
+      message: sealedMessage,
+      status: false,
+      unread: selectedId,
+      conversationId,
+    });
+  };
+
+  const updateReduxState = (message: any, conversation: any) => {
+    dispatch(
+      addMessage({
+        createdAt: message?.createdAt,
+        message: message?.message,
+        sender: user?._id,
+        _id: message?._id,
+        unread: selectedId,
+      })
+    );
+  };
+
+  const dispatchNewConversation = (conversationId: string) => {
+    dispatch(
+      setConversation({
+        conversationId,
+        selectedId,
+        language,
+      })
+    );
+  };
+
+  const handleError = (err: any) => {
+    console.log("Error:", err);
+    toast.error(`${t("Error sending messages, please try again")}`);
   };
 
   const onSendFile = async () => {
@@ -581,7 +801,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     if (socket.current) {
       updateConversation();
       socket.current.on("getMessage", (data: any) => {
-        console.log(data);
         if (data.message) {
           showNotification(`${data.userName}: ${data.message}`);
           setArrivalMessages({
@@ -718,6 +937,34 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // *************************** VIDEO CALL *****************************
 
+  // *************************** DECRYPTED MESSAGES *****************************
+
+  const decryptedMessages = useMemo(() => {
+    if (!privateKey || !publicKeys[selectedId]) {
+      return messages;
+    }
+
+    return messages.map((msg) => {
+      if (msg.message) {
+        try {
+          const decryptedMessage = decryptMessage(
+            msg.message,
+            privateKey,
+            publicKeys[selectedId]
+          );
+          return { ...msg, message: decryptedMessage };
+        } catch (error) {
+          console.error("Error decrypting message:", error);
+          return msg; // Return the original message if decryption fails
+        }
+      } else {
+        return msg;
+      }
+    });
+  }, [messages, privateKey, publicKeys, selectedId]);
+
+  // *************************** DECRYPTED MESSAGES *****************************
+
   return (
     <div
       className={`w-full h-full flex flex-col ${
@@ -808,8 +1055,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
                 >
                   {selectedId ? (
                     <div className="m-2 p-2 ">
-                      {messages
-                        ? messages.map((msg) => (
+                      {decryptedMessages
+                        ? decryptedMessages.map((msg) => (
                             <div
                               className={
                                 "" +
