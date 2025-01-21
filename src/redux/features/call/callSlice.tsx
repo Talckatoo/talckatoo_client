@@ -13,6 +13,7 @@ export interface Call {
 interface HandleCall {
   video?: boolean;
   audio?: boolean;
+  remoteAudio?: boolean;
 }
 
 interface CallState {
@@ -25,6 +26,7 @@ const initialState: CallState = {
   handleCall: {
     video: true,
     audio: true,
+    remoteAudio: true,
   },
 };
 
@@ -39,10 +41,17 @@ const callSlice = createSlice({
       state.call = null;
     },
     setHandleCall: (state, action: PayloadAction<HandleCall>) => {
-      state.handleCall = action.payload;
+      state.handleCall = {
+        ...state.handleCall,
+        ...action.payload,
+      };
     },
+    setRemoteAudio: (state, action: PayloadAction<boolean>) => {
+      state.handleCall.remoteAudio = action.payload;
+    },
+
   },
 });
 
-export const { setCall, clearCall, setHandleCall } = callSlice.actions;
+export const { setCall, clearCall, setHandleCall, setRemoteAudio } = callSlice.actions;
 export default callSlice.reducer;
