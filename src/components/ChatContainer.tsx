@@ -9,12 +9,11 @@ import ChatWelcome from "../components/ChatWelcome";
 import { getTime } from "../util/getTime";
 import { v4 as uuidv4 } from "uuid";
 import JumpingDotsAnimation from "../UI/animation";
-import languagesArray from "../util/languages";
 import textToVoiceLanguages from "../util/textToVoiceLanguages";
 import TextToSpeech from "../components/TextToSpeech";
 import { MdCancel, MdDownload } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   addMessage,
   setMessages,
@@ -41,7 +40,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 //   DialogActions,
 //   Button,
 // } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
 import HandleAnswerCall from "./VideoCall/services/HandleAnswerCall";
 import { setConversation } from "../redux/features/conversation/conversationSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
@@ -80,7 +78,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     }
   }, []);
 
-  const showNotification = (message) => {
+  const showNotification = (message: any) => {
     if (notificationPermission) {
       const audio = new Audio(notificationSound);
       audio.play();
@@ -88,10 +86,6 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
         body: message,
       });
     }
-  };
-
-  const handleTestNotification = () => {
-    showNotification("This is a test notification");
   };
 
   const { t } = useTranslation();
@@ -342,7 +336,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           },
         }
       );
-      const keys = response.data.data.userKeys.reduce((acc, key) => {
+      const keys = response.data.data.userKeys.reduce((acc:any, key:any) => {
         acc[key.userId] = key.publicKey;
         return acc;
       }, {});
@@ -380,7 +374,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // function for encrypting a message using ECDH key exchange methodology
   // the encryption and decryption protocol currently being used is AES
-  const encryptMessage = (message, senderPrivateKey, recipientPublicKey) => {
+  const encryptMessage = (message:any, senderPrivateKey:any, recipientPublicKey:any) => {
     const senderKey = ec.keyFromPrivate(senderPrivateKey, "hex");
     const recipientKey = ec.keyFromPublic(recipientPublicKey, "hex");
     const sharedSecret = senderKey
@@ -395,7 +389,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   };
 
   // function for decrypting a message using ECDH key exchange methodology
-  const decryptMessage = (encryptedMessage, privateKey, publicKey) => {
+  const decryptMessage = (encryptedMessage:any, privateKey:any, publicKey:any) => {
     const privateKeyObj = ec.keyFromPrivate(privateKey, "hex");
     const publicKeyObj = ec.keyFromPublic(publicKey, "hex");
     const sharedSecret = privateKeyObj
@@ -644,8 +638,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
       if (response.data && !response.data.error) {
         {
           socket.current.emit("stopTyping", selectedId);
-          const fileId = response.data.media._id;
-          const media = response.data.media;
+          const fileId = response?.data?.media?._id;
+          const media = response?.data?.media;
           if (selectedId && conversationId) {
             try {
               const response = await sendMessage({
