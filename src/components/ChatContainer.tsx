@@ -61,8 +61,43 @@ interface ReceivedCallState {
   roomId?: string;
 }
 
+// Define the type for users in the array
+interface UserArrayItem {
+  _id: string;
+  userName: string;
+}
+
+interface Message {
+  _id: string;
+  sender: string;
+  message?: string;
+  createdAt: string;  // Changed to only accept string
+  voiceNote?: {
+    url: string;
+  };
+  media?: {
+    url: string;
+    type: string;
+    altText: string;
+  };
+  type?: string;
+  unread?: string;
+}
+
+interface PublicKeys {
+  [key: string]: string;
+}
+
+interface MessageResponse {
+  message: Message;
+  conversation?: {
+    _id: string;
+    // Add other conversation fields if needed
+  };
+}
+
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
-  const [notificationPermission, setNotificationPermission] = useState(false);
+  const [notificationPermission, setNotificationPermission] = useState<boolean>(false);
 
   useEffect(() => {
     // Check if the browser supports notifications
@@ -154,8 +189,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [sendMessage, { isLoading }] = useSendMessageMutation();
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
-  const [usersArray, setUsersArray] = useState([]);
-  const [arrivalMessages, setArrivalMessages] = useState(null);
+  const [usersArray, setUsersArray] = useState<UserArrayItem[]>([]);
+  const [arrivalMessages, setArrivalMessages] = useState<Message | null>(null);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [selectedTyping, setSelectedTyping] = useState();
@@ -167,8 +202,8 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const token = localStorage.getItem("token");
 
   // crypto state
-  const [publicKeys, setPublicKeys] = useState({});
-  const [privateKey, setPrivateKey] = useState("");
+  const [publicKeys, setPublicKeys] = useState<PublicKeys>({});
+  const [privateKey, setPrivateKey] = useState<string>("");
 
   // TEST //  ------------------------------------------------
 
@@ -317,7 +352,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
     dispatch(
       addMessage({
-        createdAt: Date.now(),
+        createdAt: new Date(Date.now()).toISOString(),
         message: messageAI,
         sender: user?._id,
         _id: uuidv4(),
@@ -514,10 +549,11 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   //   }
   // };
 
-  const handleSendMessage = async (messageText: string) => {
+  const handleSendMessage = async (messageText: string): Promise<void> => {
     socket.current.emit("stopTyping", selectedId);
 
     if (!selectedId) return;
+
 
     try {
       // Translate the message
@@ -532,20 +568,21 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
       // Send the message based on whether it's a new or existing conversation
       const response = conversationId
-        ? await sendExistingMessage(sealedMessage)
-        : await sendNewMessage(sealedMessage);
+      ? await sendExistingMessage(sealedMessage)
+      : await sendNewMessage(sealedMessage);
+ 
+      // const { message, conversation } = response;
 
-      const { message, conversation } = response;
+      // // Emit the message through the socket
+      // emitSocketMessage(sealedMessage, message?.createdAt, conversation?._id);
 
-      // Emit the message through the socket
-      emitSocketMessage(sealedMessage, message?.createdAt, conversation?._id);
+      // // Update Redux state with the new message
+      // updateReduxState(message, conversation);
+      // if (!conversationId) {
+      //   dispatchNewConversation(conversation?._id);
+      // }
 
-      // Update Redux state with the new message
-      updateReduxState(message, conversation);
 
-      if (!conversationId) {
-        dispatchNewConversation(conversation?._id);
-      }
     } catch (err) {
       handleError(err);
     }
@@ -604,7 +641,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
     });
   };
 
-  const updateReduxState = (message: any, conversation: any) => {
+  const updateReduxState = (message: any) => {
     dispatch(
       addMessage({
         createdAt: message?.createdAt,
