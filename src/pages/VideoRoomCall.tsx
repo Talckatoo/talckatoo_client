@@ -9,7 +9,6 @@ import AnswerCall from "../components/VideoCall/services/AnswerCall";
 import LeaveCall from "../components/VideoCall/services/LeaveCall";
 import { Base64 } from "js-base64";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { UserContext } from "../context/user-context";
 
 interface Socket {
@@ -25,6 +24,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   const [callAccepted, setCallAccepted] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
   const [media, setMedia] = useState(true);
+  const [userMuteStates, setUserMuteStates] = useState(new Map());
 
   const myVideo = useRef();
   const userVideo = useRef();
@@ -146,6 +146,41 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
     LeaveCall(socket, roomId, connectionRef, setCallEnded);
   };
 
+  useEffect(() => {
+    if (socket?.current) {
+      socket.current.on("userToggleAudio", ({ userId, isMuted }) => {
+        console.log(`User ${userId} ${isMuted ? 'muted' : 'unmuted'}`);
+        
+        setUserMuteStates(prev => new Map(prev).set(userId, isMuted));
+      });
+
+      return () => {
+        socket.current.off("userToggleAudio");
+      };
+    }
+  }, [socket?.current]);
+
+  // Effect to update media stream when audio/video settings change
+  useEffect(() => {
+    const updateMediaStream = async () => {
+      if (stream) {
+        const audioTrack = stream.getAudioTracks()[0];
+        console.log("audioTrack", audioTrack);
+
+        if (audioTrack) {
+          audioTrack.enabled = audio;
+        }
+
+        const videoTrack = stream.getVideoTracks()[0];
+        if (videoTrack) {
+          videoTrack.enabled = video;
+        }
+      }
+    };
+
+    updateMediaStream();
+  }, [audio, video, stream]);
+
   return (
     <>
       {!callEnded ? (
@@ -171,6 +206,8 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
                   callEnded={callEnded}
                   userData={userData}
                   video={video}
+                  userId={user._id}
+                  userMuteStates={userMuteStates}
                 />
               </div>
               <div className="flex h-1/6 bg-[#25282C]">
@@ -181,6 +218,9 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
                   userVideo={userVideo}
                   leaveCall={leaveCall}
                   userData={userData}
+                  socket={socket.current}
+                  stream={stream}
+                  roomId={roomId}
                 ></Options>
               </div>
             </>
