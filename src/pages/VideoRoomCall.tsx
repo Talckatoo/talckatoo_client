@@ -130,6 +130,7 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
       socket.current.off("calleeEnded");
       socket.current.off("callAccepted");
       socket.current.off("leaveCall");
+      socket.current?.off("userToggleAudio");
     };
   }, [socket.current, roomId, decodedCallData, video, audio]);
 
@@ -149,9 +150,13 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   useEffect(() => {
     if (socket?.current) {
       socket.current.on("userToggleAudio", ({ userId, isMuted }) => {
-        console.log(`User ${userId} ${isMuted ? 'muted' : 'unmuted'}`);
+        console.log("listen to userToggleAudio event");
         
-        setUserMuteStates(prev => new Map(prev).set(userId, isMuted));
+        setUserMuteStates((prev) => {
+          const newMuteStates = new Map(prev);
+          newMuteStates.set(userId, isMuted);
+          return newMuteStates;
+        });
       });
 
       return () => {
@@ -163,18 +168,18 @@ const VideoRoomCall = ({ socket }: { socket: Socket }): JSX.Element => {
   // Effect to update media stream when audio/video settings change
   useEffect(() => {
     const updateMediaStream = async () => {
-      if (stream) {
-        const audioTrack = stream.getAudioTracks()[0];
-        console.log("audioTrack", audioTrack);
+      if (!stream) return;
 
-        if (audioTrack) {
-          audioTrack.enabled = audio;
-        }
+      const audioTrack = stream.getAudioTracks()[0];
+      console.log("audioTrack", audioTrack);
 
-        const videoTrack = stream.getVideoTracks()[0];
-        if (videoTrack) {
-          videoTrack.enabled = video;
-        }
+      if (audioTrack) {
+        audioTrack.enabled = audio;
+      }
+
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.enabled = video;
       }
     };
 

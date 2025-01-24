@@ -24,30 +24,28 @@ export default function Options({
   const { video, audio } = handleCall;
 
   const handleAudio = () => {
-    // Control local audio track
     if (stream) {
       const audioTrack = stream.getAudioTracks()[0];
       if (audioTrack) {
         audioTrack.enabled = !audio;
       }
     }
-
-    // Update Redux state
+    
+    // Emit before Redux update
+    if (socket && roomId) {
+      socket.emit("toggleAudioInRoom", {
+        roomId,
+        userId: user._id,
+        isMuted: audio  // Remove ! operator
+      });
+    }
+  
     dispatch(
       setHandleCall({
         audio: !audio,
         video: video,
       })
     );
-
-    // Emit mute status to room
-    if (socket && roomId) {
-      socket.emit("toggleAudioInRoom", {
-        roomId,
-        userId: user._id,
-        isMuted: !audio
-      });
-    }
   };
 
   const handleVideo = () => {
