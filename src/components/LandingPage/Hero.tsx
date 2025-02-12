@@ -22,9 +22,8 @@ const Hero = () => {
             </p>
             <Button
               type="submit"
-              className={` px-8 py-2 mt-[2rem] z-[1] ${
-                isDarkMode ? "bg-white text-black" : "bg-black text-white"
-              }`}
+              className={` px-8 py-2 mt-[2rem] z-[1] ${isDarkMode ? "bg-white text-black" : "bg-black text-white"
+                }`}
               onClick={() => {
                 navigate("/sign-up/verification");
               }}
@@ -49,7 +48,7 @@ const Hero = () => {
           </p>
           <div className="flex justify-center  md:justify-start gap-2 items-center mt-4 ">
             <img src="/assets/img/Ellipse.png" alt="SVG" />
-            <span className="font-jakarta font-bold "> Denny Jone</span>
+            <span className="font-jakarta font-bold "> John Daniel</span>
           </div>
         </div>
 
