@@ -1,9 +1,17 @@
 name: Build and Deploy
 
 on:
+  workflow_dispatch:  # Manual trigger
   push:
     branches: [ "main" ]
-  workflow_dispatch:  # Allows manual trigger# Only runs on pushes to main
+    paths:
+      - "src/**"
+      - "public/**"
+      - "package.json"
+      - "package-lock.json"
+      - "Dockerfile"
+      - "docker-compose.prod.yml"
+      - "vite.config.js"
 
 env:
   IMAGE_NAME: talckatoo-client
@@ -11,6 +19,10 @@ env:
 
 jobs:
   build-and-push:
+    # Prevent concurrent builds
+    concurrency: 
+      group: docker-build-${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -44,9 +56,6 @@ jobs:
       - name: Commit and push if changed
         run: |
           git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add docker-compose.prod.yml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update Docker image tag to ${IMAGE_TAG}" && git push)
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add docker-compose.prod.yml
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update Docker image tag to ${IMAGE_TAG}" && git push)
