@@ -49,7 +49,7 @@ const Hero = () => {
           </p>
           <div className="flex justify-center  md:justify-start gap-2 items-center mt-4 ">
             <img src="/assets/img/Ellipse.png" alt="SVG" />
-            <span className="font-jakarta font-bold "> Denny Jones</span>
+            <span className="font-jakarta font-bold "> Denny Jone</span>
           </div>
         </div>
 
