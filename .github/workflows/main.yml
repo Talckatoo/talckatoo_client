@@ -3,8 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:  # Allows manual trigger# Only runs on pushes to main
 
 env:
   IMAGE_NAME: talckatoo-client
@@ -38,16 +37,16 @@ jobs:
 
       - name: Update docker-compose.prod.yml
         run: |
-          # Update image tag in docker-compose.prod.yml
           sed -i "s|\${IMAGE_TAG:-latest}|${{ env.IMAGE_TAG }}|g" docker-compose.prod.yml
           sed -i "s|\${DOCKER_HUB_USERNAME}|${{ secrets.DOCKER_HUB_USERNAME }}|g" docker-compose.prod.yml
-          
-          # Add timestamp to force update
           echo "# Last updated: $(date)" >> docker-compose.prod.yml
 
       - name: Commit and push if changed
         run: |
           git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add docker-compose.prod.yml
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update Docker image tag to ${IMAGE_TAG}" && git push)
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add docker-compose.prod.yml
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update Docker image tag to ${IMAGE_TAG}" && git push)
