@@ -13,9 +13,13 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -43,7 +47,7 @@ jobs:
 
       - name: Commit and push if changed
         run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'github-actions@github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add docker-compose.prod.yml
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update Docker image tag to ${IMAGE_TAG}" && git push)
