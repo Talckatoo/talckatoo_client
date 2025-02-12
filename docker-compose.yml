@@ -1,6 +1,6 @@
 services:
   client:
-    image: mintam141/talckatoo-client:latest # Use env var for prod image, fallback to local for dev
+    image: mintam141/talckatoo-client:126eed9bc089766ca9cb489a39ff9b5a1da32646 # Use env var for prod image, fallback to local for dev
     build:
       context: .
       dockerfile: Dockerfile
@@ -20,3 +20,4 @@ services:
       - VITE_AZURE_TRANSLATOR_KEY=${VITE_AZURE_TRANSLATOR_KEY}
       - VITE_TRANSLATOR_ENDPOINT=${VITE_TRANSLATOR_ENDPOINT}
     restart: unless-stopped
+# Last updated: Wed Feb 12 18:56:12 UTC 2025
