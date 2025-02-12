@@ -1,6 +1,6 @@
 services:
   client:
-    image: ${DOCKER_HUB_USERNAME}/talckatoo-client:${IMAGE_TAG:-latest}
+    image: mintam141/talckatoo-client:3764e1aaafed5f88f4d4cb62048285ba2d939c76
     ports:
       - "5173:5173"
     environment:
@@ -16,4 +16,4 @@ services:
       - VITE_KEK_SECRET=${VITE_KEK_SECRET}
       - VITE_AZURE_TRANSLATOR_KEY=${VITE_AZURE_TRANSLATOR_KEY}
       - VITE_TRANSLATOR_ENDPOINT=${VITE_TRANSLATOR_ENDPOINT}
-    restart: unless-stopped
+    restart: unless-stopped# Last updated: Wed Feb 12 04:04:02 UTC 2025
