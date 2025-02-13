@@ -41,7 +41,7 @@ const App = () => {
   const { requests } = useAppSelector((state) => state.user);
   const { users } = useAppSelector((state) => state.user);
   useEffect(() => {
-    socket.current = io(`${import.meta.env.VITE_SOCKET_URL}`);
+    socket.current = io(`${import.meta.env.VITE_SOCKET_URL}` || "https://talckatoo-250985c83f7c.herokuapp.com");
 
     return () => {
       if (socket.current) {
