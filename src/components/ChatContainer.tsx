@@ -61,6 +61,8 @@ interface ReceivedCallState {
   roomId?: string;
 }
 
+console.log("VITE_AZURE_TRANSLATOR_KEY", import.meta.env.VITE_AZURE_TRANSLATOR_KEY)
+
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [notificationPermission, setNotificationPermission] = useState(false);
 
