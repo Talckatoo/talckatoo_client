@@ -1,6 +1,6 @@
 services:
   client:
-    image: mintam141/talckatoo-client:latest # Use env var for prod image, fallback to local for dev
+    image: mintam141/talckatoo-client:96b6b96bba54f2e32dc1eb9f2f7f6062dbc59071 # Use env var for prod image, fallback to local for dev
     build:
       context: .
       dockerfile: Dockerfile
@@ -27,3 +27,4 @@ services:
 # Last updated: Thu Feb 13 19:22:01 UTC 2025
 # Last updated: Thu Feb 13 19:31:25 UTC 2025
 # Last updated: Thu Feb 13 20:19:33 UTC 2025
+# Last updated: Thu Feb 13 20:45:33 UTC 2025
