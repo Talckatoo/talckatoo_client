@@ -1,6 +1,6 @@
 services:
   client:
-    image: mintam141/talckatoo-client:126eed9bc089766ca9cb489a39ff9b5a1da32646 # Use env var for prod image, fallback to local for dev
+    image: mintam141/talckatoo-client:latest # Use env var for prod image, fallback to local for dev
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,9 +11,9 @@ services:
       - VITE_AI_ASSISTANT_CALL=${VITE_AI_ASSISTANT_CALL}
       - VITE_OPENAI_API_KEY=${VITE_OPENAI_API_KEY}
       - VITE_WHISPER_TRANSCRIPTION_URL=${VITE_WHISPER_TRANSCRIPTION_URL}
-      - VITE_BASE_URL=${VITE_BASE_URL:-https://talckatoo-250985c83f7c.herokuapp.com/api/v1}
-      - VITE_SOCKET_URL=${VITE_SOCKET_URL:-https://talckatoo-250985c83f7c.herokuapp.com}
-      - VITE_GOOGLE_URL=${VITE_GOOGLE_URL:-https://talckatoo-250985c83f7c.herokuapp.com/api/v1/account/loginWithGoogle}
+      - VITE_BASE_URL=${VITE_BASE_URL}
+      - VITE_SOCKET_URL=${VITE_SOCKET_URL}
+      - VITE_GOOGLE_URL=${VITE_GOOGLE_URL}
       - VITE_ENCRYPTION_KEY=${VITE_ENCRYPTION_KEY}
       - VITE_ENCRYPTION_IV=${VITE_ENCRYPTION_IV}
       - VITE_KEK_SECRET=${VITE_KEK_SECRET}
