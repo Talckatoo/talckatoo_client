@@ -1,4 +1,30 @@
 FROM node:18-alpine AS builder
+# Create .env file using mounted secrets
+RUN --mount=type=secret,id=ai_assistant_id \
+    --mount=type=secret,id=ai_assistant_call \
+    --mount=type=secret,id=openai_api_key \
+    --mount=type=secret,id=whisper_url \
+    --mount=type=secret,id=base_url \
+    --mount=type=secret,id=socket_url \
+    --mount=type=secret,id=google_url \
+    --mount=type=secret,id=encryption_key \
+    --mount=type=secret,id=encryption_iv \
+    --mount=type=secret,id=kek_secret \
+    --mount=type=secret,id=azure_translator_key \
+    --mount=type=secret,id=translator_endpoint \
+    set -e; \
+    echo "VITE_AI_ASSISTANT_ID=$(cat /run/secrets/ai_assistant_id)" >> .env && \
+    echo "VITE_AI_ASSISTANT_CALL=$(cat /run/secrets/ai_assistant_call)" >> .env && \
+    echo "VITE_OPENAI_API_KEY=$(cat /run/secrets/openai_api_key)" >> .env && \
+    echo "VITE_WHISPER_TRANSCRIPTION_URL=$(cat /run/secrets/whisper_url)" >> .env && \
+    echo "VITE_BASE_URL=$(cat /run/secrets/base_url)" >> .env && \
+    echo "VITE_SOCKET_URL=$(cat /run/secrets/socket_url)" >> .env && \
+    echo "VITE_GOOGLE_URL=$(cat /run/secrets/google_url)" >> .env && \
+    echo "VITE_ENCRYPTION_KEY=$(cat /run/secrets/encryption_key)" >> .env && \
+    echo "VITE_ENCRYPTION_IV=$(cat /run/secrets/encryption_iv)" >> .env && \
+    echo "VITE_KEK_SECRET=$(cat /run/secrets/kek_secret)" >> .env && \
+    echo "VITE_AZURE_TRANSLATOR_KEY=$(cat /run/secrets/azure_translator_key)" >> .env && \
+    echo "VITE_TRANSLATOR_ENDPOINT=$(cat /run/secrets/translator_endpoint)" >> .env
 
 WORKDIR /app
 
@@ -11,33 +37,6 @@ RUN npm install
 # Copy project files
 COPY . .
 
-# Create .env file from build args
-ARG VITE_AI_ASSISTANT_ID
-ARG VITE_AI_ASSISTANT_CALL
-ARG VITE_OPENAI_API_KEY
-ARG VITE_WHISPER_TRANSCRIPTION_URL
-ARG VITE_BASE_URL
-ARG VITE_SOCKET_URL
-ARG VITE_GOOGLE_URL
-ARG VITE_ENCRYPTION_KEY
-ARG VITE_ENCRYPTION_IV
-ARG VITE_KEK_SECRET
-ARG VITE_AZURE_TRANSLATOR_KEY
-ARG VITE_TRANSLATOR_ENDPOINT
-
-# Create .env file with all variables
-RUN echo "VITE_AI_ASSISTANT_ID=$VITE_AI_ASSISTANT_ID" > .env && \
-    echo "VITE_AI_ASSISTANT_CALL=$VITE_AI_ASSISTANT_CALL" >> .env && \
-    echo "VITE_OPENAI_API_KEY=$VITE_OPENAI_API_KEY" >> .env && \
-    echo "VITE_WHISPER_TRANSCRIPTION_URL=$VITE_WHISPER_TRANSCRIPTION_URL" >> .env && \
-    echo "VITE_BASE_URL=$VITE_BASE_URL" >> .env && \
-    echo "VITE_SOCKET_URL=$VITE_SOCKET_URL" >> .env && \
-    echo "VITE_GOOGLE_URL=$VITE_GOOGLE_URL" >> .env && \
-    echo "VITE_ENCRYPTION_KEY=$VITE_ENCRYPTION_KEY" >> .env && \
-    echo "VITE_ENCRYPTION_IV=$VITE_ENCRYPTION_IV" >> .env && \
-    echo "VITE_KEK_SECRET=$VITE_KEK_SECRET" >> .env && \
-    echo "VITE_AZURE_TRANSLATOR_KEY=$VITE_AZURE_TRANSLATOR_KEY" >> .env && \
-    echo "VITE_TRANSLATOR_ENDPOINT=$VITE_TRANSLATOR_ENDPOINT" >> .env
 
 # Build the project
 RUN npm run build
@@ -73,4 +72,3 @@ EXPOSE 5173
 
 CMD ["nginx", "-g", "daemon off;"]
 
-CMD ["nginx", "-g", "daemon off;"]
