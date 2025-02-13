@@ -32,8 +32,6 @@ type MyEventMap = {
   getAcceptFriendRequest: (data: any) => void;
 };
 
-console.log("VITE_SOCKET_URL", import.meta.env.VITE_SOCKET_URL)
-
 const App = () => {
   useUserRedirect();
   const dispatch = useAppDispatch();
@@ -41,7 +39,10 @@ const App = () => {
   const { requests } = useAppSelector((state) => state.user);
   const { users } = useAppSelector((state) => state.user);
   useEffect(() => {
-    socket.current = io(`${import.meta.env.VITE_SOCKET_URL}` || "https://talckatoo-250985c83f7c.herokuapp.com");
+    socket.current = io(
+      `${import.meta.env.VITE_SOCKET_URL}` ||
+        "https://talckatoo-250985c83f7c.herokuapp.com"
+    );
 
     return () => {
       if (socket.current) {
