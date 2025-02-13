@@ -32,6 +32,8 @@ type MyEventMap = {
   getAcceptFriendRequest: (data: any) => void;
 };
 
+console.log("VITE_SOCKET_URL", import.meta.env.VITE_SOCKET_URL)
+
 const App = () => {
   useUserRedirect();
   const dispatch = useAppDispatch();
