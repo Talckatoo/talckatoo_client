@@ -1,6 +1,6 @@
 name: Build and Deploy
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
   push:
     branches: [ "main" ]
     paths:
@@ -10,9 +10,11 @@ on:
       - "package-lock.json"
       - "Dockerfile"
       - "vite.config.js"
+
 env:
   IMAGE_NAME: talckatoo-client
   IMAGE_TAG: ${{ github.sha }}
+
 jobs:
   build-and-push:
     concurrency: 
@@ -27,17 +29,50 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+          
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           
+      # Create secret files
+      - name: Create secret files
+        run: |
+          mkdir -p secrets
+          echo "${{ secrets.AI_ASSISTANT_ID }}" > secrets/ai_assistant_id
+          echo "${{ secrets.AI_ASSISTANT_CALL }}" > secrets/ai_assistant_call
+          echo "${{ secrets.OPENAI_API_KEY }}" > secrets/openai_api_key
+          echo "${{ secrets.WHISPER_URL }}" > secrets/whisper_url
+          echo "${{ secrets.BASE_URL }}" > secrets/base_url
+          echo "${{ secrets.SOCKET_URL }}" > secrets/socket_url
+          echo "${{ secrets.GOOGLE_URL }}" > secrets/google_url
+          echo "${{ secrets.ENCRYPTION_KEY }}" > secrets/encryption_key
+          echo "${{ secrets.ENCRYPTION_IV }}" > secrets/encryption_iv
+          echo "${{ secrets.KEK_SECRET }}" > secrets/kek_secret
+          echo "${{ secrets.AZURE_TRANSLATOR_KEY }}" > secrets/azure_translator_key
+          echo "${{ secrets.TRANSLATOR_ENDPOINT }}" > secrets/translator_endpoint
+          
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
+          secrets: |
+            "ai_assistant_id=secrets/ai_assistant_id"
+            "ai_assistant_call=secrets/ai_assistant_call"
+            "openai_api_key=secrets/openai_api_key"
+            "whisper_url=secrets/whisper_url"
+            "base_url=secrets/base_url"
+            "socket_url=secrets/socket_url"
+            "google_url=secrets/google_url"
+            "encryption_key=secrets/encryption_key"
+            "encryption_iv=secrets/encryption_iv"
+            "kek_secret=secrets/kek_secret"
+            "azure_translator_key=secrets/azure_translator_key"
+            "translator_endpoint=secrets/translator_endpoint"
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
             ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
@@ -46,6 +81,10 @@ jobs:
         run: |
           sed -i "s|image: mintam141/talckatoo-client:latest|image: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}|g" docker-compose.yml
           echo "# Last updated: $(date)" >> docker-compose.yml
+          
+      - name: Clean up secrets
+        if: always()
+        run: rm -rf secrets
           
       - name: Commit and push if changed
         run: |
