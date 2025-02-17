@@ -1,5 +1,10 @@
+# Use Node.js for building the Vite app
 FROM node:18-alpine AS builder
-# Create .env file using mounted secrets
+
+# Set working directory
+WORKDIR /app
+
+# Use Docker secrets for secure environment variables
 RUN --mount=type=secret,id=ai_assistant_id \
     --mount=type=secret,id=ai_assistant_call \
     --mount=type=secret,id=openai_api_key \
@@ -26,28 +31,22 @@ RUN --mount=type=secret,id=ai_assistant_id \
     echo "VITE_AZURE_TRANSLATOR_KEY=$(cat /run/secrets/azure_translator_key)" >> .env && \
     echo "VITE_TRANSLATOR_ENDPOINT=$(cat /run/secrets/translator_endpoint)" >> .env
 
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
+# Copy package files and install dependencies
+COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy project files
+# Copy project files and build
 COPY . .
-
-
-# Build the project
 RUN npm run build
 
-# Production stage
+# Serve with Nginx
 FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
 
-# Copy built assets from builder stage - changed from dist to build
-COPY --from=builder /app/build /usr/share/nginx/html
+# Copy built assets
+COPY --from=builder /app/build .
 
-# Add nginx configuration
+# Add custom Nginx config
 RUN echo 'server { \
     listen 5173; \
     root /usr/share/nginx/html; \
@@ -57,7 +56,6 @@ RUN echo 'server { \
     location /assets { \
         try_files $uri =404; \
     } \
-    # Add WebSocket support for Socket.IO
     location /socket.io/ { \
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; \
         proxy_set_header Host $host; \
@@ -69,6 +67,4 @@ RUN echo 'server { \
 }' > /etc/nginx/conf.d/default.conf
 
 EXPOSE 5173
-
 CMD ["nginx", "-g", "daemon off;"]
-
