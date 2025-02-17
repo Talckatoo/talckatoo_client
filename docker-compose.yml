@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   vite-app:
-    image: mintam141/talckatoo-client:394a5ae7a6aec176ee35182064ea67e04d651591 # Pulls latest image from Docker Hub
+    image: mintam141/talckatoo-client:latest # Pulls latest image from Docker Hub
     ports:
       - "5173:5173"
     restart: always
