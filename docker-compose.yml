@@ -6,6 +6,8 @@ services:
     ports:
       - "5173:5173"
     restart: always
+    volumes:
+      - ./secrets:/run/secrets:ro 
     secrets:
       - ai_assistant_id
       - ai_assistant_call
