@@ -22,13 +22,7 @@ import Random from "./pages/Random";
 import useUserRedirect from "./hooks/useUserRedirect";
 import SignUpVerification from "./pages/SignUpVerification";
 
-useEffect(() => {
-  console.log('Environment Variables:', {
-    VITE_AI_ASSISTANT_ID: import.meta.env.VITE_AI_ASSISTANT_ID,
-    VITE_AI_ASSISTANT_CALL: import.meta.env.VITE_AI_ASSISTANT_CALL,
-    // ... other variables
-  });
-}, []);
+
 
 type MyEventMap = {
   connect: () => void;
@@ -46,11 +40,19 @@ const App = () => {
   const socket = useRef<Socket<MyEventMap> | null>();
   const { requests } = useAppSelector((state) => state.user);
   const { users } = useAppSelector((state) => state.user);
+
   useEffect(() => {
-    console.log('VITE_SOCKET_URL',import.meta.env.VITE_SOCKET_URL);
+    console.log('Environment Variables:', {
+      VITE_AI_ASSISTANT_ID: import.meta.env.VITE_AI_ASSISTANT_ID,
+      VITE_AI_ASSISTANT_CALL: import.meta.env.VITE_AI_ASSISTANT_CALL,
+      // ... other variables
+    });
+  }, []);
+
+  useEffect(() => {
     socket.current = io(
       `${import.meta.env.VITE_SOCKET_URL}` ||
-        "https://talckatoo-250985c83f7c.herokuapp.com"
+      "https://talckatoo-250985c83f7c.herokuapp.com"
     );
 
     return () => {
