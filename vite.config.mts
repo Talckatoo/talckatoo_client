@@ -7,12 +7,13 @@ export default defineConfig(() => {
       outDir: "build",
     },
     plugins: [react()],
-    ENV_KEY: process.env.ENV_KEY,
     resolve: {
       alias: {
         // ...
         "simple-peer": "simple-peer/simplepeer.min.js",
       },
     },
+    envPrefix: 'VITE_',
+    envDir: '.'
   };
 });
