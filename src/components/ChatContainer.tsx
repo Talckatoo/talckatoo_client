@@ -61,6 +61,49 @@ interface ReceivedCallState {
   roomId?: string;
 }
 
+interface KeyResponse {
+  data: {
+    userKeys: {
+      userId: string;
+      publicKey: string;
+      privateKey?: string;
+    }[];
+  };
+}
+
+interface PublicKeys {
+  [key: string]: string;
+}
+
+interface PrivateKeyResponse {
+  data: {
+    data: {
+      userKeys: {
+        privateKey: string;
+        userId: string;
+      };
+    };
+  };
+}
+
+interface PublicKeyResponse {
+  data: {
+    data: {
+      userKeys: Array<{
+        userId: string;
+        publicKey: string;
+      }>;
+    };
+  };
+}
+
+interface Message {
+  _id: string;
+  message?: string;
+  sender: string;
+  createdAt: string;
+}
+
 
 const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const [notificationPermission, setNotificationPermission] = useState(false);
@@ -168,7 +211,7 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
   const token = localStorage.getItem("token");
 
   // crypto state
-  const [publicKeys, setPublicKeys] = useState({});
+  const [publicKeys, setPublicKeys] = useState<PublicKeys>({});
   const [privateKey, setPrivateKey] = useState("");
 
   // TEST //  ------------------------------------------------
@@ -328,8 +371,13 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // Fetch public keys
   const handleFetchPubKeys = async () => {
+    if (!user?._id || !token) {
+      console.warn('User or token not available for fetching public keys');
+      return;
+    }
+  
     try {
-      const response = await axios.get(
+      const response = await axios.get<PublicKeyResponse>(
         `${import.meta.env.VITE_BASE_URL}/keys/public`,
         {
           headers: {
@@ -337,21 +385,42 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           },
         }
       );
-      const keys = response.data.data.userKeys.reduce((acc:any, key:any) => {
-        acc[key.userId] = key.publicKey;
+  
+      // Log response structure for debugging
+      // console.log('Public keys response:', JSON.stringify(response.data, null, 2));
+  
+      if (!response?.data?.data?.userKeys) {
+        console.error('Unexpected response structure:', response);
+        throw new Error('Invalid response format for public keys');
+      }
+  
+      const keys = response.data.data.userKeys.reduce((acc, key) => {
+        if (key.userId && key.publicKey) {
+          acc[key.userId] = key.publicKey;
+        }
         return acc;
-      }, {});
+      }, {} as Record<string, string>);
+  
       setPublicKeys(keys);
     } catch (err) {
-      console.log(`Keys fetch error: ${err}`);
-      toast.error("Failed to fetch public keys");
+      console.error(`Public keys fetch error:`, err);
+      if (axios.isAxiosError(err)) {
+        toast.error(`Failed to fetch public keys: ${err.response?.data?.message || 'Unknown error'}`);
+      } else {
+        toast.error("Failed to fetch public keys");
+      }
     }
   };
 
   // Fetch private key
   const handleFetchPrivKey = async () => {
+    if (!user?._id || !token) {
+      console.warn('User or token not available for fetching private key');
+      return;
+    }
+  
     try {
-      const response = await axios.get(
+      const response = await axios.get<PrivateKeyResponse>(
         `${import.meta.env.VITE_BASE_URL}/keys/private/${user._id}`,
         {
           headers: {
@@ -359,14 +428,61 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
           },
         }
       );
-      const decryptedPrivateKey = CryptoJS.AES.decrypt(
-        response.data.data.userKeys.privateKey,
-        import.meta.env.VITE_KEK_SECRET
-      ).toString(CryptoJS.enc.Utf8);
-      setPrivateKey(decryptedPrivateKey);
+  
+      // Log response structure for debugging
+      // console.log('Private key response:', JSON.stringify(response.data, null, 2));
+  
+      // Check if response has the expected structure
+      if (!response?.data?.data?.userKeys?.privateKey) {
+        console.error('Unexpected response structure:', response);
+        throw new Error('Invalid response format for private key');
+      }
+  
+      const encryptedPrivateKey = response.data.data.userKeys.privateKey;
+  
+      // Log encrypted key for debugging (be careful with sensitive data in production)
+      // console.log('Encrypted private key exists:', !!encryptedPrivateKey);
+  
+      // Verify KEK secret exists
+      if (!import.meta.env.VITE_KEK_SECRET) {
+        throw new Error('KEK secret not found in environment variables');
+      }
+  
+      try {
+        const decryptedPrivateKey = CryptoJS.AES.decrypt(
+          encryptedPrivateKey,
+          import.meta.env.VITE_KEK_SECRET
+        ).toString(CryptoJS.enc.Utf8);
+  
+        if (!decryptedPrivateKey) {
+          throw new Error('Decryption resulted in empty private key');
+        }
+  
+        // Verify the decrypted key format (should be a valid hex string)
+        if (!/^[0-9a-fA-F]+$/.test(decryptedPrivateKey)) {
+          throw new Error('Decrypted key is not in valid hex format');
+        }
+  
+        setPrivateKey(decryptedPrivateKey);
+      } catch (decryptError) {
+        console.error('Error decrypting private key:', decryptError);
+        throw new Error('Failed to decrypt private key');
+      }
     } catch (err) {
-      console.log(`Keys fetch error: ${err}`);
-      toast.error("Failed to fetch private key");
+      console.error(`Private key fetch error:`, err);
+      
+      // Provide more specific error messages
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 401) {
+          toast.error("Authentication failed. Please log in again.");
+        } else if (err.response?.status === 404) {
+          toast.error("Private key not found. Please generate new keys.");
+        } else {
+          toast.error(`Failed to fetch private key: ${err.response?.data?.message || 'Unknown error'}`);
+        }
+      } else {
+        toast.error("Failed to fetch private key");
+      }
     }
   };
 
@@ -375,44 +491,65 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // function for encrypting a message using ECDH key exchange methodology
   // the encryption and decryption protocol currently being used is AES
-  const encryptMessage = (message:any, senderPrivateKey:any, recipientPublicKey:any) => {
-    const senderKey = ec.keyFromPrivate(senderPrivateKey, "hex");
-    const recipientKey = ec.keyFromPublic(recipientPublicKey, "hex");
-    const sharedSecret = senderKey
-      .derive(recipientKey.getPublic())
-      .toString(16);
-
-    const encryptedMessage = CryptoJS.AES.encrypt(
-      message,
-      sharedSecret
-    ).toString();
-    return encryptedMessage;
+  const encryptMessage = (message: string, senderPrivateKey: string, recipientPublicKey: string) => {
+    if (!message || !senderPrivateKey || !recipientPublicKey) {
+      throw new Error('Missing required parameters for encryption');
+    }
+  
+    try {
+      const senderKey = ec.keyFromPrivate(senderPrivateKey, "hex");
+      const recipientKey = ec.keyFromPublic(recipientPublicKey, "hex");
+      const sharedSecret = senderKey.derive(recipientKey.getPublic()).toString(16);
+  
+      return CryptoJS.AES.encrypt(message, sharedSecret).toString();
+    } catch (err) {
+      console.error('Encryption error:', err);
+      throw new Error('Failed to encrypt message');
+    }
   };
 
   // function for decrypting a message using ECDH key exchange methodology
-  const decryptMessage = (encryptedMessage:any, privateKey:any, publicKey:any) => {
-    const privateKeyObj = ec.keyFromPrivate(privateKey, "hex");
-    const publicKeyObj = ec.keyFromPublic(publicKey, "hex");
-    const sharedSecret = privateKeyObj
-      .derive(publicKeyObj.getPublic())
-      .toString(16);
-
-    const decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, sharedSecret);
-    const decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
-    return decryptedMessage;
+  const decryptMessage = (encryptedMessage: string, privateKey: string, publicKey: string) => {
+    if (!encryptedMessage || !privateKey || !publicKey) {
+      throw new Error('Missing required parameters for decryption');
+    }
+  
+    try {
+      const privateKeyObj = ec.keyFromPrivate(privateKey, "hex");
+      const publicKeyObj = ec.keyFromPublic(publicKey, "hex");
+      const sharedSecret = privateKeyObj.derive(publicKeyObj.getPublic()).toString(16);
+  
+      const decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, sharedSecret);
+      const decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
+  
+      if (!decryptedMessage) {
+        throw new Error('Decryption resulted in empty message');
+      }
+  
+      return decryptedMessage;
+    } catch (err) {
+      console.error('Decryption error:', err);
+      throw new Error('Failed to decrypt message');
+    }
   };
 
   // Keys fetch useEffect
   useEffect(() => {
-    if (user) {
-      try {
-        handleFetchPubKeys();
-        handleFetchPrivKey();
-      } catch (err) {
-        console.log(`Keys fetch error: ${err}`);
-        toast.error("Failed to fetch public keys");
+    const fetchKeys = async () => {
+      if (user) {
+        try {
+          await Promise.all([
+            handleFetchPubKeys(),
+            handleFetchPrivKey()
+          ]);
+        } catch (err) {
+          console.error(`Keys fetch error:`, err);
+          toast.error("Failed to fetch encryption keys");
+        }
       }
-    }
+    };
+  
+    fetchKeys();
   }, [user]);
 
   // const handleSendMessage = async (messageText: any) => {
@@ -934,25 +1071,26 @@ const ChatContainer = ({ socket }: { socket: Socket }): JSX.Element => {
 
   // *************************** DECRYPTED MESSAGES *****************************
 
-  const decryptedMessages = useMemo(() => {
-    if (!privateKey || !publicKeys[selectedId]) {
+  const decryptedMessages = useMemo<Message[]>(() => {
+    if (!privateKey || !publicKeys[selectedId] || !messages) {
       return messages;
     }
-
-    return messages.map((msg) => {
-      if (msg.message) {
-        try {
-          const decryptedMessage = decryptMessage(
-            msg.message,
-            privateKey,
-            publicKeys[selectedId]
-          );
-          return { ...msg, message: decryptedMessage };
-        } catch (error) {
-          console.error("Error decrypting message:", error);
-          return msg; // Return the original message if decryption fails
-        }
-      } else {
+  
+    return messages.map(msg => {
+      if (!msg.message) {
+        return msg;
+      }
+  
+      try {
+        const decryptedMessage = decryptMessage(
+          msg.message,
+          privateKey,
+          publicKeys[selectedId]
+        );
+        return { ...msg, message: decryptedMessage };
+      } catch (err) {
+        console.error('Message decryption error:', err);
+        // Return original message if decryption fails
         return msg;
       }
     });
