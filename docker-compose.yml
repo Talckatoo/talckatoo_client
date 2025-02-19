@@ -2,12 +2,9 @@ version: "3.8"
 
 services:
   vite-app:
-    image: mintam141/talckatoo-client:d41a19c8d2bdaeec17a24bcdda3fde8a347f1545 # Pulls latest image from Docker Hub
+    image: test_1
     ports:
       - "5173:5173"
-    restart: always
-    volumes:
-      - ./secrets:/run/secrets:ro 
     secrets:
       - ai_assistant_id
       - ai_assistant_call
@@ -21,36 +18,42 @@ services:
       - kek_secret
       - azure_translator_key
       - translator_endpoint
+    environment:
+      VITE_AI_ASSISTANT_ID_FILE: /run/secrets/ai_assistant_id
+      VITE_AI_ASSISTANT_CALL_FILE: /run/secrets/ai_assistant_call
+      VITE_OPENAI_API_KEY_FILE: /run/secrets/openai_api_key
+      VITE_WHISPER_TRANSCRIPTION_URL_FILE: /run/secrets/whisper_url
+      VITE_BASE_URL_FILE: /run/secrets/base_url
+      VITE_SOCKET_URL_FILE: /run/secrets/socket_url
+      VITE_GOOGLE_URL_FILE: /run/secrets/google_url
+      VITE_ENCRYPTION_KEY_FILE: /run/secrets/encryption_key
+      VITE_ENCRYPTION_IV_FILE: /run/secrets/encryption_iv
+      VITE_KEK_SECRET_FILE: /run/secrets/kek_secret
+      VITE_AZURE_TRANSLATOR_KEY_FILE: /run/secrets/azure_translator_key
+      VITE_TRANSLATOR_ENDPOINT_FILE: /run/secrets/translator_endpoint
 
 secrets:
   ai_assistant_id:
-    file: ./secrets/ai_assistant_id.txt
+    external: true
   ai_assistant_call:
-    file: ./secrets/ai_assistant_call.txt
+    external: true
   openai_api_key:
-    file: ./secrets/openai_api_key.txt
+    external: true
   whisper_url:
-    file: ./secrets/whisper_url.txt
+    external: true
   base_url:
-    file: ./secrets/base_url.txt
+    external: true
   socket_url:
-    file: ./secrets/socket_url.txt
+    external: true
   google_url:
-    file: ./secrets/google_url.txt
+    external: true
   encryption_key:
-    file: ./secrets/encryption_key.txt
+    external: true
   encryption_iv:
-    file: ./secrets/encryption_iv.txt
+    external: true
   kek_secret:
-    file: ./secrets/kek_secret.txt
+    external: true
   azure_translator_key:
-    file: ./secrets/azure_translator_key.txt
+    external: true
   translator_endpoint:
-    file: ./secrets/translator_endpoint.txt
-# Last updated: Mon Feb 17 02:06:25 UTC 2025
-# Last updated: Mon Feb 17 02:26:12 UTC 2025
-# Last updated: Mon Feb 17 03:28:52 UTC 2025
-# Last updated: Mon Feb 17 04:38:05 UTC 2025
-# Last updated: Tue Feb 18 01:16:10 UTC 2025
-# Last updated: Tue Feb 18 15:04:40 UTC 2025
-# Last updated: Tue Feb 18 19:17:20 UTC 2025
+    external: true
