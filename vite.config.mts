@@ -6,15 +6,6 @@ export default defineConfig(({ mode }) => {
   // Load .env file explicitly
   const env = loadEnv(mode, process.cwd(), "VITE_");
 
-  // Function to safely read secrets for production
-  const getSecret = (path) => {
-    try {
-      return JSON.stringify(fs.readFileSync(path, "utf8").trim());
-    } catch (e) {
-      return '""';
-    }
-  };
-
   const getEnvDefinitions = (mode) => {
     if (mode === "production") {
       return {
