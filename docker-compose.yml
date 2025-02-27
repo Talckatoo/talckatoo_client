@@ -1,43 +1,42 @@
-version: "3.8"
-
 services:
   vite-app:
-    build: .
+    image: talckatoo-frontend:latest
     ports:
       - "5173:5173"
     secrets:
-      - ai_assistant_id
+      - client_ai_assistant_id
       - ai_assistant_call
-      - openai_api_key
+      - client_openai_api_key
       - whisper_url
       - base_url
       - socket_url
       - google_url
-      - encryption_key
-      - encryption_iv
-      - kek_secret
-      - azure_translator_key
-      - translator_endpoint
+      - client_encryption_key
+      - client_encryption_iv
+      - client_kek_secret
+      - client_azure_translator_key
+      - client_translator_endpoint
     environment:
-      VITE_AI_ASSISTANT_ID_FILE: /run/secrets/ai_assistant_id
-      VITE_AI_ASSISTANT_CALL_FILE: /run/secrets/ai_assistant_call
-      VITE_OPENAI_API_KEY_FILE: /run/secrets/openai_api_key
-      VITE_WHISPER_TRANSCRIPTION_URL_FILE: /run/secrets/whisper_url
-      VITE_BASE_URL_FILE: /run/secrets/base_url
-      VITE_SOCKET_URL_FILE: /run/secrets/socket_url
-      VITE_GOOGLE_URL_FILE: /run/secrets/google_url
-      VITE_ENCRYPTION_KEY_FILE: /run/secrets/encryption_key
-      VITE_ENCRYPTION_IV_FILE: /run/secrets/encryption_iv
-      VITE_KEK_SECRET_FILE: /run/secrets/kek_secret
-      VITE_AZURE_TRANSLATOR_KEY_FILE: /run/secrets/azure_translator_key
-      VITE_TRANSLATOR_ENDPOINT_FILE: /run/secrets/translator_endpoint
+      VITE_AI_ASSISTANT_ID: /run/secrets/client_ai_assistant_id
+      VITE_AI_ASSISTANT_CALL: /run/secrets/ai_assistant_call
+      VITE_OPENAI_API_KEY: /run/secrets/client_openai_api_key
+      VITE_WHISPER_TRANSCRIPTION_URL: /run/secrets/whisper_url
+      VITE_BASE_URL: /run/secrets/base_url
+      VITE_SOCKET_URL: /run/secrets/socket_url
+      VITE_GOOGLE_URL: /run/secrets/google_url
+      VITE_ENCRYPTION_KEY: /run/secrets/client_encryption_key
+      VITE_ENCRYPTION_IV: /run/secrets/client_encryption_iv
+      VITE_KEK_SECRET: /run/secrets/client_kek_secret
+      VITE_AZURE_TRANSLATOR_KEY: /run/secrets/client_azure_translator_key
+      VITE_TRANSLATOR_ENDPOINT: /run/secrets/client_translator_endpoint
+    restart: unless-stopped
 
 secrets:
-  ai_assistant_id:
+  client_ai_assistant_id:
     external: true
   ai_assistant_call:
     external: true
-  openai_api_key:
+  client_openai_api_key:
     external: true
   whisper_url:
     external: true
@@ -47,13 +46,13 @@ secrets:
     external: true
   google_url:
     external: true
-  encryption_key:
+  client_encryption_key:
     external: true
-  encryption_iv:
+  client_encryption_iv:
     external: true
-  kek_secret:
+  client_kek_secret:
     external: true
-  azure_translator_key:
+  client_azure_translator_key:
     external: true
-  translator_endpoint:
+  client_translator_endpoint:
     external: true

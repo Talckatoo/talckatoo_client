@@ -5,47 +5,23 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Copy package files first for better caching
-COPY package.json package-lock.json ./
-RUN npm install
+COPY package*.json ./
 
-# Use Docker secrets for secure environment variables
-RUN --mount=type=secret,id=ai_assistant_id \
-    --mount=type=secret,id=ai_assistant_call \
-    --mount=type=secret,id=openai_api_key \
-    --mount=type=secret,id=whisper_url \
-    --mount=type=secret,id=base_url \
-    --mount=type=secret,id=socket_url \
-    --mount=type=secret,id=google_url \
-    --mount=type=secret,id=encryption_key \
-    --mount=type=secret,id=encryption_iv \
-    --mount=type=secret,id=kek_secret \
-    --mount=type=secret,id=azure_translator_key \
-    --mount=type=secret,id=translator_endpoint \
-    set -e; \
-    echo "VITE_AI_ASSISTANT_ID=$(cat /run/secrets/ai_assistant_id)" > .env && \
-    echo "VITE_AI_ASSISTANT_CALL=$(cat /run/secrets/ai_assistant_call)" >> .env && \
-    echo "VITE_OPENAI_API_KEY=$(cat /run/secrets/openai_api_key)" >> .env && \
-    echo "VITE_WHISPER_TRANSCRIPTION_URL=$(cat /run/secrets/whisper_url)" >> .env && \
-    echo "VITE_BASE_URL=$(cat /run/secrets/base_url)" >> .env && \
-    echo "VITE_SOCKET_URL=$(cat /run/secrets/socket_url)" >> .env && \
-    echo "VITE_GOOGLE_URL=$(cat /run/secrets/google_url)" >> .env && \
-    echo "VITE_ENCRYPTION_KEY=$(cat /run/secrets/encryption_key)" >> .env && \
-    echo "VITE_ENCRYPTION_IV=$(cat /run/secrets/encryption_iv)" >> .env && \
-    echo "VITE_KEK_SECRET=$(cat /run/secrets/kek_secret)" >> .env && \
-    echo "VITE_AZURE_TRANSLATOR_KEY=$(cat /run/secrets/azure_translator_key)" >> .env && \
-    echo "VITE_TRANSLATOR_ENDPOINT=$(cat /run/secrets/translator_endpoint)" >> .env
+# Install dependencies
+RUN npm install
 
 # Copy project files after .env has been created
 COPY . .
 
 # Ensure Vite loads .env
-RUN node -e "console.log(require('fs').readFileSync('.env', 'utf8'))"
+# RUN node -e "console.log(require('fs').readFileSync('.env', 'utf8'))"
 
 # Build the Vite app
 RUN npm run build
 
 # Serve with Nginx
 FROM nginx:alpine
+
 WORKDIR /usr/share/nginx/html
 
 # Copy built assets
