@@ -4,6 +4,10 @@ FROM node:18-alpine AS builder
 # Set working directory
 WORKDIR /app
 
+# Copy package files first for better caching
+COPY package.json package-lock.json ./
+RUN npm install
+
 # Use Docker secrets for secure environment variables
 RUN --mount=type=secret,id=ai_assistant_id \
     --mount=type=secret,id=ai_assistant_call \
@@ -18,7 +22,7 @@ RUN --mount=type=secret,id=ai_assistant_id \
     --mount=type=secret,id=azure_translator_key \
     --mount=type=secret,id=translator_endpoint \
     set -e; \
-    echo "VITE_AI_ASSISTANT_ID=$(cat /run/secrets/ai_assistant_id)" >> .env && \
+    echo "VITE_AI_ASSISTANT_ID=$(cat /run/secrets/ai_assistant_id)" > .env && \
     echo "VITE_AI_ASSISTANT_CALL=$(cat /run/secrets/ai_assistant_call)" >> .env && \
     echo "VITE_OPENAI_API_KEY=$(cat /run/secrets/openai_api_key)" >> .env && \
     echo "VITE_WHISPER_TRANSCRIPTION_URL=$(cat /run/secrets/whisper_url)" >> .env && \
@@ -31,12 +35,13 @@ RUN --mount=type=secret,id=ai_assistant_id \
     echo "VITE_AZURE_TRANSLATOR_KEY=$(cat /run/secrets/azure_translator_key)" >> .env && \
     echo "VITE_TRANSLATOR_ENDPOINT=$(cat /run/secrets/translator_endpoint)" >> .env
 
-# Copy package files and install dependencies
-COPY package.json package-lock.json ./
-RUN npm install
-
-# Copy project files and build
+# Copy project files after .env has been created
 COPY . .
+
+# Ensure Vite loads .env
+RUN node -e "console.log(require('fs').readFileSync('.env', 'utf8'))"
+
+# Build the Vite app
 RUN npm run build
 
 # Serve with Nginx

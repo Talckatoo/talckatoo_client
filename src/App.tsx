@@ -45,10 +45,7 @@ const App = () => {
     console.log('Environment Variables:', {
       VITE_AI_ASSISTANT_ID: import.meta.env.VITE_AI_ASSISTANT_ID,
       VITE_AI_ASSISTANT_CALL: import.meta.env.VITE_AI_ASSISTANT_CALL,
-      VITE_BASE_URL: import.meta.env.VITE_BASE_URL, 
-      VITE_ENCRYPTION_KEY: import.meta.env.VITE_ENCRYPTION_KEY,
-      VITE_ENCRYPTION_IV: import.meta.env.VITE_ENCRYPTION_IV,
-      VITE_KEK_SECRET: import.meta.env.VITE_KEK_SECRET,
+      VITE_BASE_URL: import.meta.env.VITE_BASE_URL,
     });
   }, []);
 
