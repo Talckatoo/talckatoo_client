@@ -26,7 +26,7 @@ const Testimonials = () => {
           </p>
         </div>
 
-        <div className="grid  gap-10 md:grid-cols-2  max-sm:grid-cols-1  sm:mx-auto items-center mt-[4rem] w-full z-[1]   justify-between p-card">
+        <div className="grid  gap-10 md:grid-cols-2  max-sm:grid-cols-1  sm:mx-auto items-center  w-full z-[1]   justify-between testemonie p-card">
           {untranslatedTestimonials.map((item) => (
             <div
               key={item?.name}

@@ -124,7 +124,9 @@
     position: relative;
     bottom: 10rem;
   }
-
+  .testemonie {
+    margin-top: 8rem;
+  }
   .card:first-child {
     position: relative;
     top: 9rem;
@@ -143,15 +145,25 @@
     position: relative;
     top: 0;
   }
+  
 }
 
 .card:nth-child(3) {
   visibility: hidden;
 }
-
-.card:nth-child(4) {
-  position: relative;
-  bottom: 9rem;
+@media (max-width: 867px) {
+  /* Mobile-specific changes */
+  .p-card {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+   
+  .testemonie {
+    margin-top: -14rem;
+  }
+  .card:nth-child(4) {
+    order: -1; /* Moves card 4 above card 3 */
+  }
 }
 
 body {
