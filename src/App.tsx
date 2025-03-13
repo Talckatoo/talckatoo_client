@@ -21,7 +21,7 @@ import {
 import Random from "./pages/Random";
 import useUserRedirect from "./hooks/useUserRedirect";
 import SignUpVerification from "./pages/SignUpVerification";
-
+import ProtectedRoute from "./route/ProtectedRoute";
 
 
 type MyEventMap = {
@@ -109,16 +109,18 @@ const App = () => {
         />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-up/verification" element={<SignUpVerification />} />
+        <Route path="/terms" element={<Term />} />
+        <Route path="/privacy" element={<Privacy />} />
         <Route path="/" element={<Home />} />
+        <Route element={<ProtectedRoute />}>
         <Route path="/chat" element={<Chat socket={socket} />} />
         <Route path="/profile" element={<Profile socket={socket} />} />
-        <Route path="/terms" element={<Term />} />
         <Route path="/random" element={<Random socket={socket} />} />
-        <Route path="/privacy" element={<Privacy />} />
         <Route
           path="/call/:roomId/:decodedCallData"
           element={<VideoRoomCall socket={socket} />}
         />
+        </Route>
       </Routes>
     </div>
   );
