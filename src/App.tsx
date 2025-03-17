@@ -21,7 +21,7 @@ import {
 import Random from "./pages/Random";
 import useUserRedirect from "./hooks/useUserRedirect";
 import SignUpVerification from "./pages/SignUpVerification";
-
+import server_endpoint from "./util/endpoint";
 
 
 type MyEventMap = {
@@ -33,6 +33,7 @@ type MyEventMap = {
   getFriendRequest: (data: any) => void;
   getAcceptFriendRequest: (data: any) => void;
 };
+
 
 const App = () => {
   useUserRedirect();
@@ -52,7 +53,7 @@ const App = () => {
   useEffect(() => {
     socket.current = io(
       `${import.meta.env.VITE_SOCKET_URL}` ||
-      "https://talckatoo-250985c83f7c.herokuapp.com"
+      server_endpoint
     );
 
     return () => {

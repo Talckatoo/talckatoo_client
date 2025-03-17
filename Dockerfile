@@ -64,7 +64,7 @@ RUN echo 'server { \
     location /socket.io/ { \
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; \
         proxy_set_header Host $host; \
-        proxy_pass https://talckatoo-250985c83f7c.herokuapp.com; \
+        proxy_pass https://server.talckatoo.me; \
         proxy_http_version 1.1; \
         proxy_set_header Upgrade $http_upgrade; \
         proxy_set_header Connection "upgrade"; \

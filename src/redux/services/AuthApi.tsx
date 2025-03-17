@@ -5,7 +5,7 @@ export const AuthApi = createApi({
   reducerPath: "AuthApi",
   refetchOnFocus: true,
   baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_BASE_URL as string || "https://talckatoo-250985c83f7c.herokuapp.com/api/v1",
+    baseUrl: import.meta.env.VITE_BASE_URL as string,
   }),
 
   endpoints: authEndpoints,

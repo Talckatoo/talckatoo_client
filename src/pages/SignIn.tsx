@@ -97,6 +97,8 @@ const SignIn = () => {
     }
   };
 
+  console.log("Environment Variables:", import.meta.env.VITE_GOOGLE_URL);
+  
   const redirectTogoogle = async (): Promise<void> => {
     window.open(`${import.meta.env.VITE_GOOGLE_URL}`, "_self");
   };
